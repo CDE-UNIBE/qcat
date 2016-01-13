@@ -4,16 +4,14 @@ separate the varying code styles.
 """
 from django.http import Http404
 from django.middleware.csrf import get_token
-from django.shortcuts import get_object_or_404
 from django.utils import formats
 from django.utils.timezone import now
 from django.utils.translation import get_language
 from wkhtmltopdf.views import PDFTemplateView
 
 from configuration.cache import get_configuration
-from questionnaire.models import Questionnaire
 from questionnaire.utils import get_questionnaire_data_in_single_language, \
-    get_list_values, get_query_status_filter
+    get_list_values, get_query_status_filter, query_questionnaire
 
 
 class PDFDetailView(PDFTemplateView):
@@ -23,8 +21,7 @@ class PDFDetailView(PDFTemplateView):
     This view is mostly ported and adapted to a class based view from
     questionnaire.views.generic_questionnaire_details
     """
-    # template_name = 'approaches/questionnaire/details.html'
-    template_name = 'home.html'
+    template_name = 'approaches/questionnaire/details.html'
     http_method_names = ['get', ]
     configuration_code = 'approaches'
 
@@ -40,7 +37,13 @@ class PDFDetailView(PDFTemplateView):
         return super().get(request, *args, **kwargs)
 
     def get_object(self):
-        return get_object_or_404(Questionnaire, code=self.kwargs['identifier'])
+        questionnaires = query_questionnaire(
+            self.request, self.kwargs['identifier']
+        )
+        if questionnaires.exists():
+            return questionnaires.first()
+        else:
+            raise Http404()
 
     def get_filename(self):
         """The name of the pdf file"""
