@@ -92,5 +92,4 @@ def _set_maintenance_mode(value, source_folder):
     run('echo {bool_value} > {envs_file}'.format(
         bool_value=str(value),
         envs_file=join(source_folder, 'envs', 'MAINTENANCE_MODE')
-        )
-    )
+    ))
