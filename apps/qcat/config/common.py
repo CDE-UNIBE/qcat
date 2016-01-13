@@ -38,6 +38,7 @@ class BaseSettings(Configuration):
         'rest_framework',
         'django_filters',
         'maintenancemode',
+        'wkhtmltopdf',
         # Custom apps
         'questionnaire',
         'accounts',
@@ -218,3 +219,5 @@ class BaseSettings(Configuration):
     CACHES = values.CacheURLValue(default='locmem://')
 
     MAINTENANCE_MODE = values.BooleanValue(environ_prefix='', default=False)
+
+    WKHTMLTOPDF_CMD = values.Value(environ_prefix='')

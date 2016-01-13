@@ -24,8 +24,8 @@ follows ::
     ├── DJANGO_TEMPLATE_DEBUG
     ├── DJANGO_USE_CACHING
     ├── MAINTENANCE_MODE
-    └── TESTING_FIREFOX_PATH
-
+    ├── TESTING_FIREFOX_PATH
+    └── WKHTMLTOPDF_CMD
 
 .. seealso::
     `dj-database-url`_ for the format of ```DATABASE_URL```
@@ -102,3 +102,12 @@ Example::
             ('application/pdf', 'pdf'),
         )
     }
+
+
+``WKHTMLTOPDF_CMD``
+^^^^^^^^^^^^^^^^^^^
+
+Path to the path of wkhtmltopdf. On unix system, execute
+```which wkhtmltopdf```; also refer to the `offical wkhtmltopdf docs`_.
+
+.. _offical wkhtmltopdf docs: https://pypi.python.org/pypi/django-wkhtmltopdf
