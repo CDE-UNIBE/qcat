@@ -106,7 +106,18 @@ def get_mappings(questionnaire_configuration):
                 'name': {
                     'properties': name_properties
                 },
-                'authors': {
+                'compilers': {
+                    'type': 'nested',
+                    'properties': {
+                        'id': {
+                            'type': 'integer',
+                        },
+                        'name': {
+                            'type': 'string',
+                        },
+                    }
+                },
+                'editors': {
                     'type': 'nested',
                     'properties': {
                         'id': {
@@ -279,14 +290,6 @@ def put_questionnaire_data(configuration_code, questionnaire_objects):
                 links[language].append(get_link_display(
                     link_configuration.keyword, name, link.code))
 
-        authors = []
-        for author in list(chain(
-                obj.members.filter(questionnairemembership__role='author'),
-                obj.members.filter(questionnairemembership__role='editor'))):
-            authors.append({
-                'id': author.id,
-                'name': str(author),
-            })
         source = {
             'data': obj.data,
             'list_data': list_data,

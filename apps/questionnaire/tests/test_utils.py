@@ -833,7 +833,7 @@ class QueryQuestionnairesForLinkTest(TestCase):
 class GetListValuesTest(TestCase):
 
     def setUp(self):
-        self.values_length = 10
+        self.values_length = 11
         self.es_hits = [{'_id': 1}]
 
     def test_returns_values_from_es_search(self):
@@ -849,7 +849,8 @@ class GetListValuesTest(TestCase):
         self.assertEqual(ret_1.get('id'), 1)
         self.assertEqual(ret_1.get('translations'), [])
         self.assertEqual(ret_1.get('code'), '')
-        self.assertEqual(ret_1.get('authors'), [])
+        self.assertEqual(ret_1.get('compilers'), [])
+        self.assertEqual(ret_1.get('editors'), [])
         self.assertEqual(ret_1.get('links'), [])
 
     def test_es_uses_provided_configuration(self):
@@ -887,7 +888,8 @@ class GetListValuesTest(TestCase):
         self.assertEqual(ret_1.get('id'), obj.id)
         self.assertEqual(ret_1.get('translations'), [])
         self.assertEqual(ret_1.get('code'), 'code')
-        self.assertEqual(ret_1.get('authors'), ['author'])
+        self.assertEqual(ret_1.get('compilers'), ['compiler'])
+        self.assertEqual(ret_1.get('editors'), ['editor'])
         self.assertEqual(ret_1.get('links'), [])
 
     @patch('questionnaire.utils.get_link_data')

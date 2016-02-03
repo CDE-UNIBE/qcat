@@ -3,11 +3,13 @@ from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.shortcuts import redirect
 
+from accounts.decorators import force_login_check
 from configuration.cache import delete_configuration_cache
 from configuration.models import Configuration
 
 
 @login_required
+@force_login_check
 def delete_caches(request):
     """
     Delete all the caches.

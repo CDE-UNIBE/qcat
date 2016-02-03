@@ -4,6 +4,7 @@ from django.http import JsonResponse
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
 
+from accounts.decorators import force_login_check
 from questionnaire.views import (
     generic_questionnaire_details,
     generic_questionnaire_link_form,
@@ -16,6 +17,7 @@ from questionnaire.views import (
 
 
 @login_required
+@force_login_check
 def questionnaire_link_form(request, identifier):
     """
     View to show the form for linking questionnaires. Also handles the
@@ -64,6 +66,7 @@ def questionnaire_link_search(request):
 
 
 @login_required
+@force_login_check
 def questionnaire_view_step(request, identifier, step):
     """
     View rendering the form of a single step of a new SAMPLE
@@ -75,6 +78,7 @@ def questionnaire_view_step(request, identifier, step):
 
 
 @login_required
+@force_login_check
 def questionnaire_new_step(request, identifier, step):
     """
     View to show the form of a single step of a new Approaches
@@ -103,6 +107,7 @@ def questionnaire_new_step(request, identifier, step):
 
 
 @login_required
+@force_login_check
 def questionnaire_new(request, identifier=None):
     """
     View to show the overview of a new or edited Approaches

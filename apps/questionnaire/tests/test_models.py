@@ -37,7 +37,8 @@ def get_valid_metadata():
     return {
         'created': 'created',
         'updated': 'updated',
-        'authors': ['author'],
+        'compilers': ['compiler'],
+        'editors': ['editor'],
         'code': 'code',
         'configurations': ['configuration'],
         'translations': ['en']
@@ -353,28 +354,17 @@ class QuestionnaireModelTest(TestCase):
             configuration_code='sample', data={}, user=self.user)
         metadata = questionnaire.get_metadata()
         self.assertIsInstance(metadata, dict)
-        self.assertEqual(len(metadata), 7)
+        self.assertEqual(len(metadata), 8)
         self.assertEqual(metadata['created'], questionnaire.created)
         self.assertEqual(metadata['updated'], questionnaire.updated)
         self.assertEqual(
-            metadata['authors'],
+            metadata['compilers'],
             [{'id': self.user.id, 'name': str(self.user)}])
+        self.assertEqual(metadata['editors'], [])
         self.assertEqual(metadata['code'], questionnaire.code)
         self.assertEqual(metadata['configurations'], ['sample'])
         self.assertEqual(metadata['translations'], ['en'])
         self.assertEqual(metadata['status'], ('draft', 'Draft'))
-
-    def test_get_metadata_puts_author_first(self):
-        questionnaire = Questionnaire.create_new(
-            configuration_code='sample', data={}, user=self.user)
-        QuestionnaireMembership.objects.create(
-            user=create_new_user(id=2, email='foo@bar.com'),
-            questionnaire=questionnaire, role='editor')
-        metadata = questionnaire.get_metadata()
-        authors = metadata['authors']
-        self.assertEqual(len(authors), 2)
-        self.assertEqual(authors[0]['id'], 1)
-        self.assertEqual(authors[1]['id'], 2)
 
     def test_has_links(self):
         questionnaire = get_valid_questionnaire(self.user)
@@ -399,6 +389,22 @@ class QuestionnaireModelTest(TestCase):
         questionnaire_2.remove_link(questionnaire_1)
         self.assertEqual(questionnaire_2.links.count(), 0)
         self.assertEqual(QuestionnaireLink.objects.count(), 0)
+
+    def test_protect_published_item(self):
+        questionnaire = Questionnaire.create_new(
+            configuration_code='sample', data={}, user=self.user, status=4
+        )
+        self.assertEqual(questionnaire.status, 4)
+        questionnaire.data = {'foo': 'bar'}
+        self.assertRaises(ValidationError, lambda: questionnaire.save())
+
+    def test_allow_changes_unpublished_item(self):
+        questionnaire = Questionnaire.create_new(
+            configuration_code='sample', data={}, user=self.user, status=1
+        )
+        questionnaire.data = {'foo': 'bar'}
+        questionnaire.save()
+        self.assertEqual(questionnaire.data, {'foo': 'bar'})
 
 
 class FileModelTest(TestCase):

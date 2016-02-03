@@ -22,6 +22,26 @@ If pip2 is not available, install fabric outside of the virtual
 environment.
 
 
+Process
+-------
+
+* Changes are always commited to feature branches.
+* The `git-flow`_ model is in use.
+* Only Selected people from the CDE (Centre for Development and Environment) can
+  merge commits into the branches ``develop`` and ``master``.
+* `Shippable`_ is monitoring these branches, new commits trigger a deployment.
+* The configuration for shippable is stored in the file: ``shippable.yml``
+  * The host string is a secure value, which be generated on the platform.
+  * Before the actual deployment is started, all tests are run.
+  * If no tests fail, the deployment is started.
+* Deployment is handled with Fabric.
+* For the git branches develop and master, respective environments are created.
+* Manual deployment should be avoided.
+
+.. _git-flow: http://nvie.com/posts/a-successful-git-branching-model/
+.. _Shippable: http://www.shippable.com
+
+
 Provision
 ---------
 
@@ -40,24 +60,16 @@ the app to live in. The script assumes the application will live in
 This will install the required software, create the folder structures
 for the app and get the latest source of the app from its repository.
 
-You will then have to create the local settings file
-(``source/qcat/settings_local.py``) and set the database connection and
-adapt other settings.
+You will then have to create the environment variables and set the database
+connection and adapt other settings: :doc:`/configuration/settings`
 
 
 Deploy
 ------
 
-    .. warning::
-        The deploy script is sensible to the Git branch you are
-        currently on and will set the server to the last commit of the
-        current branch. So before you run the deploy command, make sure
-        to do a ``git checkout master`` or a ``git checkout develop``
-        respectively.
-
 To deploy the latest code to the server, use the following command::
 
-    (env)$ fab deploy -H [user]@[server]
+    (env)$ fab <environment> deploy -H [user]@[server]
 
 If needed, add and enable the site in Apache.
 

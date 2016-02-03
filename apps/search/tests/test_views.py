@@ -34,6 +34,7 @@ class AdminTest(TestCase):
     def test_requires_superuser_permissions(self):
         request = self.factory.get(self.url)
         request.user = create_new_user()
+        request.session = {}
         with self.assertRaises(PermissionDenied):
             admin(request)
 
@@ -41,6 +42,7 @@ class AdminTest(TestCase):
         request = self.factory.get(self.url)
         request.user = create_new_user()
         request.user.is_superuser = True
+        request.session = {}
         res = admin(request)
         self.assertEqual(res.status_code, 200)
 
@@ -55,6 +57,7 @@ class IndexTest(TestCase):
         user.is_superuser = True
         self.request = self.factory.get(self.url)
         self.request.user = user
+        self.request.session = {}
 
     def test_login_required(self, mock_messages):
         res = self.client.get(self.url, follow=True)
@@ -63,6 +66,7 @@ class IndexTest(TestCase):
     def test_requires_superuser_permissions(self, mock_messages):
         request = self.factory.get(self.url)
         request.user = create_new_user(id=99, email='foo@bar.com')
+        request.session = {}
         with self.assertRaises(PermissionDenied):
             index(request, 'foo')
 
@@ -147,6 +151,7 @@ class UpdateTest(TestCase):
         user.is_superuser = True
         self.request = self.factory.get(self.url)
         self.request.user = user
+        self.request.session = {}
 
     def test_login_required(self, mock_messages):
         res = self.client.get(self.url, follow=True)
@@ -155,6 +160,7 @@ class UpdateTest(TestCase):
     def test_requires_superuser_permissions(self, mock_messages):
         request = self.factory.get(self.url)
         request.user = create_new_user(id=99, email='foo@bar.com')
+        request.session = {}
         with self.assertRaises(PermissionDenied):
             update(request, 'foo')
 
@@ -222,6 +228,7 @@ class DeleteTest(TestCase):
         user.is_superuser = True
         self.request = self.factory.get(self.url)
         self.request.user = user
+        self.request.session = {}
 
     def test_login_required(self, mock_messages):
         res = self.client.get(self.url, follow=True)
@@ -230,6 +237,7 @@ class DeleteTest(TestCase):
     def test_requires_superuser_permissions(self, mock_messages):
         request = self.factory.get(self.url)
         request.user = create_new_user(id=99, email='foo@bar.com')
+        request.session = {}
         with self.assertRaises(PermissionDenied):
             delete_all(request)
 

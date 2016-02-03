@@ -1,0 +1,33 @@
+{% extends 'wocat/base.html' %}
+
+{% load staticfiles %}
+{% load i18n %}
+
+{% block content %}
+
+<section class="hero" data-equalizer>
+  <div class="row large-collapse" data-equalizer-watch>
+    <div class="medium-4 large-5 columns">
+      <h1 class="is-wocat">{% trans "404 - Not found" %}</h1>
+      <p class="is-large">{% trans "Sorry, the page you are looking for does not exist. Maybe you are looking for one of the following:" %}</p>
+      <div class="row">
+        <div class="medium-12 columns button-column">
+          <a href="{% url 'wocat:home' %}" class="button is-wocat">{% trans "WOCAT SLM practices" %}</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="medium-12 columns button-column">
+          <a href="{% url 'unccd:home' %}" class="button is-unccd">{% trans "UNCCD SLM practices" %}</a>
+        </div>
+      </div>
+      <div class="row">
+        <div class="medium-12 columns button-column">
+          <a href="/" class="button light">{% trans "Home" %}</a>
+        </div>
+      </div>
+    </div>
+  </div>
+    <div class="hero-media" id="not-found-hero-image" data-equalizer-watch></div>
+</section>
+
+{% endblock %}

@@ -1036,7 +1036,8 @@ def get_list_values(
                 source.get('updated', '')),
             'translations': translations,
             'code': source.get('code', ''),
-            'authors': source.get('authors', []),
+            'compilers': source.get('compilers', []),
+            'editors': source.get('editors', []),
         })
         list_entries.append(template_value)
 

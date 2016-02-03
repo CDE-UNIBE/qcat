@@ -1,0 +1,85 @@
+# Shippable CI/CD configuration file.
+# http://docs.shippable.com/en/latest/config.html#configuration
+language: python
+python: 3.4
+
+branches:
+  only:
+    - develop
+    # - master
+
+env:
+  # secure keys must include:
+  # HOST_STRING_DEV
+  # OPBEAT_APP_ID
+  # OPBEAT_ORGANIZATION_URL
+  # AUTH_API_USER
+  # AUTH_API_KEY
+  # these values are used for testing / deployment only, so the must not
+  # necessarily match the proper values from develop / production.
+
+  global:
+    - secure: Siv6eT2z7G3uHWMRUZIiZn8TuF2pyOoYVe3HvWzRFpYeBABNpIAZVYORIYxZZnNLl124V6+/vMJGFMjvB7DIj6lIaMMHCufYw+1Gfu7MePXsjCkz3kJgN2oeu86x1O2NpArtv5hVtzo544hyZdVahfnSNofoj31m/jzBrj57szJPS4WhnWy/dOMZTApZc55KUNzWtspQ63auu92rajJ/kO+iJGfn+7SjvcWoGqBBlW9t8daQjHGhOHRUGit9SEMlF6fOE7YQsxR+75cRYY7mW/m2XEi1Q8cugfAsuI5qUqk5FZcdFU3g/P7Mqm14LiOdPOWrkj0HfDMzzztIOMJGQybXC84aCpZSwr3U48C3Rh4B9Tkm2xBLf3S/ESTQJCNMHD6ZQUzpSRrgeRMO1XtH9/urwRxqaKAMdeGnIHsfyMV4XOvc7IpyJDjOFxaN+eZG1cxA23hG/k8FvEbK2HkgauY0yjedEG8FkBViXE+XZxNKQraBlYHZeS+2m73inpuYJ6yRRetyjS4hdH7fvhDzTRPaayIzBjpCJ3nmETRoe7D9lLkAL0auTR+x+RfMIzxfty2V8F3RgYfo4Nf6/R1qtI2b2NVyxNaMZ/7mTE/W/cfKAmd71TA/Q0boHLwXSkt/9coJ88DopLbbaqIFPe0m2br8vwuEiXvnt4A1dkR/YtM=
+
+cache: true
+
+#addons:
+#  - firefox: "48.0"
+
+#services:
+#  - selenium
+
+install:
+#  - sudo npm install --global npm@1.4.21
+#  - sudo npm install -g grunt-cli
+#  - npm install
+#  - bower install --allow-root
+#  - grunt build
+  - pip3 install -r requirements/development.txt
+  - pip3 install -r requirements/production.txt
+
+before_script:
+#  - "/etc/init.d/xvfb start"
+#  - "export DISPLAY=:99.0"
+#  # postgres for tests
+#  - psql -c 'CREATE ROLE qcat_test LOGIN SUPERUSER INHERIT CREATEDB CREATEROLE REPLICATION;' -U postgres
+#  - psql -c 'CREATE DATABASE "qcat_test";' -U postgres
+#  - psql -c 'CREATE EXTENSION postgis;' -U postgres -d qcat_test
+#  - psql -c "ALTER USER qcat_test WITH PASSWORD '123456';" -U postgres
+#  # postgres for the application
+#  - psql -c 'CREATE ROLE qcat LOGIN SUPERUSER INHERIT CREATEDB CREATEROLE REPLICATION;' -U postgres
+#  - psql -c 'CREATE DATABASE "qcat";' -U postgres
+#  - psql -c 'CREATE EXTENSION postgis;' -U postgres -d qcat
+#  - psql -c "ALTER USER qcat WITH PASSWORD '123456';" -U postgres
+#  # Put our 'apps' directory to the sys.path so our apps can be loaded..
+  - echo "`pwd`/apps" > /home/shippable/build_ve/python/3.4/lib/python3.4/site-packages/_qcat_path.pth
+  - echo "ProdDefaultSite" > envs/DJANGO_CONFIGURATION
+  - echo "qcat.settings" > envs/DJANGO_SETTINGS_MODULE
+  - echo "postgis://qcat:123456@localhost:5432/qcat" > envs/DATABASE_URL
+  - echo "123" > envs/DJANGO_SECRET_KEY
+#  # Prepare application: load initial data and create static assets.
+#  - python manage.py migrate --noinput
+#  - python load_qcat_data
+#  - python create_es_indexes
+#  - python manage.py collectstatic --noinput
+#  # For selenium
+#  - "export DISPLAY=:99.0"
+
+#script:
+#  - flake8
+#  - coverage run --source='.' manage.py test
+
+#after_script:
+#  - "/etc/init.d/xvfb stop"
+
+after_success:
+#  - mv coverage.xml shippable/codecoverage/
+#  - mv unittests.xml shippable/testresults/
+#  - mv reports/*.xml shippable/testresults/ && rmdir reports
+  - fab $BRANCH deploy
+  - fab register_deployment
+
+notifications:
+  email:
+    on_success: change
+    on_failure: always

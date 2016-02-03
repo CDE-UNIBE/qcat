@@ -112,6 +112,14 @@
     min-height: rem-calc(500);
   }
 }
+#not-found-hero-image {
+  background: url("/static/assets/img/home_header_02.jpg") $color-brown no-repeat top center;
+  background-size: cover;
+
+  @media #{$medium-up} {
+    min-height: rem-calc(500);
+  }
+}
 
 .hero-big {
   h2.is-unccd {

@@ -1,0 +1,56 @@
+{% load i18n %}
+
+{% if config.label and config.extra == 'label' %}
+  <h3>{{ config.label }}</h3>
+{% endif %}
+{% for rq in raw_questions %}
+  <div class="user_container output">
+    {% if rq.user_id %}
+      <h5>{{ rq.label_user_display }}{% if rq.label_user_display|last not in ".:!?" %}:{% endif %}</h5>
+      <p>{{ rq.user_display }}</p>
+    {% else %}
+      <div class="row">
+        <div class="columns small-6 output">
+          <h5>{% trans "Address" %}</h5>
+          <p>
+            {% if rq.person_firstname or rq.person_lastname %}
+              {{ rq.person_firstname|default:"" }} {{ rq.person_lastname|default:"" }}<br>
+            {% endif %}
+            {% if rq.person_phone_1 %}
+              {{ rq.person_phone_1 }}<br>
+            {% endif %}
+            {% if rq.person_phone_2 %}
+              {{ rq.person_phone_2 }}<br>
+            {% endif %}
+            {% if rq.person_email_1 %}
+              {{ rq.person_email_1 }}<br>
+            {% endif %}
+            {% if rq.person_email_2 %}
+              {{ rq.person_email_2 }}<br>
+            {% endif %}
+          </p>
+        </div>
+        <div class="columns small-6 output">
+          <h5>{% trans "Institution" %}</h5>
+          <p>
+            {% if rq.person_institution_name %}
+              {{ rq.person_institution_name }}<br>
+            {% endif %}
+            {% if rq.person_institution_address %}
+              {{ rq.person_institution_address }}<br>
+            {% endif %}
+            {% if rq.person_postal_code or rq.person_city %}
+              {{ rq.person_postal_code|default:"" }} {{ rq.person_city|default:"" }}<br>
+            {% endif %}
+            {% if rq.person_state %}
+              {{ rq.person_state }}<br>
+            {% endif %}
+            {% if rq.country %}
+              {{ rq.country.0 }}<br>
+            {% endif %}
+          </p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+{% endfor %}

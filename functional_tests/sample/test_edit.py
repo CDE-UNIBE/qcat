@@ -1,5 +1,7 @@
 from django.core.urlresolvers import reverse
+from unittest.mock import patch
 
+from accounts.client import Typo3Client
 from accounts.models import User
 from functional_tests.base import FunctionalTest
 from questionnaire.models import Questionnaire
@@ -42,6 +44,7 @@ def has_no_old_version_overview(browser):
         'different than the current one.")]')
 
 
+@patch.object(Typo3Client, 'get_user_id')
 class EditTest(FunctionalTest):
 
     fixtures = [
@@ -172,7 +175,7 @@ class EditTest(FunctionalTest):
     #     self.findByNot('xpath', '//article//*[text()="Foo"]')
     #     self.findBy('xpath', '//article//*[text()="Faz"]')
 
-    def test_creation_date_does_not_change(self):
+    def test_creation_date_does_not_change(self, mock_get_user_id):
 
         # Alice logs in
         user = User.objects.get(pk=102)
@@ -252,7 +255,7 @@ class EditTest(FunctionalTest):
         self.assertEqual(creation_date, dates[0].text)
         self.assertTrue(update_date != dates[1].text)
 
-    def test_edit_draft(self):
+    def test_edit_draft(self, mock_get_user_id):
 
         code = 'sample_1'
 
@@ -305,7 +308,7 @@ class EditTest(FunctionalTest):
         # Also there was no additional version created in the database
         self.assertEqual(Questionnaire.objects.count(), 10)
 
-    def test_edit_public(self):
+    def test_edit_public(self, mock_get_user_id):
 
         code = 'sample_3'
 
@@ -383,7 +386,7 @@ class EditTest(FunctionalTest):
             'contains(text(), "asdf")]').click()
         self.checkOnPage('asdf')
 
-    def test_edit_questionnaire(self):
+    def test_edit_questionnaire(self, mock_get_user_id):
 
         user = create_new_user(id=6, email='mod@bar.com')
         user.groups = [Group.objects.get(pk=3), Group.objects.get(pk=4)]
@@ -449,7 +452,7 @@ class EditTest(FunctionalTest):
         self.findByNot('xpath', '//p[text()="Foo"]')
         self.findBy('xpath', '//p[text()="asdf"]')
 
-    def test_show_message_of_changed_versions(self):
+    def test_show_message_of_changed_versions(self, mock_get_user_id):
 
         user = create_new_user(id=6, email='mod@bar.com')
         user.groups = [Group.objects.get(pk=3), Group.objects.get(pk=4)]

@@ -26,9 +26,17 @@
           <time datetime="{{ metadata.updated|date:"c" }}">{{ metadata.updated|date:"SHORT_DATETIME_FORMAT"|default:'&ndash;' }}</time>
         </li>
         <li>
-          <span class="is-muted">{% if metadata.authors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
-          {% for author in metadata.authors %}
-            <a rel="author" href="#" class="link">{{ author.name }}</a>{% if not forloop.last %}, {% endif %}
+          <span class="is-muted">{% if metadata.compilers|length > 1 %}{% trans "Compilers:" %}{% else %}{% trans "Compiler:" %}{% endif %}</span>
+          {% for compiler in metadata.compilers %}
+            <a rel="author" href="#" class="link">{{ compiler.name }}</a>{% if not forloop.last %}, {% endif %}
+          {% empty %}
+            &ndash;
+          {% endfor %}
+        </li>
+        <li>
+          <span class="is-muted">{% if metadata.editors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
+          {% for editor in metadata.editors %}
+            <a rel="author" href="#" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
           {% empty %}
             &ndash;
           {% endfor %}
@@ -66,17 +74,8 @@
     {% endif %}
 
     <div class="medium-12 columns output">
-      {% if raw_data.funding_project %}
-        <h5>{{ raw_data.label_funding_project }}{% if raw_data.label_funding_project|last not in ".:!?" %}: {% endif %}</h5>
-        <p>{{ raw_data.funding_project }}</p>
-      {% endif %}
-      {% if raw_data.accept_conditions %}
-        <h5>{{ raw_data.label_accept_conditions }}{% if raw_data.label_accept_conditions|last not in ".:!?" %}: {% endif %}</h5>
-        <p>{{ raw_data.accept_conditions.0 }}</p>
-      {% endif %}
-
       {% for subcategory, subcategory_config in subcategories %}
-        {% if subcategory_config.keyword == 'app__1__4' %}
+        {% if subcategory_config.keyword != 'app__0__1' and subcategory_config.keyword != 'app__1__1' %}
           {{ subcategory }}
         {% endif %}
       {% endfor %}

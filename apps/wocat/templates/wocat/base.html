@@ -9,7 +9,14 @@
 {% block navclass %}is-wocat{% endblock %}
 
 {% block logo %}
-  <h1><a href="{% url 'wocat:home' %}"><img src="{% static 'assets/img/wocat_logo.svg' %}" alt="{% trans "WOCAT" %}"></a><a href="{% url 'unccd:home' %}"><img src="{% static 'assets/img/unccd_mono_trans.png' %}" alt="{% trans "UNCCD" %}"></a></h1>
+  <h1>
+    <a href="{% url 'wocat:home' %}">
+      <img src="{% static 'assets/img/wocat_logo.svg' %}" alt="{% trans "WOCAT" %}" class="hide-on-print"><img src="{% static 'assets/img/wocat_logo_print.svg' %}" alt="{% trans "WOCAT" %}" class="print-only">
+    </a>
+    <a href="{% url 'unccd:home' %}">
+      <img src="{% static 'assets/img/unccd_mono_trans.png' %}" alt="{% trans "UNCCD" %}">
+    </a>
+  </h1>
 {% endblock %}
 
 {% block header %}

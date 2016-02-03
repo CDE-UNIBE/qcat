@@ -2,9 +2,7 @@ from django.core.urlresolvers import reverse
 from django.test.client import RequestFactory
 from unittest.mock import patch, Mock
 
-from accounts.tests.test_authentication import (
-    create_new_user,
-)
+from accounts.tests.test_models import create_new_user
 from qcat.tests import TestCase
 from sample.views import (
     home,
@@ -115,6 +113,9 @@ class QuestionnaireLinkFormTest(TestCase):
         self.factory = RequestFactory()
         self.url = reverse(
             route_questionnaire_link_form, kwargs={'identifier': 'foo'})
+        self.request = self.factory.get(self.url)
+        self.request.user = create_new_user()
+        self.request.session = {}
 
     def test_login_required(self):
         res = self.client.get(self.url, follow=True)
@@ -122,11 +123,9 @@ class QuestionnaireLinkFormTest(TestCase):
 
     @patch('sample.views.generic_questionnaire_link_form')
     def test_calls_generic_function(self, mock_questionnaire_link_form):
-        request = self.factory.get(self.url)
-        request.user = create_new_user()
-        questionnaire_link_form(request, identifier='foo')
+        questionnaire_link_form(self.request, identifier='foo')
         mock_questionnaire_link_form.assert_called_once_with(
-            request, *get_valid_link_form_values()[0],
+            self.request, *get_valid_link_form_values()[0],
             **get_valid_link_form_values()[1])
 
 
@@ -144,25 +143,23 @@ class QuestionnaireNewTest(TestCase):
     def setUp(self):
         self.factory = RequestFactory()
         self.url = reverse(route_questionnaire_new)
+        self.request = self.factory.get(self.url)
+        self.request.user = create_new_user()
+        self.request.session = {}
 
     def test_questionnaire_new_login_required(self):
         res = self.client.get(self.url, follow=True)
         self.assertTemplateUsed(res, 'login.html')
 
     def test_questionnaire_new_test_renders_correct_template(self):
-        request = self.factory.get(self.url)
-        request.user = create_new_user()
-        request.session = Mock()
-        res = questionnaire_new(request)
+        res = questionnaire_new(self.request)
         self.assertEqual(res.status_code, 200)
 
     @patch('sample.views.generic_questionnaire_new')
     def test_calls_generic_function(self, mock_questionnaire_new):
-        request = self.factory.get(self.url)
-        request.user = create_new_user()
-        questionnaire_new(request)
+        questionnaire_new(self.request)
         mock_questionnaire_new.assert_called_once_with(
-            request, *get_valid_new_values()[0], **get_valid_new_values()[1])
+            self.request, *get_valid_new_values()[0], **get_valid_new_values()[1])
 
 
 class QuestionnaireNewStepTest(TestCase):
@@ -175,27 +172,25 @@ class QuestionnaireNewStepTest(TestCase):
         self.url = reverse(
             route_questionnaire_new_step, kwargs={
                 'identifier': 'new', 'step': get_categories()[0][0]})
+        self.request = self.factory.get(self.url)
+        self.request.user = create_new_user()
+        self.request.session = {}
 
     def test_questionnaire_new_step_login_required(self):
         res = self.client.get(self.url, follow=True)
         self.assertTemplateUsed(res, 'login.html')
 
     def test_renders_correct_template(self):
-        request = self.factory.get(self.url)
-        request.user = create_new_user()
-        request.session = Mock()
         res = questionnaire_new_step(
-            request, identifier='new', step=get_categories()[0][0])
+            self.request, identifier='new', step=get_categories()[0][0])
         self.assertEqual(res.status_code, 200)
 
     @patch('sample.views.generic_questionnaire_new_step')
     def test_calls_generic_function(self, mock_questionnaire_new_step):
-        request = self.factory.get(self.url)
-        request.user = create_new_user()
         questionnaire_new_step(
-            request, identifier='new', step=get_categories()[0][0])
+            self.request, identifier='new', step=get_categories()[0][0])
         mock_questionnaire_new_step.assert_called_once_with(
-            request, *get_valid_new_step_values()[0],
+            self.request, *get_valid_new_step_values()[0],
             **get_valid_new_step_values()[1])
 
 

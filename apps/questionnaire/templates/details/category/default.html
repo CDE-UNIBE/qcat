@@ -5,7 +5,7 @@
 {% endif %}
 
 {% if subcategories or 'edit_questionnaire' in permissions %}
-  <section id="{{ keyword }}" class="tech-section is-rhythmed row" data-magellan-destination="{{ keyword }}">
+  <section id="{{ keyword }}" class="tech-section is-rhythmed row{% if not subcategories %} is-empty-section{% endif %}" data-magellan-destination="{{ keyword }}">
     <a name="{{ keyword }}"></a>
     {% if 'edit_questionnaire' in permissions and edit_step_route %}
       <div class="medium-9 columns">

@@ -1,100 +1,73 @@
 from django.contrib import messages
 from django.contrib.auth import (
     logout as django_logout,
+    login as django_login,
 )
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.urlresolvers import reverse
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404
+from django.shortcuts import render, get_object_or_404, redirect, resolve_url
+from django.utils.decorators import method_decorator
+from django.utils.http import is_safe_url
+from django.utils.timezone import now
+from django.views.decorators.cache import never_cache
+from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.http import require_POST
-from qcat.utils import url_with_querystring
-from accounts.authentication import (
-    get_login_url,
-    get_logout_url,
-    get_session_cookie_name,
-    get_user_information,
-    search_users,
-    update_user,
-)
-from accounts.models import User
+from django.views.generic import FormView
+
 from questionnaire.views import generic_questionnaire_list_no_config
+from .client import typo3_client
+from .conf import settings
+from .decorators import force_login_check
+from .forms import WocatAuthenticationForm
+from .models import User
 
 
-def welcome(request):
+class LoginView(FormView):
     """
-    The landing page of a user after he logged in. Update the user
-    details and redirect to the page provided or "home".
-
-    Args:
-        ``request`` (django.http.HttpRequest): The request object.
-
-    Returns:
-        ``HttpResponse``. A rendered Http Response (through redirect)
+    This view handles the login form and authenticates users.
     """
-    home = reverse('home')
-    redirect = request.GET.get('next', home)
+    form_class = WocatAuthenticationForm
+    template_name = 'login.html'
+    success_url = settings.ACCOUNTS_LOGIN_SUCCESS_URL
 
-    # In case the user was not logged in properly route him to "home"
-    if not request.user.is_authenticated():
-        return HttpResponseRedirect(reverse('home'))
-    session_id = request.COOKIES.get(get_session_cookie_name())
-    if session_id is None:
-        return HttpResponseRedirect(reverse('home'))
+    @method_decorator(never_cache)
+    @method_decorator(sensitive_post_parameters('password'))
+    def dispatch(self, *args, **kwargs):
+        if hasattr(self.request, 'user') and \
+                self.request.user.is_authenticated():
+            return redirect(self.get_success_url())
+        return super(LoginView, self).dispatch(*args, **kwargs)
 
-    # Update the user information
-    user = request.user
-    user_info = get_user_information(user.id)
-    update_user(user, user_info)
+    def form_valid(self, form):
+        # Put the user on the request, and add a welcome message.
+        user = form.get_user()
+        django_login(self.request, user)
+        messages.info(self.request, 'Welcome {}'.format(user.firstname))
 
-    messages.info(
-        request, 'Welcome {}'.format(user_info.get('first_name')))
+        # Get the response, add a cookie and return it.
+        response = HttpResponseRedirect(self.get_success_url())
+        # We really should set a signed cookie - but the same cookie is used
+        # on wocat.net.
+        response.set_cookie(
+            key=settings.AUTH_COOKIE_NAME,
+            value=user.typo3_session_id
+        )
+        response.set_signed_cookie(
+            key=settings.ACCOUNTS_ENFORCE_LOGIN_COOKIE_NAME,
+            value=now(),
+            salt=settings.ACCOUNTS_ENFORCE_LOGIN_SALT
+        )
+        return response
 
-    return HttpResponseRedirect(redirect)
-
-
-def login(request):
-    """
-    Show the login form or log in and redirect if the user is already
-    authenticated. The actual authentication is handled by the
-    authentication backend as specified in the settings (
-    ``settings.AUTH_LOGIN_FORM``).
-
-    .. seealso::
-        :func:`accounts.authentication.get_login_url`
-
-    After login, the user is sent to the welcome page where he is logged
-    in in Django. Afterwards, he is redirected to the provided page
-    (``next``) or to "home".
-
-    * If the user is already logged in by Django: Redirect to the
-      provided URL or to "home".
-
-    * If the user is not logged in by Django and has no Session ID set,
-      the login form is shown.
-
-    Args:
-        ``request`` (django.http.HttpRequest): The request object.
-
-    Returns:
-        ``HttpResponse``. A rendered Http Response.
-    """
-    redirect = request.GET.get('next', reverse('home'))
-
-    if request.user.is_authenticated():
-        return HttpResponseRedirect(redirect)
-
-    # Prevent that the URL is already encoded by inserting it afterwards
-    welcome_url = url_with_querystring(
-        reverse('welcome'), next='REDIRECT_URL')
-    welcome_url = welcome_url.replace('REDIRECT_URL', redirect)
-
-    return render(
-        request, 'login.html', {
-            'redirect_url': request.build_absolute_uri(welcome_url),
-            'login_url': get_login_url(),
-            'show_notice': redirect != reverse('home')
-        })
+    def get_success_url(self):
+        # Explicitly passed ?next= url takes precedence.
+        redirect_to = self.request.GET.get('next') or reverse(self.success_url)
+        # Prevent redirecting to other/invalid hosts - i.e. prevent xsrf
+        if not is_safe_url(url=redirect_to, host=self.request.get_host()):
+            redirect_to = resolve_url(settings.LOGIN_REDIRECT_URL)
+        return redirect_to
 
 
 def logout(request):
@@ -108,16 +81,22 @@ def logout(request):
     Returns:
         ``HttpResponse``. A rendered Http Response.
     """
-    redirect = reverse('home')
+    url = reverse('home')
 
     django_logout(request)
 
-    ses_id = request.COOKIES.get(get_session_cookie_name())
+    ses_id = request.COOKIES.get(settings.AUTH_COOKIE_NAME)
     if ses_id is not None:
-        return HttpResponseRedirect(
-            get_logout_url(request.build_absolute_uri(redirect)))
+        response = HttpResponseRedirect(
+            typo3_client.get_logout_url(request.build_absolute_uri(url))
+        )
+        # The cookie is not always removed on wocat.net
+        response.delete_cookie(settings.AUTH_COOKIE_NAME)
+    else:
+        response = HttpResponseRedirect(url)
 
-    return HttpResponseRedirect(redirect)
+    response.delete_cookie(settings.ACCOUNTS_ENFORCE_LOGIN_COOKIE_NAME)
+    return response
 
 
 def questionnaires(request, user_id):
@@ -139,6 +118,7 @@ def questionnaires(request, user_id):
 
 
 @login_required
+@force_login_check
 def moderation(request):
     """
     View to show only pending Questionnaires to a moderator. Moderation
@@ -172,7 +152,7 @@ def user_search(request):
     Returns:
         ``JsonResponse``. A rendered JSON response.
     """
-    search = search_users(name=request.GET.get('name', ''))
+    search = typo3_client.search_users(name=request.GET.get('name', ''))
     if not search:
         search = {
             'success': False,
@@ -207,7 +187,7 @@ def user_update(request):
         return JsonResponse(ret)
 
     # Try to find the user in the authentication DB
-    user_info = get_user_information(user_uid)
+    user_info = typo3_client.get_user_information(user_uid)
     if not user_info:
         ret['message'] = 'No user with ID {} found in the authentication '
         'database.'.format(user_uid)
@@ -215,7 +195,7 @@ def user_update(request):
 
     # Update (or insert) the user details in the local database
     user, created = User.objects.get_or_create(pk=user_uid)
-    update_user(user, user_info)
+    typo3_client.update_user(user, user_info)
 
     ret = {
         'name': user.get_display_name(),
@@ -240,8 +220,8 @@ def details(request, id):
     user = get_object_or_404(User, pk=id)
 
     # Update the user details
-    user_info = get_user_information(user.id)
-    update_user(user, user_info)
+    user_info = typo3_client.get_user_information(user.id)
+    typo3_client.update_user(user, user_info)
 
     return render(request, 'details.html', {
         'detail_user': user,

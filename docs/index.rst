@@ -64,6 +64,16 @@ page of the project. Or see the `List of ToDo's`_ for open issues.
 .. _Redmine: https://redmine.cde.unibe.ch/projects/unccd-bp/issues
 .. _List of ToDo's: todos.html
 
+
+Hosting
+-------
+
+.. toctree::
+    :maxdepth: 2
+
+    hosting/server_configuration
+
+
 Latest changes
 ~~~~~~~~~~~~~~
 

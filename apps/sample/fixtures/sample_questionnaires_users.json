@@ -58,7 +58,7 @@
     "fields": {
         "questionnaire": 1,
         "user": 101,
-        "role": "author"
+        "role": "compiler"
     },
     "model": "questionnaire.questionnairemembership"
 },

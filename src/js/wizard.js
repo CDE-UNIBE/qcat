@@ -398,7 +398,7 @@ $(function() {
   });
 
   // Select inputs with chosen
-  $(".chosen-select").chosen();
+  $(".chosen-select").chosen({width: '100%'});
 
   $('.sortable').sortable({
     handle: '.questiongroup-numbered-number',

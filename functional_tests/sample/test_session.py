@@ -1,7 +1,9 @@
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
+from unittest.mock import patch
 
+from accounts.client import Typo3Client
 from accounts.tests.test_models import create_new_user
 from functional_tests.base import FunctionalTest
 from sample.tests.test_views import (
@@ -21,6 +23,7 @@ from nose.plugins.attrib import attr  # noqa
 TEST_INDEX_PREFIX = 'qcat_test_prefix_'
 
 
+@patch.object(Typo3Client, 'get_user_id')
 @override_settings(ES_INDEX_PREFIX=TEST_INDEX_PREFIX)
 class SessionTest(FunctionalTest):
 
@@ -54,7 +57,7 @@ class SessionTest(FunctionalTest):
     #     # self.assertEqual(self.browser.current_url, 'foo')
     #     self.findBy('id', 'button-submit').click()
 
-    def test_sessions_separated_by_configuration(self):
+    def test_sessions_separated_by_configuration(self, mock_get_user_id):
 
         # Alice logs in
         self.doLogin()
@@ -113,13 +116,14 @@ class SessionTest(FunctionalTest):
         self.findByNot('xpath', '//article//*[text()[contains(.,"Bar")]]')
 
 
+@patch.object(Typo3Client, 'get_user_id')
 class SessionTest2(FunctionalTest):
 
     fixtures = [
         'groups_permissions.json', 'sample_global_key_values.json',
         'sample.json']
 
-    def test_sessions_separated_by_questionnaire(self):
+    def test_sessions_separated_by_questionnaire(self, mock_get_user_id):
 
         cat_1_position = get_position_of_category('cat_1')
 

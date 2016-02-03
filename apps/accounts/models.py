@@ -25,6 +25,7 @@ class User(AbstractBaseUser, PermissionsMixin):
     firstname = models.CharField(max_length=255, null=True, blank=True)
     lastname = models.CharField(max_length=255, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
+    typo3_session_id = models.CharField(max_length=255, blank=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

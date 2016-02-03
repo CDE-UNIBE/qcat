@@ -277,6 +277,272 @@
   },
   {
     "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "User ID"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "User ID"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5014
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Registered user"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Registered user"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5015
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Lastname / surname"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Lastname / surname"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5016
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "First name(s)"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "First name(s)"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5017
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Gender"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Gender"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5018
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Name of institution"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Name of institution"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5019
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Address of institution"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Address of institution"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5020
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Postal Code"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Postal Code"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5021
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "City"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "City"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5022
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "State or District"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "State or District"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5023
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Phone no. 1"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Phone no. 1"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5024
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Phone no. 2 (mobile)"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Phone no. 2 (mobile)"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5025
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "E-mail 1"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "E-mail 1"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5026
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "E-mail 2"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "E-mail 2"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5027
+  },
+  {
+    "fields": {
       "translation_type": "value",
       "data": {
         "wocat": {
@@ -4693,6 +4959,44 @@
   },
   {
     "fields": {
+      "translation_type": "value",
+      "data": {
+        "technologies": {
+          "label": {
+            "en": "female"
+          }
+        },
+        "approaches": {
+          "label": {
+            "en": "female"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5762
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "technologies": {
+          "label": {
+            "en": "male"
+          }
+        },
+        "approaches": {
+          "label": {
+            "en": "male"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5763
+  },
+  {
+    "fields": {
       "translation_type": "category",
       "data": {
         "approaches": {
@@ -5151,6 +5455,164 @@
     },
     "model": "configuration.key",
     "pk": 13
+  },
+  {
+    "fields": {
+      "keyword": "user_id",
+      "translation": 5014,
+      "configuration": {
+        "type": "user_id"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 14
+  },
+  {
+    "fields": {
+      "keyword": "user_display",
+      "translation": 5015,
+      "configuration": {
+        "type": "user_display"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 15
+  },
+  {
+    "fields": {
+      "keyword": "person_lastname",
+      "translation": 5016,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 16
+  },
+  {
+    "fields": {
+      "keyword": "person_firstname",
+      "translation": 5017,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 17
+  },
+  {
+    "fields": {
+      "keyword": "person_gender",
+      "translation": 5018,
+      "configuration": {
+        "type": "radio"
+      },
+      "values": [
+        262,
+        263
+      ]
+    },
+    "model": "configuration.key",
+    "pk": 18
+  },
+  {
+    "fields": {
+      "keyword": "person_institution_name",
+      "translation": 5019,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 19
+  },
+  {
+    "fields": {
+      "keyword": "person_institution_address",
+      "translation": 5020,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 20
+  },
+  {
+    "fields": {
+      "keyword": "person_postal_code",
+      "translation": 5021,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 21
+  },
+  {
+    "fields": {
+      "keyword": "person_city",
+      "translation": 5022,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 22
+  },
+  {
+    "fields": {
+      "keyword": "person_state",
+      "translation": 5023,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 23
+  },
+  {
+    "fields": {
+      "keyword": "person_phone_1",
+      "translation": 5024,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 24
+  },
+  {
+    "fields": {
+      "keyword": "person_phone_2",
+      "translation": 5025,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 25
+  },
+  {
+    "fields": {
+      "keyword": "person_email_1",
+      "translation": 5026,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 26
+  },
+  {
+    "fields": {
+      "keyword": "person_email_2",
+      "translation": 5027,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 27
   },
   {
     "fields": {
@@ -7251,6 +7713,24 @@
     },
     "model": "configuration.value",
     "pk": 261
+  },
+  {
+    "fields": {
+      "keyword": "gender_female",
+      "translation": 5762,
+      "order_value": 1
+    },
+    "model": "configuration.value",
+    "pk": 262
+  },
+  {
+    "fields": {
+      "keyword": "gender_male",
+      "translation": 5763,
+      "order_value": 2
+    },
+    "model": "configuration.value",
+    "pk": 263
   },
   {
     "fields": {

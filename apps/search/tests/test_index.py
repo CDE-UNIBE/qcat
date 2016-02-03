@@ -118,7 +118,7 @@ class GetMappingsTest(TestCase):
         mock_Conf.get_questiongroups.return_value = []
         mappings = get_mappings(mock_Conf)
         q_props = mappings.get('questionnaire').get('properties')
-        self.assertEqual(len(q_props), 9)
+        self.assertEqual(len(q_props), 10)
         self.assertEqual(q_props['data'], {'properties': {}})
         self.assertEqual(q_props['created'], {'type': 'date'})
         self.assertEqual(q_props['updated'], {'type': 'date'})
@@ -128,7 +128,12 @@ class GetMappingsTest(TestCase):
         self.assertIn('name', q_props)
         self.assertIn('links', q_props)
         self.assertEqual(
-            q_props['authors'],
+            q_props['compilers'],
+            {'type': 'nested', 'properties': {
+                'id': {'type': 'integer'},
+                'name': {'type': 'string'}}})
+        self.assertEqual(
+            q_props['editors'],
             {'type': 'nested', 'properties': {
                 'id': {'type': 'integer'},
                 'name': {'type': 'string'}}})
@@ -389,7 +394,8 @@ class PutQuestionnaireDataTest(TestCase):
                 'name': {'en': 'Unknown name'},
                 'configurations': ['configuration'],
                 'translations': ['en'],
-                'authors': ['author'],
+                'compilers': ['compiler'],
+                'editors': ['editor'],
                 'links': {'es': [], 'en': [], 'fr': []},
             }
         }]

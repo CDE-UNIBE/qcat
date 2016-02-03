@@ -1,34 +1,42 @@
 {% extends 'base.html' %}
 
 {% load i18n %}
+{% load floppyforms %}
 
 {% block bodyclass %}layout-wocat{% endblock %}
 {% block navclass %}is-wocat{% endblock %}
 
 {% block content %}
-  <div class="row">
-    <div class="large-12 columns">
-      {% if show_notice %}
-        <div class="alert-box info">{% trans "Please log in to access" %} {{ redirect_url }}</div>
-      {% endif %}
-      <h3>{% trans "Login" %}</h3>
-      <form action="{{ login_url }}" method="post">
-        <input type='hidden' name='csrfmiddlewaretoken' value='t40MEbP2o8C1q8xSj9oqWrqr3Uam8yqz' />
-        <tr><th><label for="id_email">{% trans "Email" %}:</label></th><td><input id="id_email" name="user" type="email" required="required"/></td></tr>
-        <tr><th><label for="id_password">{% trans "Password" %}:</label></th><td><input id="id_password" name="pass" type="password" required="required"/></td></tr>
-        <input id="button_login" type="submit" name="submit" class="button" value="{% trans "Login" %}" />
-        <input type="hidden" name="logintype" value="login">
-        <input type="hidden" name="pid" value="3">
-        <input type="hidden" name="redirect_url" value="{{ redirect_url }}">
-      </form>
+    <div class="row">
+        <div class="large-12 columns">
+            {% if show_notice %}
+                <div class="alert-box info">{% trans "Please log in to access" %} {{ redirect_url }}</div>
+            {% endif %}
+            <h3>{% trans "Login" %}</h3>
+                <form action="{{ login_url }}" method="post">
+                    {% csrf_token %}
+                    {% formrow form.username %}
+                    {% formrow form.password %}
+                    {% if form.non_field_errors %}
+                        {{ form.non_field_errors }}
+                    {% endif %}
+                    <input id="button_login" type="submit" name="submit"
+                           class="button" value="{% trans "Login" %}"/>
+                </form>
+
+        </div>
     </div>
-  </div>
-  <div class="row is-rhythmed-2">
-    <div class="large-12 columns">
-      <h5>{% trans "No login?" %}</h5>
-      <p>{% trans "If you do not yet have a login, please visit " %}<a href="{{ login_url }}" class="link">{% trans "WOCAT" %}</a>{% trans " and register for a free account." %}</p>
-      <h5>{% trans "Forgot your password?" %}</h5>
-      <p>{% trans "Please visit " %}<a href="{{ login_url }}" class="link">{% trans "WOCAT" %}</a>{% trans " and reset your password." %}</p>
+    <div class="row is-rhythmed-2">
+        <div class="large-12 columns">
+            <h5>{% trans "No login?" %}</h5>
+            <p>{% trans "If you do not yet have a login, please visit " %}<a
+                    href="{{ login_url }}"
+                    class="link">{% trans "WOCAT" %}</a>{% trans " and register for a free account." %}
+            </p>
+            <h5>{% trans "Forgot your password?" %}</h5>
+            <p>{% trans "Please visit " %}<a href="{{ login_url }}"
+                                             class="link">{% trans "WOCAT" %}</a>{% trans " and reset your password." %}
+            </p>
+        </div>
     </div>
-  </div>
 {% endblock %}

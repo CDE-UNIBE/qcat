@@ -6,9 +6,7 @@ from django.http.response import HttpResponse
 from django.test.client import RequestFactory
 from unittest.mock import patch, Mock
 
-from accounts.tests.test_authentication import (
-    create_new_user,
-)
+from accounts.tests.test_models import create_new_user
 from configuration.configuration import (
     QuestionnaireConfiguration,
     QuestionnaireCategory,
@@ -55,7 +53,7 @@ class GenericQuestionnaireLinkFormTest(TestCase):
         self.url = '/sample/edit/links'
         self.request = self.factory.get(self.url)
         self.request.user = create_new_user()
-        self.request.session = Mock()
+        self.request.session = {}
 
     def test_requires_login(self):
         self.client.logout()
@@ -102,7 +100,7 @@ class GenericQuestionnaireLinkFormTest(TestCase):
             'overview_url': '/en/sample/edit/foo/#links',
             'link_forms': [(
                 {
-                    'label': 'samplemulti',
+                    'label': '',
                     'keyword': 'samplemulti',
                     'search_url': '/en/samplemulti/search/links/',
                 }, []
@@ -188,7 +186,7 @@ class GenericQuestionnaireNewStepTest(TestCase):
         self.factory = RequestFactory()
         self.request = self.factory.get('/sample/new/cat_1')
         self.request.user = create_new_user()
-        self.request.session = Mock()
+        self.request.session = {}
 
     @patch('questionnaire.views.get_configuration')
     def test_calls_get_configuration(self, mock_get_configuration):
@@ -280,7 +278,7 @@ class GenericQuestionnaireNewTest(TestCase):
         self.factory = RequestFactory()
         self.request = self.factory.get('/sample/new')
         self.request.user = create_new_user()
-        self.request.session = Mock()
+        self.request.session = {}
 
     @patch('questionnaire.views.get_configuration')
     def test_calls_get_configuration(self, mock_get_configuration):
@@ -734,6 +732,7 @@ class GenericFileUploadTest(TestCase):
         self.url = reverse(file_upload_route)
         self.request = self.factory.post(self.url)
         self.request.user = create_new_user()
+        self.request.session = {}
 
     def test_upload_login_required(self):
         self.client.logout()

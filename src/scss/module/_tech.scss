@@ -212,6 +212,15 @@ h4.output-subcategory {
   }
 }
 
+.user_container {
+  border: 1px solid $color-beige;
+  padding: 0 rem-calc(12) rem-calc(12);
+
+  + .user_container {
+    margin-top: rem-calc(12);
+  }
+}
+
 .aside-questiongroup {
   margin-left: 125px;
   h5, p, ul {

@@ -17,6 +17,7 @@ from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _, get_language
 from django.views.decorators.http import require_POST
 
+from accounts.decorators import force_login_check
 from configuration.cache import get_configuration
 from configuration.models import Configuration
 from configuration.utils import (
@@ -61,6 +62,7 @@ from search.search import advanced_search
 
 
 @login_required
+@force_login_check
 def generic_questionnaire_link_form(
         request, configuration_code, url_namespace, page_title='QCAT Links',
         identifier=None):
@@ -304,6 +306,7 @@ def generic_questionnaire_view_step(
 
 
 @login_required
+@force_login_check
 def generic_questionnaire_new_step(
         request, step, configuration_code, url_namespace,
         page_title='QCAT Form', identifier=None):
@@ -494,6 +497,7 @@ def generic_questionnaire_new_step(
 
 
 @login_required
+@force_login_check
 def generic_questionnaire_new(
         request, configuration_code, template, url_namespace, identifier=None):
     """
@@ -951,6 +955,7 @@ def generic_questionnaire_list(
 
 @login_required
 @require_POST
+@force_login_check
 def generic_file_upload(request):
     """
     A view to handle file uploads. Can only be called with POST requests

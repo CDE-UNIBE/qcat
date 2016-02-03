@@ -1,8 +1,10 @@
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
-from functional_tests.base import FunctionalTest
+from unittest.mock import patch
 
+from accounts.client import Typo3Client
 from accounts.models import User
+from functional_tests.base import FunctionalTest
 from sample.tests.test_views import (
     # get_position_of_category,
     # route_home,
@@ -20,6 +22,7 @@ TEST_INDEX_PREFIX = 'qcat_test_prefix_'
 
 
 @override_settings(ES_INDEX_PREFIX=TEST_INDEX_PREFIX)
+@patch.object(Typo3Client, 'get_user_id')
 class LinkTests(FunctionalTest):
 
     fixtures = [
@@ -61,7 +64,7 @@ class LinkTests(FunctionalTest):
         super(LinkTests, self).tearDown()
         delete_all_indices()
 
-    def test_show_only_one_linked_version(self):
+    def test_show_only_one_linked_version(self, mock_get_user_id):
 
         # Alice logs in
         user = User.objects.get(pk=101)

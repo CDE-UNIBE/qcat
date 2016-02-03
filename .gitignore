@@ -26,6 +26,3 @@ coverage_html
 bower_components
 node_modules
 static
-
-# Ignore environment variables
-envs/

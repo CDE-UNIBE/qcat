@@ -1,13 +1,16 @@
 from django.contrib.auth.models import Group
 from django.contrib.auth import get_user_model
-User = get_user_model()
 from django.core.exceptions import ValidationError
-
 from qcat.tests import TestCase
+User = get_user_model()
 
 
 def create_new_user(id=1, email='a@b.com', lastname='foo', firstname='bar'):
-    return User.create_new(id, email, lastname=lastname, firstname=firstname)
+    user, created = User.objects.get_or_create(
+        id=id, email=email,
+        defaults={'lastname': lastname, 'firstname': firstname}
+    )
+    return user
 
 
 class UserModelTestWithFixtures(TestCase):
@@ -95,7 +98,7 @@ class UserModelTestFixtures(TestCase):
 
     def test_get_questionnaires_returns_tuples(self):
         from questionnaire.tests.test_models import get_valid_questionnaire
-        user = create_new_user(id=2, email='foo@bar.com')
+        user = create_new_user(id=3, email='foo@bar.com')
         questionnaire_1 = get_valid_questionnaire(user=user)
         questionnaire_2 = get_valid_questionnaire()
         questionnaire_2.add_user(user, 'landuser')

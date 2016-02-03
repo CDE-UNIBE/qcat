@@ -20,9 +20,11 @@
     bottom: A block at the bottom of the body to add additional JS files.
 {% endcomment %}
 
-{% load staticfiles %}
-{% load i18n %}
 {% load clean_language_url %}
+{% load compress %}
+{% load i18n %}
+{% load staticfiles %}
+{% load sekizai_tags %}
 
 <!DOCTYPE html>
   <!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
@@ -33,14 +35,30 @@
     <meta charset="utf-8"/>
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <title>{% block title %}QCAT{% endblock %}</title>
-    <meta name="description" content="">
+    <meta name="description" content="WOCAT is an established global network which supports innovation and decision-making processes in Sustainable Land Management.">
     <meta name="viewport" content="width=device-width, initial-scale=1">
+    <meta http-equiv="content-language" content="{{ request.LANGUAGE_CODE }}" />
 
     <!-- Theme styles -->
-    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+    {% compress css %}
+        <link rel="stylesheet" href="{% static 'css/app.css' %}" />
+    {% endcompress %}
 
-    <!-- ModernizR -->
-    <script src="{% static 'js/modernizr.js' %}"></script>
+    {% compress js %}
+      <!-- todo: measure if cdns are benefitial for rural areas -->
+      <script src="{% static 'js/modernizr.js' %}"></script>
+    {% endcompress %}
+
+    {% render_block "css" %}
+    {% render_block "js_head" %}
+
+    {% block social_meta_tags %}
+      <meta property="og:image" content="{{ request.get_host }}{% static 'assets/img/wocat_logo.svg' %}"/>
+      <meta property="og:title" content="wocat.net"/>
+      <meta property="og:url" content="{{ request.build_absolute_uri }}"/>
+      <meta property="og:site_name" content="wocat.net"/>
+      <meta property="og:description" content="WOCAT is an established global network which supports innovation and decision-making processes in Sustainable Land Management."/>
+    {% endblock %}
 
   </head>
   <body class="{% block bodyclass %}layout-wocat{% endblock %}">
@@ -64,7 +82,16 @@
       <nav class="top-bar {% block navclass %}is-wocat{% endblock %}" role="navigation" data-topbar="" data-options="is_hover: false">
         <ul class="title-area">
           <li class="name">
-            {% block logo %}<h1><a href="{% url 'home' %}"><img src="{% static 'assets/img/wocat_logo.svg' %}" alt="{% trans "WOCAT" %}"></a><a href="{% url 'home' %}"><img src="{% static 'assets/img/unccd_mono_logo.png' %}" alt="{% trans "UNCCD" %}"></a></h1>{% endblock %}
+            {% block logo %}
+              <h1>
+                <a href="{% url 'home' %}">
+                  <img src="{% static 'assets/img/wocat_logo.svg' %}" alt="{% trans "WOCAT" %}" class="hide-on-print"><img src="{% static 'assets/img/wocat_logo_print.svg' %}" alt="{% trans "WOCAT" %}" class="print-only">
+                </a>
+                <a href="{% url 'home' %}">
+                  <img src="{% static 'assets/img/unccd_mono_logo.png' %}" alt="{% trans "UNCCD" %}">
+                </a>
+              </h1>
+            {% endblock %}
           </li>
 
           <li class="toggle-topbar menu-icon"><a href="#"><span>{% trans "Menu" %}</span></a></li>
@@ -139,6 +166,15 @@
     {% block content %}
     {% endblock %}
 
+    <!-- Block for js within specific templates. Add compress in the template.  -->
+    {% render_block "js" %}
+    {% compress js %}
+      <script src="{% static 'js/jquery.min.js' %}"></script>
+      <script src="{% static 'js/foundation.min.js' %}"></script>
+      <script src="{% static 'js/jquery.nstSlider.min.js' %}"></script>
+      <script src="{% static 'js/main.min.js' %}"></script>
+    {% endcompress %}
+
     <footer class="row page-footer large-collapse" role="contentinfo">
       <nav class="sub-nav-footer medium-6 columns">
         <a href="" class="link">{% trans "About" %}</a> | <a href="" class="link">{% trans "FAQ" %}</a> | <a href="" class="link">{% trans "Contact" %}</a>
@@ -147,11 +183,6 @@
         © 2015 - <a href="http://www.wocat.net/" target="_blank" class="link">{% trans "WOCAT" %}</a>
       </div>
     </footer>
-
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/foundation.min.js' %}"></script>
-    <script src="{% static 'js/jquery.nstSlider.min.js' %}"></script>
-    <script src="{% static 'js/main.min.js' %}"></script>
 
     {% block bottom %}
     {% endblock %}

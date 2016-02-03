@@ -60,7 +60,22 @@
             </div>
             <div class="content form-user-tab-create">
               {% for field in f.visible_fields %}
-                <div class="row single-item">
+
+                {% if forloop.counter == 3 %}
+                  <div class="row single-item">
+                {% elif forloop.counter == 6 or forloop.counter == 7 %}
+                  <div class="row single-item">
+                {% elif forloop.counter >= 8 and forloop.counter|divisibleby:2 %}
+                  <div class="row single-item">
+                {% endif %}
+
+                {% if forloop.counter >= 3 and forloop.counter <= 5 %}
+                  <div class="small-4 columns">
+                {% elif forloop.counter == 6 or forloop.counter == 7 %}
+                  <div class="small-12 columns">
+                {% else %}
+                  <div class="small-6 columns">
+                {% endif %}
                   {% if forloop.last %}{% formconfig row with hidden_fields=f.hidden_fields %}{% endif %}
                   {% with template=config.templates|get_by_keyword:field.name options=config.options|get_by_keyword:field.name %}
                     {% if template %}
@@ -69,7 +84,20 @@
                       {% formrow field using "form/question/default.html" %}
                     {% endif %}
                   {% endwith %}
-                </div>
+
+                {% if forloop.counter >= 3 and forloop.counter <= 5 %}
+                  </div>
+                {% else %}
+                  </div>
+                {% endif %}
+
+                {% if forloop.counter == 5 %}
+                  </div>
+                {% elif forloop.counter == 6 or forloop.counter == 7 %}
+                  </div>
+                {% elif forloop.counter >= 9 and not forloop.counter|divisibleby:2 %}
+                  </div>
+                {% endif %}
               {% endfor %}
             </div>
           </div>

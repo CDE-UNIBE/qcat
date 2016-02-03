@@ -8,6 +8,8 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from unittest import skipUnless
 
+from accounts.authentication import WocatAuthenticationBackend
+from accounts.client import Typo3Client
 from qcat.tests import TEST_CACHES
 from unittest.mock import patch
 from accounts.tests.test_models import create_new_user
@@ -121,15 +123,20 @@ class FunctionalTest(StaticLiveServerTestCase):
     def changeLanguage(self, locale):
         self.findBy('xpath', '//a[@data-language="{}"]'.format(locale)).click()
 
-    @patch('accounts.authentication.auth_authenticate')
-    def doLogin(self, mock_authenticate, user=None):
+    @patch.object(Typo3Client, 'get_and_update_django_user')
+    @patch.object(WocatAuthenticationBackend, 'authenticate')
+    def doLogin(self, mock_authenticate, mock_get_and_update_django_user, user=None):
+        self.doLogout()
         if user is None:
             user = create_new_user()
-        user.backend = 'accounts.authentication.WocatAuthenticationBackend'
         mock_authenticate.return_value = user
-        self.browser.get(self.live_server_url + '/404_no_such_url/')
-        self.browser.add_cookie({'name': 'fe_typo_user', 'value': 'foo'})
-        self.browser.get(self.live_server_url + reverse(loginRouteName))
+        mock_authenticate.__name__ = ''
+        mock_get_and_update_django_user.return_value = user
+        with patch('accounts.client.typo3_client.get_user_id') as get_user_id:
+            get_user_id.return_value = user.id
+            self.browser.get(self.live_server_url + '/404_no_such_url/')
+            self.browser.add_cookie({'name': 'fe_typo_user', 'value': 'foo'})
+            self.browser.get(self.live_server_url + reverse(loginRouteName))
 
     def doLogout(self):
         self.browser.delete_cookie('fe_typo_user')

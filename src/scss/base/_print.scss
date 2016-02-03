@@ -1,0 +1,162 @@
+$color-print-dark: #524e46;
+$color-print-light: #dddfe3;
+
+@media print {
+  a:link:after, a:visited:after {
+    content: "";
+  }
+
+  a.button {
+    display: none;
+  }
+
+  .demo-version {
+    display: none;
+  }
+
+  .top-bar .menu-icon {
+    display: none;
+  }
+
+  figure.tech-figure {
+    page-break-after: avoid;
+  }
+
+  .tech-figure-container {
+    max-height: 25rem;
+  }
+
+  .tech-figure figcaption {
+    border: 1px solid $color-beige;
+    padding: 0.5rem;
+    font-size: 0.75rem;
+  }
+
+  .tech-status {
+    border: 1px solid $color-beige;
+    border-top: none;
+  }
+
+  h1.tech-output-title {
+    margin-top: 0;
+  }
+
+  h2 {
+    font-size: rem-calc(24);
+  }
+
+  h3 {
+    font-size: rem-calc(18);
+  }
+
+  h4 {
+    font-size: rem-calc(16);
+  }
+
+  h5 {
+    font-size: rem-calc(14);
+  }
+
+  .tech-output-infos li {
+    margin-top: 0;
+  }
+
+  section {
+    page-break-inside: avoid;
+  }
+
+  section.is-empty-section {
+    display: none;
+  }
+
+  section.toc-row {
+    display: none;
+  }
+
+  div.columns.gallery img {
+    max-height: 15rem;
+  }
+
+  img.output-image-cb {
+    width: 50px;
+    height: 50px;
+  }
+
+  .aside-questiongroup {
+    margin-left: 75px;
+  }
+
+  @page {
+    margin: 0.5cm;
+  }
+
+  body {
+    line-height: 1.3;
+  }
+
+  table tr td {
+    padding: 0.35rem;
+    font-size: 0.7rem;
+  }
+  table.output-table thead tr th {
+    font-size: 0.8rem;
+    padding: 0.35rem;
+  }
+  table.output-table {
+    page-break-inside: avoid;
+  }
+
+  .row.impacts {
+    .small-2 {
+      width: 16.6666666667%;
+    }
+    .small-10 {
+      width: 83.3333333333%;
+    }
+    .medium-3 {
+      width: 25%;
+    }
+    .medium-9 {
+      width: 75%;
+    }
+  }
+
+  .tech-output-columns {
+    .medium-4 {
+      width: 33.33333333333%;
+    }
+  }
+
+  .chart-horizontal-bars .chart-bar {
+    padding: 0.075rem 0.75rem;
+  }
+
+  .chart-horizontal-bars {
+    .chart-bar.is-level-1 {
+      border: 1px solid $color-print-light;
+    }
+    .chart-bar.is-level-5 {
+      border: 1px solid $color-print-dark;
+    }
+  }
+
+  .chart-measure-labelled .step {
+    border: 1px solid $color-print-light;
+
+    +.is-level-5 {
+      border: 1px solid $color-print-dark;
+    }
+  }
+
+  .page-footer {
+    margin: 0;
+
+    .medium-6 {
+      width: 50%;
+    }
+
+    .page-footer-copy {
+      text-align: right;
+    }
+  }
+}

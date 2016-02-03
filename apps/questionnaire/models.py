@@ -39,6 +39,7 @@ QUESTIONNAIRE_ROLES = (
     ('publisher', _('Publisher')),
     # Content roles only, no privileges attached
     ('landuser', _('Land User')),
+    ('resourceperson', _('Key resource person')),
 )
 
 
@@ -430,13 +431,16 @@ class Questionnaire(models.Model):
 
             * ``updated`` (timestamp)
 
-            * ``authors`` (list): A list of dictionaries containing
-              information about the authors. Each entry contains the
+            * ``compilers`` (list): A list of dictionaries containing
+              information about the compilers. Each entry contains the
               following data:
 
               * ``id``
 
               * ``name``
+
+            * ``editors`` (list): A list of dictionaries containing information
+            about the editors. The format is the same as for ``compilers``
 
             * ``code`` (string)
 
@@ -444,14 +448,17 @@ class Questionnaire(models.Model):
 
             * ``translations`` (list)
         """
-        authors = []
-        # Make sure the author is first
-        for author in list(chain(
-                self.members.filter(questionnairemembership__role='compiler'),
-                self.members.filter(questionnairemembership__role='editor'))):
-            authors.append({
-                'id': author.id,
-                'name': str(author),
+        compilers = []
+        editors = []
+        for compiler in self.members.filter(questionnairemembership__role='compiler'):
+            compilers.append({
+                'id': compiler.id,
+                'name': str(compiler),
+            })
+        for editor in self.members.filter(questionnairemembership__role='editor'):
+            editors.append({
+                'id': editor.id,
+                'name': str(editor),
             })
         status = next((x for x in STATUSES if x[0] == self.status), (None, ''))
         status_code = next(
@@ -459,7 +466,8 @@ class Questionnaire(models.Model):
         return {
             'created': self.created,
             'updated': self.updated,
-            'authors': authors,
+            'compilers': compilers,
+            'editors': editors,
             'code': self.code,
             'configurations': [
                 conf.code for conf in self.configurations.all()],

@@ -8,6 +8,7 @@ from unittest.mock import patch
 
 from functional_tests.base import FunctionalTest
 
+from accounts.client import Typo3Client
 from accounts.models import User
 from questionnaire.models import Questionnaire
 from sample.tests.test_views import (
@@ -390,20 +391,20 @@ class ListTest(FunctionalTest):
             'xpath', '{}//dl/dt[text()="Update:"]/following::dd[1]'.format(
                 entry_xpath))
         self.assertEqual(update.text, '02/13/2014 5:08 p.m.')
-        author = self.findBy(
-            'xpath', '{}//dl/dt[text()="Author:"]/following::dd[1]'.format(
+        compiler = self.findBy(
+            'xpath', '{}//dl/dt[text()="Compiler:"]/following::dd[1]'.format(
                 entry_xpath))
-        self.assertEqual(author.text, 'Foo Bar')
+        self.assertEqual(compiler.text, 'Foo Bar')
 
         html_1 = self.findBy('xpath', entry_xpath).get_attribute('innerHTML')
 
-        # She also sees that the second entry has two authors (1 author, 1
-        # editor)
+        # She also sees that the second entry has one compiler and one editor
+        # but only the compiler is shown
         entry_xpath = '//article[contains(@class, "tech-item")][2]'
-        author = self.findBy(
-            'xpath', '{}//dl/dt[text()="Authors:"]/following::dd[1]'.format(
+        compiler = self.findBy(
+            'xpath', '{}//dl/dt[text()="Compiler:"]/following::dd[1]'.format(
                 entry_xpath))
-        self.assertEqual(author.text, 'Foo Bar, Faz Taz')
+        self.assertEqual(compiler.text, 'Foo Bar')
 
         # # She goes to the WOCAT list and sees the list (retrieved from
         # # elasticsearch) also contains metadata information and is
@@ -424,20 +425,20 @@ class ListTest(FunctionalTest):
             'xpath', '{}//dl/dt[text()="Update:"]/following::dd[1]'.format(
                 entry_xpath))
         self.assertEqual(update.text, '02/13/2014 5:08 p.m.')
-        author = self.findBy(
-            'xpath', '{}//dl/dt[text()="Author:"]/following::dd[1]'.format(
+        compiler = self.findBy(
+            'xpath', '{}//dl/dt[text()="Compiler:"]/following::dd[1]'.format(
                 entry_xpath))
-        self.assertEqual(author.text, 'Foo Bar')
+        self.assertEqual(compiler.text, 'Foo Bar')
 
         html_2 = self.findBy('xpath', entry_xpath).get_attribute('innerHTML')
 
-        # She also sees that the second entry has two authors (1 author, 1
-        # editor)
+        # She also sees that the second entry has one compiler and one editor
+        # but only the compiler is shown
         entry_xpath = '//article[contains(@class, "tech-item")][2]'
-        author = self.findBy(
-            'xpath', '{}//dl/dt[text()="Authors:"]/following::dd[1]'.format(
+        compiler = self.findBy(
+            'xpath', '{}//dl/dt[text()="Compiler:"]/following::dd[1]'.format(
                 entry_xpath))
-        self.assertEqual(author.text, 'Foo Bar, Faz Taz')
+        self.assertEqual(compiler.text, 'Foo Bar')
 
         # She sees that both list entries are exactly the same
         self.assertEqual(html_1, html_2)
@@ -447,7 +448,8 @@ class ListTest(FunctionalTest):
             'contains(text(), "Foo 3")]').click()
 
         info = self.findBy('xpath', '//ul[@class="tech-output-infos"]')
-        self.assertIn('Foo Bar, Faz Taz', info.text)
+        self.assertIn('Foo Bar', info.text)
+        self.assertIn('Faz Taz', info.text)
 
     def test_filter_checkbox(self):
 
@@ -1251,7 +1253,8 @@ class ListTest(FunctionalTest):
         # Fix it if you like.
         self.assertEqual(country_filter.get_attribute('value'), 'Bar+Country')
 
-    def test_filter_routes_to_list(self):
+    @patch.object(Typo3Client, 'get_user_id')
+    def test_filter_routes_to_list(self, mock_get_user_id):
 
         # Alice goes to the home view
         self.browser.get(self.live_server_url + reverse(route_home))
@@ -1595,6 +1598,7 @@ class ListTestLinks(FunctionalTest):
 
 
 @override_settings(ES_INDEX_PREFIX=TEST_INDEX_PREFIX)
+@patch.object(Typo3Client, 'get_user_id')
 class ListTestStatus(FunctionalTest):
 
     fixtures = [
@@ -1610,7 +1614,7 @@ class ListTestStatus(FunctionalTest):
         super(ListTestStatus, self).tearDown()
         delete_all_indices()
 
-    def test_list_status_public(self):
+    def test_list_status_public(self, mock_get_user_id):
 
         # Alice is not logged in. She goes to the SAMPLE landing page
         # and sees the latest updates. These are: 3 (public) and 6
@@ -1643,7 +1647,7 @@ class ListTestStatus(FunctionalTest):
         # seeing only public questionnaires.
         self.findByNot('xpath', '//p[contains(@class, "help-bloc")]')
 
-    def test_list_status_logged_in(self):
+    def test_list_status_logged_in(self, mock_get_user_id):
 
         # Alice logs in as user 1.
         user = User.objects.get(pk=101)
@@ -1718,7 +1722,7 @@ class ListTestStatus(FunctionalTest):
         # are visible
         self.findBy('xpath', '//p[contains(@class, "help-bloc")]')
 
-    def test_list_status_moderator(self):
+    def test_list_status_moderator(self, mock_get_user_id):
 
         # Alice logs in as user 3 (moderator).
         user = User.objects.get(pk=103)
@@ -1757,7 +1761,7 @@ class ListTestStatus(FunctionalTest):
         # are visible
         self.findBy('xpath', '//p[contains(@class, "help-bloc")]')
 
-    def test_list_shows_only_one_public(self):
+    def test_list_shows_only_one_public(self, mock_get_user_id):
 
         code = 'sample_3'
 
@@ -1782,7 +1786,6 @@ class ListTestStatus(FunctionalTest):
                 cat_1_position].click()
         self.assertIn(code, self.browser.current_url)
 
-        # She makes some changes and submits the category
         key_1 = self.findBy('name', 'qg_1-0-original_key_1')
         key_1.clear()
         self.findBy('name', 'qg_1-0-original_key_1').send_keys('asdf')

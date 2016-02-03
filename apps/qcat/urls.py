@@ -3,6 +3,10 @@ from django.conf.urls.static import static
 from django.conf.urls import patterns, include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
+from django.contrib.sitemaps.views import sitemap
+
+from .views import static_sitemap
+
 
 urlpatterns = patterns(
     '',
@@ -14,6 +18,8 @@ urlpatterns = patterns(
     url(r'^i18n/', include('django.conf.urls.i18n')),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
+    url(r'^sitemap\.xml$', sitemap, {'sitemaps': static_sitemap},
+        name='django.contrib.sitemaps.views.sitemap')
 )
 
 # The following urls are created with the locale as prefix, eg.

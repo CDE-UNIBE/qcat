@@ -1017,6 +1017,15 @@ class QuestionnaireQuestiongroup(BaseConfigurationObject):
             'colclass': self.view_options.get('colclass'),
             'label': self.label,
         }
+        if self.view_options.get('raw_questions', False) is True:
+            raw_questions = []
+            for d in data:
+                raw_questions.append(self.get_raw_data([d]))
+            return render_to_string(
+                view_template, {
+                    'raw_questions': raw_questions,
+                    'config': config,
+                })
         rendered = render_to_string(
             view_template, {
                 'questiongroups': questiongroups,

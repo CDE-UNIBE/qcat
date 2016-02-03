@@ -38,9 +38,17 @@
           <time datetime="{{ metadata.updated|date:"c" }}">{{ metadata.updated|date:"SHORT_DATETIME_FORMAT"|default:'&ndash;' }}</time>
         </li>
         <li>
-          <span class="is-muted">{% if metadata.authors|length > 1 %}{% trans "Data sources:" %}{% else %}{% trans "Data source:" %}{% endif %}</span>
-          {% for author in metadata.authors %}
-            <a rel="author" href="#" class="link">{{ author.name }}</a>{% if not forloop.last %}, {% endif %}
+          <span class="is-muted">{% if metadata.compilers|length > 1 %}{% trans "Compilers:" %}{% else %}{% trans "Compiler:" %}{% endif %}</span>
+          {% for compiler in metadata.compilers %}
+            <a rel="author" href="#" class="link">{{ compiler.name }}</a>{% if not forloop.last %}, {% endif %}
+          {% empty %}
+            &ndash;
+          {% endfor %}
+        </li>
+        <li>
+          <span class="is-muted">{% if metadata.editors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
+          {% for editor in metadata.editors %}
+            <a rel="author" href="#" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
           {% empty %}
             &ndash;
           {% endfor %}

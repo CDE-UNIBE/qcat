@@ -30,27 +30,31 @@ class BaseSettings(Configuration):
         'django.contrib.contenttypes',
         'django.contrib.sessions',
         'django.contrib.messages',
+        'django.contrib.sitemaps',
         'django.contrib.staticfiles',
+        'compressor',
         'django_nose',
-        'floppyforms',
         'django_extensions',
-        'imagekit',
-        'rest_framework',
         'django_filters',
+        'floppyforms',
+        'imagekit',
         'maintenancemode',
+        'rest_framework',
+        'sekizai',
         'wkhtmltopdf',
         # Custom apps
-        'questionnaire',
         'accounts',
         'api',
-        'configuration',
-        'wocat',
-        'technologies',
         'approaches',
-        'unccd',
-        'search',
+        'configuration',
+        'qcat',
+        'questionnaire',
         'sample',
         'samplemulti',
+        'search',
+        'technologies',
+        'unccd',
+        'wocat',
     )
 
     MIDDLEWARE_CLASSES = (
@@ -61,7 +65,7 @@ class BaseSettings(Configuration):
         'django.middleware.csrf.CsrfViewMiddleware',
         'django.contrib.auth.middleware.AuthenticationMiddleware',
         'django.contrib.auth.middleware.SessionAuthenticationMiddleware',
-        'accounts.authentication.WocatAuthenticationMiddleware',
+        'accounts.middleware.WocatAuthenticationMiddleware',
         'django.contrib.messages.middleware.MessageMiddleware',
         'django.middleware.clickjacking.XFrameOptionsMiddleware',
         'maintenancemode.middleware.MaintenanceModeMiddleware',
@@ -98,6 +102,11 @@ class BaseSettings(Configuration):
     STATICFILES_DIRS = (
         join(BASE_DIR, 'static'),
     )
+    STATICFILES_FINDERS = (
+        'django.contrib.staticfiles.finders.FileSystemFinder',
+        'django.contrib.staticfiles.finders.AppDirectoriesFinder',
+        'compressor.finders.CompressorFinder',
+    )
 
     MEDIA_URL = '/upload/'
     MEDIA_ROOT = join(BASE_DIR, '..', 'upload')
@@ -133,6 +142,7 @@ class BaseSettings(Configuration):
         "django.core.context_processors.tz",
         "django.contrib.messages.context_processors.messages",
         'django.core.context_processors.request',
+        'sekizai.context_processors.sekizai',
     )
 
     AUTH_USER_MODEL = 'accounts.User'
@@ -210,6 +220,7 @@ class BaseSettings(Configuration):
         environ_prefix='',
         default='https://dev.wocat.net/en/sitefunctions/login.html'
     )
+    AUTH_COOKIE_NAME = values.Value(default='fe_typo_user', environ_prefix='')
 
     # https://raw.githubusercontent.com/SeleniumHQ/selenium/master/py/CHANGES
     # for the latest supported firefox version.
@@ -218,6 +229,16 @@ class BaseSettings(Configuration):
     USE_CACHING = values.BooleanValue(default=True)
     CACHES = values.CacheURLValue(default='locmem://')
 
+    # If set to true, the template 503.html is displayed.
     MAINTENANCE_MODE = values.BooleanValue(environ_prefix='', default=False)
+    MAINTENANCE_LOCKFILE_PATH = join(BASE_DIR, 'maintenance.lock')
+
+    # Settings for opbeat.
+    OPBEAT_ORGANIZATION_ID = values.Value(environ_prefix='')
+    OPBEAT_APP_ID = values.Value(environ_prefix='')
+    OPBEAT_SECRET_TOKEN = values.Value(environ_prefix='')
+    OPBEAT_ORGANIZATION_URL = values.Value(environ_prefix='')
+
+    HOST_STRING_DEV = values.Value(environ_prefix='')
 
     WKHTMLTOPDF_CMD = values.Value(environ_prefix='')

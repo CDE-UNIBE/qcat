@@ -18,7 +18,7 @@
   {% if images|length %}
     <figure class="tech-figure">
       <div class="tech-figure-container">
-        <img alt="{{ images.0.caption }}" data-interchange="{{ images.0.interchange }}">
+        <img alt="{{ images.0.caption }}" data-interchange="{{ images.0.interchange }}" src="{{ images.0.image }}">
       </div>
       {% if images.0.caption or images.0.photographer %}
         <div class="row hide-for-small-only">

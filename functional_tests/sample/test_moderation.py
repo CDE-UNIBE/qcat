@@ -5,7 +5,9 @@ from django.test.utils import override_settings
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
+from unittest.mock import patch
 
+from accounts.client import Typo3Client
 from accounts.models import User
 from accounts.tests.test_models import create_new_user
 from functional_tests.base import FunctionalTest
@@ -30,6 +32,7 @@ TEST_INDEX_PREFIX = 'qcat_test_prefix_'
 
 
 @override_settings(ES_INDEX_PREFIX=TEST_INDEX_PREFIX)
+@patch.object(Typo3Client, 'get_user_id')
 class ModerationTest(FunctionalTest):
 
     fixtures = [
@@ -45,7 +48,7 @@ class ModerationTest(FunctionalTest):
         super(ModerationTest, self).tearDown()
         delete_all_indices()
 
-    def test_questionnaire_permissions(self):
+    def test_questionnaire_permissions(self, mock_get_user_id):
 
         cat_1_position = get_position_of_category('cat_1', start0=True)
 
@@ -156,6 +159,7 @@ class ModerationTest(FunctionalTest):
         self.findBy('xpath', '//a[contains(text(), "Edit")]')
 
 
+@patch.object(Typo3Client, 'get_user_id')
 class ModerationTestFixture(FunctionalTest):
 
     fixtures = [
@@ -176,7 +180,7 @@ class ModerationTestFixture(FunctionalTest):
         super(ModerationTestFixture, self).tearDown()
         delete_all_indices()
 
-    def test_review_panel(self):
+    def test_review_panel(self, mock_get_user_id):
 
         # Editor logs in
         self.doLogin(user=self.user_editor)
@@ -326,7 +330,7 @@ class ModerationTestFixture(FunctionalTest):
         self.findByNot('xpath', '//ol[@class="process"]')
         self.findByNot('xpath', '//a[contains(text(), "Edit")]')
 
-    def test_reviewer_can_edit_questionnaire(self):
+    def test_reviewer_can_edit_questionnaire(self, mock_get_user_id):
 
         cat_1_position = get_position_of_category('cat_1', start0=True)
         identifier = 'sample_2'
@@ -378,7 +382,7 @@ class ModerationTestFixture(FunctionalTest):
         self.findBy('xpath', '//div[contains(@class, "success")]')
         self.findBy('xpath', '//span[contains(@class, "is-reviewed")]')
 
-    def test_reviewer_can_reject_questionnaire(self):
+    def test_reviewer_can_reject_questionnaire(self, mock_get_user_id):
 
         identifier = 'sample_2'
 
@@ -413,7 +417,7 @@ class ModerationTestFixture(FunctionalTest):
             route_questionnaire_details, kwargs={'identifier': identifier}))
         self.findBy('xpath', '//span[contains(@class, "is-draft")]')
 
-    def test_publishers_can_edit_questionnaire(self):
+    def test_publishers_can_edit_questionnaire(self, mock_get_user_id):
 
         cat_1_position = get_position_of_category('cat_1', start0=True)
         identifier = 'sample_7'
@@ -464,7 +468,7 @@ class ModerationTestFixture(FunctionalTest):
         self.findBy('id', 'button-publish').click()
         self.findBy('xpath', '//div[contains(@class, "success")]')
 
-    def test_publisher_can_reject_questionnaire(self):
+    def test_publisher_can_reject_questionnaire(self, mock_get_user_id):
 
         identifier = 'sample_7'
 
