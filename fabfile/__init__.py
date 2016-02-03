@@ -178,6 +178,10 @@ def _set_maintenance_mode(value, source_folder):
         bool_value=str(value),
         envs_file=join(source_folder, 'envs', 'MAINTENANCE_MODE')
         ))
+    # There were issues with permissions, so the lock-file remained in place.
+    # Prevent this from happening again.
+    if exists(settings.MAINTENANCE_LOCKFILE_PATH):
+        run('rm {}'.format(settings.MAINTENANCE_LOCKFILE_PATH))
 
 
 @task
