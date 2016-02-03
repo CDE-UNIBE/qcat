@@ -84,13 +84,14 @@ def deploy():
     """
     require('environment', provided_by=(develop, master))
     _set_maintenance_mode(True, env.source_folder)
+    _reload_uwsgi()
     _get_latest_source(env.source_folder)
     _update_virtualenv(env.source_folder)
     _clean_static_folder(env.source_folder)
     _update_static_files(env.source_folder)
     _update_database(env.source_folder)
-    _reload_uwsgi()
     _set_maintenance_mode(False, env.source_folder)
+    _reload_uwsgi()
     print(green("Everything OK"))
 
 
@@ -180,7 +181,7 @@ def _set_maintenance_mode(value, source_folder):
         ))
     # There were issues with permissions, so the lock-file remained in place.
     # Prevent this from happening again.
-    if exists(settings.MAINTENANCE_LOCKFILE_PATH):
+    if not value and exists(settings.MAINTENANCE_LOCKFILE_PATH):
         run('rm {}'.format(settings.MAINTENANCE_LOCKFILE_PATH))
 
 
