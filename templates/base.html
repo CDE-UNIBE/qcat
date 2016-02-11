@@ -49,8 +49,9 @@
       <script src="{% static 'js/modernizr.js' %}"></script>
     {% endcompress %}
 
-    {% render_block "css" %}
-    {% render_block "js_head" %}
+      {#  Activate if needed #}
+      {# {% render_block "css" %} #}
+      {# {% render_block "js_head" %}#}
 
     {% block social_meta_tags %}
       <meta property="og:image" content="{{ request.get_host }}{% static 'assets/img/wocat_logo.svg' %}"/>
@@ -167,7 +168,8 @@
     {% endblock %}
 
     <!-- Block for js within specific templates. Add compress in the template.  -->
-    {% render_block "js" %}
+    {#  Activate if needed #}
+    {# {% render_block "js" %} #}
     {% compress js %}
       <script src="{% static 'js/jquery.min.js' %}"></script>
       <script src="{% static 'js/foundation.min.js' %}"></script>
