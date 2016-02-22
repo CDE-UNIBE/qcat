@@ -9,7 +9,6 @@ from unittest.mock import patch
 from accounts.client import Typo3Client
 from accounts.models import User
 from functional_tests.base import FunctionalTest
-from questionnaire.models import File
 from sample.tests.test_views import (
     route_questionnaire_details,
     route_questionnaire_link_form,
@@ -2108,11 +2107,11 @@ class QuestionnaireTest(FunctionalTest):
             'xpath', '//a[@data-questiongroup-keyword="qg_30"]').click()
 
         # She sees that another dropzone was added and it is empty.
-        dropzone_2 = self.findBy(
-            'xpath', '//div[@id="id_qg_30-1-file_key_19" and contains(@class, '
-            '"dropzone")]')
-        preview_2 = self.findBy(
-            'xpath', '//div[@id="preview-id_qg_30-1-file_key_19"]')
+        # dropzone_2 = self.findBy(
+        #     'xpath', '//div[@id="id_qg_30-1-file_key_19" and contains(@class,'
+        #     '"dropzone")]')
+        # preview_2 = self.findBy(
+        #     'xpath', '//div[@id="preview-id_qg_30-1-file_key_19"]')
         # self.findByNot(
         #     'xpath', '//div[@id="preview-id_qg_30-1-file_key_19"]/'
         #     'div[@class="image-preview"]/img')
@@ -2137,7 +2136,7 @@ class QuestionnaireTest(FunctionalTest):
         #
         # # Dropzone is hidden, preview is there, filename was written to field
         # dropzone = self.findBy(
-        #     'xpath', '//div[@id="id_qg_30-0-file_key_19" and contains(@class, '
+        #     'xpath', '//div[@id="id_qg_30-0-file_key_19" and contains(@class,'
         #     '"dropzone")]')
         # time.sleep(1)
         # self.assertFalse(dropzone.is_displayed())
@@ -2153,7 +2152,7 @@ class QuestionnaireTest(FunctionalTest):
         #
         # # She sees that another dropzone was added and it is empty.
         # dropzone_2 = self.findBy(
-        #     'xpath', '//div[@id="id_qg_30-1-file_key_19" and contains(@class, '
+        #     'xpath', '//div[@id="id_qg_30-1-file_key_19" and contains(@class,'
         #     '"dropzone")]')
         # preview_2 = self.findBy(
         #     'xpath', '//div[@id="preview-id_qg_30-1-file_key_19"]')
@@ -2186,7 +2185,7 @@ class QuestionnaireTest(FunctionalTest):
         #
         # # She sees the preview is empty
         # self.findBy(
-        #     'xpath', '//div[@id="id_qg_30-1-file_key_19" and contains(@class, '
+        #     'xpath', '//div[@id="id_qg_30-1-file_key_19" and contains(@class,'
         #     '"dropzone")]')
         # self.findByNot(
         #     'xpath',
@@ -2198,7 +2197,8 @@ class QuestionnaireTest(FunctionalTest):
         # # She submits and sees the correct image was submitted
         # self.findBy('id', 'button-submit').click()
         #
-        # img = self.findManyBy('xpath', '//div[contains(@class, "output")]/img')
+        # img = self.findManyBy(
+        #     'xpath', '//div[contains(@class, "output")]/img')
         # self.assertEqual(len(img), 1)
         #
         # db_images = File.objects.all()
@@ -2284,7 +2284,7 @@ class QuestionnaireTest(FunctionalTest):
         # time.sleep(1)
         #
         # self.findBy(
-        #     'xpath', '//div[@id="id_qg_30-0-file_key_19" and contains(@class, '
+        #     'xpath', '//div[@id="id_qg_30-0-file_key_19" and contains(@class,'
         #     '"dropzone")]')
         # preview_1 = self.findBy(
         #     'xpath', '//div[@id="preview-id_qg_30-0-file_key_19"]')

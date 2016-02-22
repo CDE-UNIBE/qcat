@@ -159,6 +159,7 @@ module.exports = function(grunt) {
           'static/js/dropzone.min.js': 'bower_components/dropzone/dist/min/dropzone.min.js',
           'static/js/app.js': 'src/js/app.js',
           'static/js/filter.js': 'src/js/filter.js',
+          'static/js/parallax.js': 'src/js/parallax.js',
           'static/js/wocat.magellan.js': 'src/js/wocat.magellan.js',
           'static/js/wizard.js': 'src/js/wizard.js',
           'static/js/chosen.jquery.min.js': 'bower_components/chosen/chosen.jquery.min.js',

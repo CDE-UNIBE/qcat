@@ -110,7 +110,7 @@
         "code": "sample_1",
         "status": 1,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:59:59.000Z",
         "updated": "2014-12-31T23:59:59.000Z"
     }
@@ -143,7 +143,7 @@
         "code": "sample_2",
         "status": 2,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:59:00.000Z",
         "updated": "2014-12-31T23:59:00.000Z"
     }
@@ -176,7 +176,7 @@
         "code": "sample_3",
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:58:00.000Z",
         "updated": "2014-12-31T23:58:00.000Z"
     }
@@ -218,7 +218,7 @@
         "code": "sample_4",
         "status": 5,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:57:00.000Z",
         "updated": "2014-12-31T23:57:00.000Z"
     }
@@ -269,7 +269,7 @@
         "code": "sample_5",
         "status": 6,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:56:00.000Z",
         "updated": "2014-12-31T23:56:00.000Z"
     }
@@ -302,7 +302,7 @@
         "code": "sample_5",
         "status": 4,
         "version": 2,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:56:30.000Z",
         "updated": "2014-12-31T23:56:30.000Z"
     }
@@ -335,7 +335,7 @@
         "code": "sample_6",
         "status": 1,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:54:00.000Z",
         "updated": "2014-12-31T23:54:00.000Z"
     }
@@ -367,7 +367,7 @@
         "code": "sample_7",
         "status": 3,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:53:00.000Z",
         "updated": "2014-12-31T23:53:00.000Z"
     }
@@ -399,7 +399,7 @@
         "code": "sample_8",
         "status": 2,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:52:00.000Z",
         "updated": "2014-12-31T23:52:00.000Z"
     }
@@ -438,7 +438,7 @@
         "code": "sample_9",
         "status": 3,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-12-31T23:51:00.000Z",
         "updated": "2014-12-31T23:51:00.000Z"
     }

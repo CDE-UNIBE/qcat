@@ -13,10 +13,7 @@ from unittest.mock import patch
 from questionnaire.models import Questionnaire
 from sample.tests.test_views import (
     route_questionnaire_new_step,
-    route_questionnaire_details,
 )
-from accounts.tests.test_views import accounts_route_user
-
 
 from nose.plugins.attrib import attr  # noqa
 # @attr('foo')
@@ -782,7 +779,8 @@ class UserTest2(FunctionalTest):
 #         user.lastname = 'Foo'
 #         user.save()
 #
-#         # She refreshes the questionnaire details and sees that nothing changed
+#         # She refreshes the questionnaire details and
+#         # sees that nothing changed
 #         self.browser.refresh()
 #         self.findBy('xpath', '//*[contains(text(), "Faz Taz")]')
 #         self.findBy('xpath', '//*[contains(text(), "Some other person")]')

@@ -8,12 +8,8 @@ from accounts.models import User
 from accounts.tests.test_models import create_new_user
 from configuration.models import Configuration
 from qcat.tests import TestCase
-from questionnaire.models import (
-    Questionnaire,
-    QuestionnaireLink,
-    QuestionnaireMembership,
-    File,
-)
+from questionnaire.errors import QuestionnaireLockedException
+from questionnaire.models import Questionnaire, QuestionnaireLink, File
 
 
 def get_valid_file():
@@ -405,6 +401,30 @@ class QuestionnaireModelTest(TestCase):
         questionnaire.data = {'foo': 'bar'}
         questionnaire.save()
         self.assertEqual(questionnaire.data, {'foo': 'bar'})
+
+    def test_block_for_for_user(self):
+        questionnaire = get_valid_questionnaire()
+        questionnaire.lock_questionnaire(questionnaire.code, self.user)
+        questionnaire.refresh_from_db()
+        self.assertEqual(questionnaire.blocked, self.user)
+
+    def test_blocked_questionnaire_raises_exception(self):
+        questionnaire = get_valid_questionnaire()
+        questionnaire.lock_questionnaire(questionnaire.code, self.user)
+        user_2 = create_new_user(id=2, email='foo@bar.com')
+        with self.assertRaises(QuestionnaireLockedException):
+            questionnaire.lock_questionnaire(questionnaire.code, user_2)
+
+    def test_blocked_allow_editing_for_same_user(self):
+        questionnaire = get_valid_questionnaire()
+        questionnaire.lock_questionnaire(questionnaire.code, self.user)
+        self.assertTrue(questionnaire.can_edit(self.user))
+
+    def test_blocked_for_other_user(self):
+        questionnaire = get_valid_questionnaire()
+        questionnaire.lock_questionnaire(questionnaire.code, self.user)
+        user_2 = create_new_user(id=2, email='foo@bar.com')
+        self.assertFalse(questionnaire.can_edit(user_2))
 
 
 class FileModelTest(TestCase):

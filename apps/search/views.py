@@ -45,8 +45,8 @@ def admin(request, log=''):
 
     configurations = []
     for active_configuration in Configuration.objects.filter(active=True):
-        db_count = Questionnaire.objects.filter(
-            configurations__code=active_configuration.code, status=4).count()
+        db_count = Questionnaire.with_status.public().filter(
+            configurations__code=active_configuration.code).count()
         try:
             index_count = es.count(
                 index=get_alias([active_configuration.code])).get('count')
@@ -128,8 +128,9 @@ def update(request, configuration):
 
     processed, errors = put_questionnaire_data(
         configuration,
-        Questionnaire.objects.filter(
-            configurations__code=configuration, status=4))
+        Questionnaire.with_status.public().filter(
+            configurations__code=configuration)
+    )
 
     if len(errors) > 0:
         messages.error(request, 'The following error(s) occured: {}'.format(

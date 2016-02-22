@@ -28,15 +28,10 @@ from qcat.utils import (
     get_session_questionnaire,
     save_session_questionnaire,
 )
-from questionnaire.models import (
-    Questionnaire,
-    File,
-)
-from questionnaire.upload import (
-    handle_upload,
-    retrieve_file,
-)
-from questionnaire.utils import (
+from .errors import QuestionnaireLockedException
+from .models import Questionnaire, File
+from .upload import handle_upload, retrieve_file
+from .utils import (
     clean_questionnaire_data,
     compare_questionnaire_data,
     get_active_filters,
@@ -51,7 +46,7 @@ from questionnaire.utils import (
     query_questionnaire,
     query_questionnaires,
 )
-from questionnaire.view_utils import (
+from .view_utils import (
     ESPagination,
     get_page_parameter,
     get_pagination_parameters,
@@ -59,6 +54,7 @@ from questionnaire.view_utils import (
     get_limit_parameter,
 )
 from search.search import advanced_search
+from .conf import settings
 
 
 @login_required
@@ -451,6 +447,13 @@ def generic_questionnaire_new_step(
 
             questionnaire_data, errors = clean_questionnaire_data(
                 session_questionnaire, questionnaire_configuration)
+
+            # Try to lock questionnaire, raise an error if it is locked already.
+            try:
+                Questionnaire().lock_questionnaire(identifier, request.user)
+            except QuestionnaireLockedException as e:
+                errors.append(e)
+
             if errors:
                 valid = False
                 messages.error(
@@ -537,6 +540,9 @@ def generic_questionnaire_new(
         # For edits, copy the data to the session first (if it was
         # edited for the first time only).
         questionnaire_object = query_questionnaire(request, identifier).first()
+        questionnaire_object.lock_questionnaire(
+            questionnaire_object.code, request.user
+        )
         if questionnaire_object is None:
             raise Http404()
         questionnaire_data = questionnaire_object.data
@@ -573,11 +579,19 @@ def generic_questionnaire_new(
     if request.method == 'POST':
         cleaned_questionnaire_data, errors = clean_questionnaire_data(
             session_questionnaire, questionnaire_configuration)
+
+        if questionnaire_object and \
+                not questionnaire_object.can_edit(request.user):
+            lvl, msg = questionnaire_object.get_blocked_message(request.user)
+            errors.append(msg)
+
         if errors:
             messages.error(
                 request, 'Something went wrong. The questionnaire cannot be '
                 'submitted because of the following errors: <br/>{}'.format(
                     '<br/>'.join(errors)), extra_tags='safe')
+            return redirect(request.path)
+
         if not cleaned_questionnaire_data:
             messages.info(
                 request, _('You cannot submit an empty questionnaire'),
@@ -652,6 +666,19 @@ def generic_questionnaire_new(
     filter_configuration = questionnaire_configuration.\
         get_filter_configuration()
 
+    is_blocked = None
+    # Display a message regarding the state for editing (locked / available)
+    if questionnaire_object:
+        is_blocked = questionnaire_object.can_edit(request.user)
+        # Display a hint about the 'blocked' status for GET requests only. For
+        # post requests, this is done in the form validation.
+        if request.method == 'GET':
+            questionnaire_object
+            level, message = questionnaire_object.get_blocked_message(
+                request.user
+            )
+            messages.add_message(request, level, message)
+
     return render(request, template, {
         'images': images,
         'sections': sections,
@@ -661,6 +688,7 @@ def generic_questionnaire_new(
         'permissions': permissions,
         'edited_questiongroups': edited_questiongroups,
         'view_mode': 'edit',
+        'is_blocked': is_blocked
     })
 
 
@@ -706,7 +734,8 @@ def generic_questionnaire_details(
     permissions = questionnaire_object.get_permissions(request.user)
 
     review_config = {}
-    if request.user.is_authenticated() and questionnaire_object.status != 4:
+    if request.user.is_authenticated() \
+            and questionnaire_object.status != settings.QUESTIONNAIRE_SUBMITTED:
         # Show the review panel only if the user is logged in and if the
         # version shown is not active.
         review_config = {
@@ -714,6 +743,9 @@ def generic_questionnaire_details(
             'csrf_token_value': get_token(request),
             'permissions': permissions,
         }
+        if not questionnaire_object.can_edit(request.user):
+            lvl, msg = questionnaire_object.get_blocked_message(request.user)
+            review_config['blocked_by'] = msg
 
     sections = questionnaire_configuration.get_details(
         data=data, permissions=permissions, review_config=review_config,

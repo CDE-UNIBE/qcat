@@ -1,83 +1,84 @@
 {% load i18n %}
 
-  <section id="{{ keyword }}" class="row" data-magellan-destination="{{ keyword }}">
-    <a name="{{ keyword }}"></a>
 
-    <header class="tech-output-header medium-7 columns">
-      <div class="tech-status">
-        {% if metadata.configurations.0 %}
-          <span class="label is-{{ metadata.configurations.0 }}">{{ metadata.configurations.0 }}</span>
-        {% endif %}
-        {% if metadata.status.0 and metadata.status.0 != 'public' %}
-          <span class="label is-{{ metadata.status.0 }}">{{ metadata.status.1 }}</span>
-        {% endif %}
-      </div>
-      <h1 class="tech-output-title">{{ raw_data.name|default:'' }}</h1>
-      <p class="tech-output-header-info clearfix"><span class="is-muted left">{% if metadata.code %}{{ metadata.code }} - {% endif %}{{ raw_data.country.0|default:"" }}</span></p>
-    </header>
-    <aside class="tech-output-aside medium-4 medium-offset-1 columns" role="contentinfo">
-      <ul class="tech-output-infos">
-        <li>
-          <span class="is-muted">{% trans "Creation:" %}</span>
-          <time datetime="{{ metadata.created|date:"c" }}">{{ metadata.created|date:"SHORT_DATETIME_FORMAT"|default:'&ndash;' }}</time>
-        </li>
-        <li>
-          <span class="is-muted">{% trans "Update:" %}</span>
-          <time datetime="{{ metadata.updated|date:"c" }}">{{ metadata.updated|date:"SHORT_DATETIME_FORMAT"|default:'&ndash;' }}</time>
-        </li>
-        <li>
-          <span class="is-muted">{% if metadata.compilers|length > 1 %}{% trans "Compilers:" %}{% else %}{% trans "Compiler:" %}{% endif %}</span>
-          {% for compiler in metadata.compilers %}
-            <a rel="author" href="#" class="link">{{ compiler.name }}</a>{% if not forloop.last %}, {% endif %}
-          {% empty %}
-            &ndash;
-          {% endfor %}
-        </li>
-        <li>
-          <span class="is-muted">{% if metadata.editors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
-          {% for editor in metadata.editors %}
-            <a rel="author" href="#" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
-          {% empty %}
-            &ndash;
-          {% endfor %}
-        </li>
-      </ul>
-      {% if 'edit_questionnaire' in permissions %}
-        {% if view_mode == 'edit' %}
-          <form action="" method="POST">
-            <div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'/></div>
-            <input class="button large is-approaches q-action-button-top" type="submit" value="{% trans "Save SLM Approach" %}">
-          </form>
-        {% else %}
-          <a href="{% url 'approaches:questionnaire_edit' questionnaire_identifier %}" class="button large is-approaches q-action-button-top">{% trans "Edit SLM Approach" %}</a>
-        {% endif %}
-      {% endif %}
-    </aside>
+<section id="{{ keyword }}" class="row" data-magellan-destination="{{ keyword }}">
+<a name="{{ keyword }}"></a>
 
-    <div class="medium-12 columns">
-      {% include "details/toc.html" with toc_keyword=keyword %}
-    </div>
-
-    {% if 'edit_questionnaire' in permissions and view_mode == 'edit' %}
-      <div class="medium-9 columns">
-        <h2>{{ numbering|default:'' }} {{ label }}</h2>
-        <div class="tech-section-progress progress">
-          <span class="progress-steps"></span>
-          <span class="meter" style="width:{{ progress }}%"></span>
-        </div>
-      </div>
-      <div class="medium-3 columns">
-        <a class="button is-approaches right" data-toggle-boolean="section_one" href="{% url edit_step_route questionnaire_identifier keyword %}">
-          {% trans "Edit this section" %} <strong>({{ complete }}/{{ total }}){% if has_changes %}<span class="button-has-changes">*</span>{% endif %}</strong>
-        </a>
-      </div>
+<header class="tech-output-header medium-7 columns">
+  <div class="tech-status">
+    {% if metadata.configurations.0 %}
+      <span class="label is-{{ metadata.configurations.0 }}">{{ metadata.configurations.0 }}</span>
     {% endif %}
-
-    <div class="medium-12 columns output">
-      {% for subcategory, subcategory_config in subcategories %}
-        {% if subcategory_config.keyword != 'app__0__1' and subcategory_config.keyword != 'app__1__1' %}
-          {{ subcategory }}
-        {% endif %}
+    {% if metadata.status.0 and metadata.status.0 != 'public' %}
+      <span class="label is-{{ metadata.status.0 }}">{{ metadata.status.1 }}</span>
+    {% endif %}
+  </div>
+  <h1 class="tech-output-title">{{ raw_data.name|default:'' }}</h1>
+  <p class="tech-output-header-info clearfix"><span class="is-muted left">{% if metadata.code %}{{ metadata.code }} - {% endif %}{{ raw_data.country.0|default:"" }}</span></p>
+</header>
+<aside class="tech-output-aside medium-4 medium-offset-1 columns" role="contentinfo">
+  <ul class="tech-output-infos">
+    <li>
+      <span class="is-muted">{% trans "Creation:" %}</span>
+      <time datetime="{{ metadata.created|date:"c" }}">{{ metadata.created|date:"SHORT_DATETIME_FORMAT"|default:'&ndash;' }}</time>
+    </li>
+    <li>
+      <span class="is-muted">{% trans "Update:" %}</span>
+      <time datetime="{{ metadata.updated|date:"c" }}">{{ metadata.updated|date:"SHORT_DATETIME_FORMAT"|default:'&ndash;' }}</time>
+    </li>
+    <li>
+      <span class="is-muted">{% if metadata.compilers|length > 1 %}{% trans "Compilers:" %}{% else %}{% trans "Compiler:" %}{% endif %}</span>
+      {% for compiler in metadata.compilers %}
+        <a rel="author" href="#" class="link">{{ compiler.name }}</a>{% if not forloop.last %}, {% endif %}
+      {% empty %}
+        &ndash;
       {% endfor %}
+    </li>
+    <li>
+      <span class="is-muted">{% if metadata.editors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
+      {% for editor in metadata.editors %}
+        <a rel="author" href="#" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
+      {% empty %}
+        &ndash;
+      {% endfor %}
+    </li>
+  </ul>
+  {% if 'edit_questionnaire' in permissions %}
+    {% if view_mode == 'edit' %}
+      <form action="" method="POST">
+        <div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='{{ csrf_token }}'/></div>
+          <input class="button large is-approaches q-action-button-top" type="submit" value="{% trans "Save SLM Approach" %}">
+        </form>
+    {% else %}
+      <a href="{% url 'approaches:questionnaire_edit' questionnaire_identifier %}" class="button large is-approaches q-action-button-top">{% trans "Edit SLM Approach" %}</a>
+    {% endif %}
+  {% endif %}
+</aside>
+
+<div class="medium-12 columns">
+  {% include "details/toc.html" with toc_keyword=keyword %}
+</div>
+
+{% if 'edit_questionnaire' in permissions and view_mode == 'edit' %}
+  <div class="medium-9 columns">
+    <h2>{{ numbering|default:'' }} {{ label }}</h2>
+    <div class="tech-section-progress progress">
+      <span class="progress-steps"></span>
+      <span class="meter" style="width:{{ progress }}%"></span>
     </div>
-  </section>
+  </div>
+  <div class="medium-3 columns">
+    <a class="button is-approaches right" data-toggle-boolean="section_one" href="{% url edit_step_route questionnaire_identifier keyword %}">
+      {% trans "Edit this section" %} <strong>({{ complete }}/{{ total }}){% if has_changes %}<span class="button-has-changes">*</span>{% endif %}</strong>
+    </a>
+  </div>
+{% endif %}
+
+<div class="medium-12 columns output">
+  {% for subcategory, subcategory_config in subcategories %}
+    {% if subcategory_config.keyword != 'app__0__1' and subcategory_config.keyword != 'app__1__1' %}
+      {{ subcategory }}
+    {% endif %}
+  {% endfor %}
+</div>
+</section>

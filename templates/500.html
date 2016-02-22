@@ -1,84 +1,131 @@
 <html>
-    <head>
-        <title>wocat.net | Application Error</title>
-        <style>
-            body {
-                font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
-                text-rendering: optimizeLegibility;
-                line-height: 1.5;
-                color: #fff;
-                margin: 0;
-                display: flex;
-                flex-direction: column;
-            }
-            h1, a {
-                color:#DC7D35;
-                font-weight: 100;
-            }
-            .container {
-                display: flex;
-                flex-direction: column;
-            }
-            .content {
-                background-color: #3E3B34;
-            }
-            .content img {
-                margin: 0;
-                padding: 2rem 1rem;
-            }
-            .content .logos {
-                background-color: #5F594F;
-            }
-            .content .text {
-                padding: 2rem;
-            }
-            .content .text img {
-                padding: 0;
-                max-width:100%;
-                max-height:100%;
-            }
-            .left {
-                order: -1;
-                background-color: #EAE8DF;
-            }
-            .right {
-                background-color: #EAE8DF;
-            }
-            @media (min-width: 768px) {
-                .container {
-                    flex-direction: row;
-                    flex: 1;
-                }
-                .content {
-                    flex: 1;
-                }
-                .left, .right {
-                    flex: 0 0 20rem;
-                }
-            }
-        </style>
+<head>
+    <title>wocat.net | Maintenance</title>
+    <style>
+        body {
+            font-family: 'Open Sans', 'Helvetica Neue', Helvetica, Arial, sans-serif;
+            text-rendering: optimizeLegibility;
+            line-height: 1.5;
+            color: #fff;
+            margin: 0;
+            display: flex;
+            flex-direction: column;
+        }
 
-    </head>
-    <body>
-        <div class="container">
-            <main class="content">
-                <div class="logos">
-                    <img src="/static/assets/img/wocat_logo.svg" alt="WOCAT">
-                    <img src="/static/assets/img/unccd_mono_trans.png" alt="UNCCD">
-                </div>
-                <div class="text">
-                    <h1>Application Error</h1>
-                    Sorry about that! Errors are tracked automatically, our technicans were informed about it.
-                    <br>
-                    If the problem persists, feel free to contact us on <a href="https://wocat.net">wocat.net</a>
-                    <br>
-                    <br>
-                    <img src="/static/assets/img/home_header_wocat.jpg" alt="header image">
-                </div>
-            </main>
-            <nav class="left"></nav>
-            <aside class="right"></aside>
+        h1, a {
+            color: #DC7D35;
+            font-weight: 100;
+        }
+
+        .container {
+            display: flex;
+            flex-direction: column;
+        }
+
+        .content {
+            background-color: #3E3B34;
+        }
+
+        .content .logos {
+            background-color: #5F594F;
+        }
+
+        .content .text {
+            padding: 2rem;
+        }
+
+        .content .text img {
+            padding: 0;
+            max-width: 100%;
+            max-height: 100%;
+            display: block;
+        }
+
+        .left {
+            order: -1;
+            background-color: #EAE8DF;
+        }
+
+        .right {
+            background-color: #EAE8DF;
+        }
+
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                flex: 1;
+            }
+
+            .content {
+                flex: 1;
+            }
+
+            .left, .right {
+                flex: 0 0 20rem;
+            }
+        }
+
+        .scene {
+            padding: 0;
+            margin: 0;
+        }
+
+        .layer:nth-child(1) {
+            opacity: 0.6;
+        }
+
+        .layer:nth-child(1) button {
+            -webkit-transform: rotate(150deg);
+        }
+
+        .layer:nth-child(2) {
+            opacity: 0.9;
+        }
+
+        .layer:nth-child(2) button {
+            -webkit-transform: rotate(120deg);
+        }
+
+        .layer:nth-child(3) {
+            opacity: 0.2;
+        }
+
+    </style>
+
+</head>
+<body>
+<div class="container">
+    <main class="content">
+        <div class="logos">
+            <img src="/static/assets/img/wocat_logo.svg" alt="WOCAT">
+            <img src="/static/assets/img/unccd_mono_trans.png" alt="UNCCD">
         </div>
-    </body>
+        <div class="text">
+            <h1>Application Error</h1>
+            Sorry about that! Errors are tracked automatically, our technicans were informed about it.
+            <br>
+            If the problem persists, feel free to contact us on <a href="https://wocat.net">wocat.net</a>
+            <br>
+            <br>
+            <div id="container" class="container">
+                <ul id="scene" class="scene border">
+                    <li class="layer" data-depth="0.30"><img src="/static/assets/img/error/bg.jpg"></li>
+                    <li class="layer" data-depth="0.50"><img src="/static/assets/img/error/man.png"></li>
+                    <li class="layer" data-depth="1.20"><img src="/static/assets/img/error/puff-top.png"></li>
+                    <li class="layer" data-depth="0.70"><img src="/static/assets/img/error/puff-bottom.png"></li>
+                </ul>
+            </div>
+            <script src="/static/js/parallax.js"></script>
+            <script>
+                var scene = document.getElementById('scene');
+                var parallax = new Parallax(scene);
+            </script>
+        </div>
+    </main>
+    <nav class="left"></nav>
+    <aside class="right"></aside>
+</div>
+
+</body>
 </html>
 

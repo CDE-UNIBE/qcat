@@ -2,7 +2,7 @@ from rest_framework import filters
 from rest_framework import viewsets
 
 from .serializers import QuestionnaireSerializer
-from ..models import Questionnaire, STATUSES
+from ..models import Questionnaire
 
 
 class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
@@ -22,6 +22,4 @@ class QuestionnaireViewSet(viewsets.ReadOnlyModelViewSet):
         """
         Filter valid questionnaires; Status "3" is public.
         """
-        return Questionnaire.objects.filter(
-            blocked=False, status=STATUSES[3][0]
-        )
+        return Questionnaire.with_status.public().filter(blocked=None)

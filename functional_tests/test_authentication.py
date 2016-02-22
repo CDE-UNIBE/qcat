@@ -54,7 +54,8 @@ class LoginTest(FunctionalTest):
         self.findBy('id', 'button_login').click()
 
         # She sees that she was redirected to the landing page
-        self.assertEqual(self.browser.current_url, self.live_server_url + '/en/')
+        self.assertEqual(self.browser.current_url,
+                         self.live_server_url + '/en/')
         self.checkOnPage(user.get_display_name())
         self.checkOnPage('Logout')
 

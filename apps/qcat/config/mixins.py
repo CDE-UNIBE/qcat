@@ -21,7 +21,7 @@ class SecurityMixin:
     # Security settings, as recommended from manage.py check --deploy
     CSRF_COOKIE_SECURE = True
     X_FRAME_OPTIONS = 'DENY'
-    # It is recommended to set the max-age to a big value like 12/24 months
+    # Set the max-age to 12 months
     SECURE_HSTS_SECONDS = 31536000
     SECURE_HSTS_INCLUDE_SUBDOMAINS = True
     SECURE_CONTENT_TYPE_NOSNIFF = True

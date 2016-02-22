@@ -1,5 +1,4 @@
 import ast
-from django.conf import settings
 from django.contrib import messages
 from django.db.models import Q
 from django.template.loader import render_to_string
@@ -15,11 +14,12 @@ from configuration.utils import (
     get_configuration_query_filter,
 )
 from qcat.errors import QuestionnaireFormatError
-from questionnaire.models import Questionnaire
 from search.index import (
     put_questionnaire_data,
     delete_questionnaires_from_es,
 )
+from .models import Questionnaire
+from .conf import settings
 
 
 def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
@@ -792,7 +792,9 @@ def get_query_status_filter(request, moderation_mode=''):
         if 'questionnaire.review_questionnaire' in permissions:
 
             if moderation_mode == '' or not moderation_mode != 'review':
-                status_filter |= Q(status__in=[2])
+                status_filter |= Q(
+                    status__in=[settings.QUESTIONNAIRE_SUBMITTED]
+                )
 
             if moderation_mode == 'review':
                 return status_filter
@@ -801,7 +803,7 @@ def get_query_status_filter(request, moderation_mode=''):
         if 'questionnaire.publish_questionnaire' in permissions:
 
             if moderation_mode == '' or not moderation_mode != 'publish':
-                status_filter |= Q(status__in=[3])
+                status_filter |= Q(status__in=[settings.QUESTIONNAIRE_REVIEWED])
 
             if moderation_mode == 'publish':
                 return status_filter
@@ -810,8 +812,13 @@ def get_query_status_filter(request, moderation_mode=''):
         # "reviewed" if they are "compiler" or "editor".
         status_filter |= (
             Q(members=request.user) &
-            Q(questionnairemembership__role__in=['compiler', 'editor'])
-            & Q(status__in=[1, 2, 3])
+            Q(questionnairemembership__role__in=[
+                settings.QUESTIONNAIRE_COMPILER, settings.QUESTIONNAIRE_EDITOR
+            ])
+            & Q(status__in=[settings.QUESTIONNAIRE_DRAFT,
+                            settings.QUESTIONNAIRE_SUBMITTED,
+                            settings.QUESTIONNAIRE_REVIEWED
+                            ])
         )
 
         # Users see Questionnaires with status "submitted" if they are
@@ -819,18 +826,23 @@ def get_query_status_filter(request, moderation_mode=''):
         # see the "reviewed" Questionnaires they approved.
         status_filter |= (
             Q(members=request.user) &
-            Q(questionnairemembership__role__in=['reviewer'])
-            & Q(status__in=[2, 3]))
+            Q(questionnairemembership__role__in=[
+                settings.QUESTIONNAIRE_REVIEWER
+            ])
+            & Q(status__in=[settings.QUESTIONNAIRE_SUBMITTED,
+                            settings.QUESTIONNAIRE_REVIEWED]))
 
         # Users see Questionnaires with status "reviewed" if they are
         # assigned as "publisher" for this Questionnaire.
         status_filter |= (
             Q(members=request.user) &
-            Q(questionnairemembership__role__in=['publisher'])
-            & Q(status__in=[3]))
+            Q(questionnairemembership__role__in=[
+                settings.QUESTIONNAIRE_PUBLISHER
+            ])
+            & Q(status__in=[settings.QUESTIONNAIRE_REVIEWED]))
 
     # Everybody sees Questionnaires with status "public".
-    status_filter |= Q(status=4)
+    status_filter |= Q(status=settings.QUESTIONNAIRE_PUBLIC)
 
     return status_filter
 
@@ -1134,7 +1146,7 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
     if request.POST.get('submit'):
 
         # Previous status must be "draft"
-        if questionnaire_object.status != 1:
+        if questionnaire_object.status != settings.QUESTIONNAIRE_DRAFT:
             messages.error(
                 request, 'The questionnaire could not be submitted because it '
                 'does not have to correct status.')
@@ -1147,7 +1159,7 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
             return
 
         # Delete the old data and update the status
-        questionnaire_object.status = 2
+        questionnaire_object.status = settings.QUESTIONNAIRE_SUBMITTED
         questionnaire_object.data_old = None
         questionnaire_object.save()
 
@@ -1157,7 +1169,7 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
     elif request.POST.get('review'):
 
         # Previous status must be "submitted"
-        if questionnaire_object.status != 2:
+        if questionnaire_object.status != settings.QUESTIONNAIRE_SUBMITTED:
             messages.error(
                 request, 'The questionnaire could not be reviewed because '
                 'it does not have to correct status.')
@@ -1174,7 +1186,7 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
         questionnaire_object.add_user(request.user, 'reviewer')
 
         # Update the status
-        questionnaire_object.status = 3
+        questionnaire_object.status = settings.QUESTIONNAIRE_REVIEWED
         questionnaire_object.save()
 
         messages.success(
@@ -1183,7 +1195,7 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
     elif request.POST.get('publish'):
 
         # Previous status must be "reviewed"
-        if questionnaire_object.status != 3:
+        if questionnaire_object.status != settings.QUESTIONNAIRE_REVIEWED:
             messages.error(
                 request, 'The questionnaire could not be published because '
                 'it does not have to correct status.')
@@ -1199,14 +1211,16 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
         # Set the previously "public" Questionnaire to "inactive".
         # Also remove it from ES.
         previously_public = Questionnaire.objects.filter(
-            code=questionnaire_object.code, status=4)
+            code=questionnaire_object.code,
+            status=settings.QUESTIONNAIRE_PUBLIC
+        )
         for previous_object in previously_public:
-            previous_object.status = 6
+            previous_object.status = settings.QUESTIONNAIRE_INACTIVE
             previous_object.save()
             delete_questionnaires_from_es(
                 configuration_code, [previous_object])
 
-        questionnaire_object.status = 4
+        questionnaire_object.status = settings.QUESTIONNAIRE_PUBLIC
         questionnaire_object.save()
 
         added, errors = put_questionnaire_data(
@@ -1232,20 +1246,22 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
 
     elif request.POST.get('reject'):
 
-        if questionnaire_object.status not in [2, 3]:
+        if questionnaire_object.status not in [
+            settings.QUESTIONNAIRE_SUBMITTED, settings.QUESTIONNAIRE_REVIEWED
+        ]:
             messages.error(
                 request, 'The questionnaire could not be rejected because it '
                 'does not have to correct status.')
             return
 
-        if (questionnaire_object.status == 2
+        if (questionnaire_object.status == settings.QUESTIONNAIRE_SUBMITTED
                 and 'review_questionnaire' not in permissions):
             messages.error(
                 request, 'The questionnaire could not be rejected because '
                 'you do not have permission to do so.')
             return
 
-        if (questionnaire_object.status == 3
+        if (questionnaire_object.status == settings.QUESTIONNAIRE_REVIEWED
                 and 'publish_questionnaire' not in permissions):
             messages.error(
                 request, 'The questionnaire could not be rejected because '
@@ -1255,7 +1271,7 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
         # Attach the reviewer to the questionnaire if he is not already
         questionnaire_object.add_user(request.user, 'reviewer')
 
-        questionnaire_object.status = 1
+        questionnaire_object.status = settings.QUESTIONNAIRE_DRAFT
         questionnaire_object.save()
 
         messages.success(

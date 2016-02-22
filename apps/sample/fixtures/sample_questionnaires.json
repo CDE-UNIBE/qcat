@@ -24,7 +24,7 @@
         "code": "sample_1",
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2015-02-10T16:07:20.847Z",
         "updated": "2015-02-10T16:07:20.847Z"
     }
@@ -55,7 +55,7 @@
         "code": "sample_2",
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2015-02-11T16:08:20.904Z",
         "updated": "2015-02-11T16:08:20.904Z"
     }

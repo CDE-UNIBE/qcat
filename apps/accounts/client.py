@@ -1,8 +1,14 @@
+# -*- coding: utf-8 -*-
+import logging
 import requests
 from django.contrib.auth import get_user_model
+from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.utils.timezone import now
+from django.utils.translation import ugettext_lazy as _
 from .conf import settings
+
+logger = logging.getLogger(__name__)
 
 
 class Typo3Client:
@@ -153,7 +159,14 @@ class Typo3Client:
             ))
         user.typo3_session_id = session_id
 
-        self.update_user(user, user_data)
+        # Related questionnaires are saved here as well. Befar an invalid
+        # questionnaire is saved an exception is raised - and the user not
+        # returned. Prevent this, but inform the admins about it.
+        try:
+            self.update_user(user, user_data)
+        except ValidationError as e:
+            logger.error(_(u"Error when logging in and "
+                           u"updating the user {}: {}").format(user_id, e))
 
         # Finally, return the django user.
         return user

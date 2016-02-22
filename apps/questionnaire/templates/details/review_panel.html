@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load compress %}
 
 <section class="row is-rhythmed">
   <div class="small-12 columns">
@@ -16,6 +17,9 @@
             <div class="{% if 'submit_questionnaire' in review_config.permissions %}medium-8{% else %}medium-12{% endif %} columns">
               <h3>{% trans "Edit" %}</h3>
               <p>{% trans "The version is saved as a draft. Editors can work on the draft. The compiler can submit it for review." %}</p>
+              {% if review_config.blocked_by %}
+                <p id="is-blocked" data-confirm="{% trans "Someone is still editing this questionnaire. If you submit it, these changes will be lost. Are you sure you want to proceed?" %}">{{ review_config.blocked_by }}</p>
+              {% endif %}
             </div>
             <div class="medium-4 columns text-right">
               {% if 'submit_questionnaire' in review_config.permissions %}
@@ -50,3 +54,22 @@
     </div>
   </div>
 </section>
+
+{# This should be added to 'js' with sekizai. However, this needs refactoring of the config, and the template structure as a context_instance and template blocks would be required #}
+{% compress js %}
+    <script>
+        document.addEventListener('DOMContentLoaded', function () {
+            var isBlocked = document.getElementById('is-blocked');
+            if (isBlocked !== null) {
+                btnSubmit = document.getElementById('button-submit');
+                btnSubmit.addEventListener('click', function() {
+                    event.preventDefault();
+                    var choice = confirm(isBlocked.getAttribute('data-confirm'));
+                    if (choice) {
+                        window.location.href = this.getAttribute('href');
+                    }
+                })
+            }
+        });
+    </script>
+{% endcompress %}

@@ -1532,6 +1532,7 @@ class QuestionnaireCategory(BaseConfigurationObject):
                 'configuration_name': configuration,
                 'toc_content': tuple(toc_content),
                 'questionnaire_identifier': questionnaire_identifier,
+                'questionnaire_object': questionnaire_object,
                 'has_changes': has_changes,
             })
 

@@ -125,7 +125,8 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     @patch.object(Typo3Client, 'get_and_update_django_user')
     @patch.object(WocatAuthenticationBackend, 'authenticate')
-    def doLogin(self, mock_authenticate, mock_get_and_update_django_user, user=None):
+    def doLogin(self, mock_authenticate, mock_get_and_update_django_user,
+                user=None):
         self.doLogout()
         if user is None:
             user = create_new_user()

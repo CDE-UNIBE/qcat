@@ -130,7 +130,10 @@ class QuestionnaireNewTest(TestCase):
     def test_calls_generic_function(self, mock_questionnaire_new):
         questionnaire_new(self.request)
         mock_questionnaire_new.assert_called_once_with(
-            self.request, *get_valid_new_values()[0], **get_valid_new_values()[1])
+            self.request,
+            *get_valid_new_values()[0],
+            **get_valid_new_values()[1]
+        )
 
 
 class QuestionnaireNewStepTest(TestCase):
