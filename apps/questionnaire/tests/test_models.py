@@ -1,5 +1,7 @@
 import uuid
 from datetime import datetime
+
+from django.contrib.auth.models import AnonymousUser
 from django.core.exceptions import ValidationError
 from django.utils.translation import activate
 from unittest.mock import patch
@@ -282,6 +284,13 @@ class QuestionnaireModelTest(TestCase):
         self.assertEqual(len(permissions), 2)
         self.assertIn('edit_questionnaire', permissions)
         self.assertIn('publish_questionnaire', permissions)
+
+    def test_get_permissions_anonymous_user(self):
+        # Anonymous users have no rights.
+        questionnaire = get_valid_questionnaire()
+        user = AnonymousUser()
+        permissions = questionnaire.get_permissions(user)
+        self.assertEqual(permissions, [])
 
     def test_get_users_returns_tuples(self):
         questionnaire = get_valid_questionnaire(self.user)
