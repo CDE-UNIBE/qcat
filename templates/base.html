@@ -49,9 +49,8 @@
       <script src="{% static 'js/modernizr.js' %}"></script>
     {% endcompress %}
 
-      {#  Activate if needed #}
-      {# {% render_block "css" %} #}
-      {# {% render_block "js_head" %}#}
+    {% render_block "css" %}
+    {% render_block "js_head" %}
 
     {% block social_meta_tags %}
       <meta property="og:image" content="{{ request.get_host }}{% static 'assets/img/wocat_logo.svg' %}"/>
@@ -171,15 +170,14 @@
     {% block content %}
     {% endblock %}
 
-    <!-- Block for js within specific templates. Add compress in the template.  -->
-    {#  Activate if needed #}
-    {# {% render_block "js" %} #}
     {% compress js %}
       <script src="{% static 'js/jquery.min.js' %}"></script>
       <script src="{% static 'js/foundation.min.js' %}"></script>
       <script src="{% static 'js/jquery.nstSlider.min.js' %}"></script>
       <script src="{% static 'js/main.min.js' %}"></script>
     {% endcompress %}
+    <!-- Block for js within specific templates. Add compress in the template.  -->
+    {% render_block "js" %}
 
     <footer class="row page-footer large-collapse" role="contentinfo">
       <nav class="sub-nav-footer medium-6 columns">
