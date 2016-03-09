@@ -21,12 +21,17 @@ django.settings_module('qcat.settings')
 ENVIRONMENTS = {
     'develop': {
         'branch': 'develop',
-        'host_string': settings.HOST_STRING_DEV,
         'label': 'dev',
+        'host_string': settings.HOST_STRING_DEV,
+        'opbeat_url': settings.OPBEAT_URL_DEV,
+        'opbeat_bearer': settings.OPBEAT_BEARER_DEV,
     },
     'master': {
         'branch': 'master',
         'label': 'live',
+        'host_string': settings.HOST_STRING_LIVE,
+        'opbeat_url': settings.OPBEAT_URL_LIVE,
+        'opbeat_bearer': settings.OPBEAT_BEARER_LIVE,
     },
     'common': {
         'project_name': 'qcat',
@@ -182,6 +187,7 @@ def _set_maintenance_mode(value, source_folder):
     # Prevent this from happening again.
     if not value and exists(settings.MAINTENANCE_LOCKFILE_PATH):
         run('rm {}'.format(settings.MAINTENANCE_LOCKFILE_PATH))
+    _reload_uwsgi()
 
 
 @task
@@ -191,6 +197,7 @@ def register_deployment():
     Call register_deployment with a local path that contains a .git directory
     after a release has been deployed.
     """
+    require('environment', provided_by=(develop, master))
     local_project_folder = dirname(dirname(__file__))
     with(lcd(local_project_folder)):
         revision = local('git log -n 1 --pretty="format:%H"', capture=True)
@@ -199,7 +206,7 @@ def register_deployment():
               ' -H "Authorization: Bearer {}"'
               ' -d rev="{}"'
               ' -d branch="{}"'
-              ' -d status=completed'.format(settings.OPBEAT_ORGANIZATION_URL,
-                                            settings.OPBEAT_APP_ID,
+              ' -d status=completed'.format(env.opbeat_url,
+                                            env.opbeat_bearer,
                                             revision,
                                             branch))

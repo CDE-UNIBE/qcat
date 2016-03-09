@@ -1,0 +1,77 @@
+{% extends 'form/base.html' %}
+
+{% load i18n %}
+{% load staticfiles %}
+
+{% block content %}
+  <form id="wizard-form" class="wizard" action="" method="POST">
+    {% csrf_token %}
+
+    <header class="wizard-header" role="banner">
+      <div class="row">
+        <div class="columns small-12 medium-9">
+          <a class="wizard-header-back" href="{{ overview_url }}">{% trans "Go Back" %}</a>
+          <h2 class="wizard-header-title">{% trans "Linked Questionnaires" %}</h2>
+        </div>
+        <div class="columns small-12 medium-3">
+          <a class="button secondary button-icon" href="#question1" data-magellan-step="previous">
+            <svg class="icon"><use xlink:href="#icon-chevron-thin-up"></use></svg>
+          </a><a class="button secondary button-icon" href="#question2" data-magellan-step="next">
+            <svg class="icon"><use xlink:href="#icon-chevron-thin-down"></use></svg>
+          </a>
+          <a id="button-submit" class="button expand is-{{ configuration_name }}" onclick="document.getElementById('wizard-form').submit();">{% trans "Save" %}</a>
+        </div>
+      </div>
+      <div data-magellan-expedition="fixed" style="" class="fixed">
+        <dl>
+          {% for subcategory_config, subcategory_formsets in category_formsets %}
+            <dd data-magellan-arrival="question{{ forloop.counter }}" class="{% if forloop.counter == 1 %}active{% endif %}">
+              <a href="#question{{ forloop.counter }}">{{ subcategory_config.label }}</a>
+            </dd>
+          {% endfor %}
+        </dl>
+      </div>
+    </header>
+
+    {% if not valid %}
+      <div data-alert class="alert-box alert">
+        <p>{% trans "There was a problem with your submission. Errors have been highlighted below." %}</p>
+      </div>
+    {% endif %}
+
+    <main class="main inner-wrap">
+      {% for config, data_list in link_forms %}
+        {% if config.keyword == 'technologies' %}
+          <a name="question{{ forloop.counter }}" data-magellan-destination="question{{ forloop.counter }}" class="{% if forloop.counter == 1 %}active{% endif %}"></a>
+          <fieldset class="row">
+            <legend>{{ config.label }}</legend>
+            {% trans "<p>Indicate SLM Technologies which were promoted by and implemented through this Approach, and indicate compilers.</p><p>The major Technologies promoted by and implemented through this Approach must be described in separate SLM Technology questionnaires. WOCAT recommends that you first fill in the Technology questionnaire and that you focus the description of the Approach to the Technology(ies) documented.</p><p>Only existing SLM Technologies can be linked.</p>" as msg %}
+            {% include "form/helptext.html" with helptext=msg %}
+            <div class="links is-rhythmed">
+              {% for data in data_list %}
+                <div class="alert-box secondary">
+                  {{ data.name }}
+                  <a href="#" class="close" data-input-hidden="links__{{ config.keyword }}__{{ data.id }}">&times;</a>
+                </div>
+                <input id="links__{{ config.keyword }}__{{ data.id }}" type="hidden" name="links__{{ config.keyword }}" value="{{ data.id }}" />
+              {% empty %}
+                <p class="empty">{% trans "No linked SLM Technologies" %}</p>
+              {% endfor %}
+            </div>
+            <input type="search" placeholder="{% trans 'Search' %}" class="link_search_field" data-keyword="{{ config.keyword }}" data-url="{{ config.search_url }}" data-translation-no-results="{% trans 'No results found' %}" data-translation-too-many-results="{% trans 'Too many results found, please narrow the search' %}"/>
+          </fieldset>
+        {% endif %}
+      {% endfor %}
+    </main>
+  </form>
+
+{% endblock %}
+
+{% block head %}
+  <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet">
+{% endblock %}
+
+{% block bottom %}
+  <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+{% endblock %}

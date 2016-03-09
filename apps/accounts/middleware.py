@@ -52,13 +52,19 @@ class WocatAuthenticationMiddleware(object):
         # the user in.
         elif session_id:
             user_id = typo3_client.get_user_id(session_id)
-            user = typo3_client.get_and_update_django_user(user_id, session_id)
+            if not user_id:
+                # Delete auth cookie for invalid users.
+                self.delete_auth_cookie = True
+            else:
+                user = typo3_client.get_and_update_django_user(
+                    user_id, session_id
+                )
 
-            if user_id and user:
-                user.backend = 'accounts.authentication.' \
-                               'WocatAuthenticationBackend'
-                login(request, user)
-                self.refresh_login_timeout = True
+                if user_id and user:
+                    user.backend = 'accounts.authentication.' \
+                                   'WocatAuthenticationBackend'
+                    login(request, user)
+                    self.refresh_login_timeout = True
 
         if force_login:
             with ignored(KeyError):

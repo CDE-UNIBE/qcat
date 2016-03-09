@@ -180,7 +180,7 @@ class SaveSessionQuestionnaireTest(TestCase):
         self.assertIsInstance(q, list)
         self.assertEqual(len(q), 1)
         q = q[0]
-        self.assertEqual(len(q), 6)
+        self.assertEqual(len(q), 7)
         self.assertEqual(q['configuration_code'], 'sample')
         self.assertEqual(q['questionnaire_code'], 'code')
         self.assertEqual(q['questionnaire'], {'data': 'bar'})
@@ -198,7 +198,7 @@ class SaveSessionQuestionnaireTest(TestCase):
         self.assertIsInstance(q, list)
         self.assertEqual(len(q), 1)
         q = q[0]
-        self.assertEqual(len(q), 6)
+        self.assertEqual(len(q), 7)
         self.assertEqual(q['configuration_code'], 'sample')
         self.assertEqual(q['questionnaire_code'], 'code')
         self.assertEqual(q['questionnaire'], {'data': 'bar'})
@@ -211,7 +211,7 @@ class SaveSessionQuestionnaireTest(TestCase):
         self.assertIsInstance(q, list)
         self.assertEqual(len(q), 1)
         q = q[0]
-        self.assertEqual(len(q), 6)
+        self.assertEqual(len(q), 7)
         self.assertEqual(q['configuration_code'], 'sample')
         self.assertEqual(q['questionnaire_code'], 'code')
         self.assertEqual(q['questionnaire'], {})
@@ -227,7 +227,7 @@ class SaveSessionQuestionnaireTest(TestCase):
         self.assertIsInstance(q, list)
         self.assertEqual(len(q), 1)
         q = q[0]
-        self.assertEqual(len(q), 6)
+        self.assertEqual(len(q), 7)
         self.assertEqual(q['configuration_code'], 'sample')
         self.assertEqual(q['questionnaire_code'], 'code')
         self.assertEqual(q['questionnaire'], {'data': 'bar'})

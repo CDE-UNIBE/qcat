@@ -1,46 +1,61 @@
 import magic
 import os
 import sys
+import subprocess
 from django.conf import settings
 from django.core.files.uploadedfile import UploadedFile
 from django.utils.translation import ugettext as _
-from imagekit import ImageSpec
-from imagekit.processors import ResizeToFill
 from uuid import uuid4
 
-from questionnaire.models import File
+
+UPLOAD_THUMBNAIL_EXTENSION = 'jpg'
+UPLOAD_THUMBNAIL_CONTENT_TYPE = 'image/jpeg'
 
 
-def handle_upload(file):
+def create_thumbnails(file_path, content_type):
     """
-    The main function to handle an uploaded file. Stores the file and
-    creates a database entry for it. If the file is an image, thumbnails
-    are created.
+    Create thumbnails for a file found under a given path. The thumbnails are
+    stored and the identifiers returned in a dictionaries with their format.
 
-    The storage of the file is handled by :func:`store_file`.
+    Parameters taken from http://stackoverflow.com/a/7262050/841644
 
     Args:
-        ``file`` (django.core.files.uploadedfile.UploadedFile):
-        An uploaded file.
+        file_path: The path of the original file.
+
+        content_type: The content type of the file.
 
     Returns:
-        :mod:`questionnaire.models.File`.
+        dict. A dictionary where each key is a thumbnail format and the value
+        the identifier of the respective thumbnail file.
     """
-    file_uid = store_file(file)
-    file_type = file.content_type.split('/')[0]
+    quality = '85%'
+
     thumbnails = {}
-    if file_type == 'image':
-        thumbnail_formats = settings.UPLOAD_IMAGE_THUMBNAIL_FORMATS
-        for format_name, format_settings in thumbnail_formats:
-            image_generator = Thumbnail(
-                source=file,
-                dimensions=(format_settings[0], format_settings[1]))
-            result = image_generator.generate()
-            thumbnails[format_name] = store_file(result.read())
-    file_model = File.create_new(
-        content_type=file.content_type, size=file.size, thumbnails=thumbnails,
-        uuid=file_uid)
-    return file_model
+    for format_name, format_settings in settings.UPLOAD_IMAGE_THUMBNAIL_FORMATS:
+        uid = str(uuid4())
+
+        resize_format = '{}x{}'.format(format_settings[0], format_settings[1])
+
+        folder_path = get_upload_folder_path(uid)
+        if not os.path.exists(folder_path):
+            os.makedirs(folder_path)
+        thumbnail_path = os.path.join(
+            folder_path, '{}.{}'.format(uid, UPLOAD_THUMBNAIL_EXTENSION))
+
+        if content_type == 'application/pdf':
+            params = '-density 300 -background white -alpha remove'
+        else:
+            params = '-strip -interlace Plane -sampling-factor 4:2:0'
+
+        cmd = 'convert -quality {quality} -resize {size} {params} ' \
+              '{input}[0] {output}'.format(quality=quality, size=resize_format,
+                                           params=params, input=file_path,
+                                           output=thumbnail_path)
+        subprocess.call(cmd, shell=True)
+
+        thumbnails[format_name] = uid
+
+    return thumbnails
 
 
 def store_file(file):
@@ -49,11 +64,13 @@ def store_file(file):
     checking it.
 
     Args:
-        ``file`` (django.core.files.uploadedfile.UploadedFile or
+        file (django.core.files.uploadedfile.UploadedFile or
         Buffer).
 
     Returns:
-        ``str``. The uuid of stored file.
+        str. The uuid of stored file.
+
+        str. The path of the file.
     """
     if isinstance(file, UploadedFile):
         content_type = file.content_type
@@ -78,13 +95,57 @@ def store_file(file):
         upload_folder, *get_upload_folder_structure(uid))
     if not os.path.exists(upload_path):
         os.makedirs(upload_path)
-    with open(os.path.join(upload_path, filename), 'wb+') as destination:
+    file_path = os.path.join(upload_path, filename)
+    with open(file_path, 'wb+') as destination:
         if isinstance(file, UploadedFile):
             for chunk in file.chunks():
                 destination.write(chunk)
         else:
             destination.write(file)
-    return uid
+    return uid, file_path
+
+
+def get_upload_folder_path(uid):
+    """
+    Return the path of the upload folder of a given file.
+
+    Args:
+        uid (str): The identifier of the file.
+
+    Returns:
+        str. The path of the file in its upload folder.
+    """
+    upload_folder = settings.MEDIA_ROOT
+    return os.path.join(upload_folder, *get_upload_folder_structure(uid))
+
+
+def get_file_path(file_object, thumbnail=None):
+    """
+    Return the path and name of a file.
+
+    Args:
+        file_object (questionnaire.models.File): A file model instance.
+
+        thumbnail (str): The thumbnail format or None.
+
+    Returns:
+        str. The path of the file in its upload folder.
+
+        str. The name of the file.
+    """
+    file_extension = get_file_extension_by_content_type(
+        file_object.content_type)
+    uid = file_object.uuid
+    if thumbnail is not None:
+        file_extension = UPLOAD_THUMBNAIL_EXTENSION
+        uid = file_object.thumbnails.get(thumbnail)
+        if uid is None:
+            return None, None
+
+    file_name = '{}.{}'.format(uid, file_extension)
+    upload_path = get_upload_folder_path(uid)
+    file_path = os.path.join(upload_path, file_name)
+    return file_path, file_name
 
 
 def retrieve_file(file_object, thumbnail=None):
@@ -92,28 +153,17 @@ def retrieve_file(file_object, thumbnail=None):
     Read and return a file.
 
     Args:
-        ``file_object`` (:mod:`questionnaire.models.File`). A file
-        object.
+        file_object (:mod:`questionnaire.models.File`). A file object.
 
-    Kwargs:
-        ``thumbnail`` (str): The name of the thumbnail format if
+        thumbnail (str): The name of the thumbnail format if
         available.
 
     Returns:
         ``Buffer``, ``str``. The file object read into memory and the
         filename of the file.
     """
-    file_extension = get_file_extension_by_content_type(
-        file_object.content_type)
-    uid = file_object.uuid
-    if thumbnail is not None:
-        uid = file_object.thumbnails.get(thumbnail)
-        file_extension = 'jpg'
-    filename = '{}.{}'.format(uid, file_extension)
-    upload_folder = settings.MEDIA_ROOT
-    upload_path = os.path.join(
-        upload_folder, *get_upload_folder_structure(uid))
-    return open(os.path.join(upload_path, filename), 'rb'), filename
+    file_path, file_name = get_file_path(file_object, thumbnail=thumbnail)
+    return open(file_path, 'rb'), file_name
 
 
 def get_all_file_extensions():
@@ -160,12 +210,12 @@ def get_file_extension_by_content_type(content_type):
         :doc:`/configuration/settings`
 
     Args:
-        ``content_type`` (str): The content type to find the file
+        content_type (str): The content type to find the file
         extension for.
 
     Returns:
-        ``str`` or ``None``. The file extension for the given content
-        type. ``None`` if the content type was not found.
+        str or None. The file extension for the given content type. None if the
+        content type was not found.
     """
     file_extension = [
         v[1] for v in get_all_file_extensions() if v[0] == content_type]
@@ -174,7 +224,7 @@ def get_file_extension_by_content_type(content_type):
     return file_extension[0]
 
 
-def get_url_by_filename(filename):
+def get_url_by_file_name(file_name):
     """
     Return the relative URL of a file based on its filename. The URL
     basically indicates the location where the file was stored in the
@@ -185,73 +235,16 @@ def get_url_by_filename(filename):
         exists.
 
     Args:
-        ``filename`` (str): The full filename of the file.
+        file_name (str): The full filename of the file.
 
     Returns:
-        ``str``. The relative URL of the file.
+        str. The relative URL of the file.
     """
-    folder_path = os.path.join(*get_upload_folder_structure(filename))
-    return os.path.join(settings.MEDIA_URL, folder_path, filename)
+    folder_path = os.path.join(*get_upload_folder_structure(file_name))
+    return os.path.join(settings.MEDIA_URL, folder_path, file_name)
 
 
-def get_url_by_identifier(uuid, thumbnail=None):
-    """
-    Return the relative URL of a file based on its identifier. A query
-    is made to find the file in the database table, then the file's
-    method is used to get its url.
-
-    .. seealso::
-        :func:`questionnaire.models.File.get_url`
-
-    Args:
-        ``uuid`` (str): The identifier of the file.
-
-    Kwargs:
-        ``thumbnail`` (str): The name of the thumbnail for which the URL
-        shall be returned.
-
-    Returns:
-        ``str`` or ``None``. The relative URL of the file or ``None`` if
-        the file was not found.
-    """
-    try:
-        file = File.objects.get(uuid=uuid)
-    except File.DoesNotExist:
-        return None
-    return file.get_url(thumbnail=thumbnail)
-
-
-def get_interchange_urls_by_identifier(uuid, as_list=False):
-    """
-    Return the interchange URLs of a file based on its identifier. A
-    query is made to find the file in the database table, then the
-    file's method is used to get its URLs.
-
-    .. seealso::
-        :func:`questionnaire.models.File.get_interchange_urls`
-
-    Args:
-        ``uuid`` (str): The identifier of the file.
-
-    Kwargs:
-        ``as_list`` (bool): A boolean indicating whether the list of
-        interchange URLs is to be returned as string (``True``) or as
-        list (``False``).
-
-    Returns:
-        ``str``. The interchange URLs of the files.
-    """
-    try:
-        file = File.objects.get(uuid=uuid)
-    except File.DoesNotExist:
-        return ''
-    if as_list is True:
-        return file.get_interchange_urls_as_list()
-    else:
-        return file.get_interchange_urls()
-
-
-def get_upload_folder_structure(filename):
+def get_upload_folder_structure(file_name):
     """
     Return the structure in the upload folder used for storing and
     retrieving uploaded files.
@@ -264,31 +257,13 @@ def get_upload_folder_structure(filename):
     ``9c/d/9cd7b281-2c70-42eb-86ec-e29fc755cc1e.jpg``.
 
     Args:
-        ``filename`` (str): The name of the file.
+        file_name (str): The name of the file.
 
     Returns:
-        ``tuple`` or ``None``. A tuple of the folders or none if there
-        was a problem with the filename.
+        list. A list of the folders or an empty list if there was a problem with
+        the file name.
     """
     try:
-        return filename[0:2], filename[2:3]
-    except:
-        return None
-
-
-class Thumbnail(ImageSpec):
-    """
-    This is the class used for creating thumbnails of uploaded images.
-    The dimensions of the thumbnails are passed as constructor
-    arguments.
-
-    .. important::
-        The thumbnails are always stored as JPEG files with the
-        extension ``.jpg``.
-    """
-    format = 'JPEG'
-    options = {'quality': 60}
-
-    def __init__(self, source=None, dimensions=(0, 0)):
-        self.processors = [ResizeToFill(dimensions[0], dimensions[1])]
-        super(Thumbnail, self).__init__(source)
+        return [file_name[0:2], file_name[2:3]]
+    except TypeError:
+        return []

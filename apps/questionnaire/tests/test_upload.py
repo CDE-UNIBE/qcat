@@ -3,19 +3,15 @@ from django.core.files.uploadedfile import SimpleUploadedFile
 from unittest.mock import patch, Mock
 
 from qcat.tests import TestCase
-from questionnaire.models import File
 from questionnaire.upload import (
     get_all_file_extensions,
     get_file_extension_by_content_type,
-    get_interchange_urls_by_identifier,
+    create_thumbnails,
     get_upload_folder_structure,
-    get_url_by_filename,
-    get_url_by_identifier,
-    handle_upload,
+    get_url_by_file_name,
     retrieve_file,
     store_file,
 )
-from questionnaire.tests.test_models import get_valid_file
 from questionnaire.tests.test_views import valid_file
 
 TEST_UPLOAD_IMAGE_THUMBNAIL_FORMATS = (
@@ -35,38 +31,22 @@ TEST_UPLOAD_VALID_FILES = {
 }
 
 
-class HandleUploadTest(TestCase):
+@override_settings(
+    UPLOAD_IMAGE_THUMBNAIL_FORMATS=TEST_UPLOAD_IMAGE_THUMBNAIL_FORMATS)
+@patch('questionnaire.upload.os')
+class CreateThumbnailsTest(TestCase):
 
-    @patch('questionnaire.upload.store_file')
-    def test_calls_store_file(self, mock_store_file):
-        mock_store_file.return_value = 'foo'
-        file = SimpleUploadedFile('img.jpg', open(valid_file, 'rb').read())
-        file.content_type = 'text/plain'
-        handle_upload(file)
-        mock_store_file.assert_called_once_with(file)
-
-    @override_settings(
-        UPLOAD_IMAGE_THUMBNAIL_FORMATS=TEST_UPLOAD_IMAGE_THUMBNAIL_FORMATS)
-    @patch('questionnaire.upload.store_file')
-    def test_calls_store_file_image(self, mock_store_file):
-        mock_store_file.return_value = 'foo'
-        file = SimpleUploadedFile('img.jpg', open(valid_file, 'rb').read())
-        file.content_type = 'image/jpeg'
-        handle_upload(file)
-        mock_store_file.assert_called_count(3)
-
-    @override_settings(UPLOAD_VALID_FILES=TEST_UPLOAD_VALID_FILES)
-    def test_returns_file_model(self):
-        file = SimpleUploadedFile('img.png', open(valid_file, 'rb').read())
-        file.content_type = 'image/png'
-        ret = handle_upload(file)
-        self.assertIsInstance(ret, File)
+    @patch('questionnaire.upload.subprocess')
+    def test_calls_subprocess(self, mock_subprocess, mock_os):
+        create_thumbnails('path', 'content_type')
+        mock_subprocess.call.assert_call_count(3)
 
 
+@patch('questionnaire.upload.os.makedirs')
 class StoreFileTest(TestCase):
 
     @patch('questionnaire.upload.magic.from_buffer')
-    def test_uses_magic_to_determine_content_type(self, mock_magic):
+    def test_uses_magic_to_determine_content_type(self, mock_magic, mock_os):
         file = Mock()
         with self.assertRaises(Exception):
             store_file(file)
@@ -74,14 +54,15 @@ class StoreFileTest(TestCase):
 
     @override_settings(UPLOAD_VALID_FILES=TEST_UPLOAD_VALID_FILES)
     @patch('questionnaire.upload.get_file_extension_by_content_type')
-    def test_calls_get_file_extension_by_content_type(self, mock_func):
+    def test_calls_get_file_extension_by_content_type(self, mock_func, mock_os):
         file = SimpleUploadedFile('img.png', open(valid_file, 'rb').read())
         file.content_type = 'image/png'
-        store_file(file)
+        with self.assertRaises(Exception):
+            store_file(file)
         mock_func.assert_called_once_with('image/png')
 
     @override_settings(UPLOAD_VALID_FILES=TEST_UPLOAD_VALID_FILES)
-    def test_raises_exception_if_invalid_file_extension(self):
+    def test_raises_exception_if_invalid_file_extension(self, mock_os):
         file = SimpleUploadedFile('img.png', open(valid_file, 'rb').read())
         file.content_type = 'foo'
         with self.assertRaises(Exception):
@@ -92,19 +73,14 @@ class StoreFileTest(TestCase):
     @patch('questionnaire.upload.sys.getsizeof')
     @patch('questionnaire.upload.magic.from_buffer')
     def test_raises_exception_if_file_too_big(
-            self, mock_from_buffer, mock_get_size_of, mock_get_file_extension):
+            self, mock_from_buffer, mock_get_size_of, mock_get_file_extension,
+            mock_os):
         mock_from_buffer.return_value = b''
         mock_get_size_of.return_value = 2
         mock_get_file_extension.return_value = 'some/filetype'
         file = Mock()
         with self.assertRaises(Exception):
             store_file(file)
-
-    def test_returns_str(self):
-        file = SimpleUploadedFile('img.png', open(valid_file, 'rb').read())
-        file.content_type = 'image/png'
-        ret = store_file(file)
-        self.assertIsInstance(ret, str)
 
 
 @override_settings(UPLOAD_VALID_FILES=TEST_UPLOAD_VALID_FILES)
@@ -160,54 +136,27 @@ class GetFileExtensionByContentTypeTest(TestCase):
         self.assertIsNone(ext)
 
 
-class GetUrlByFilenameTest(TestCase):
+class GetUrlByFileNameTest(TestCase):
 
     @patch('questionnaire.upload.get_upload_folder_structure')
     def test_calls_get_upload_folder_structure(self, func):
         func.return_value = 'foo'
-        get_url_by_filename('foo.jpg')
+        get_url_by_file_name('foo.jpg')
         func.assert_called_once_with('foo.jpg')
 
     @override_settings(MEDIA_URL='/media/')
     @patch('questionnaire.upload.get_upload_folder_structure')
     def test_returns_url(self, mock_get_upload_folder_structure):
         mock_get_upload_folder_structure.return_value = 'a', 'b'
-        url = get_url_by_filename('foo.jpg')
+        url = get_url_by_file_name('foo.jpg')
         self.assertEqual(url, '/media/a/b/foo.jpg')
-
-
-class GetUrlByIdentifierTest(TestCase):
-
-    @patch.object(File, 'get_url')
-    def test_calls_file_get_url(self, mock_get_url):
-        file = get_valid_file()
-        get_url_by_identifier(file.uuid, thumbnail='foo')
-        mock_get_url.assert_called_once_with(thumbnail='foo')
-
-    def test_returns_none_if_file_not_found(self):
-        self.assertIsNone(get_url_by_identifier('foo'))
-
-
-@override_settings(
-    UPLOAD_IMAGE_THUMBNAIL_FORMATS=TEST_UPLOAD_IMAGE_THUMBNAIL_FORMATS)
-class GetInterchangeUrlsByIdentifierTest(TestCase):
-
-    @patch.object(File, 'get_interchange_urls')
-    def test_calls_file_get_url(self, mock_get_interchange_url):
-        file = get_valid_file()
-        get_interchange_urls_by_identifier(file.uuid)
-        mock_get_interchange_url.assert_called_once_with()
-
-    def test_returns_empty_string_if_not_found(self):
-        f = get_interchange_urls_by_identifier('foo')
-        self.assertEqual(f, '')
 
 
 class GetUploadFolderStructureTest(TestCase):
 
     def test_returns_folders(self):
         folders = get_upload_folder_structure('filename')
-        self.assertEqual(folders, ('fi', 'l'))
+        self.assertEqual(folders, ['fi', 'l'])
 
-    def test_returns_None_if_exception(self):
-        self.assertIsNone(get_upload_folder_structure(None))
+    def test_returns_empty_if_exception(self):
+        self.assertEqual(get_upload_folder_structure(None), [])

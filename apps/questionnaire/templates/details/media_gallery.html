@@ -7,7 +7,7 @@
       {% for data in media_content %}
         {% if data.image %}
           <li>
-            <a class="th" href="{{ data.image }}"><img src="{{ data.interchange.1.0 }}" data-caption="{{ data.caption }}<br><i>{{ data.date_location|default:'' }}</i><br><strong>Photo: {{ data.photographer|default:'-' }}</strong>"></a>
+            <a class="th" href="{{ data.image }}"><img src="{{ data.interchange_list.1.0 }}" data-caption="{{ data.caption }}<br><i>{{ data.date_location|default:'' }}</i><br><strong>Photo: {{ data.photographer|default:'-' }}</strong>"></a>
           </li>
         {% endif %}
       {% endfor %}

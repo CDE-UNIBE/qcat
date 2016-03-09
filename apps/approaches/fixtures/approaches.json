@@ -19,7 +19,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Aims/objectives"
+            "en": "Aims/ objectives"
           }
         }
       }
@@ -61,10 +61,10 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Specify stakeholders and describe their roles."
+            "en": "Specify stakeholders and describe their roles"
           },
           "helptext": {
-            "en": "If relevant, also specify gender, age, status, ethnicity, etc.)"
+            "en": "If relevant, also specify gender, age, status, ethnicity, etc."
           }
         }
       }
@@ -109,7 +109,7 @@
             "en": "Roles of involved stakeholders"
           },
           "helptext": {
-            "en": "If relevant, indicate gender, status and ethnicity and mention who accepted /resisted, who benefited / was excluded and if equity was advanced."
+            "en": "If relevant, indicate gender, status, and ethnicity, and mention who accepted/ resisted, who benefited/ was excluded and if equity was advanced."
           }
         }
       }
@@ -123,7 +123,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Conclusions/lessons learnt (major strengths and weaknesses)"
+            "en": "Conclusions/ lessons learnt (major strengths and weaknesses)"
           }
         }
       }
@@ -277,7 +277,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Is decision based on"
+            "en": "Is decision-making based on"
           }
         }
       }
@@ -291,10 +291,10 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Was training provided to land users / other stakeholders?"
+            "en": "Was training provided to land users/ other stakeholders?"
           },
           "helptext": {
-            "en": "<p>If <strong>no</strong>, go to question 5.2</p><p>If <strong>yes</strong>, please answer the following sub-questions</p>"
+            "en": "<p>If yes, please answer the following sub-questions.</p><p>If no, go to question 5.2.</p>"
           }
         }
       }
@@ -322,7 +322,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "If relevant specify gender, age, status, ethnicity etc"
+            "en": "If relevant, specify gender, age, status, ethnicity, etc."
           }
         }
       }
@@ -449,7 +449,10 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Do land users have access to advisory service?"
+            "en": "Do land users have access to an advisory service?"
+          },
+          "helptext": {
+            "en": "<p><strong>Advisory service</strong>: technical assistance provided to land users by extension workers/ advisors from government, NGOs, projects, etc.</p><p>If yes, please answer the following sub-questions.</p><p>If no, go to question 5.2.</p>"
           }
         }
       }
@@ -494,7 +497,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Describe / comment"
+            "en": "Describe/ comment"
           }
         }
       }
@@ -640,7 +643,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Were contributions made per area, per unit or per product provided to land users?"
+            "en": "Were contributions made per area, per unit, or per product provided to land users?"
           },
           "helptext": {
             "en": "E.g. tax exemptions, compensation payments, subsidies, etc."
@@ -789,7 +792,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "If yes, specify conditions (interest rate, pay-back, etc.)"
+            "en": "If yes, specify conditions (interest rate, payback, etc.)"
           }
         }
       }
@@ -831,7 +834,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Were other incentives or instrument used to promote implementation of SLM Technologies?"
+            "en": "Were other incentives or instruments used to promote implementation of SLM Technologies?"
           }
         }
       }
@@ -887,7 +890,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Did the Approach enable evidence-based decision making?"
+            "en": "Did the Approach enable evidence-based decision-making?"
           }
         }
       }
@@ -929,7 +932,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Did the Approach mobilize / improve access to financial resources for SLM implementation?"
+            "en": "Did the Approach mobilize/ improve access to financial resources for SLM implementation?"
           }
         }
       }
@@ -971,7 +974,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Did the Approach build / strengthen institutions, collaboration between stakeholders?"
+            "en": "Did the Approach build/ strengthen institutions, collaboration between stakeholders?"
           }
         }
       }
@@ -1013,7 +1016,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Did the Approach improve land tenure issues / user rights that hindered the implementation of the Technology?"
+            "en": "Did the Approach improve land tenure issues/ user rights that hindered the implementation of the Technology?"
           }
         }
       }
@@ -1027,7 +1030,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Did the Approach lead to improved food security/improved nutrition?"
+            "en": "Did the Approach lead to improved food security/ improved nutrition?"
           }
         }
       }
@@ -1055,7 +1058,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Did the Approach lead to more sustainable use / sources of energy?"
+            "en": "Did the Approach lead to more sustainable use/ sources of energy?"
           }
         }
       }
@@ -1139,10 +1142,10 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Strengths / advantages in the land users' view"
+            "en": "Strengths/ advantages in the land users' view"
           },
           "helptext": {
-            "en": "<strong>Land user</strong>: the person / entity who implements / maintains land conservation, including individual small/large scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc"
+            "en": "<strong>Land user</strong>: the person/ entity who implements/ maintains land conservation, including individual small-/ large-scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc."
           }
         }
       }
@@ -1156,7 +1159,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Strengths / advantages in the compiler’s or other key resource person’s view"
+            "en": "Strengths/ advantages in the compiler’s or other key resource person’s view"
           }
         }
       }
@@ -1170,10 +1173,10 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Weaknesses / disadvantages in the land users' view"
+            "en": "Weaknesses/ disadvantages in the land users' view"
           },
           "helptext": {
-            "en": "<strong>Land user</strong>: the person / entity who implements / maintains land conservation, including individual small/large scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc"
+            "en": "<strong>Land user</strong>: the person/ entity who implements/ maintains land conservation, including individual small-/ large-scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc."
           }
         }
       }
@@ -1211,11 +1214,112 @@
   },
   {
     "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Flow chart"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 7084
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Description"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 7085
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Author"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 7086
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Indicate lead agency"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 7087
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Indicate name of project (if relevant)"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 7088
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Is monitoring and evaluation part of the Approach?"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 7089
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "If yes, is systematic documentation of SLM practices part of reporting procedures?"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 7090
+  },
+  {
+    "fields": {
       "translation_type": "value",
       "data": {
         "approaches": {
           "label": {
-            "en": "Local land users / community"
+            "en": "local land users/ community"
+          },
+          "helptext": {
+            "en": "land users themselves without international agencies, government and non-governmental interventions"
           }
         }
       }
@@ -1229,7 +1333,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Community based organisations"
+            "en": "community-based organizations"
           }
         }
       }
@@ -1243,7 +1347,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "SLM specialists / agricultural advisors"
+            "en": "SLM specialists/ agricultural advisors"
           }
         }
       }
@@ -1257,7 +1361,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Teachers / school children / students"
+            "en": "teachers/ school children/ students"
           }
         }
       }
@@ -1285,7 +1389,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Private sector"
+            "en": "private sector"
           }
         }
       }
@@ -1299,7 +1403,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Local government"
+            "en": "local government"
           }
         }
       }
@@ -1313,7 +1417,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "National government (planners, decision-makers)"
+            "en": "national government (planners, decision-makers)"
           }
         }
       }
@@ -1327,7 +1431,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "International organization"
+            "en": "international organization"
           }
         }
       }
@@ -1341,7 +1445,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "traditional/indigenous"
+            "en": "traditional/ indigenous"
           }
         }
       }
@@ -1355,7 +1459,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "recent local initiative / innovative"
+            "en": "recent local initiative/ innovative"
           }
         }
       }
@@ -1369,7 +1473,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "project/programme based"
+            "en": "project/ programme based"
           }
         }
       }
@@ -1411,7 +1515,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "by land users alone (self-initiative / bottom-up)?"
+            "en": "by land users alone (self-initiative/ bottom-up)?"
           }
         }
       }
@@ -1481,7 +1585,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "by politicians / leaders?"
+            "en": "by politicians/ leaders?"
           }
         }
       }
@@ -1495,7 +1599,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "evaluation of well documented SLM knowledge (evidence based decision making)"
+            "en": "evaluation of well-documented SLM knowledge (evidence-based decision-making)"
           }
         }
       }
@@ -1551,7 +1655,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "field staff / advisors"
+            "en": "field staff/ advisors"
           }
         }
       }
@@ -1579,7 +1683,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "site visits / farmer to farmer"
+            "en": "site visits/ farmer to farmer"
           }
         }
       }
@@ -1635,7 +1739,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "on land users fields"
+            "en": "on land users' fields"
           }
         }
       }
@@ -1691,7 +1795,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "yes, moderate"
+            "en": "yes, moderately"
           }
         }
       }
@@ -1705,7 +1809,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "yes, great"
+            "en": "yes, greatly"
           }
         }
       }
@@ -1873,7 +1977,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "None"
+            "en": "none"
           }
         }
       }
@@ -1887,7 +1991,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Labour"
+            "en": "labour"
           }
         }
       }
@@ -1901,7 +2005,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Equipment"
+            "en": "equipment"
           }
         }
       }
@@ -1915,7 +2019,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Agricultural"
+            "en": "agricultural"
           }
         }
       }
@@ -1929,7 +2033,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Construction"
+            "en": "construction"
           }
         }
       }
@@ -1943,7 +2047,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Infrastructure"
+            "en": "infrastructure"
           }
         }
       }
@@ -2251,7 +2355,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "payments / subsidies"
+            "en": "payments/ subsidies"
           }
         }
       }
@@ -2265,7 +2369,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "rules and regulations (fines) / enforcement"
+            "en": "rules and regulations (fines)/ enforcement"
           }
         }
       }
@@ -2279,7 +2383,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "prestige, social pressure / social cohesion"
+            "en": "prestige, social pressure/ social cohesion"
           }
         }
       }
@@ -2293,7 +2397,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "affiliation to movement / project / group / networks"
+            "en": "affiliation to movement/ project/ group/ networks"
           }
         }
       }
@@ -2419,7 +2523,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Researchers"
+            "en": "researchers"
           }
         }
       }
@@ -2433,7 +2537,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "social / cultural / religious norms and values"
+            "en": "social/ cultural/ religious norms and values"
           }
         }
       }
@@ -2447,7 +2551,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "availability / access to financial resources and services"
+            "en": "availability/ access to financial resources and services"
           }
         }
       }
@@ -2475,7 +2579,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "collaboration / coordination of actors"
+            "en": "collaboration/ coordination of actors"
           }
         }
       }
@@ -2587,7 +2691,7 @@
       "data": {
         "approaches": {
           "helptext": {
-            "en": "Note: Some projects / programmes include many activities other than SLM. Please calculate / estimate only the amount that was used for the Approach as described here. Refer to project documents."
+            "en": "Note: Some projects/ programmes include many activities other than SLM. Please calculate/ estimate only the amount that was used for the Approach as described here. Refer to project documents."
           }
         }
       }
@@ -2643,11 +2747,14 @@
       "data": {
         "approaches": {
           "label": {
+            "en": "Name of the SLM Approach (hereafter referred to as the Approach)"
+          },
+          "label_view": {
             "en": "Name of the SLM Approach"
           },
           "numbering": "1.1",
           "helptext": {
-            "en": "Do not use exactly same name as used for the corresponding Technology (QT), try to name the main characteristic of the Approach (name of project/programme/initiative, name of implementation / extension / promotion method used, etc.)"
+            "en": "Do not use exactly the same name as used for the corresponding Technology (QT); try to name the main characteristic of the Approach (name of project/ programme/ initiative; name of implementation/ extension/ promotion method used, etc.)"
           }
         }
       }
@@ -2661,7 +2768,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Definition of the SLM Approach"
+            "en": "Definition of the Approach"
           },
           "numbering": "2.1",
           "helptext": {
@@ -2696,7 +2803,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Contact details of author / institution"
+            "en": "Contact details of resource persons and institutions involved in the assessment and documentation of the Approach"
           },
           "numbering": "1.2"
         }
@@ -2711,7 +2818,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Link approach to SLM technologies"
+            "en": "Conditions regarding the use of data documented through WOCAT"
           },
           "numbering": "1.3"
         }
@@ -2726,7 +2833,10 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Define the area in which the SLM Approach has been applied"
+            "en": "Country/ region/ locations where the Approach has been applied"
+          },
+          "helptext": {
+            "en": "If you have already filled in Questionnaires on SLM Technologies that were implemented under this Approach, refer to the information given there in section QT 2.4"
           },
           "numbering": "2.4"
         }
@@ -2745,7 +2855,7 @@
           },
           "numbering": "2.2",
           "helptext": {
-            "en": "Make sure that the description contains the key characteristic / distinct features of the Approach, its aims / objectives, methods used, stages of implementation, roles of involved stakeholders, strengths and weaknesses. This summary has to provide a comprehensive / concise picture of the Approach to outsiders. After having gone through the whole questionnaire come back and revise / complement this section."
+            "en": "Make sure the description contains the key characteristics/ distinct features of the Approach, its aims/ objectives, methods used, stages of implementation, roles of involved stakeholders, strengths, and weaknesses. This summary has to provide a comprehensive/ concise picture of the Approach to outsiders. After having gone through the whole questionnaire, come back and revise/ complement this section."
           }
         }
       }
@@ -2774,10 +2884,10 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Photos showing impressions of the SLM Approach"
+            "en": "Photos showing impressions of the Approach"
           },
           "helptext": {
-            "en": "<p>Provide photos showing stakeholders interacting with each other / implementing / in training, etc.</p><p>Provide at least two digital files (jpeg, raw, pdf ...), i.e. scans from prints, scans from negative/positive films or digital photos.</p><p>Photos should be of high quality/high resolution and not manipulated or distorted.</p><p>Explanation (description) is required for each photo submitted! Photos should match the description given in 2.2</p>"
+            "en": "<p>Provide photos showing stakeholders interacting with each other/ implementing/ in training, etc.</p><p>Provide at least two digital files (jpeg, raw, pdf ...), i.e. scans from prints, scans from negative/ positive films or digital photos.</p><p>Photos should be of high quality/ high resolution and not manipulated or distorted.</p><p>An explanation (description) is required for each photo submitted! Photos should match the description given in 2.2</p>"
           },
           "numbering": "2.3"
         }
@@ -2845,6 +2955,9 @@
           "label": {
             "en": "Flow chart (if available)"
           },
+          "helptext": {
+            "en": "<p>Provide a visual summary pointing out important actors, acitivites, key stages of implementation, etc. You could also use different colours to distinguish stakeholders.</p><p><strong>Example</strong>: Process of Participatory Technology Development through close researcher-farmer interaction in Syria<br><img src=\"/static/assets/img/qa_flowchart.png\"></img></p>"
+          },
           "numbering": "3.2"
         }
       }
@@ -2858,7 +2971,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Decision making on the selection of SLM Technology(ies)"
+            "en": "Decision-making on the selection of SLM Technology(ies)"
           },
           "numbering": "3.4"
         }
@@ -2873,7 +2986,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Training / awareness raising"
+            "en": "Training/ awareness raising"
           },
           "numbering": "4.1"
         }
@@ -2918,7 +3031,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Documentation of SLM experiences"
+            "en": "Monitoring, evaluation and documentation of SLM experiences"
           },
           "numbering": "4.4"
         }
@@ -2948,7 +3061,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Contributions per area, per unit or per product"
+            "en": "Contributions per area, per unit, or per product"
           },
           "numbering": "5.2"
         }
@@ -2964,6 +3077,9 @@
         "approaches": {
           "label": {
             "en": "Subsidies for specific inputs (including labour)"
+          },
+          "helptext": {
+            "en": "<p><strong>Subsidy</strong>: a subsidy is an instrument used by the state or by private actors to reduce the costs of a product or increase the returns from a particular activity (Kerr, 1994). It may be provided in cash or in kind and usually serves a specific purpose.</p><p>If no inputs were subsidized, go to question 6.2.</p>"
           },
           "numbering": "5.3"
         }
@@ -3011,7 +3127,7 @@
             "en": "Impacts of the Approach"
           },
           "helptext": {
-            "en": "The term Approach refers to the implementation of one or several Technology(ies), be it introduced through a project / programme, be it an indigenous system or be it a spontaneous adoption / adaptation based on individual initiative."
+            "en": "The term Approach refers to the implementation of one or several Technology(ies). It may have been introduced through a project/ programme, or be part of an indigenous system, or refer to a spontaneous adoption/ adaptation based on individual initiative."
           },
           "numbering": "6.1"
         }
@@ -3056,7 +3172,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Strengths / advantages of the Approach"
+            "en": "Strengths/ advantages of the Approach"
           },
           "numbering": "7.3"
         }
@@ -3071,7 +3187,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Weaknesses / disadvantages of the Approach and ways of how they could be overcome."
+            "en": "Weaknesses/ disadvantages of the Approach and ways of overcoming these"
           },
           "numbering": "7.4"
         }
@@ -3086,7 +3202,22 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "General Information"
+            "en": "Link of the Approach to SLM Technologies"
+          },
+          "numbering": "1.4"
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 8729
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "General information"
           },
           "numbering": "1."
         }
@@ -3101,11 +3232,11 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Specification of the SLM approach"
+            "en": "Specification of the SLM Approach"
           },
           "numbering": "2.",
           "helptext": {
-            "en": "<p>The <strong>SLM Approach</strong> (herein after referred to as the Approach) defines <strong>how</strong> implementation of one or several Technology(ies) was achieved (including capacity building, organisation of the implementation, decision making, technical and material support, change of legal framework and policies) and who achieved it (including all stakeholders involved and their roles).</p><p>All types of Approaches may be documented using the WOCAT QA. Besides SLM activities introduced through projects or programmes, WOCAT includes indigenous practices and spontaneous adoptions or adaptations of Technologies. <strong>In the case of a project, we restrict ourselves to those elements within the project that are directly or indirectly relevant to SLM.</strong></p>"
+            "en": "<p>The <strong>SLM Approach</strong> (hereafter referred to as the Approach) defines the ways and means used to implement one or several SLM Technology(ies), including technical and material support, involvement and roles of different stakeholders, etc. All types of Approaches may be documented using this questionnaire: Besides SLM activities introduced through projects or programmes, WOCAT includes indigenous practices and spontaneous adoptions or adaptations of Technologies. <strong>In the case of a project, we restrict ourselves to those elements within the project that are directly or indirectly relevant to SLM.</strong></p>"
           }
         }
       }
@@ -3134,7 +3265,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Technical support, capacity building and knowledge management"
+            "en": "Technical support, capacity building, and knowledge management"
           },
           "numbering": "4."
         }
@@ -3152,7 +3283,7 @@
             "en": "Financing and external material support"
           },
           "helptext": {
-            "en": "<strong>External material support</strong>: includes in-kind and financial support or incentives from government or private organisations. Questions regarding financing consider all costs of the Approach including the implementation of the Technology."
+            "en": "<p><strong>External material support</strong>: includes in-kind and financial support or incentives from government or private organisations.</p><p>Questions regarding financing consider all costs of the Approach including the implementation of the Technology.</p>"
           },
           "numbering": "5."
         }
@@ -3170,7 +3301,7 @@
             "en": "Impact analysis"
           },
           "helptext": {
-            "en": "Impact analysis is crucial to assess investments made in SLM, however often poorly assessed and documented; please provide as much information as possible. Note: Impacts of the Technology on natural resources, production, etc. need to be specified in the corresponding questionnaire(s) on SLM Technologies."
+            "en": "Impact analysis is crucial to assess investments made in SLM, which are often poorly assessed and documented; please provide as much information as possible. Note: Impacts of the Technology on natural resources, production, etc. must be specified in the corresponding questionnaire(s) on SLM Technologies."
           },
           "numbering": "6."
         }
@@ -3188,7 +3319,7 @@
             "en": "Conclusions and lessons learnt"
           },
           "helptext": {
-            "en": "The concluding statements should concentrate on the Approach you described in this document. Concluding statements for the Technologies associated with this Approach are to be made in separate Questionnaire on SLM Technologies."
+            "en": "The concluding statements should concentrate on the Approach you described in this document. Concluding statements for the Technologies associated with this Approach are to be made in the separate Questionnaire on SLM Technologies."
           },
           "numbering": "7."
         }
@@ -5049,6 +5180,94 @@
   },
   {
     "fields": {
+      "keyword": "app_flowchart",
+      "translation": 7084,
+      "configuration": {
+        "type": "file"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 3145
+  },
+  {
+    "fields": {
+      "keyword": "app_flowchart_description",
+      "translation": 7085,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 3146
+  },
+  {
+    "fields": {
+      "keyword": "app_flowchart_author",
+      "translation": 7086,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 3147
+  },
+  {
+    "fields": {
+      "keyword": "app_stakeholders_lead_agency",
+      "translation": 7087,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 3148
+  },
+  {
+    "fields": {
+      "keyword": "app_stakeholders_project",
+      "translation": 7088,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 3149
+  },
+  {
+    "fields": {
+      "keyword": "app_monitoring",
+      "translation": 7089,
+      "configuration": {
+        "type": "bool"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 3150
+  },
+  {
+    "fields": {
+      "keyword": "app_monitoring_comment",
+      "translation": 5004,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 3151
+  },
+  {
+    "fields": {
+      "keyword": "app_documentation_systematic",
+      "translation": 7090,
+      "configuration": {
+        "type": "bool"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 3152
+  },
+  {
+    "fields": {
       "keyword": "stakeholder_local",
       "translation": 7501,
       "order_value": 1
@@ -6750,6 +6969,33 @@
   },
   {
     "fields": {
+      "keyword": "app_qg_103",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 3103
+  },
+  {
+    "fields": {
+      "keyword": "app_qg_104",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 3104
+  },
+  {
+    "fields": {
+      "keyword": "app_qg_105",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 3105
+  },
+  {
+    "fields": {
       "keyword": "app__1__1",
       "translation": 8701
     },
@@ -6974,6 +7220,14 @@
   },
   {
     "fields": {
+      "keyword": "app__1__4",
+      "translation": 8729
+    },
+    "model": "configuration.category",
+    "pk": 3029
+  },
+  {
+    "fields": {
       "keyword": "app__1",
       "translation": 8901
     },
@@ -7107,25 +7361,34 @@
                           "max_num": 3
                         },
                         "view_options": {
-                          "template": "user_details",
-                          "extra": "label",
-                          "raw_questions": true
+                          "template": "select_user"
                         },
                         "questions": [
                           {
-                            "keyword": "user_id",
-                            "form_options": {
-                              "template": "no_label",
-                              "display_field": "user_display"
-                            }
-                          },
-                          {
-                            "keyword": "user_display",
+                            "keyword": "user_resourceperson_type",
                             "form_options": {
                               "template": "no_label"
                             },
                             "view_options": {
+                              "template": "values_as_header",
                               "header": "small"
+                            }
+                          },
+                          {
+                            "keyword": "user_resourceperson_other",
+                            "form_options": {
+                              "template": "radio_other",
+                              "label": "placeholder"
+                            },
+                            "view_options": {
+                              "template": "as_header",
+                              "header": "small"
+                            }
+                          },
+                          {
+                            "keyword": "user_id",
+                            "form_options": {
+                              "template": "no_label"
                             }
                           },
                           {
@@ -7215,7 +7478,12 @@
                             "keyword": "funding_project"
                           }
                         ]
-                      },
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "app__1__3",
+                    "questiongroups": [
                       {
                         "keyword": "qg_accept_conditions",
                         "questions": [
@@ -7227,9 +7495,9 @@
                     ]
                   },
                   {
-                    "keyword": "app__1__3",
+                    "keyword": "app__1__4",
                     "form_options": {
-                      "template": "todo"
+                      "template": "links_approaches"
                     }
                   }
                 ]
@@ -7353,12 +7621,6 @@
                           },
                           {
                             "keyword": "further_location",
-                            "view_options": {
-                              "template": "inline_6"
-                            }
-                          },
-                          {
-                            "keyword": "location_comments",
                             "view_options": {
                               "template": "inline_6"
                             }
@@ -7911,7 +8173,7 @@
                       ]
                     },
                     "view_options": {
-                      "template": "checkbox_questiongroups_2",
+                      "template": "checkbox_questiongroups_appsh",
                       "raw_questions": true
                     },
                     "questiongroups": [
@@ -8167,14 +8429,53 @@
                             }
                           }
                         ]
+                      },
+                      {
+                        "keyword": "app_qg_104",
+                        "questions": [
+                          {
+                            "keyword": "app_stakeholders_lead_agency",
+                            "view_options": {
+                              "header": "small"
+                            }
+                          },
+                          {
+                            "keyword": "app_stakeholders_project",
+                            "view_options": {
+                              "header": "small"
+                            }
+                          }
+                        ]
                       }
                     ]
                   },
                   {
                     "keyword": "app__3__2",
-                    "form_options": {
-                      "template": "todo"
-                    }
+                    "questiongroups": [
+                      {
+                        "keyword": "app_qg_103",
+                        "view_options": {
+                          "template": "columns_o4_r8"
+                        },
+                        "questions": [
+                          {
+                            "keyword": "app_flowchart"
+                          },
+                          {
+                            "keyword": "app_flowchart_description",
+                            "view_options": {
+                              "header": "small"
+                            }
+                          },
+                          {
+                            "keyword": "app_flowchart_author",
+                            "view_options": {
+                              "header": "small"
+                            }
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     "keyword": "app__3__3",
@@ -8431,9 +8732,25 @@
                   },
                   {
                     "keyword": "app__4__4",
-                    "form_options": {
-                      "template": "todo"
-                    }
+                    "questiongroups": [
+                      {
+                        "keyword": "app_qg_105",
+                        "questions": [
+                          {
+                            "keyword": "app_monitoring"
+                          },
+                          {
+                            "keyword": "app_monitoring_comment",
+                            "view_options": {
+                              "header": "small"
+                            }
+                          },
+                          {
+                            "keyword": "app_documentation_systematic"
+                          }
+                        ]
+                      }
+                    ]
                   }
                 ]
               },

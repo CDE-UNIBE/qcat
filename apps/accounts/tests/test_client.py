@@ -35,12 +35,12 @@ class TestClient(TestCase):
         login = typo3_client.api_login()
         self.assertIsNotNone(login)
 
-    @patch('accounts.client.typo3_client.get_user_information')
+    @patch.object(Typo3Client, 'get_user_information')
     def test_get_and_update_django_user(self, mock_user_information):
         user_mock = dict(
             last_name='last_test',
             first_name='first_test',
-            username='f@b.com',
+            username=self.user.email,
             usergroup=[],
         )
         with patch.object(Typo3Client, 'get_user_information') as user_info:
@@ -48,7 +48,7 @@ class TestClient(TestCase):
             user = typo3_client.get_and_update_django_user(self.user.id, 'foo')
             self.assertEqual(user.lastname, 'last_test')
             self.assertEqual(user.firstname, 'first_test')
-            self.assertEqual(user.email, 'f@b.com')
+            self.assertEqual(user.email, self.user.email)
             self.assertEqual(user, self.user)
 
     def test_get_logout_url(self):

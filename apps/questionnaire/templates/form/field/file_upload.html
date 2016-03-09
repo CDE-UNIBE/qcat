@@ -1,12 +1,12 @@
 {% comment %}
 
-  Template to render an image upload field. The upload is handled by DropzoneJS.
+  Template to render an upload field. The upload is handled by DropzoneJS.
 
 {% endcomment %}
 
 {% load i18n %}
 
-<div id="{{ attrs.id }}" class="dropzone" data-upload-url="{% url 'file_upload' %}" data-upload-preview-container="preview-{{ attrs.id }}">
+<div id="{{ attrs.id }}" class="dropzone {{ attrs.css_class }}" data-upload-url="{% url 'file_upload' %}" data-upload-preview-container="preview-{{ attrs.id }}">
   <div class="fallback">
     Sorry, the upload functionality seems to be broken for the time being. Please come back later.
   </div>

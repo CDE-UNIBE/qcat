@@ -95,7 +95,7 @@ def get_session_questionnaire(request, configuration_code, questionnaire_code):
 def save_session_questionnaire(
         request, configuration_code, questionnaire_code,
         questionnaire_data=None, questionnaire_links=None,
-        edited_questiongroups=None):
+        edited_questiongroups=None, old_questionnaire_data=None):
     """
     Save the data of a questionnaire to the session, using the key
     ``questionnaires``.
@@ -147,6 +147,9 @@ def save_session_questionnaire(
             if edited_questiongroups is None:
                 edited_questiongroups = session_questionnaire.get(
                     'edited_questiongroups', [])
+            if old_questionnaire_data is None:
+                old_questionnaire_data = session_questionnaire.get(
+                    'old_questionnaire', {})
             session_questionnaires.remove(sq)
 
     if questionnaire_data is None:
@@ -155,11 +158,14 @@ def save_session_questionnaire(
         questionnaire_links = {}
     if edited_questiongroups is None:
         edited_questiongroups = []
+    if old_questionnaire_data is None:
+        old_questionnaire_data = {}
 
     session_questionnaire.update({
         'configuration_code': configuration_code,
         'questionnaire_code': questionnaire_code,
         'questionnaire': questionnaire_data,
+        'old_questionnaire': old_questionnaire_data,
         'edited_questiongroups': edited_questiongroups,
         'links': questionnaire_links,
         'modified': str(datetime.now()),

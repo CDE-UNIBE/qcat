@@ -44,9 +44,6 @@ A sample configuration for this application:
 * Vassals: Symlink (``serverconfig/uwsgi_<environment>.conf``) in the folder
   that is ruled by your emperor.
 
-sudo apt-get install uwsgi-plugin-python3
-
-
 .. _Apache: https://httpd.apache.org/
 .. _reverse proxy: https://httpd.apache.org/docs/2.4/mod/mod_proxy.html
 .. _see uwsgi docs: http://uwsgi-docs.readthedocs.org/

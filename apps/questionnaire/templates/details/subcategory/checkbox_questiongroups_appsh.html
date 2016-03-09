@@ -1,0 +1,62 @@
+{% load staticfiles %}
+{% load list_to_columns %}
+
+<h3>{{ numbering|default:'' }} {{ label }}</h3>
+{% if subcategories %}
+  {% for subcategory in subcategories %}
+    {{ subcategory }}
+  {% endfor %}
+{% else %}
+
+  {% for questiongroup in questions %}
+
+    {% if forloop.first %}
+      {% for qg_questions in questiongroup.questions %}
+        {% for question in qg_questions %}
+          {% for value in question.values %}
+            <div class="row">
+              <div class="small-6 columns">
+                <ul>
+                  <li>{{ value.0 }}</li>
+                </ul>
+              </div>
+              <div class="small-6 columns">
+                {% for questiongroup_sub in questions %}
+                  {% if questiongroup_sub.extra == value.1 %}
+                    {% for qg_questions_sub in questiongroup_sub.questions %}
+                      {% for question_sub in qg_questions_sub %}
+                        {{ question_sub }}
+                      {% endfor %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+
+    {% if questiongroup.qg == 'app_qg_91' %}
+      {% for qg_questions in questiongroup.questions %}
+        <div class="row">
+          {% for question in qg_questions %}
+            <div class="small-6 columns">
+              {{ question }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% elif questiongroup.qg == 'app_qg_104' %}
+      {% for qg_questions in questiongroup.questions %}
+        <div class="row">
+          {% for question in qg_questions %}
+            <div class="small-12 columns output">
+              {{ question }}
+            </div>
+          {% endfor %}
+        </div>
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+{% endif %}

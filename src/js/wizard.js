@@ -557,37 +557,7 @@ $(function() {
         qg.find('.form-user-search-loading').show();
 
         clearQuestiongroup(qg);
-
-        // Copy the user to the local QCAT database if not yet there.
-        $.ajax({
-          url: $(this).data('update-url'),
-          type: "POST",
-          data: {
-            uid: ui.item.uid
-          },
-          beforeSend: function(xhr, settings) {
-            xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
-          },
-          success: function(data) {
-            if (data.success !== true) {
-              qg.find('.form-user-search-error').html('Error: ' + data.message).show();
-              return;
-            }
-            var userDisplayname = data.name;
-
-            // Add the uid to the hidden input field
-            qg.find('.select-user-id').val(ui.item.uid);
-            qg.find('.select-user-display').val(userDisplayname);
-
-            // Add user display field
-            addUserField(qg, userDisplayname);
-
-            qg.find('.form-user-search').hide();
-          },
-          error: function(response) {
-            qg.find('.form-user-search-error').html('Error: ' + response.statusText).show();
-          }
-        });
+        updateUser(qg, ui.item.uid);
 
         // Hide empty message
         $(this).parent('fieldset').find('.empty').hide();
@@ -607,7 +577,7 @@ $(function() {
       var qg = $t.closest('.list-item');
       if ($t.val()) {
         // A user is already selected, show it
-        addUserField(qg, qg.find('.select-user-display').val());
+        updateUser(qg, $t.val());
       } else {
         // No users linked but check if the form has content (new person)
         var initial_content = false;
@@ -680,6 +650,46 @@ $(function() {
 
   updateDropzones();
 });
+
+
+/*
+ * Fetch the user details from the database (with an update of the user details)
+ * and display the id.
+ */
+function updateUser(qg, user_id) {
+  // Copy the user to the local QCAT database if not yet there.
+
+  var csrf = $('input[name="csrfmiddlewaretoken"]').val();
+  $.ajax({
+    url: qg.find('.user-search-field').data('update-url'),
+    type: "POST",
+    data: {
+      uid: user_id
+    },
+    beforeSend: function(xhr, settings) {
+      xhr.setRequestHeader("X-CSRFToken", csrf);
+    },
+    success: function(data) {
+      if (data.success !== true) {
+        qg.find('.form-user-search-error').html('Error: ' + data.message).show();
+        return;
+      }
+      var userDisplayname = data.name;
+
+      // Add the uid to the hidden input field
+      qg.find('.select-user-id').val(user_id);
+      qg.find('.select-user-display').val(userDisplayname);
+
+      // Add user display field
+      addUserField(qg, userDisplayname);
+
+      qg.find('.form-user-search').hide();
+    },
+    error: function(response) {
+      qg.find('.form-user-search-error').html('Error: ' + response.statusText).show();
+    }
+  });
+}
 
 
 /**
@@ -762,6 +772,7 @@ function updateDropzones(emptyNew) {
     }
 
     var url = dropzoneContainer.data('upload-url');
+    var csrf = $('input[name="csrfmiddlewaretoken"]').val();
 
     if (!url) {
       return;
@@ -788,7 +799,7 @@ function updateDropzones(emptyNew) {
         }
       },
       sending: function(file, xhr, formData) {
-        xhr.setRequestHeader("X-CSRFToken", getCookie('csrftoken'));
+        xhr.setRequestHeader("X-CSRFToken", csrf);
       },
       success: function(file, response) {
         if (previewContainer && response['interchange']) {

@@ -1,0 +1,29 @@
+{% comment %}
+  Two columns (4 / 8). The first two questions (assumed to be type of user
+  involvement) are rendered in the first column, all others in the second
+  column.
+{% endcomment %}
+
+{% for questiongroup in questiongroups %}
+  <div class="row tech-output-columns top-margin{% if config.colclass %} {{ config.colclass }}{% endif %}">
+    {% if config.label and forloop.first %}
+      <div class="columns small-12">
+        <h5>{{ config.label }}</h5>
+      </div>
+    {% endif %}
+    <div class="columns medium-4">
+      {% for question in questiongroup %}
+        {% if forloop.counter <= 2 %}
+          {{ question }}
+        {% endif %}
+      {% endfor %}
+    </div>
+    <div class="columns medium-8 user-details">
+      {% for question in questiongroup %}
+        {% if forloop.counter >= 3 %}
+          {{ question }}
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endfor %}

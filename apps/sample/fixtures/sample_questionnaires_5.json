@@ -72,7 +72,7 @@
         "code": "sample_1",
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2011-02-10T16:07:20.847Z",
         "updated": "2011-02-10T16:07:20.847Z"
     }
@@ -86,7 +86,7 @@
     }
 },
 {
-    "pk": 1011,
+    "pk": 1111,
     "fields": {
         "questionnaire": 1,
         "user": 101,
@@ -103,7 +103,7 @@
         "code": "sample_2",
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2012-02-11T16:08:20.904Z",
         "updated": "2012-02-11T16:08:20.904Z"
     }
@@ -117,7 +117,7 @@
     }
 },
 {
-    "pk": 1021,
+    "pk": 1121,
     "fields": {
         "questionnaire": 2,
         "user": 101,
@@ -134,7 +134,7 @@
         "code": "sample_3",
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2013-02-12T16:08:20.904Z",
         "updated": "2013-02-12T16:08:20.904Z"
     }
@@ -148,7 +148,7 @@
     }
 },
 {
-    "pk": 1031,
+    "pk": 1131,
     "fields": {
         "questionnaire": 3,
         "user": 102,
@@ -157,7 +157,7 @@
     "model": "questionnaire.questionnairemembership"
 },
 {
-    "pk": 1032,
+    "pk": 1132,
     "fields": {
         "questionnaire": 3,
         "user": 101,
@@ -174,7 +174,7 @@
         "code": "sample_4",
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2014-02-13T16:08:20.904Z",
         "updated": "2014-02-13T16:08:20.904Z"
     }
@@ -206,7 +206,7 @@
     "model": "questionnaire.questionnairetranslation"
 },
 {
-    "pk": 1041,
+    "pk": 1141,
     "fields": {
         "questionnaire": 4,
         "user": 101,
@@ -223,7 +223,7 @@
         "code": "unccd_1",
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2015-02-14T16:08:20.904Z",
         "updated": "2015-03-14T16:08:20.904Z"
     }
@@ -237,7 +237,7 @@
     }
 },
 {
-    "pk": 1051,
+    "pk": 1151,
     "fields": {
         "questionnaire": 5,
         "user": 101,

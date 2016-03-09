@@ -450,6 +450,8 @@ class ModerationTestFixture(FunctionalTest):
         self.findBy('xpath', '//a[contains(text(), "Edit")]').click()
 
         # He sees there is a message of an old version
+        # TODO: Basically, the old version should disappear after a compiler
+        # saves it.
         has_old_version_overview(self)
 
         # He edits the step again and sees there is now a message of changes

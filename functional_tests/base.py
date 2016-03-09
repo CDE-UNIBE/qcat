@@ -3,6 +3,7 @@ from django.contrib.staticfiles.testing import StaticLiveServerTestCase
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from nose.plugins.attrib import attr
+from pyvirtualdisplay import Display
 from selenium import webdriver
 from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
@@ -42,12 +43,19 @@ def check_firefox_path():
 class FunctionalTest(StaticLiveServerTestCase):
 
     def setUp(self):
+        """
+        Use FF as browser for functional tests.
+        Create a virtual display, so the browser doesn't keep popping up.
+        """
+        self.display = Display(visible=0)
+        self.display.start()
         self.browser = webdriver.Firefox(
             firefox_binary=FirefoxBinary(settings.TESTING_FIREFOX_PATH))
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
         self.browser.quit()
+        self.display.stop()
 
     def findByNot(self, by, el):
         try:

@@ -62,6 +62,12 @@ class CustomIndexDashboard(Dashboard):
             models=('questionnaire.*',)
         ))
 
+        self.children.append(modules.ModelList(
+            title='API',
+            column=1,
+            models=('api.*', 'rest_framework.*')
+        ))
+
         # # append an app list module for "Administration"
         # self.children.append(modules.ModelList(
         #     _('ModelList: Administration'),

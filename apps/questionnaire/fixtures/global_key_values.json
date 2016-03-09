@@ -5,7 +5,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Common name"
+            "en": "Name"
           }
         },
         "technologies": {
@@ -58,7 +58,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Local name (with language)"
+            "en": "Local name (state which language)"
           }
         },
         "technologies": {
@@ -106,7 +106,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Region / State / Province"
+            "en": "Region/ State/ Province"
           }
         },
         "technologies": {
@@ -125,7 +125,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Further specification of location (e.g. district / commune)"
+            "en": "Further specification of location (e.g. municipality, town, etc.), if relevant"
           }
         },
         "technologies": {
@@ -242,7 +242,7 @@
         },
         "approaches": {
           "label": {
-            "en": "Name of project/institution which funded the documentation/evaluation of the SLM approach (if relevant)"
+            "en": "Name of project/ institution which funded the documentation/ evaluation of the Approach (if relevant)"
           }
         }
       }
@@ -265,9 +265,6 @@
         "approaches": {
           "label": {
             "en": "The editor and key resource person(s) accept the conditions regarding the use of data documented through WOCAT"
-          },
-          "helptext": {
-            "en": "<p><strong>Conditions regarding the use of data documented through the WOCAT</strong></p><ul><li>Data captured with WOCAT questionnaires will be entered and stored in the WOCAT online database by the editor or adata entry person assigned by the editor. Yet, the editor is responsible for compilation and the data quality. The editor,the resource persons and the data entry person will be recorded and will be given credit for the data in the database aswell as in any compilation or publication of the documented approach.</li><li>Data stored in the WOCAT database are open access.</li><li>Data is made available for users under the Creative Commons Attribution-NonCommercial-ShareAlike 3.0 UnportedLicense (<a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\">http://creativecommons.org/licenses/by-nc-sa/3.0/</a>)</li></ul><p>You are free to:</p><ul><li><strong>Share</strong> — copy and redistribute the material in any medium or format</li><li><strong>Adapt</strong> — remix, transform, and build upon the material</li></ul><p>The licensor cannot revoke these freedoms as long as you follow the following license terms:</p><ul><li><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li><li><strong>NonCommercial</strong> — You may not use the material for commercial purposes.</li><li><strong>ShareAlike</strong> — If you remix, transform, or build upon the material, you must distribute your contributions under the samelicense as the original.</li><li><strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others fromdoing anything the license permits.</li></ul><p><strong>Full license terms</strong>: <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" target=\"_blank\">http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</a></p>"
           }
         }
       }
@@ -300,26 +297,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Registered user"
-          }
-        },
-        "technologies": {
-          "label": {
-            "en": "Registered user"
-          }
-        }
-      }
-    },
-    "model": "configuration.translation",
-    "pk": 5015
-  },
-  {
-    "fields": {
-      "translation_type": "key",
-      "data": {
-        "approaches": {
-          "label": {
-            "en": "Lastname / surname"
+            "en": "Last name"
           }
         },
         "technologies": {
@@ -540,6 +518,44 @@
     },
     "model": "configuration.translation",
     "pk": 5027
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Key resource person type"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Key resource person type"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5028
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Other (specify)"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Other (specify)"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5029
   },
   {
     "fields": {
@@ -4997,6 +5013,58 @@
   },
   {
     "fields": {
+      "translation_type": "value",
+      "data": {
+        "technologies": {
+          "label": {
+            "en": "land user"
+          }
+        },
+        "approaches": {
+          "label": {
+            "en": "land user"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5764
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "technologies": {
+          "label": {
+            "en": "SLM specialist/ technical advisor"
+          }
+        },
+        "approaches": {
+          "label": {
+            "en": "SLM specialist/ technical advisor"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5765
+  },
+  {
+    "fields": {
+      "translation_type": "questiongroup",
+      "data": {
+        "approaches": {
+          "helptext": {
+            "en": "<p><strong>Conditions regarding the use of data documented through WOCAT</strong></p><ul><li>Data captured through WOCAT questionnaires will be entered, edited, and stored in the WOCAT online database by the compiler or a data entry person assigned by the compiler. Overall responsibility for compilation and data quality lies with the compiler. The compiler, resource persons, and data entry person will be recorded and given credit for the data in the database as well as in any compilation or publication of the documented technology.</li><li>Data stored in the WOCAT database are open access.</li><li>Data are made available for users under the <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 UnportedLicense.</a></li></ul><p>You are free to:</p><ul><li><strong>Share</strong> — copy and redistribute the material in any medium or format</li><li><strong>Adapt</strong> — remix, transform, and build upon the material</li></ul><p>The licensor cannot revoke these freedoms as long as you follow the following license terms:</p><ul><li><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li><li><strong>NonCommercial</strong> — You may not use the material for commercial purposes.</li><li><strong>ShareAlike</strong> — If you remix, transform, or build upon the material, you must distribute your contributions under the samelicense as the original.</li><li><strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others fromdoing anything the license permits.</li></ul><p><strong>Full license terms</strong>: <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</a></p>"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5901
+  },
+  {
+    "fields": {
       "translation_type": "category",
       "data": {
         "approaches": {
@@ -5469,17 +5537,6 @@
   },
   {
     "fields": {
-      "keyword": "user_display",
-      "translation": 5015,
-      "configuration": {
-        "type": "user_display"
-      }
-    },
-    "model": "configuration.key",
-    "pk": 15
-  },
-  {
-    "fields": {
       "keyword": "person_lastname",
       "translation": 5016,
       "configuration": {
@@ -5613,6 +5670,32 @@
     },
     "model": "configuration.key",
     "pk": 27
+  },
+  {
+    "fields": {
+      "keyword": "user_resourceperson_type",
+      "translation": 5028,
+      "configuration": {
+        "type": "radio"
+      },
+      "values": [
+        264,
+        265
+      ]
+    },
+    "model": "configuration.key",
+    "pk": 28
+  },
+  {
+    "fields": {
+      "keyword": "user_resourceperson_other",
+      "translation": 5029,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 29
   },
   {
     "fields": {
@@ -7691,7 +7774,7 @@
     "fields": {
       "keyword": "implemenation_50_plus",
       "translation": 5759,
-      "order_value": 1
+      "order_value": 3
     },
     "model": "configuration.value",
     "pk": 259
@@ -7709,7 +7792,7 @@
     "fields": {
       "keyword": "implemenation_less_10",
       "translation": 5761,
-      "order_value": 3
+      "order_value": 1
     },
     "model": "configuration.value",
     "pk": 261
@@ -7731,6 +7814,24 @@
     },
     "model": "configuration.value",
     "pk": 263
+  },
+  {
+    "fields": {
+      "keyword": "resourceperson_landuser",
+      "translation": 5764,
+      "order_value": 1
+    },
+    "model": "configuration.value",
+    "pk": 264
+  },
+  {
+    "fields": {
+      "keyword": "resourceperson_slmspecialist",
+      "translation": 5765,
+      "order_value": 2
+    },
+    "model": "configuration.value",
+    "pk": 265
   },
   {
     "fields": {
@@ -7780,7 +7881,7 @@
   {
     "fields": {
       "keyword": "qg_accept_conditions",
-      "translation": null,
+      "translation": 5901,
       "configuration": {}
     },
     "model": "configuration.questiongroup",

@@ -116,28 +116,3 @@ $(function() {
   // Update the numbering of the questiongroups
   updateNumbering();
 });
-
-/**
- * Helper function to retrieve a Cookie in JavaScript. This is used for
- * example for form submission through AJAX to get the CSRF token needed
- * by Django to process the form.
- *
- * @param {string} name - The name of the cookie.
- * @return {string or null} The value of the cookie or "null" if no
- * cookie with the given name was found.
- */
-function getCookie(name) {
-  var cookieValue = null;
-  if (document.cookie && document.cookie != '') {
-    var cookies = document.cookie.split(';');
-    for (var i = 0; i < cookies.length; i++) {
-      var cookie = jQuery.trim(cookies[i]);
-      // Does this cookie string begin with the name we want?
-      if (cookie.substring(0, name.length + 1) == (name + '=')) {
-        cookieValue = decodeURIComponent(cookie.substring(name.length + 1));
-        break;
-      }
-    }
-  }
-  return cookieValue;
-}

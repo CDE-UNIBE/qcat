@@ -1,0 +1,14 @@
+{% comment %}
+  This is just a stub, pointing the user to the link section.
+{% endcomment %}
+
+{% load i18n %}
+
+<fieldset class="row">
+  <legend>{{ config.numbering|default:'' }} {{ config.label }}</legend>
+
+  {% trans "SLM Technologies which were promoted by and implemented through this Approach can be linked in a separate section at the end of the Questionnaire." as msg %}
+
+  {% include "form/helptext.html" with helptext=msg %}
+
+</fieldset>

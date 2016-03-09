@@ -1,0 +1,57 @@
+{% extends 'rest_framework_swagger/base.html' %}
+
+{% load i18n %}
+
+
+{% block title %}{% trans "Wocat API Documentation" %}{% endblock %}
+
+{% block header %}
+    <div id="header">
+        <div class="swagger-ui-wrap">
+            <a id="logo" href="{% url 'django.swagger.base.view' %}">{% trans "Wocat API Docs" %}</a>
+            <form id="api_selector">
+                <div class="input"><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
+                <div class="input"><a id="explore" href="#">{% trans "Explore" %}</a></div>
+            </form>
+        </div>
+    </div>
+{% endblock %}
+{% block django_rest_swagger %}
+    <div class="swagger-ui-wrap">
+        <h1>{% trans "Introduction" %}</h1>
+        {% spaceless %}{% blocktrans %}
+            <p>Welcome to the documentation for the Wocat API. Please refer to
+                the <a href="https://qcat.readthedocs.org" target="_blank">qcat docs</a>
+                in case of questions regrading the structure of the returned objects.
+                The API is built on top of the <a href="http://www.django-rest-framework.org/" target="_blank">django REST framework</a>.
+            </p>
+            <p>
+                The current version of the API is: 1.0. Docs for the older versions will be listed here as well.
+            </p>
+            <h2>Authentication</h2>
+            <p>
+                Requests to any resource requires an authentication token in the header of the request.
+                The token can be obtained with this API (see: auth-token), a wocat user account is
+                required to obtain a token. Please specify what you will use the token for as "notes". Example request:
+                <pre style="white-space:pre-line;">curl -X POST -d '{"username":"name", "notes": "token will be used for testing", "password": "***"}' -H "Content-Type: application/json" https://qcat.wocat.net/en/api/v1/auth-token/</pre>
+                <br>
+                Pass the token in the request header as follows: 'Authorization: Token &#60;your token here&#62;'. Example request:
+                <br>
+                <pre style="white-space:pre-line;">curl -X GET -H 'Authorization: Token 5289bc42fb2e9322b3aa6238669734bacdc1ae60' https://qcat.wocat.net/en/api/v1/questionnaires/</pre>
+            </p>
+            <h2>Response content types</h2>
+            <p>
+            The format of the response can be defined with the 'Accept' header. Following types are available:
+            <ul>
+                <li>JSON (Accept:application/json)</li>
+                <li>XML (Accept:application/xml)</li>
+                <li>CSV (Accept:text/csv)</li>
+            </ul>
+            <br>
+            Example:
+            <pre style="white-space:pre-line;">curl -X GET -H 'Accept:text/csv' https://qcat.wocat.net/en/api/v1/questionnaires/303/</pre>
+            </p>
+
+        {% endblocktrans %}{% endspaceless %}
+    </div>
+{% endblock %}

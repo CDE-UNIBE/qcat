@@ -307,9 +307,10 @@ class UserTest2(FunctionalTest):
 
         # She sees the user is selected, loading and search fields are
         # not visible
-        loading_indicator = self.findBy(
-            'xpath', '//div[contains(@class, "form-user-search-loading")][1]')
-        self.assertFalse(loading_indicator.is_displayed())
+        WebDriverWait(self.browser, 10).until(
+            EC.invisibility_of_element_located((
+                By.CLASS_NAME, "form-user-search-loading")))
+
         self.findBy(
             'xpath', '//div[contains(@class, "alert-box") and contains(text(),'
             '"Kurt Gerber")]')
@@ -609,9 +610,11 @@ class UserTest2(FunctionalTest):
         qg_1_xpath = (
             '//fieldset[contains(@class, "row")][2]//div[contains(@class, '
             '"list-item")][1]')
-        self.findBy(
-            'xpath', '{}//div[contains(@class, "form-user-selected")]/div['
-            'contains(@class, "secondary")]'.format(qg_1_xpath))
+
+        WebDriverWait(self.browser, 10).until(
+            EC.visibility_of_element_located((
+                By.XPATH, '{}//div[contains(@class, "form-user-selected")]/div['
+                'contains(@class, "secondary")]'.format(qg_1_xpath))))
         self.assertEqual(self.findBy(
             'id', 'id_qg_31-0-key_39').get_attribute('value'), '1055')
         self.assertEqual(self.findBy(

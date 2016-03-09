@@ -552,8 +552,10 @@ class EditTest(FunctionalTest):
         # She sees there is no message of an old version
         has_no_old_version_overview(self)
 
-        # She edits it again and sees there is a message about the changes
+        # She edits it again and sees there is NO message about the changes
         self.findBy('xpath', '//a[contains(text(), "Edit")]').click()
+        # TODO: In theory, the old version should disappear after a compiler ...
+        # saves the questionnaire.
         has_old_version_overview(self)
 
         # She edits a step and sees the message about changes there as well

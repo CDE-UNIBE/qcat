@@ -601,6 +601,81 @@
   },
   {
     "fields": {
+      "translation_type": "key",
+      "data": {
+        "sample": {
+          "label": {
+            "en": "Key 42",
+            "es": "Clave 42"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 11042
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "sample": {
+          "label": {
+            "en": "Key 43",
+            "es": "Clave 43"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 11043
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "sample": {
+          "label": {
+            "en": "Key 44",
+            "es": "Clave 44"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 11044
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "sample": {
+          "label": {
+            "en": "Key 45",
+            "es": "Clave 45"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 11045
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "sample": {
+          "label": {
+            "en": "Key 46",
+            "es": "Clave 46"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 11046
+  },
+  {
+    "fields": {
       "translation_type": "value",
       "data": {
         "sample": {
@@ -1295,6 +1370,21 @@
       "data": {
         "sample": {
           "label": {
+            "en": "Subcategory 5_2",
+            "es": "Subcategoría 5_2"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 12722
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "sample": {
+          "label": {
             "en": "Category 1",
             "es": "Categoría 1"
           }
@@ -1931,6 +2021,61 @@
   },
   {
     "fields": {
+      "keyword": "key_42",
+      "translation": 11042,
+      "configuration": {
+        "type": "file"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 11042
+  },
+  {
+    "fields": {
+      "keyword": "key_43",
+      "translation": 11043,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 11043
+  },
+  {
+    "fields": {
+      "keyword": "key_44",
+      "translation": 11044,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 11044
+  },
+  {
+    "fields": {
+      "keyword": "key_45",
+      "translation": 11045,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 11045
+  },
+  {
+    "fields": {
+      "keyword": "key_46",
+      "translation": 11046,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 11046
+  },
+  {
+    "fields": {
       "keyword": "value_1",
       "translation": 11501,
       "order_value": 1
@@ -2449,6 +2594,15 @@
   },
   {
     "fields": {
+      "keyword": "qg_32",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 11032
+  },
+  {
+    "fields": {
       "keyword": "subcat_1_1",
       "translation": 12701
     },
@@ -2617,6 +2771,14 @@
   },
   {
     "fields": {
+      "keyword": "subcat_5_2",
+      "translation": 12722
+    },
+    "model": "configuration.category",
+    "pk": 11032
+  },
+  {
+    "fields": {
       "keyword": "cat_1",
       "translation": 12901
     },
@@ -2743,16 +2905,18 @@
                           "user_role": "landuser",
                           "max_num": 3
                         },
+                        "view_options": {
+                          "template": "select_user"
+                        },
                         "questions": [
                           {
-                            "keyword": "key_39",
-                            "form_options": {
-                              "template": "no_label",
-                              "display_field": "key_40"
-                            }
+                            "keyword": "key_45"
                           },
                           {
-                            "keyword": "key_40",
+                            "keyword": "key_46"
+                          },
+                          {
+                            "keyword": "key_39",
                             "form_options": {
                               "template": "no_label"
                             }
@@ -3267,6 +3431,28 @@
                           },
                           {
                             "keyword": "key_36"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "subcat_5_2",
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_32",
+                        "view_options": {
+                          "template": "columns_o4_r8"
+                        },
+                        "questions": [
+                          {
+                            "keyword": "key_42"
+                          },
+                          {
+                            "keyword": "key_43"
+                          },
+                          {
+                            "keyword": "key_44"
                           }
                         ]
                       }

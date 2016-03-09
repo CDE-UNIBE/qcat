@@ -1,0 +1,13 @@
+{% load list_to_columns %}
+
+{% if not values|is_empty %}
+  {% if header == 'small' %}
+    <h5>
+      {% for value in values %}{{ value }}{% endfor %}
+    </h5>
+  {% else %}
+    <h3>
+      {% for value in values %}{{ value }}{% endfor %}
+    </h3>
+  {% endif %}
+{% endif %}

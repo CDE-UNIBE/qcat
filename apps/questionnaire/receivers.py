@@ -6,11 +6,12 @@ from django.dispatch import receiver
 
 from .errors import QuestionnaireLockedException
 from .models import Questionnaire
+from .conf import settings
 
 
 @receiver(pre_save, sender=Questionnaire)
 def prevent_updates_on_published_items(instance, *args, **kwargs):
-    if instance.id:
+    if instance.id and instance.status != settings.QUESTIONNAIRE_INACTIVE:
         qs = Questionnaire.objects.filter(id=instance.id, status=4)
         if qs.exists():
             raise ValidationError(

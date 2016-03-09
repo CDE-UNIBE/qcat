@@ -3270,6 +3270,48 @@
   },
   {
     "fields": {
+      "translation_type": "key",
+      "data": {
+        "technologies": {
+          "label": {
+            "en": "Technical drawing"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 1257
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "technologies": {
+          "label": {
+            "en": "Author"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 1258
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "technologies": {
+          "label": {
+            "en": "Date"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 1259
+  },
+  {
+    "fields": {
       "translation_type": "value",
       "data": {
         "technologies": {
@@ -9696,7 +9738,7 @@
       "data": {
         "technologies": {
           "label": {
-            "en": "Technical specifications (related to technical drawing)"
+            "en": "Technical specifications / explanations of technical drawing"
           },
           "helptext": {
             "en": "<p>Summarize technical specifications, e.g.:</p><ul><li>Dimensions (height, depth, width, length) of structures or vegetative elements;</li><li>Spacing between structures or plants/vegetative measures</li><li>Vertical intervals structures or vegetative measures</li><li>Slope angle (before and after implementation of SLM technology)</li><li>Lateral gradient of structures</li><li>Capacity of dams, ponds, etc.</li><li>Catchment area and beneficial area of dams, ponds, other water harvesting systems</li><li>Construction material used</li><li>Species used</li><li>Quantity/density of plants (per ha)</li></ul>"
@@ -9966,7 +10008,10 @@
       "data": {
         "technologies": {
           "label": {
-            "en": "Provide a technical drawing and corresponding technical specifications of the SLM technology"
+            "en": "Technical drawing of the Technology"
+          },
+          "helptext": {
+            "en": "<p>Please provide a comprehensive and detailed drawing (with dimensions) of the Technology and indicate technical specifications, measurements, spacing, gradient, etc. You can also provide several drawings showing (a) a temporal sequence of operations or (b) different elements or details of the Technology. Alternatively you can also provide one or several photographs with technical specifications drawn and/or written on the photograph(s). Include as much as possible technical information on the drawings (or photographs).</p><p>Keep the drawing simple and schematic. The technical drawing is crucial for the understanding of the Technology! Scan the drawing and upload the scan.</p><p><strong>Example</strong>: Technical drawing indicating technical specifications, dimensions, spacing<br><img src=\"/static/assets/img/qt_technical_drawing.jpg\"></img></p>"
           },
           "numbering": "4.1"
         }
@@ -14288,6 +14333,39 @@
     },
     "model": "configuration.key",
     "pk": 1315
+  },
+  {
+    "fields": {
+      "keyword": "tech_drawing",
+      "translation": 1257,
+      "configuration": {
+        "type": "file"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 1316
+  },
+  {
+    "fields": {
+      "keyword": "tech_drawing_author",
+      "translation": 1258,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 1317
+  },
+  {
+    "fields": {
+      "keyword": "tech_drawing_date",
+      "translation": 1259,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 1318
   },
   {
     "fields": {
@@ -18816,6 +18894,15 @@
   },
   {
     "fields": {
+      "keyword": "tech_qg_185",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 1205
+  },
+  {
+    "fields": {
       "keyword": "tech__0__1",
       "translation": 2701
     },
@@ -19386,25 +19473,34 @@
                           "max_num": 3
                         },
                         "view_options": {
-                          "template": "user_details",
-                          "extra": "label",
-                          "raw_questions": true
+                          "template": "select_user"
                         },
                         "questions": [
                           {
-                            "keyword": "user_id",
-                            "form_options": {
-                              "template": "no_label",
-                              "display_field": "user_display"
-                            }
-                          },
-                          {
-                            "keyword": "user_display",
+                            "keyword": "user_resourceperson_type",
                             "form_options": {
                               "template": "no_label"
                             },
                             "view_options": {
+                              "template": "values_as_header",
                               "header": "small"
+                            }
+                          },
+                          {
+                            "keyword": "user_resourceperson_other",
+                            "form_options": {
+                              "template": "radio_other",
+                              "label": "placeholder"
+                            },
+                            "view_options": {
+                              "template": "as_header",
+                              "header": "small"
+                            }
+                          },
+                          {
+                            "keyword": "user_id",
+                            "form_options": {
+                              "template": "no_label"
                             }
                           },
                           {
@@ -20568,9 +20664,31 @@
                 "subcategories": [
                   {
                     "keyword": "tech__4__1",
-                    "form_options": {
-                      "template": "todo"
-                    }
+                    "questiongroups": [
+                      {
+                        "keyword": "tech_qg_185",
+                        "view_options": {
+                          "template": "columns_o4_r8"
+                        },
+                        "questions": [
+                          {
+                            "keyword": "tech_drawing"
+                          },
+                          {
+                            "keyword": "tech_drawing_author",
+                            "view_options": {
+                              "header": "small"
+                            }
+                          },
+                          {
+                            "keyword": "tech_drawing_date",
+                            "view_options": {
+                              "header": "small"
+                            }
+                          }
+                        ]
+                      }
+                    ]
                   },
                   {
                     "keyword": "tech__4__2",

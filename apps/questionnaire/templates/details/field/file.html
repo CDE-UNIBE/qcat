@@ -1,0 +1,16 @@
+{% if value %}
+  <div class="file-preview-container">
+    <a href="{{ value }}" target="_blank">
+      <img data-interchange="{{ interchange }}"/>
+      <span class="text-content"><span>
+        <svg class="icon">
+          {% if content_type == 'application/pdf' %}
+            <use xlink:href="#icon-pdf"></use>
+          {% else %}
+            <use xlink:href="#icon-image"></use>
+          {% endif %}
+        </svg>
+      </span></span>
+    </a>
+  </div>
+{% endif %}

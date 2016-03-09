@@ -2,7 +2,7 @@ from django.contrib.auth import get_user_model
 from unittest.mock import patch
 from qcat.tests import TestCase
 from ..authentication import WocatAuthenticationBackend
-from ..client import typo3_client
+from ..client import typo3_client, Typo3Client
 
 User = get_user_model()
 
@@ -38,7 +38,7 @@ class AuthenticateTest(TestCase):
         )
         self.user = user
 
-    @patch('accounts.client.typo3_client.get_user_information')
+    @patch.object(Typo3Client, 'get_user_information')
     def test_creates_new_user_if_necessary(self, mock_get_user_information):
         mock_get_user_information.return_value = \
             get_mock_user_information_values()
@@ -66,9 +66,9 @@ class GetUserInformationTest(TestCase):
 
 class SearchUsersTest(TestCase):
 
-    @patch('accounts.client.typo3_client.search_users')
+    @patch.object(Typo3Client, 'api_login')
     def test_returns_empty_dict_if_api_login_is_not_valid(
             self, mock_api_login):
         mock_api_login.return_value = None
         search_results = typo3_client.search_users(name='foo')
-        self.assertEqual(search_results.get('users'), [])
+        self.assertEqual(search_results, {})

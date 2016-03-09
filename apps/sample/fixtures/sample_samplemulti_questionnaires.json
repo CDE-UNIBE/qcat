@@ -39,7 +39,7 @@
         "data": {"qg_3":[{"key_6":{"en":"... and I am Key 6"}}],"qg_1":[{"key_3":{"en":"And this cannot be empty."},"key_1":{"en":"This is the first key.","es":"Esto es la clave 1"}}]},
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2015-02-10T16:07:20.847Z",
         "updated": "2015-02-10T16:07:20.847Z",
         "code": "sample_1"
@@ -70,7 +70,7 @@
         "data": {"qg_4": [{"key_5": {"en": "Faz"}}], "qg_3": [{}], "qg_1": [{"key_3": {"en": "Bar"}, "key_1": {"en": "Foo"}}]},
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2015-02-10T16:08:20.904Z",
         "updated": "2015-02-10T16:08:20.904Z",
         "code": "sample_2"
@@ -92,7 +92,7 @@
         "data": {"mqg_01": [{"mkey_01": {"en": "This is key 1a","es":"Esto es clave 1a"}}]},
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2015-02-10T16:07:20.847Z",
         "updated": "2015-02-10T16:07:20.847Z",
         "code": "samplemulti_1"
@@ -123,7 +123,7 @@
         "data": {"mqg_01":[{"mkey_01":{"en":"This is key 1b"}}]},
         "status": 4,
         "version": 1,
-        "blocked": false,
+        "blocked": null,
         "created": "2015-02-10T16:08:20.904Z",
         "updated": "2015-02-10T16:08:20.904Z",
         "code": "samplemulti_2"

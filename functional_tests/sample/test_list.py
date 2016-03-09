@@ -1826,6 +1826,7 @@ class ListTestStatus(FunctionalTest):
 
         # She submits the questionnaire
         self.findBy('xpath', '//input[@name="submit"]').click()
+        self.findBy('xpath', '//div[contains(@class, "success")]')
         url = self.browser.current_url
 
         # Bob (the moderator) logs in

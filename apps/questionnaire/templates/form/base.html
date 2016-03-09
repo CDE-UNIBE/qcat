@@ -1,57 +1,18 @@
+{% extends 'base.html' %}
+
 {% load staticfiles %}
 {% load i18n %}
+{% load sekizai_tags %}
+{% load compress %}
 
-<!DOCTYPE html>
-<!--[if lt IE 7]>      <html class="no-js lt-ie9 lt-ie8 lt-ie7"> <![endif]-->
-<!--[if IE 7]>         <html class="no-js lt-ie9 lt-ie8"> <![endif]-->
-<!--[if IE 8]>         <html class="no-js lt-ie9"> <![endif]-->
-<!--[if gt IE 8]><!--> <html class="no-js"> <!--<![endif]-->
-  <head>
-    <meta charset="utf-8">
-    <meta http-equiv="X-UA-Compatible" content="IE=edge">
-    <title>{{ title }}</title>
-    <meta name="description" content="">
-    <meta name="viewport" content="width=device-width, initial-scale=1">
+{% block title %}{{ title }}{% endblock %}
 
-    <!-- Place favicon.ico and apple-touch-icon.png in the root directory -->
-
-    <!-- Theme styles -->
-    <link rel="stylesheet" href="{% static 'css/app.css' %}" />
-
-    <!-- ModernizR -->
-    <script src="{% static 'js/modernizr.js' %}"></script>
-
-    {% block head %}
-    {% endblock %}
-
-  </head>
-  <body class="layout-wizard">
-
-        <!--[if lt IE 9]>
-            <p class="browsehappy">You are using an <strong>outdated</strong> browser. Please <a href="http://browsehappy.com/">upgrade your browser</a> to improve your experience.</p>
-        <![endif]-->
-
-    {% include "svg.html" %}
-
-    {% if messages %}
-      {% for message in messages %}
-      <div class="alert-box{% if message.tags %} {{ message.tags }}{% endif %}">{% autoescape off %}{{ message }}{% endautoescape %}</div>
-      {% endfor %}
-    {% endif %}
-
-    {% block content %}
-    {% endblock %}
-
-    <script src="{% static 'js/jquery.min.js' %}"></script>
-    <script src="{% static 'js/foundation.min.js' %}"></script>
+{% block bodyclass %}layout-wizard{% endblock %}
+{% block temporary %}{% endblock %}
+{% block banner %}
+  {% addtoblock 'js' %}
     <script src="{% static 'js/wocat.magellan.js' %}"></script>
-    <script src="{% static 'js/jquery.nstSlider.min.js' %}"></script>
-
     <script src="{% static 'js/wizard.min.js' %}"></script>
-    <script src="{% static 'js/main.min.js' %}"></script>
-
-    {% block bottom %}
-    {% endblock %}
-    {% include 'parts/tracking.html' %}
-  </body>
-</html>
+    <script type="text/javascript">$(document).foundation();</script>
+  {% endaddtoblock %}
+{% endblock %}

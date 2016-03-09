@@ -168,7 +168,7 @@ def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
                     value = translations
                 elif question.field_type in ['todo']:
                     value = None
-                elif question.field_type in ['image', 'user_display']:
+                elif question.field_type in ['image', 'file', 'user_display']:
                     pass
                 elif question.field_type in ['user_id']:
                     pass
@@ -1086,8 +1086,11 @@ def get_list_values(
             translations.remove(get_language())
         except ValueError:
             pass
-        translations = [
-            lang for lang in settings.LANGUAGES if lang[0] in translations]
+
+        # Return the language name as string, not as lazy translation. This
+        # is useful when returning the object to the API.
+        translations = [(lang[0], str(lang[1])) for lang in
+                        settings.LANGUAGES if lang[0] in translations]
 
         for key, value in template_value.items():
             if isinstance(value, dict):

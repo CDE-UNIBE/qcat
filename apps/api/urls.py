@@ -1,30 +1,30 @@
-from django.conf.urls import patterns, url
+from django.conf.urls import patterns, url, include
 from rest_framework.urlpatterns import format_suffix_patterns
 
-from questionnaire.api.views import QuestionnaireViewSet
+from questionnaire.api.views import QuestionnaireListView
 
-from .views import APIRoot
+from .views import APIRoot, ObtainNoteAuthTokenView
 
-
-questionnaire_list = QuestionnaireViewSet.as_view({
-    'get': 'list'
-})
-questionnaire_detail = QuestionnaireViewSet.as_view({
-    'get': 'retrieve'
-})
-
+api_root_patterns = [
+    url(r'^$', APIRoot.as_view(), name='api-root'),
+]
 
 urlpatterns = patterns(
     '',
-    url(r'^$', APIRoot.as_view(), name='api-root'),
-    url(r'^questionnaire/$',
-        questionnaire_list,
+    url(r'^questionnaires/$',
+        QuestionnaireListView.as_view(),
         name='questionnaires-api-list'
         ),
-    url(r'^questionnaire/(?P<pk>[0-9]+)/$',
-        questionnaire_detail,
-        name='questionnaires-api-detail'
-        ),
+    url(r'^auth-token/$', ObtainNoteAuthTokenView.as_view(),
+        name='obtain-api-token'),
+    url(r'^docs/', include('rest_framework_swagger.urls')),
+)
+
+# Workaround: the api root must not be in the API docs. Only namespaces can
+# be excluded - so a namespace is created for this single view.
+urlpatterns = urlpatterns + patterns(
+    '',
+    url(r'^$', include((api_root_patterns, 'api', 'api-root'))),
 )
 
 urlpatterns = format_suffix_patterns(urlpatterns)

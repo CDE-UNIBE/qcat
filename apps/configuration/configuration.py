@@ -1,4 +1,6 @@
+import collections
 import floppyforms as forms
+from django.contrib.auth import get_user_model
 from django.forms import BaseFormSet, formset_factory
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _
@@ -22,10 +24,8 @@ from qcat.utils import (
     find_dict_in_list,
     is_empty_list_of_dicts,
 )
-from questionnaire.upload import (
-    get_interchange_urls_by_identifier,
-    get_url_by_identifier,
-)
+from questionnaire.models import File
+User = get_user_model()
 
 
 class BaseConfigurationObject(object):
@@ -225,13 +225,13 @@ class QuestionnaireQuestion(BaseConfigurationObject):
         'checkbox',
         'image_checkbox',
         'image',
+        'file',
         'select_type',
         'select',
         'radio',
         'todo',
         'cb_bool',
         'user_id',
-        'user_display',
     ]
     translation_original_prefix = 'original_'
     translation_translation_prefix = 'translation_'
@@ -537,12 +537,9 @@ class QuestionnaireQuestion(BaseConfigurationObject):
             translation_field = forms.CharField(
                 label=self.label, widget=forms.TextInput(attrs=readonly_attrs),
                 required=self.required, max_length=max_length)
-        elif self.field_type in ['user_id', 'user_display']:
+        elif self.field_type in ['user_id']:
             widget = HiddenInput()
-            if self.field_type == 'user_id':
-                widget.css_class = 'select-user-id'
-            elif self.field_type == 'user_display':
-                widget.css_class = 'select-user-display'
+            widget.css_class = 'select-user-id'
             field = forms.CharField(
                 label=None, widget=widget, required=self.required)
         elif self.field_type == 'text':
@@ -600,8 +597,10 @@ class QuestionnaireQuestion(BaseConfigurationObject):
             field = forms.MultipleChoiceField(
                 label=self.label, widget=widget, choices=self.choices,
                 required=self.required)
-        elif self.field_type == 'image':
-            widget = ImageUpload(attrs=attrs)
+        elif self.field_type in ['image', 'file']:
+            if self.field_type == 'file':
+                attrs.update({'css_class': 'upload-file'})
+            widget = FileUpload(attrs=attrs)
             formfields['file_{}'.format(self.keyword)] = forms.FileField(
                 widget=widget, required=self.required, label=self.label)
             field = forms.CharField(
@@ -677,7 +676,7 @@ class QuestionnaireQuestion(BaseConfigurationObject):
             if not isinstance(value, list):
                 value = [value]
             values = self.lookup_choices_labels_by_keywords(value)
-        if self.field_type in ['char', 'text', 'todo', 'user_display']:
+        if self.field_type in ['char', 'text', 'todo']:
             template_name = 'textarea'
             template_values.update({
                 'key': self.label_view,
@@ -749,14 +748,36 @@ class QuestionnaireQuestion(BaseConfigurationObject):
                     values, images, conditional_outputs, value_keywords)),
             })
         elif self.field_type in ['image']:
-            value = get_url_by_identifier(value)
+            file_data = File.get_data(uid=value)
             template_name = 'image'
             template_values.update({
                 'key': self.label_view,
-                'value': value,
+                'value': file_data.get('url'),
+            })
+        elif self.field_type in ['file']:
+            file_data = File.get_data(uid=value)
+            template_name = 'file'
+            template_values.update({
+                'content_type': file_data.get('content_type'),
+                'interchange': file_data.get('interchange'),
+                'key': self.label_view,
+                'value': file_data.get('url'),
             })
         elif self.field_type in ['user_id']:
-            return
+            template_name = 'user_display'
+            if value is not None:
+                unknown_user = False
+                try:
+                    user = User.objects.get(pk=value)
+                    user_display = user.get_display_name()
+                except User.DoesNotExist:
+                    unknown_user = True
+                    user_display = 'Unknown User'
+                template_values.update({
+                    'value': user_display,
+                    'user_id': value,
+                    'unknown_user': unknown_user,
+                })
         else:
             raise ConfigurationErrorInvalidOption(
                 self.field_type, 'type', self)
@@ -1674,8 +1695,7 @@ class QuestionnaireSection(BaseConfigurationObject):
         media_content = []
         media_additional = {}
         if self.view_options.get('media_gallery', False) is True:
-            media_data = self.parent_object.get_image_data(
-                data, interchange_as_list=True)
+            media_data = self.parent_object.get_image_data(data)
             media_content = media_data.get('content', [])
             media_additional = media_data.get('additional', {})
 
@@ -1804,7 +1824,7 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
                 (section.keyword, section.label, tuple(categories)))
         return tuple(sections)
 
-    def get_image_data(self, data, interchange_as_list=False):
+    def get_image_data(self, data):
         """
         Return image data from outside the category. Loops through all
         the fields to find the questiongroups containing images. For all
@@ -1813,11 +1833,6 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
 
         Args:
             ``data`` (dict): A questionnaire data dictionary.
-
-        Kwargs:
-            ``interchange_as_list`` (bool): An boolean passed as
-            ``as_list`` to :func:`get_interchange_urls_by_identifier`
-            to return the interchange URLs as list instead of string.
 
         Returns:
             ``list``. A list of dictionaries for each image. Each
@@ -1852,10 +1867,11 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
 
         images = []
         for image in image_questiongroups:
+            image_data = File.get_data(uid=image.get('image'))
             images.append({
-                'image': get_url_by_identifier(image.get('image')),
-                'interchange': get_interchange_urls_by_identifier(
-                    image.get('image'), as_list=interchange_as_list),
+                'image': image_data.get('url'),
+                'interchange': image_data.get('interchange'),
+                'interchange_list': image_data.get('interchange_list'),
                 'caption': image.get('image_caption'),
                 'date_location': image.get('image_date_location'),
                 'photographer': image.get('image_photographer')
@@ -1975,7 +1991,10 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
                     value = question_data.get(list_entry[1])
                     if list_entry[2] == 'image':
                         key = 'image'
-                        value = get_url_by_identifier(value, 'default')
+                        image_data = File.get_data(uid=value)
+                        interchange_list = image_data.get('interchange_list')
+                        if interchange_list:
+                            value = interchange_list[0][0]
                     if list_entry[2] in [
                             'bool', 'measure', 'checkbox', 'image_checkbox',
                             'select_type']:
@@ -2016,6 +2035,26 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
                     questiongroup_keyword = questiongroup.keyword
         return question_keyword, questiongroup_keyword
 
+    def get_description_keywords(self, keys):
+        """
+        Get a list of tuples in the form of 'questiongroup': 'keyword' for
+        given keys.
+
+        Args:
+            keys: list
+        Returns:
+            list of namedtuples
+        """
+        question_keywords = []
+        keyword = collections.namedtuple('Keyword', 'questiongroup question')
+        for questiongroup in self.get_questiongroups():
+            for question in questiongroup.questions:
+                if question.keyword in keys:
+                    question_keywords.append(
+                        keyword(questiongroup.keyword, question.keyword)
+                    )
+        return question_keywords
+
     def get_questionnaire_name(self, questionnaire_data):
         """
         Return the value of the key flagged with ``is_name`` of a
@@ -2034,6 +2073,27 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
             for x in questionnaire_data.get(questiongroup_keyword, []):
                 return x.get(question_keyword)
         return {'en': _('Unknown name')}
+
+    def get_questionnaire_description(self, questionnaire_data, keys):
+        """
+        Get the contents of given strings
+
+        Args:
+            keys: list
+            questionnaire_data: dict
+
+        Returns:
+            dict: language as key, concatenated content as value.
+        """
+        keywords = self.get_description_keywords(keys)
+        excerpt_data = collections.defaultdict(str)
+
+        for keyword in keywords:
+            for x in questionnaire_data.get(keyword.questiongroup, []):
+                if x.get(keyword.question):
+                    for language, text in x[keyword.question].items():
+                        excerpt_data[language] += '{} '.format(text)
+        return excerpt_data
 
     def get_user_fields(self):
         """
@@ -2255,8 +2315,8 @@ class ImageCheckbox(forms.CheckboxSelectMultiple):
         return ctx
 
 
-class ImageUpload(forms.FileInput):
-    template_name = 'form/field/image_upload.html'
+class FileUpload(forms.FileInput):
+    template_name = 'form/field/file_upload.html'
 
 
 class RequiredFormSet(BaseFormSet):

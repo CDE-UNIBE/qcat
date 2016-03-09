@@ -6,20 +6,23 @@ python: 3.4
 branches:
   only:
     - develop
-    # - master
+    - master
 
 env:
   # secure keys must include:
   # HOST_STRING_DEV
-  # OPBEAT_APP_ID
-  # OPBEAT_ORGANIZATION_URL
+  # HOST_STRING_LIVE
+  # OPBEAT_BEARER_DEV
+  # OPBEAT_URL_DEV
+  # OPBEAT_BEARER_LIVE
+  # OPBEAT_URL_LIVE
   # AUTH_API_USER
   # AUTH_API_KEY
   # these values are used for testing / deployment only, so the must not
   # necessarily match the proper values from develop / production.
 
   global:
-    - secure: Siv6eT2z7G3uHWMRUZIiZn8TuF2pyOoYVe3HvWzRFpYeBABNpIAZVYORIYxZZnNLl124V6+/vMJGFMjvB7DIj6lIaMMHCufYw+1Gfu7MePXsjCkz3kJgN2oeu86x1O2NpArtv5hVtzo544hyZdVahfnSNofoj31m/jzBrj57szJPS4WhnWy/dOMZTApZc55KUNzWtspQ63auu92rajJ/kO+iJGfn+7SjvcWoGqBBlW9t8daQjHGhOHRUGit9SEMlF6fOE7YQsxR+75cRYY7mW/m2XEi1Q8cugfAsuI5qUqk5FZcdFU3g/P7Mqm14LiOdPOWrkj0HfDMzzztIOMJGQybXC84aCpZSwr3U48C3Rh4B9Tkm2xBLf3S/ESTQJCNMHD6ZQUzpSRrgeRMO1XtH9/urwRxqaKAMdeGnIHsfyMV4XOvc7IpyJDjOFxaN+eZG1cxA23hG/k8FvEbK2HkgauY0yjedEG8FkBViXE+XZxNKQraBlYHZeS+2m73inpuYJ6yRRetyjS4hdH7fvhDzTRPaayIzBjpCJ3nmETRoe7D9lLkAL0auTR+x+RfMIzxfty2V8F3RgYfo4Nf6/R1qtI2b2NVyxNaMZ/7mTE/W/cfKAmd71TA/Q0boHLwXSkt/9coJ88DopLbbaqIFPe0m2br8vwuEiXvnt4A1dkR/YtM=
+    - secure: ilL7WPe9cAX1//dGWjDfb0eWxRSV/bfcoeQ+bXnkvEcRhvD7QiWv2PP6bTMPzVnXnIJSyvBMKkBRzivbSqULLiV8dku6CfSLgBDPOoRfkXTt0VPTJQmaFR8JMRPmXCAAsFnpG+UBukzfVEDvE0A5TQ3xRLK+c/jk9jNlWy4JsEpNQQRASX85GQFkI0jUin0LKynjd1mLWEcMWY0c7/GdkvJGb1NWJDUNkAbLdVEKsucz1zS8oMhoi4WO5/3fkiCtXQDTS7Z7IAau49qjhVvBse0EO7WbOHxPWrlWXaPXdEthJmW+0aq2/jHDJr4COkhyxlx4ApBH1DtoFzk+qDtXvGH2G79l8RlopvyKPAg3fhO2Ebwxb3o0kYgi4mV/SyERgu2xEu6b/1BRT1qciXmS0mQ+DELcna+REOaAFBTE3MHbIqQtnH9rrpwXJRfUjdNGfyAQaJP2PDCDQi74VqOBjqLW381Y3F9yfkfyhJxacbQuFx/Bgn9y/32h5QnNnFjg9A6FYE+42nvV1t7C9LrYJ3Wd7Kt0W2DgVfCZnOAxytjNulZcEezVTNgNwbHcMnnlMc1EDvWnsReA7H134zVZAsSKG3m7WfC9RXLSPZs1k/aK6cmwKywPp55d5PlrAe+GGP5RLZZQn9p7AuDfpiUvdrFohDeJiuGvRgSrWocDRRK5MAxFG0JJ6LITl8lqC1cldrWsTYyC8pt4+h6d7KRCGqvCOp0U3Z6EZyj18oExOjRZb2tGKu3JHXR2PHRNtY/i8u9tr6CwCYpwsxqOaIgh/THyM41gUlUkTp9KkD5BFrPh74VXIKK4iJPDylRgUFpq3MVeAwqNXD/rlIIiD2gbOicmqpA58l/Rv5W3DKGSd88vGcAZ0ijAPZ1JFiCtoCVr6XQwJ2ZR4RNvQTKvYLFGGw5YuhVo0ZjeVCWFb3Fe5V1yN7SD/HSAM1dleSq+yrj5PLQDag39DFr9nGPyAFvbHfwom0y4kHoGUEwPQOgFdwZJhW3abj5DjyDaoZoayHJw
 
 cache: true
 
@@ -77,7 +80,7 @@ after_success:
 #  - mv unittests.xml shippable/testresults/
 #  - mv reports/*.xml shippable/testresults/ && rmdir reports
   - fab $BRANCH deploy
-  - fab register_deployment
+  - fab $BRANCH register_deployment
 
 notifications:
   email:
