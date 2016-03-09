@@ -6,15 +6,15 @@ class DevMixin:
     TEMPLATE_DEBUG = values.BooleanValue(True)
     CACHES = values.CacheURLValue('dummy://')
     EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
-    WKHTMLTOPDF_CMD_OPTIONS = {
-        'quiet': False,
-        # 'load-error-handling': 'ignore'
-    }
 
 
 class ProdMixin:
     DEBUG = values.BooleanValue(False)
     TEMPLATE_DEBUG = values.BooleanValue(False)
+    WKHTMLTOPDF_CMD_OPTIONS = {
+        'quiet': True,
+        'load-error-handling': 'ignore'
+    }
 
 
 class SecurityMixin:

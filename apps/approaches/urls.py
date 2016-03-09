@@ -1,5 +1,5 @@
 from django.conf.urls import url, patterns
-from .cb_views import PDFDetailView
+from questionnaire.cb_views import PDFDetailView
 
 urlpatterns = patterns(
     '',
