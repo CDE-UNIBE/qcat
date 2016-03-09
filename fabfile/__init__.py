@@ -89,14 +89,12 @@ def deploy():
     """
     require('environment', provided_by=(develop, master))
     _set_maintenance_mode(True, env.source_folder)
-    _reload_uwsgi()
     _get_latest_source(env.source_folder)
     _update_virtualenv(env.source_folder)
     _clean_static_folder(env.source_folder)
     _update_static_files(env.source_folder)
     _update_database(env.source_folder)
     _set_maintenance_mode(False, env.source_folder)
-    _reload_uwsgi()
     print(green("Everything OK"))
 
 
