@@ -7,6 +7,7 @@ from django.middleware.csrf import get_token
 from django.utils import formats
 from django.utils.timezone import now
 from django.utils.translation import get_language
+from sekizai.context import SekizaiContext
 from wkhtmltopdf.views import PDFTemplateView
 
 from configuration.cache import get_configuration
@@ -129,6 +130,10 @@ class PDFDetailView(PDFTemplateView):
         return self.object.get_permissions(self.request.user)
 
     def get_context_data(self, **kwargs):
+        """
+        Put all variables to the context, and return a SekizaiContext as this
+        is not necessarily processed by sekizais context processor.
+        """
         context = super().get_context_data(**kwargs)
         context['images'] = self.get_images()
         context['sections'] = self.get_sections()
@@ -137,4 +142,4 @@ class PDFDetailView(PDFTemplateView):
         context['filter_configuration'] = self.get_filter_configuration()
         context['permissions'] = self.permissions
         context['view_mode'] = 'view',
-        return context
+        return SekizaiContext(context)
