@@ -11,6 +11,10 @@ class DevMixin:
 class ProdMixin:
     DEBUG = values.BooleanValue(False)
     TEMPLATE_DEBUG = values.BooleanValue(False)
+    WKHTMLTOPDF_CMD_OPTIONS = {
+        'quiet': True,
+        'load-error-handling': 'ignore'
+    }
 
 
 class SecurityMixin:

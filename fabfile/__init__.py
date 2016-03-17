@@ -183,7 +183,7 @@ def _set_maintenance_mode(value, source_folder):
         envs_file=join(source_folder, 'envs', 'MAINTENANCE_MODE')))
     # There were issues with permissions, so the lock-file remained in place.
     # Prevent this from happening again.
-    if exists(settings.MAINTENANCE_LOCKFILE_PATH):
+    if not value and exists(settings.MAINTENANCE_LOCKFILE_PATH):
         run('rm {}'.format(settings.MAINTENANCE_LOCKFILE_PATH))
     _reload_uwsgi()
 

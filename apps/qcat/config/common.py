@@ -42,6 +42,7 @@ class BaseSettings(Configuration):
         'rest_framework',
         'rest_framework_swagger',
         'sekizai',
+        'wkhtmltopdf',
         # Custom apps
         'accounts',
         'api',
@@ -259,3 +260,5 @@ class BaseSettings(Configuration):
     HOST_STRING_LIVE = values.Value(environ_prefix='')
 
     WARN_HEADER = values.Value(environ_prefix='')
+
+    WKHTMLTOPDF_CMD = values.Value(environ_prefix='')

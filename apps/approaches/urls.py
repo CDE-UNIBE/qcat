@@ -1,9 +1,12 @@
 from django.conf.urls import url, patterns
+from questionnaire.cb_views import PDFDetailView
 
 urlpatterns = patterns(
     '',
     # The 'home' route points to the list
     url(r'^$', 'approaches.views.questionnaire_list', name='home'),
+    url(r'^view/(?P<identifier>\w+)/pdf/$',
+        PDFDetailView.as_view(), name='questionnaire_detail_pdf'),
     url(r'^view/(?P<identifier>\w+)/$',
         'approaches.views.questionnaire_details',
         name='questionnaire_details'),

@@ -54,6 +54,17 @@ Elasticsearch
 .. _Elasticsearch: https://www.elastic.co/products/elasticsearch
 
 
+wkhtmltopdf
+^^^^^^^^^^^
+
+`wkhtmltopdf`_ is used to create pdf files. This must be installed, as well
+as ``libfontconfig``. Make sure to install the latest release from the offical
+page, instead of the version in your package manager. At least version 0.12.3.
+is required!
+
+.. _wkhtmltopdf: http://wkhtmltopdf.org/
+
+
 Installation on a UNIX system
 -----------------------------
 
