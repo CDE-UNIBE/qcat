@@ -7,8 +7,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import TemplateView, RedirectView
 
-from .views import static_sitemap
-
+from .views import static_sitemap, ServiceWorkerView
 
 urlpatterns = patterns(
     '',
@@ -24,7 +23,9 @@ urlpatterns = patterns(
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/', include(admin.site.urls)),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': static_sitemap},
-        name='django.contrib.sitemaps.views.sitemap')
+        name='django.contrib.sitemaps.views.sitemap'),
+    url(r'^service-worker\.js', ServiceWorkerView.as_view(),
+        name='service-worker'),
 )
 
 # The following urls are created with the locale as prefix, eg.
