@@ -46,6 +46,8 @@ class ServiceWorkerView(TemplateView):
         # This could be automated by using a hash - but this is too expensive
         # for this purpose.
         ctx['version'] = 1
+        # Cache the logo as well.
+        ctx['img_url'] = static('/static/assets/img/wocat_logo.svg')
         return ctx
 
 # Use this for the urls.
