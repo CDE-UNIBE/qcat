@@ -168,7 +168,8 @@ module.exports = function(grunt) {
           'static/css/introjs.min.css': 'bower_components/intro.js/minified/introjs.min.css',
           'static/css/chosen.min.css': 'bower_components/chosen/chosen.min.css',
           'static/css/chosen-sprite.png': 'bower_components/chosen/chosen-sprite.png',
-          'static/css/jquery-ui.min.css': 'bower_components/jquery-ui/themes/base/jquery-ui.min.css'
+          'static/css/jquery-ui.min.css': 'bower_components/jquery-ui/themes/base/jquery-ui.min.css',
+          'static/assets/html/offline.html': 'src/assets/html/offline.html',
         }
         ,{
           expand: true,
