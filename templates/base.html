@@ -173,6 +173,18 @@
       <script src="{% static 'js/foundation.min.js' %}"></script>
       <script src="{% static 'js/jquery.nstSlider.min.js' %}"></script>
       <script src="{% static 'js/main.min.js' %}"></script>
+      <script>
+      if('serviceWorker' in navigator) {
+          navigator.serviceWorker
+            .register('{% url 'service-worker' %}', { scope: '/'})
+            .then(function(registration) {
+              // console.log('registered');
+            })
+            .catch(function(error) {
+              // console.log(error);
+            });
+        }
+      </script>
     {% endcompress %}
     <!-- Block for js within specific templates. Add compress in the template.  -->
     {% render_block "js" %}
