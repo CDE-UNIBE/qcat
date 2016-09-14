@@ -41,3 +41,7 @@ class WocatAuthenticationBackend(ModelBackend):
 
         # TODO: Handle privileges and permissions
         return user
+
+
+class WocatV2AuthenticationBackend(ModelBackend):
+    pass

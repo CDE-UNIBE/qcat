@@ -149,8 +149,9 @@ class BaseSettings(Configuration):
     )
 
     AUTH_USER_MODEL = 'accounts.User'
-    AUTHENTICATION_BACKENDS = (
-        'accounts.authentication.WocatAuthenticationBackend',
+    AUTHENTICATION_BACKENDS = values.TupleValue(
+        environ_prefix='',
+        default=('accounts.authentication.WocatAuthenticationBackend', )
     )
     LOGIN_URL = 'login'
 
