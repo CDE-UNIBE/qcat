@@ -1,11 +1,14 @@
 # -*- coding: utf-8 -*-
 import logging
 import requests
+
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
+
+from accounts.models import User
 from .conf import settings
 
 logger = logging.getLogger(__name__)
@@ -245,4 +248,43 @@ class Typo3Client:
             settings.AUTH_LOGIN_FORM, redirect)
 
 
-typo3_client = Typo3Client()
+class WocatWebsiteUserClient:
+    """
+    Client with resources of the wocat website (relaunch oct. 2016).
+    """
+
+    base_url = settings.AUTH_API_URL
+
+    def get(self, url):
+        return requests.get(
+            '{base_url}{url}'.format(base_url=self.base_url, url=url),
+            headers={
+                'Accept': 'application/json',
+                'Content-Type': 'application/json',
+            }
+        )
+
+    def get_user_information(self, user_id: int) -> dict:
+        """
+        Get user info from remote system as dictionary.
+        """
+        response = self.get('users/{}'.format(user_id))
+        if response.ok:
+            return response.json()
+        return None
+
+    def update_user(self, user: User, user_information: dict):
+        if user_information:
+            user.update(
+                email=user_information.get('email')
+            )
+
+
+def get_remote_user_client():
+    if hasattr(settings, 'USE_NEW_WOCAT_AUTHENTICATION') and settings.USE_NEW_WOCAT_AUTHENTICATION:
+        return WocatWebsiteUserClient()
+    else:
+        return Typo3Client()
+
+# Bad naming. 'typo3_client' should be 'remote_user_client'
+typo3_client = get_remote_user_client()
