@@ -127,3 +127,14 @@ class AuthenticationFeatureSwitch:
             return ('django_cas_ng.backends.CASBackend', )
         else:
             return super().AUTHENTICATION_BACKENDS
+
+    @property
+    def MIDDLEWARE_CLASSES(self):
+        # We probably need a new middleware.
+        middlewares = super().MIDDLEWARE_CLASSES
+        old_middleware = 'accounts.middleware.WocatAuthenticationMiddleware'
+        if old_middleware in middlewares:
+            middlewares = list(middlewares)
+            middlewares.remove(old_middleware)
+            middlewares = tuple(middlewares)
+        return middlewares
