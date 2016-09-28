@@ -110,3 +110,20 @@ class OpBeatMixin:
         return super().MIDDLEWARE_CLASSES + (
             'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
         )
+
+
+class AuthenticationFeatureSwitch:
+    """
+    The new authentication is a feature switch, not just a new backend.
+    """
+    USE_NEW_WOCAT_AUTHENTICATION = values.BooleanValue(
+        environ_prefix='', default=False
+    )
+    CAS_SERVER_URL = values.Value(environ_prefix='', default='')
+
+    @property
+    def AUTHENTICATION_BACKENDS(self):
+        if self.USE_NEW_WOCAT_AUTHENTICATION:
+            return ('django_cas_ng.backends.CASBackend', )
+        else:
+            return super().AUTHENTICATION_BACKENDS
