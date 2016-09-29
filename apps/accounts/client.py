@@ -253,22 +253,43 @@ class WocatWebsiteUserClient:
     Client with resources of the wocat website (relaunch oct. 2016).
     """
 
-    base_url = settings.AUTH_API_URL
-
-    def get(self, url):
+    def _get(self, url: str) -> requests.Response:
+        """
+        Simple helper to request api; all requests are GET.
+        """
         return requests.get(
-            '{base_url}{url}'.format(base_url=self.base_url, url=url),
+            url='{base_url}{url}'.format(
+                base_url=settings.AUTH_API_URL, url=url
+            ),
             headers={
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
             }
         )
 
+    def get_user_id(self, session_id):
+        raise NotImplementedError('Deprecated method with new auth.')
+
+    def api_login(self):
+        raise NotImplementedError('Deprecated method with new auth.')
+
+    def get_and_update_django_user(self, user_id, session_id):
+        raise NotImplementedError('Deprecated method with new auth.')
+
+    def search_users(self, name='') -> dict:
+        """
+        wait for api on wocat
+        """
+        pass
+
+    def get_logout_url(self, redirect):
+        raise NotImplementedError('Deprecated method')
+
     def get_user_information(self, user_id: int) -> dict:
         """
         Get user info from remote system as dictionary.
         """
-        response = self.get('users/{}'.format(user_id))
+        response = self._get('users/{}'.format(user_id))
         if response.ok:
             return response.json()
         return None
