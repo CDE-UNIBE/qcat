@@ -1,5 +1,7 @@
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
+
+from configuration.tests.test_utils import DEFAULT_WOCAT_CONFIGURATIONS
 from functional_tests.base import FunctionalTest
 
 from search.index import delete_all_indices
@@ -22,7 +24,7 @@ class ListTest(FunctionalTest):
     def setUp(self):
         super(ListTest, self).setUp()
         delete_all_indices()
-        create_temp_indices(['technologies', 'approaches', 'unccd'])
+        create_temp_indices(DEFAULT_WOCAT_CONFIGURATIONS)
 
     def tearDown(self):
         super(ListTest, self).tearDown()
@@ -65,6 +67,43 @@ class ListTest(FunctionalTest):
             'xpath', '(//article[contains(@class, "tech-item")])[4]//p['
             'contains(text(), "This is the definition of the first WOCAT '
             'Technology.")]')
+
+    def test_list_handles_invalid_type(self):
+
+        # Alice goes to the WOCAT list and sees no value (= "All SLM Data") is
+        # selected as type filter by default.
+        self.browser.get(self.live_server_url + reverse(route_wocat_list))
+        self.assertEqual(
+            self.findBy('id', 'search-type').get_attribute('value'), '')
+
+        # Alice manually enters type "technologies" in the URL. She sees that
+        # the search type has changed.
+        self.browser.get(
+            self.live_server_url + reverse(
+                route_wocat_list) + '?type=technologies')
+        self.assertEqual(
+            self.findBy('id', 'search-type').get_attribute('value'),
+            'technologies')
+
+        # Alice goes to the WOCAT list but manually enters a type which is not
+        # valid.
+        self.browser.get(
+            self.live_server_url + reverse(
+                route_wocat_list) + '?type=foo')
+
+        # She sees there is no error message
+        self.findByNot('xpath', '//*[contains(text(), "Error")]')
+
+        # The default search type ("All SLM Data") is selected.
+        self.assertEqual(
+            self.findBy('id', 'search-type').get_attribute('value'), '')
+
+        # She manually enters UNCCD (uppercase) as type. She sees that there is
+        # no error.
+        self.browser.get(
+            self.live_server_url + reverse(
+                route_wocat_list) + '?type=UNCCD')
+        self.findByNot('xpath', '//*[contains(text(), "Error")]')
 
     def test_list_is_multilingual(self):
 

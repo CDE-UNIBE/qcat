@@ -152,8 +152,9 @@ class Typo3Client:
         # if something goes wrong, log the full exception, including user-data.
         try:
             user, created = get_user_model().objects.get_or_create(
-                pk=user_id, email=user_data['username'], defaults={
+                pk=user_id, defaults={
                     'last_login': now(),
+                    'email': user_data['username']
                 }
             )
         except IntegrityError as e:

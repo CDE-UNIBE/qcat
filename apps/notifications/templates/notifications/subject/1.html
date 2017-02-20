@@ -1,0 +1,11 @@
+{% comment %}
+  template for 'create questionnaire'
+{% endcomment %}
+
+{% load i18n %}
+
+{% spaceless %}
+  <a href="{{ log.questionnaire.get_absolute_url }}" class="link">{{ log.questionnaire.code }}</a>
+  {% trans "was created by" %}
+  <a href="{% url 'user_details' log.catalyst_id %}" class="link">{{ log.catalyst.get_display_name }}</a>.
+{% endspaceless %}

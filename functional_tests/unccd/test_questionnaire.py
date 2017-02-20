@@ -86,7 +86,7 @@ class FlaggingTest(FunctionalTest):
         self.browser.get(self.live_server_url + reverse(
             accounts_route_user, kwargs={'pk': unccd_user.id}))
 
-        self.findBy('xpath', '//*[contains(text(), "UNCCD Focal Point")]')
+        self.findBy('xpath', '//*[contains(text(), "UNCCD focal point")]')
         self.findBy('xpath', '//a[contains(text(), "Switzerland")]')
 
     def test_unccd_flag_elasticsearch(self, mock_get_user_id):

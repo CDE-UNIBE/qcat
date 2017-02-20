@@ -24,10 +24,11 @@ from staticmap import StaticMap, CircleMarker, Polygon
 from accounts.models import User
 from configuration.cache import get_configuration
 from configuration.models import Configuration
+from .signals import change_status, create_questionnaire
 
 from .conf import settings
 from .errors import QuestionnaireLockedException
-from .querysets import StatusQuerySet
+from .querysets import StatusQuerySet, LockStatusQuerySet
 
 from questionnaire.upload import (
     create_thumbnails,
@@ -72,7 +73,7 @@ QUESTIONNAIRE_FLAGS = (
 
 QUESTIONNAIRE_FLAGS_HELPTEXT = (
     (settings.QUESTIONNAIRE_FLAG_UNCCD, _(
-        'Submitted as SLM Best Practice to UNCCD by country focal point')),
+        'Submitted as SLM best practice to UNCCD by the national focal point')),
 )
 
 
@@ -83,17 +84,11 @@ class Questionnaire(models.Model):
     Questionnaire.
     """
     data = JsonBField()
-    data_old = JsonBField(null=True)
     created = models.DateTimeField()
     updated = models.DateTimeField()
     uuid = models.CharField(max_length=64, default=uuid4)
     code = models.CharField(max_length=64, default='')
     geom = models.GeometryField(null=True, blank=True)
-    blocked = models.ForeignKey(
-        settings.AUTH_USER_MODEL, blank=True, null=True,
-        related_name='blocks_questionnaire',
-        help_text=_(u"Set with the method: lock_questionnaire.")
-    )
     is_deleted = models.BooleanField(default=False)
     status = models.IntegerField(choices=STATUSES)
     version = models.IntegerField()
@@ -116,19 +111,18 @@ class Questionnaire(models.Model):
             ("publish_questionnaire", "Can publish questionnaire"),
             ("assign_questionnaire",
              "Can assign questionnaire (for review/publish)"),
+            ("view_questionnaire", "Can view questionnaire"),
+            ("edit_questionnaire", "Can edit questionnaire"),
             ("flag_unccd_questionnaire", "Can flag UNCCD questionnaire"),
             ("unflag_unccd_questionnaire", "Can unflag UNCCD questionnaire"),
         )
 
-    def get_absolute_url(self):
+    def _get_url_from_configured_app(self, url_name: str) -> str:
         """
         Try to resolve the proper code for the object, using it as namespace.
 
         If some day, the configurations code is not the exact same string as
         the application name, a 'mapping' dict is required.
-
-        Returns:
-            string: detail url of the questionnaire.
         """
         conf = self.configurations.filter(
             active=True
@@ -139,12 +133,27 @@ class Questionnaire(models.Model):
         )
         if conf.exists() and conf.count() == 1:
             with contextlib.suppress(NoReverseMatch):
-                return reverse('{app_name}:questionnaire_details'.format(
-                    app_name=conf.first().code
+                return reverse('{app_name}:{url_name}'.format(
+                    app_name=conf.first().code,
+                    url_name=url_name
                 ), kwargs={'identifier': self.code})
         return None
 
-    def update_data(self, data, updated, configuration_code, old_data=None):
+    def get_absolute_url(self):
+        """
+        Detail view url of the questionnaire. Important: don't use type hints
+        as djangorestframework as of now throws errors
+        (https://github.com/tomchristie/django-rest-framework/pull/4076)
+        """
+        return self._get_url_from_configured_app('questionnaire_details')
+
+    def get_edit_url(self) -> str:
+        """
+        Edit view url of the questionnaire
+        """
+        return self._get_url_from_configured_app('questionnaire_edit')
+
+    def update_data(self, data, updated, configuration_code):
         """
         Helper function to just update the data of the questionnaire
         without creating a new instance.
@@ -156,25 +165,24 @@ class Questionnaire(models.Model):
 
             ``configuration_code`` (str): The configuration code.
 
-            ``old_data`` (dict): The data dictionary containing the old data of
-            the questionnaire.
-
         Returns:
             ``Questionnaire``
         """
         self.data = data
         self.updated = updated
-        self.data_old = old_data
         self.save()
         # Unblock all questionnaires with this code, as all questionnaires with
         # this code are blocked for editing.
-        self._meta.model.objects.filter(
-            code=self.code
+        Lock.objects.filter(
+            questionnaire_code=self.code
         ).update(
-            blocked=None
+            is_finished=True
         )
 
-        self.update_geometry(configuration_code=configuration_code)
+        try:
+            self.update_geometry(configuration_code=configuration_code)
+        except:
+            pass
 
         # Update the users attached to the questionnaire
         self.update_users_from_data(configuration_code)
@@ -184,7 +192,7 @@ class Questionnaire(models.Model):
     @staticmethod
     def create_new(
             configuration_code, data, user, previous_version=None, status=1,
-            created=None, updated=None, old_data=None):
+            created=None, updated=None, old_data=None, languages=None):
         """
         Create and return a new Questionnaire.
 
@@ -211,6 +219,10 @@ class Questionnaire(models.Model):
             ``old_data`` (dict): The data dictionary containing the old data of
             the questionnaire.
 
+            ``languages`` (list): An optional list of languages in which a newly
+            created questionnaire is available. Should only be used when
+            importing data.
+
         Returns:
             ``questionnaire.models.Questionnaire``. The created
             Questionnaire.
@@ -231,10 +243,10 @@ class Questionnaire(models.Model):
             uuid = previous_version.uuid
 
             # Unblock all other questionnaires with same code
-            Questionnaire.objects.filter(
-                code=code
+            Lock.objects.filter(
+                questionnaire_code=code
             ).update(
-                blocked=None
+                is_finished=True
             )
 
             if 'edit_questionnaire' not in permissions:
@@ -245,11 +257,11 @@ class Questionnaire(models.Model):
                 # Edit of a public questionnaire: Create new version
                 # with the same code
                 version = previous_version.version + 1
+                languages = previous_version.translations
 
             elif previous_version.status == settings.QUESTIONNAIRE_DRAFT:
                 # Edit of a draft questionnaire: Only update the data
-                previous_version.update_data(
-                    data, updated, configuration_code, old_data=old_data)
+                previous_version.update_data(data, updated, configuration_code)
                 previous_version.add_translation_language(original=False)
                 return previous_version
 
@@ -260,8 +272,8 @@ class Questionnaire(models.Model):
                     raise ValidationError(
                         'You do not have permission to edit the '
                         'questionnaire.')
-                previous_version.update_data(
-                    data, updated, configuration_code, old_data=old_data)
+                previous_version.update_data(data, updated, configuration_code)
+                previous_version.add_translation_language(original=False)
                 return previous_version
 
             elif previous_version.status == settings.QUESTIONNAIRE_REVIEWED:
@@ -271,8 +283,8 @@ class Questionnaire(models.Model):
                     raise ValidationError(
                         'You do not have permission to edit the '
                         'questionnaire.')
-                previous_version.update_data(
-                    data, updated, configuration_code, old_data=old_data)
+                previous_version.update_data(data, updated, configuration_code)
+                previous_version.add_translation_language(original=False)
                 return previous_version
 
             else:
@@ -294,6 +306,11 @@ class Questionnaire(models.Model):
         questionnaire = Questionnaire.objects.create(
             data=data, uuid=uuid, code=code, version=version, status=status,
             created=created, updated=updated)
+        create_questionnaire.send(
+            sender=settings.NOTIFICATIONS_CREATE,
+            questionnaire=questionnaire,
+            user=user
+        )
 
         questionnaire.update_geometry(configuration_code=configuration_code)
 
@@ -302,7 +319,13 @@ class Questionnaire(models.Model):
             questionnaire=questionnaire, configuration=configuration,
             original_configuration=True)
 
-        questionnaire.add_translation_language(original=True)
+        if not languages:
+            questionnaire.add_translation_language(original=True)
+        else:
+            for i, language in enumerate(languages):
+                original = i == 0
+                questionnaire.add_translation_language(
+                    original=original, language=language)
 
         if previous_version:
             # Copy all the functional user roles from the old version
@@ -323,17 +346,21 @@ class Questionnaire(models.Model):
 
         return questionnaire
 
-    def add_translation_language(self, original=False):
+    def add_translation_language(self, original=False, language=None):
         """
         Add a language as a translation of the questionnaire. Add it only once.
 
         Args:
             original: bool. Whether the language is the original language or not
 
+            language: string. Manually set the language of the translation. If
+            not provided, it is looked up using get_language().
+
         Returns:
 
         """
-        language = get_language()
+        if language is None:
+            language = get_language()
         if language not in self.translations:
             QuestionnaireTranslation.objects.create(
                 questionnaire=self, language=language,
@@ -395,7 +422,7 @@ class Questionnaire(models.Model):
             settings.QUESTIONNAIRE_COMPILER: [{
                 'status': [settings.QUESTIONNAIRE_DRAFT,
                            settings.QUESTIONNAIRE_PUBLIC],
-                'permissions': ['edit_questionnaire']
+                'permissions': ['edit_questionnaire', 'delete_questionnaire']
             }, {
                 'status': [settings.QUESTIONNAIRE_DRAFT],
                 'permissions': ['submit_questionnaire', 'assign_questionnaire']
@@ -442,10 +469,17 @@ class Questionnaire(models.Model):
             role = settings.QUESTIONNAIRE_PUBLISHER
             roles.append(
                 (role, dict(QUESTIONNAIRE_ROLES).get(role)))
-        if ('questionnaire.assign_questionnaire' in user_permissions
-                and self.status in [settings.QUESTIONNAIRE_SUBMITTED,
-                                    settings.QUESTIONNAIRE_REVIEWED]):
-            permissions.extend(['assign_questionnaire'])
+        if 'questionnaire.assign_questionnaire' in user_permissions:
+            # Piggybacking on the "assign_questionnaire" permission to identify
+            # WOCAT secretariat users as this permission is only available for
+            # this role.
+            permissions.extend(
+                ['edit_questionnaire', 'delete_questionnaire',
+                 'submit_questionnaire', 'review_questionnaire',
+                 'publish_questionnaire'])
+            if self.status in [settings.QUESTIONNAIRE_SUBMITTED,
+                               settings.QUESTIONNAIRE_REVIEWED]:
+                permissions.extend(['assign_questionnaire'])
             role = settings.QUESTIONNAIRE_SECRETARIAT
             roles.append(
                 (role, dict(QUESTIONNAIRE_ROLES).get(role)))
@@ -477,11 +511,6 @@ class Questionnaire(models.Model):
         translated_roles = []
         for role_keyword, role_name in roles:
             translated_roles.append((role_keyword, _(role_name)))
-
-        # If questionnaire is blocked, remove 'edit' permissions.
-        if 'edit_questionnaire' in permissions and \
-                not self.can_edit(current_user):
-            permissions.remove('edit_questionnaire')
 
         return RolesPermissions(roles=translated_roles, permissions=permissions)
 
@@ -861,79 +890,52 @@ class Questionnaire(models.Model):
         return json.dumps(self.data)
 
     @classmethod
-    def has_questionnaires_for_code(cls, code):
+    def has_questionnaires_for_code(cls, code: str) -> bool:
         return cls.objects.filter(code=code).exists()
 
     @classmethod
-    def get_editable_questionnaires(cls, code, user=None):
-        """
-        After internal discussion: 'blocking' of questionnaires should happen
-        for all items with the same code, not specific questionnaires only.
-
-        Args:
-            code: string
-            user: accounts.models.User
-
-        Returns:
-            queryset
-
-        """
-        qs = cls.objects.filter(code=code)
-        if user:
-            return qs.filter(Q(blocked__isnull=True) | Q(blocked=user))
-        else:
-            return qs.filter(blocked__isnull=True)
-
-    @classmethod
-    def lock_questionnaire(cls, code, user):
+    def lock_questionnaire(cls, code: str, user: settings.AUTH_USER_MODEL):
         """
         If the questionnaire is not locked, or locked by given user: lock the
         questionnaire for this user - else raise an error.
 
-        Args:
-            code: string
-            user: accounts.models.User
         """
-        editable_questionnaires = cls.get_editable_questionnaires(
-            code, user
-        )
-        if cls.has_questionnaires_for_code(code):
-            if not editable_questionnaires.exists():
-                raise QuestionnaireLockedException(
-                    cls.objects.filter(code=code).first().blocked
-                )
-            editable_questionnaires.update(blocked=user)
+        qs_locks = Lock.with_status.is_blocked(code, for_user=user)
 
-    def can_edit(self, user):
-        return self.has_questionnaires_for_code(
-            self.code) and self.get_editable_questionnaires(self.code, user)
+        if qs_locks.exists():
+            raise QuestionnaireLockedException(
+                qs_locks.first().user
+            )
+        else:
+            Lock.objects.create(questionnaire_code=code, user=user)
+
+    def can_edit(self, user: settings.AUTH_USER_MODEL) -> bool:
+        has_questionnaires = self.has_questionnaires_for_code(self.code)
+        qs_locks = Lock.with_status.is_blocked(self.code, for_user=user)
+        return has_questionnaires and not qs_locks.exists()
 
     def unlock_questionnaire(self):
-        self._meta.model.objects.filter(
-            code=self.code
+        Lock.objects.filter(
+            questionnaire_code=self.code
         ).update(
-            blocked=None
+            is_finished=True
         )
 
-    def get_blocked_message(self, user):
+    def get_blocked_message(self, user: settings.AUTH_USER_MODEL) -> tuple:
         """
-        The user that is locking the draft of the questionnaire.
+        Get status and message for blocked status (blocked or can be edited).
+        """
+        locks = Lock.with_status.is_blocked(code=self.code, for_user=user)
 
-        Args:
-            user: accounts.models.User
-        """
-        editable_questionnaire = self.get_editable_questionnaires(
-            self.code, user
-        )
-        if self.has_questionnaires_for_code(self.code) and \
-                editable_questionnaire.exists():
+        if not locks.exists():
             return SUCCESS, _(u"This questionnaire can be edited.")
         else:
             return WARNING, _(u"This questionnaire is "
-                              u"locked for editing by {}.".format(self.blocked))
+                              u"locked for editing by {user}.".format(
+                user=locks.first().user.get_display_name()
+            ))
 
     # Properties for the get_metadata function.
-
     def _get_role_list(self, role):
         members = []
         for member in self.members.filter(questionnairemembership__role=role):
@@ -961,6 +963,11 @@ class Questionnaire(models.Model):
     @cached_property
     def configurations_property(self):
         return list(self.configurations.values_list('code', flat=True))
+
+    def get_original_configuration(self):
+        return self.configurations.filter(
+            questionnaire__questionnaireconfiguration__original_configuration=True
+        ).first()
 
     @cached_property
     def translations(self):
@@ -1256,3 +1263,18 @@ class File(models.Model):
         if file_name is None:
             return None
         return get_url_by_file_name(file_name)
+
+
+class Lock(models.Model):
+    """
+    Locks questionnaire for editing. This collects more information than
+    required, but does include info for debugging.
+    This could be extended with a field for the questionnaires section.
+    """
+    questionnaire_code = models.CharField(max_length=50)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    start = models.DateTimeField(auto_now_add=True)
+    is_finished = models.BooleanField(default=False)
+
+    objects = models.Manager()
+    with_status = LockStatusQuerySet.as_manager()

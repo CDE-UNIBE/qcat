@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans "SLM Climate Change Adaptation" %}{% endblock %}
+
+{% block bodyclass %}layout-tech is-cca{% endblock %}
+{% block navclass %}is-cca{% endblock %}
+
+{% block header %}
+  {% include "wocat/partial/top.html" with current='cca' %}
+{% endblock %}
+
+{% block bottom %}
+{% endblock %}

@@ -1,24 +1,43 @@
 {% extends 'sample/base.html' %}
 
 {% load i18n %}
+{% load sekizai_tags %}
+{% load compress %}
+{% load static %}
+
 
 {% block bodyclass %}layout-technologies{% endblock %}
 
 {% block content %}
 
+  {% addtoblock 'css' %}
+    <link rel="stylesheet" href="{% static 'css/chosen.min.css' %}">
+  {% endaddtoblock %}
+  {% addtoblock 'js' %}
+    {% compress js %}
+      <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+      <script>
+        $('.chosen-select').chosen({
+          allow_single_deselect: true,
+          search_contains: true
+        });
+      </script>
+    {% endcompress %}
+  {% endaddtoblock %}
 
   <form action="" data-url="{{ filter_url }}" data-list-url="{% url 'sample:questionnaire_list' %}" id="search-advanced">
     <div class="top-bar-search">
       <div class="row large-no-gutters">
         <div class="medium-4 columns">
           <label for="filter-country">{% trans "Country" %}</label>
-          <input type="text" class="js-search-datalist" placeholder="{% trans 'Select or type a country name' %}" list="filter-country-list" id="filter-country">
-          <datalist id="filter-country-list">
-            {% for country in filter_configuration.countries %}
-            <option data-value="{{ country.0 }}">{{ country.1 }}</option>
-            {% endfor %}
-          </datalist>
-          <input type="hidden" name="filter-country" id="filter-country-hidden" data-questiongroup="qg_location" data-key="country">
+          <select name="filter-country" class="chosen-select hidden-filter" data-questiongroup="qg_location" data-key="country" data-placeholder="{% trans 'Select or type a country name' %}">
+            <option value=""></option>
+            {% with request.GET.filter__qg_location__country|default:None as selected_country %}
+              {% for country in filter_configuration.countries %}
+                <option value="{{ country.0 }}" {% if selected_country == country.0 %}selected="selected"{% endif %}>{{ country.1 }}</option>
+              {% endfor %}
+          {% endwith %}
+          </select>
         </div>
         <div class="medium-4 columns">
           <label for="language">Language</label>
@@ -30,13 +49,14 @@
         </div>
         <div class="medium-4 columns">
           <label for="filter-project">{% trans "Project" %}</label>
-          <input type="text" class="js-search-datalist" placeholder="{% trans 'Select or type a project name' %}" list="filter-project-list" id="filter-project">
-          <datalist id="filter-project-list">
-            {% for project in filter_configuration.projects %}
-            <option data-value="{{ project.0 }}">{{ project.1 }}</option>
-            {% endfor %}
-          </datalist>
-          <input type="hidden" name="filter-project" id="filter-project-hidden" data-questiongroup="qg_funding_project" data-key="funding_project">
+          <select name="filter-project" class="chosen-select hidden-filter" data-questiongroup="qg_funding_project" data-key="funding_project" data-placeholder="{% trans 'Select or type a project name' %}">
+            <option value=""></option>
+            {% with request.GET.filter__qg_funding_project__funding_project|default:None as selected_project %}
+              {% for project in filter_configuration.projects %}
+                <option value="{{ project.0 }}" {% if selected_project == project.0 %}selected="selected"{% endif %}>{{ project.1 }}</option>
+              {% endfor %}
+            {% endwith %}
+          </select>
         </div>
       </div>
       <div class="row large-no-gutters is-rhythmed">

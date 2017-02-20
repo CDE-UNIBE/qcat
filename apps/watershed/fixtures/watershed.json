@@ -1,0 +1,2199 @@
+[
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "By national standards, is the watershed considered"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31001
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Indicate if the described watershed is representative of a larger watershed, river basin, or region."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31002
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "If yes, specify"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31003
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Total watershed area in km²"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31004
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "If precise area is not known, indicate approximately."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31005
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Key reason(s) for selecting this watershed for assessment and documentation"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31006
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Description of the watershed"
+          },
+          "helptext": {
+            "en": "<p>This detailed description should provide a concise but comprehensive picture of the watershed and its management to outsiders. Major differences of the three zones of the watershed should be highlighted. It should therefore address key questions such as:<ol><li>Where is the watershed located (natural and human environment)?</li><li>What are the main problems/ challenges and what are the main objectives of the watershed management?</li><li>What are the main Technologies applied (technical, social, and institutional)?</li><li>Who are the main target groups/ beneficiaries?</li><li>Who are the implementing partners and what is their role?</li><li>What are the environmental, social, cultural, and economic impacts of watershed management?</li></ol></p><p>The description should ideally be 2,500-3,000 characters in length; the absolute maximum is 3,500 characters. More detailed descriptions may be uploaded to the database as separate documents.</p>"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31007
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Image of the map"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31008
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Caption of the map"
+          },
+          "helptext": {
+            "en": "Write one sentence."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31009
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Date"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31010
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Location"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31011
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Describe major results illustrated by the map"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31012
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Describe a scenario for improved watershed management based on different scenario runs in the offline app."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31013
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Are there conflicts between upstream and downstream land users?"
+          },
+          "helptext": {
+            "en": "E.g. water use, forest use"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31014
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "If yes, specify"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31015
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Are there synergies between upstream and downstream land users?"
+          },
+          "helptext": {
+            "en": "E.g. down-stream hydro-power companies invest in SLM upstream"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31016
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "If yes, specify"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31017
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Are there dependencies between upstream and downstream users?"
+          },
+          "helptext": {
+            "en": "E.g. regulated water flow of rivers, groundwater recharge"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31018
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "If yes, specify"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31019
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Further comments"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31020
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Are there any solutions?"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31021
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Can they be maintained in future?"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31022
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Map layer ID"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31023
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "micro-mini scale"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31501
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "small scale"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31502
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "medium scale"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31503
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "large scale (macro)"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31504
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "1-10 km²"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31505
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "10-100 km²"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31506
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "100-1,000 km²"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31507
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "1,000-10,000 km²"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31508
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": ">10,000 km²"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 31509
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Brief identification of the watershed"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32701
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Contact details of resource persons and institutions involved in the documentation"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32702
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Conditions regarding the use of data documented through WOCAT"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32703
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Define the area of the watershed"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32704
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Coordinates in latitude and longitude at the outlet and / or centre of the watershed area"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32705
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Key reason(s) for selecting this watershed for assessment and documentation"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32706
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Description of the watershed"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32707
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Photos of the watershed"
+          },
+          "helptext": {
+            "en": "<ul><li>Provide photos showing an overview and details of the three zones of the watershed</li><li>Provide at least two digital files (JPG, PNG, GIF), i.e. files from a digital camera, or scans from prints, negative films, or slide films.</li><li>Maximum file size: 3 MB.</li><li>Photos should be of high quality/ high resolution and not manipulated or distorted.</li><li>An explanation (description) is required for each photo submitted!</li></ul><p><strong>Example:</strong></p><div class=\"row\"><div class=\"medium-6 columns\"><img src=\"/static/assets/img/watershed/watershed_example_1.jpg\"><p class=\"form-example-legend\">Sourakhak watershed, Afghanistan, used for fuel, fodder, grazing, and cash crops (photo: S. Bhuchar, Helvetas)</p></div><div class=\"medium-6 columns\"><img src=\"/static/assets/img/watershed/watershed_example_2.jpg\"><p class=\"form-example-legend\">Structural measures (contour trenches, check dams, water harvesting structures) in combination with management (grazing and shrub-cutting management) and vegetative measures applied in Baqa Kushta watershed, Afghanistan (photo: S. Bhuchar, Helvetas)</p></div></div>"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32708
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Map of the watershed assessment"
+          },
+          "helptext": {
+            "en": "Upload the map of the delineated major Land Use Types (LUTs), Land Use Sub-Types (LUSTs), and Land Management (LM) for each zone of the watershed (current situation) in one map."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32710
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Additional map(s) that support(s) characterization of the watershed"
+          },
+          "helptext": {
+            "en": "If available provide any other map(s) that support(s) characterization of the watershed (e.g. altitude, annual rainfall, slopes, soils etc.)."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32711
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Are there dependencies between upstream and downstream land users?"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32712
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Are there conflicts between upstream and downstream land users?"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32713
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Are there synergies between upstream and downstream land users?"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32714
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Describe a scenario for improved watershed management"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32715
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Strengths/ advantages/ opportunities of watershed management activities"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32716
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Weaknesses/ disadvantages/ risks of watershed management activities and ways of overcoming them"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32717
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "References to available publications"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32718
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Links to relevant information that is available online"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32719
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "General information"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32901
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Watershed information"
+          },
+          "helptext": {
+            "en": "<p><strong>Definition of a watershed</strong>: A watershed is a topographically limited area from which all water is drained by acommon water course/ outlet. A watershed is also known as a catchment or basin. (NB: take care not to confusewith another use of the term in the US, where “watershed” can mean the actual divide between two catchmentsfrom where water is shed in opposite directions, rather than the area with a common water flow or drainagesystem).</p><p>A watershed captures precipitation, filters and stores water and determines its release (Schreier et al. 1997). Theland, vegetation, and water and resource users (farmers, herders, industries, urban people, livestock, wildlife, etc.)are its main constituents. The human and environmental components are closely connected and interdependent insuch a way that a change in one component impacts the integrity of the other.</p><p><strong>Definition of watershed management</strong>: Watershed management is the integrated use of land, vegetation, andwater in a geographically discrete catchment or drainage area for the benefit of its residents, with the objective ofmaintaining the hydrological and other services that the watershed provides, and of reducing or avoiding negativedownstream or groundwater impacts (adapted from The World Bank, 2008). This implies also monitoring otherecological services such as soil productivity; biodiversity; the carbon cycle; climate change adaptation andmitigation; and sociocultural services such as aesthetics, recreation, tourism, heritage, etc.</p><p>Figure 1: Illustration of a watershed (source: https://dutchesswam.wordpress.com/)</p><img src=\"/static/assets/img/watershed/watershed_illustration.jpg\">"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32902
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Results of the watershed mapping and assessment"
+          },
+          "helptext": {
+            "en": "The results are based on the offline watershed assessment tool and uploaded to the online database."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32903
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Analysis"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32904
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "Concluding statements"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32905
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "watershed": {
+          "label": {
+            "en": "References and links "
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 32906
+  },
+  {
+    "fields": {
+      "keyword": "ws_scale_national",
+      "translation": 31001,
+      "configuration": {
+        "type": "radio"
+      },
+      "values": [
+        31001,
+        31002,
+        31003,
+        31004
+      ]
+    },
+    "model": "configuration.key",
+    "pk": 31001
+  },
+  {
+    "fields": {
+      "keyword": "ws_representative_unit",
+      "translation": 31002,
+      "configuration": {
+        "type": "bool"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31002
+  },
+  {
+    "fields": {
+      "keyword": "ws_representative_unit_specify",
+      "translation": 31003,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31003
+  },
+  {
+    "fields": {
+      "keyword": "ws_total_area",
+      "translation": 31004,
+      "configuration": {
+        "type": "float",
+        "form_options": {
+          "field_options": {
+            "min": 0
+          }
+        }
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31004
+  },
+  {
+    "fields": {
+      "keyword": "ws_approximate_area",
+      "translation": 31005,
+      "configuration": {
+        "type": "radio"
+      },
+      "values": [
+        31005,
+        31006,
+        31007,
+        31008,
+        31009
+      ]
+    },
+    "model": "configuration.key",
+    "pk": 31005
+  },
+  {
+    "fields": {
+      "keyword": "ws_reasons_selection",
+      "translation": 31006,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31006
+  },
+  {
+    "fields": {
+      "keyword": "ws_description",
+      "translation": 31007,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31007
+  },
+  {
+    "fields": {
+      "keyword": "ws_map_image",
+      "translation": 31008,
+      "configuration": {
+        "type": "image"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31008
+  },
+  {
+    "fields": {
+      "keyword": "ws_map_caption",
+      "translation": 31009,
+      "configuration": {
+        "type": "char",
+        "form_options": {
+          "helptext_position": "tooltip"
+        }
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31009
+  },
+  {
+    "fields": {
+      "keyword": "ws_map_date",
+      "translation": 31010,
+      "configuration": {
+        "type": "date"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31010
+  },
+  {
+    "fields": {
+      "keyword": "ws_map_location",
+      "translation": 31011,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31011
+  },
+  {
+    "fields": {
+      "keyword": "ws_map_description_results",
+      "translation": 31012,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31012
+  },
+  {
+    "fields": {
+      "keyword": "ws_analysis_description",
+      "translation": 31013,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31013
+  },
+  {
+    "fields": {
+      "keyword": "ws_conflicts",
+      "translation": 31014,
+      "configuration": {
+        "type": "bool"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31014
+  },
+  {
+    "fields": {
+      "keyword": "ws_conflicts_specify",
+      "translation": 31015,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31015
+  },
+  {
+    "fields": {
+      "keyword": "ws_synergies",
+      "translation": 31016,
+      "configuration": {
+        "type": "bool"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31016
+  },
+  {
+    "fields": {
+      "keyword": "ws_synergies_specify",
+      "translation": 31017,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31017
+  },
+  {
+    "fields": {
+      "keyword": "ws_dependencies",
+      "translation": 31018,
+      "configuration": {
+        "type": "bool"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31018
+  },
+  {
+    "fields": {
+      "keyword": "ws_dependencies_specify",
+      "translation": 31019,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31019
+  },
+  {
+    "fields": {
+      "keyword": "ws_map_comments",
+      "translation": 31020,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31020
+  },
+  {
+    "fields": {
+      "keyword": "ws_conflicts_solutions",
+      "translation": 31021,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31021
+  },
+  {
+    "fields": {
+      "keyword": "ws_synergies_maintained",
+      "translation": 31022,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31022
+  },
+  {
+    "fields": {
+      "keyword": "ws_map_layer_id",
+      "translation": 31023,
+      "configuration": {
+        "type": "wms_layer",
+        "view_options": {
+          "wms_url": "http://qgiscloud.com/wocat/wocat_landscapes/wms"
+        }
+      }
+    },
+    "model": "configuration.key",
+    "pk": 31023
+  },
+  {
+    "fields": {
+      "keyword": "scale_national_micro",
+      "translation": 31501,
+      "order_value": 1
+    },
+    "model": "configuration.value",
+    "pk": 31001
+  },
+  {
+    "fields": {
+      "keyword": "scale_national_small",
+      "translation": 31502,
+      "order_value": 2
+    },
+    "model": "configuration.value",
+    "pk": 31002
+  },
+  {
+    "fields": {
+      "keyword": "scale_national_medium",
+      "translation": 31503,
+      "order_value": 3
+    },
+    "model": "configuration.value",
+    "pk": 31003
+  },
+  {
+    "fields": {
+      "keyword": "scale_national_large",
+      "translation": 31504,
+      "order_value": 4
+    },
+    "model": "configuration.value",
+    "pk": 31004
+  },
+  {
+    "fields": {
+      "keyword": "approximate_area_1_10",
+      "translation": 31505,
+      "order_value": 1
+    },
+    "model": "configuration.value",
+    "pk": 31005
+  },
+  {
+    "fields": {
+      "keyword": "approximate_area_10_100",
+      "translation": 31506,
+      "order_value": 2
+    },
+    "model": "configuration.value",
+    "pk": 31006
+  },
+  {
+    "fields": {
+      "keyword": "approximate_area_100_1000",
+      "translation": 31507,
+      "order_value": 3
+    },
+    "model": "configuration.value",
+    "pk": 31007
+  },
+  {
+    "fields": {
+      "keyword": "approximate_area_1000_10000",
+      "translation": 31508,
+      "order_value": 4
+    },
+    "model": "configuration.value",
+    "pk": 31008
+  },
+  {
+    "fields": {
+      "keyword": "approximate_area_10000_plus",
+      "translation": 31509,
+      "order_value": 5
+    },
+    "model": "configuration.value",
+    "pk": 31009
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_1",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31001
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_2",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31002
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_3",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31003
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_4",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31004
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_7",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31007
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_9",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31009
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_11",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31011
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_12",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31012
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_13",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31013
+  },
+  {
+    "fields": {
+      "keyword": "ws_qg_14",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 31014
+  },
+  {
+    "fields": {
+      "keyword": "ws__1__1",
+      "translation": 32701
+    },
+    "model": "configuration.category",
+    "pk": 31001
+  },
+  {
+    "fields": {
+      "keyword": "ws__1__2",
+      "translation": 32702
+    },
+    "model": "configuration.category",
+    "pk": 31002
+  },
+  {
+    "fields": {
+      "keyword": "ws__1__3",
+      "translation": 32703
+    },
+    "model": "configuration.category",
+    "pk": 31003
+  },
+  {
+    "fields": {
+      "keyword": "ws__2__1",
+      "translation": 32704
+    },
+    "model": "configuration.category",
+    "pk": 31004
+  },
+  {
+    "fields": {
+      "keyword": "ws__2__2",
+      "translation": 32705
+    },
+    "model": "configuration.category",
+    "pk": 31005
+  },
+  {
+    "fields": {
+      "keyword": "ws__2__3",
+      "translation": 32706
+    },
+    "model": "configuration.category",
+    "pk": 31006
+  },
+  {
+    "fields": {
+      "keyword": "ws__2__4",
+      "translation": 32707
+    },
+    "model": "configuration.category",
+    "pk": 31007
+  },
+  {
+    "fields": {
+      "keyword": "ws__2__5",
+      "translation": 32708
+    },
+    "model": "configuration.category",
+    "pk": 31008
+  },
+  {
+    "fields": {
+      "keyword": "ws__3__1",
+      "translation": 32710
+    },
+    "model": "configuration.category",
+    "pk": 31010
+  },
+  {
+    "fields": {
+      "keyword": "ws__3__2",
+      "translation": 32711
+    },
+    "model": "configuration.category",
+    "pk": 31011
+  },
+  {
+    "fields": {
+      "keyword": "ws__4__1",
+      "translation": 32712
+    },
+    "model": "configuration.category",
+    "pk": 31012
+  },
+  {
+    "fields": {
+      "keyword": "ws__4__2",
+      "translation": 32713
+    },
+    "model": "configuration.category",
+    "pk": 31013
+  },
+  {
+    "fields": {
+      "keyword": "ws__4__3",
+      "translation": 32714
+    },
+    "model": "configuration.category",
+    "pk": 31014
+  },
+  {
+    "fields": {
+      "keyword": "ws__4__4",
+      "translation": 32715
+    },
+    "model": "configuration.category",
+    "pk": 31015
+  },
+  {
+    "fields": {
+      "keyword": "ws__5__1",
+      "translation": 32716
+    },
+    "model": "configuration.category",
+    "pk": 31016
+  },
+  {
+    "fields": {
+      "keyword": "ws__5__2",
+      "translation": 32717
+    },
+    "model": "configuration.category",
+    "pk": 31017
+  },
+  {
+    "fields": {
+      "keyword": "ws__6__1",
+      "translation": 32718
+    },
+    "model": "configuration.category",
+    "pk": 31018
+  },
+  {
+    "fields": {
+      "keyword": "ws__6__2",
+      "translation": 32719
+    },
+    "model": "configuration.category",
+    "pk": 31019
+  },
+  {
+    "fields": {
+      "keyword": "ws__1",
+      "translation": 32901
+    },
+    "model": "configuration.category",
+    "pk": 31701
+  },
+  {
+    "fields": {
+      "keyword": "ws__2",
+      "translation": 32902
+    },
+    "model": "configuration.category",
+    "pk": 31702
+  },
+  {
+    "fields": {
+      "keyword": "ws__3",
+      "translation": 32903
+    },
+    "model": "configuration.category",
+    "pk": 31703
+  },
+  {
+    "fields": {
+      "keyword": "ws__4",
+      "translation": 32904
+    },
+    "model": "configuration.category",
+    "pk": 31704
+  },
+  {
+    "fields": {
+      "keyword": "ws__5",
+      "translation": 32905
+    },
+    "model": "configuration.category",
+    "pk": 31705
+  },
+  {
+    "fields": {
+      "keyword": "ws__6",
+      "translation": 32906
+    },
+    "model": "configuration.category",
+    "pk": 31706
+  },
+  {
+    "fields": {
+      "code": "watershed",
+      "description": "WOCAT Watershed configuration",
+      "active": true,
+      "activated": "2016-10-25T12:00:00.000Z",
+      "data": {
+        "sections": [
+          {
+            "keyword": "section_general_information",
+            "view_options": {
+              "template": "empty"
+            },
+            "categories": [
+              {
+                "keyword": "ws__1",
+                "form_options": {
+                  "numbering": "1."
+                },
+                "view_options": {
+                  "template": "watershed_header",
+                  "with_metadata": true,
+                  "use_raw_data": true
+                },
+                "subcategories": [
+                  {
+                    "keyword": "ws__1__1",
+                    "form_options": {
+                      "numbering": "1.1"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_name",
+                        "questions": [
+                          {
+                            "keyword": "name",
+                            "view_options": {
+                              "in_list": true,
+                              "is_name": true
+                            }
+                          },
+                          {
+                            "keyword": "name_local"
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "qg_location",
+                        "questions": [
+                          {
+                            "keyword": "country",
+                            "view_options": {
+                              "template": "inline_6",
+                              "in_list": true
+                            }
+                          },
+                          {
+                            "keyword": "state_province",
+                            "form_options": {
+                              "template": "hidden"
+                            }
+                          },
+                          {
+                            "keyword": "further_location",
+                            "form_options": {
+                              "template": "hidden"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__1__2",
+                    "form_options": {
+                      "numbering": "1.2"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_1",
+                        "form_options": {
+                          "template": "select_user",
+                          "user_role": "resourceperson",
+                          "max_num": 20,
+                          "row_class": "no-top-margin",
+                          "label_class": "bottom-margin"
+                        },
+                        "view_options": {
+                          "template": "select_user",
+                          "raw_questions": true
+                        },
+                        "questions": [
+                          {
+                            "keyword": "user_resourceperson_type",
+                            "form_options": {
+                              "has_other": "user_resourceperson_type"
+                            },
+                            "view_options": {
+                              "template": "values_as_header"
+                            }
+                          },
+                          {
+                            "keyword": "user_resourceperson_other",
+                            "form_options": {
+                              "template": "radio_other",
+                              "label_position": "placeholder",
+                              "other_radio": "user_resourceperson_type"
+                            },
+                            "view_options": {
+                              "template": "as_header"
+                            }
+                          },
+                          {
+                            "keyword": "user_id",
+                            "form_options": {
+                              "template": "no_label"
+                            }
+                          },
+                          {
+                            "keyword": "person_lastname",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "person_firstname",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "person_gender",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "person_institution_name",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "person_address",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "country",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "person_phone_1",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "person_phone_2",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "person_email_1",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          },
+                          {
+                            "keyword": "person_email_2",
+                            "view_options": {
+                              "template": "value_only"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "qg_funding_project",
+                        "questions": [
+                          {
+                            "keyword": "funding_project"
+                          },
+                          {
+                            "keyword": "funding_project_display"
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "qg_funding_institution",
+                        "questions": [
+                          {
+                            "keyword": "funding_institution"
+                          },
+                          {
+                            "keyword": "funding_institution_display"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__1__3",
+                    "form_options": {
+                      "numbering": "1.3"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_accept_conditions",
+                        "form_options": {
+                          "helptext_position": "bottom"
+                        },
+                        "questions": [
+                          {
+                            "keyword": "date_documentation"
+                          },
+                          {
+                            "keyword": "accept_conditions"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "keyword": "ws__2",
+                "form_options": {
+                  "numbering": "2."
+                },
+                "subcategories": [
+                  {
+                    "keyword": "ws__2__1",
+                    "form_options": {
+                      "numbering": "2.1"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_location",
+                        "questions": [
+                          {
+                            "keyword": "country",
+                            "view_options": {
+                              "template": "inline",
+                              "in_list": true
+                            }
+                          },
+                          {
+                            "keyword": "state_province",
+                            "view_options": {
+                              "template": "inline"
+                            }
+                          },
+                          {
+                            "keyword": "further_location",
+                            "view_options": {
+                              "template": "inline"
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "ws_qg_2",
+                        "questions": [
+                          {
+                            "keyword": "ws_scale_national"
+                          },
+                          {
+                            "keyword": "ws_representative_unit",
+                            "form_options": {
+                              "question_conditions": [
+                                "=='1'|ws_representative_unit_specify"
+                              ]
+                            }
+                          },
+                          {
+                            "keyword": "ws_representative_unit_specify",
+                            "form_options": {
+                              "question_condition": "ws_representative_unit_specify"
+                            }
+                          },
+                          {
+                            "keyword": "ws_total_area"
+                          },
+                          {
+                            "keyword": "ws_approximate_area"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__2__2",
+                    "form_options": {
+                      "numbering": "2.2"
+                    },
+                    "view_options": {
+                      "template": "map_subcategory"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_location_map",
+                        "questions": [
+                          {
+                            "keyword": "location_map",
+                            "form_options": {
+                              "label_position": "none"
+                            },
+                            "view_options": {
+                              "is_geometry": true,
+                              "configuration": "watershed"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__2__3",
+                    "form_options": {
+                      "numbering": "2.3"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_3",
+                        "questions": [
+                          {
+                            "keyword": "ws_reasons_selection",
+                            "form_options": {
+                              "label_position": "none"
+                            },
+                            "view_options": {
+                              "label_position": "none"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__2__4",
+                    "form_options": {
+                      "numbering": "2.4"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_4",
+                        "questions": [
+                          {
+                            "keyword": "ws_description",
+                            "form_options": {
+                              "label_position": "none",
+                              "num_rows": 10,
+                              "max_length": 3500
+                            },
+                            "view_options": {
+                              "label_position": "none"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__2__5",
+                    "form_options": {
+                      "numbering": "2.5"
+                    },
+                    "view_options": {
+                      "media_gallery": true
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_photos",
+                        "form_options": {
+                          "max_num": 50
+                        },
+                        "view_options": {
+                          "template": "none"
+                        },
+                        "questions": [
+                          {
+                            "keyword": "image",
+                            "view_options": {
+                              "in_list": true
+                            }
+                          },
+                          {
+                            "keyword": "image_caption"
+                          },
+                          {
+                            "keyword": "image_comments"
+                          },
+                          {
+                            "keyword": "image_date"
+                          },
+                          {
+                            "keyword": "image_location"
+                          },
+                          {
+                            "keyword": "image_photographer"
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "qg_image_remarks",
+                        "view_options": {
+                          "template": "none"
+                        },
+                        "questions": [
+                          {
+                            "keyword": "image_remarks"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "keyword": "ws__3",
+                "form_options": {
+                  "numbering": "3."
+                },
+                "subcategories": [
+                  {
+                    "keyword": "ws__3__1",
+                    "form_options": {
+                      "numbering": "3.1"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_7",
+                        "view_options": {
+                          "template": "columns_o4_r8"
+                        },
+                        "questions": [
+                          {
+                            "keyword": "ws_map_layer_id"
+                          },
+                          {
+                            "keyword": "ws_map_caption"
+                          },
+                          {
+                            "keyword": "ws_map_description_results"
+                          },
+                          {
+                            "keyword": "ws_map_date"
+                          },
+                          {
+                            "keyword": "ws_map_location"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__3__2",
+                    "form_options": {
+                      "numbering": "3.2"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_9",
+                        "form_options": {
+                          "max_num": 5
+                        },
+                        "view_options": {
+                          "template": "columns_o4_r8"
+                        },
+                        "questions": [
+                          {
+                            "keyword": "ws_map_image"
+                          },
+                          {
+                            "keyword": "ws_map_caption"
+                          },
+                          {
+                            "keyword": "ws_map_comments"
+                          },
+                          {
+                            "keyword": "ws_map_date"
+                          },
+                          {
+                            "keyword": "ws_map_location"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "keyword": "ws__4",
+                "form_options": {
+                  "numbering": "4."
+                },
+                "subcategories": [
+                  {
+                    "keyword": "ws__4__1",
+                    "form_options": {
+                      "numbering": "4.1"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_14",
+                        "questions": [
+                          {
+                            "keyword": "ws_dependencies",
+                            "form_options": {
+                              "question_conditions": [
+                                "=='1'|ws_dependencies_specify"
+                              ],
+                              "helptext_position": "tooltip"
+                            },
+                            "view_options": {
+                              "label_position": "none"
+                            }
+                          },
+                          {
+                            "keyword": "ws_dependencies_specify",
+                            "form_options": {
+                              "question_condition": "ws_dependencies_specify"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__4__2",
+                    "form_options": {
+                      "numbering": "4.2"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_12",
+                        "questions": [
+                          {
+                            "keyword": "ws_conflicts",
+                            "form_options": {
+                              "question_conditions": [
+                                "=='1'|ws_conflicts_specify"
+                              ],
+                              "helptext_position": "tooltip"
+                            },
+                            "view_options": {
+                              "label_position": "none"
+                            }
+                          },
+                          {
+                            "keyword": "ws_conflicts_specify",
+                            "form_options": {
+                              "question_condition": "ws_conflicts_specify"
+                            }
+                          },
+                          {
+                            "keyword": "ws_conflicts_solutions",
+                            "form_options": {
+                              "question_condition": "ws_conflicts_specify"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__4__3",
+                    "form_options": {
+                      "numbering": "4.3"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_13",
+                        "questions": [
+                          {
+                            "keyword": "ws_synergies",
+                            "form_options": {
+                              "question_conditions": [
+                                "=='1'|ws_synergies_specify"
+                              ],
+                              "helptext_position": "tooltip"
+                            },
+                            "view_options": {
+                              "label_position": "none"
+                            }
+                          },
+                          {
+                            "keyword": "ws_synergies_specify",
+                            "form_options": {
+                              "question_condition": "ws_synergies_specify"
+                            }
+                          },
+                          {
+                            "keyword": "ws_synergies_maintained",
+                            "form_options": {
+                              "question_condition": "ws_synergies_specify"
+                            }
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__4__4",
+                    "form_options": {
+                      "numbering": "4.4"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "ws_qg_11",
+                        "questions": [
+                          {
+                            "keyword": "ws_analysis_description"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "keyword": "ws__5",
+                "form_options": {
+                  "numbering": "5."
+                },
+                "subcategories": [
+                  {
+                    "keyword": "ws__5__1",
+                    "form_options": {
+                      "numbering": "5.1"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_strengths_landusers",
+                        "questions": [
+                          {
+                            "keyword": "strengths_landuser"
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "qg_strengths_compiler",
+                        "questions": [
+                          {
+                            "keyword": "strengths_compiler"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__5__2",
+                    "form_options": {
+                      "numbering": "5.2"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_weaknesses_landusers",
+                        "questions": [
+                          {
+                            "keyword": "weaknesses_landuser"
+                          },
+                          {
+                            "keyword": "weaknesses_overcome"
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "qg_weaknesses_compiler",
+                        "questions": [
+                          {
+                            "keyword": "weaknesses_compiler"
+                          },
+                          {
+                            "keyword": "weaknesses_overcome"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              },
+              {
+                "keyword": "ws__6",
+                "form_options": {
+                  "numbering": "6."
+                },
+                "subcategories": [
+                  {
+                    "keyword": "ws__6__1",
+                    "form_options": {
+                      "numbering": "6.1"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_references",
+                        "questions": [
+                          {
+                            "keyword": "references_title"
+                          },
+                          {
+                            "keyword": "references_source"
+                          }
+                        ]
+                      }
+                    ]
+                  },
+                  {
+                    "keyword": "ws__6__2",
+                    "form_options": {
+                      "numbering": "6.2"
+                    },
+                    "questiongroups": [
+                      {
+                        "keyword": "qg_links",
+                        "questions": [
+                          {
+                            "keyword": "links_title"
+                          },
+                          {
+                            "keyword": "links_url"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "created": "2016-10-28T12:00:00.000Z",
+      "base_code": "",
+      "name": "WOCAT Watershed"
+    },
+    "model": "configuration.configuration",
+    "pk": 30001
+  }
+]

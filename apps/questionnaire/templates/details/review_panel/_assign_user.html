@@ -3,7 +3,6 @@
 
   The following strings need to be defined:
   assign_header
-  assign_description
   assign_assigned
   assign_empty
   assign_edit
@@ -17,7 +16,19 @@
   </div>
   <div class="medium-10 columns">
     <p>
-      {{ assign_description }}
+      {% if review_status == 1 %}
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          WOCAT users can be invited to work on a {{ questionnaire_type }} as editors. Editors can edit the {{ questionnaire_type }}, but they cannot submit it for review or invite other editors.
+        {% endblocktrans %}
+      {% elif review_status == 2 %}
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          Reviewers can be assigned to this {{ questionnaire_type }}. They will have the permission to review (approve or reject) the {{ questionnaire_type }}. A {{ questionnaire_type }} can have more than one reviewer and all reviewers can approve / reject a {{ questionnaire_type }} for publication.
+        {% endblocktrans %}
+      {% elif review_status == 3 %}
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          Publishers can be assigned to this {{ questionnaire_type }}. They will have the permission to publish or reject the {{ questionnaire_type }}. A {{ questionnaire_type }} can have more than one publisher and all publishers can publish / reject a {{ questionnaire_type }} for publishing.
+        {% endblocktrans %}
+      {% endif %}
     </p>
     <div id="review-list-assigned-users">
       <p>{{ assign_assigned }}</p>

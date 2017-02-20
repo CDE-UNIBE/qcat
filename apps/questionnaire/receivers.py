@@ -5,7 +5,7 @@ from django.db.models.signals import pre_save
 from django.dispatch import receiver
 
 from .errors import QuestionnaireLockedException
-from .models import Questionnaire
+from .models import Questionnaire, Lock
 from .conf import settings
 
 
@@ -28,17 +28,8 @@ def prevent_editing_of_locked_questionnaires(instance, *args, **kwargs):
         instance: Questionnaire
     """
     if instance.id:
-        has_blocked_version = Questionnaire.objects.exclude(
-            id=instance.id
-        ).filter(
-            code=instance.code,
-            blocked__isnull=False
-        )
-        if instance.blocked:
-            has_blocked_version = has_blocked_version.exclude(
-                blocked=instance.blocked
-            )
-        if has_blocked_version.exists():
+        locks = Lock.with_status.is_blocked(code=instance.code)
+        if locks.exists():
             raise QuestionnaireLockedException(
-                has_blocked_version.first().blocked
+                locks.first().user
             )

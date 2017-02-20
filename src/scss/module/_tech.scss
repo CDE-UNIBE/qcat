@@ -1,4 +1,3 @@
-
 // List
 // -----------------------------------------------------------------------------
 .tech-list {
@@ -178,12 +177,18 @@
   &.is-approach {
     background-color: rgba($color-approach, 0.8);
   }
+  &.is-cca {
+    background-color: rgba($color-cca, 0.8);
+  }
   &.is-maps,
   &.is-map {
     background-color: rgba($color-approach, 0.8);
   }
   &.is-unccd {
     background-color: rgba($color-unccd, 0.8)
+  }
+  &.is-watershed {
+    background-color: rgba($color-watershed, 0.8);
   }
 }
 
@@ -362,7 +367,7 @@ a:hover .tech-icon {
 }
 .tech-output-title {
   font-size: rem-calc(30);
-  line-height: rem-calc(36);
+  line-height: rem-calc(25);
 }
 .is-technologies .tech-output-title {
   color: $color-tech;
@@ -370,8 +375,14 @@ a:hover .tech-icon {
 .is-approaches .tech-output-title {
   color: $color-approach;
 }
+.is-cca .tech-output-title {
+  color: $color-cca;
+}
 .is-map .tech-output-title {
   color: $color-map;
+}
+.is-watershed .tech-output-title {
+  color: $color-watershed;
 }
 .tech-output-infos {
   @include reset-list;
@@ -425,8 +436,30 @@ a:hover .tech-icon {
     }
   }
 }
+.is-cca .tech-output-actions {
+  background-color: rgba($color-cca, 0.8);
+  .button {
+    background-color: $color-blue-dark;
+    box-shadow: 0 0 0 0 $color-blue-dark;
+    &:hover,
+    &:focus {
+      box-shadow: 0 0 0 $button-shadow-effect $color-blue-dark;
+    }
+  }
+}
 .is-unccd .tech-output-actions {
   background-color: rgba($color-unccd, 0.8);
+}
+.is-watershed .tech-output-actions {
+  background-color: rgba($color-watershed, 0.8);
+  .button {
+    background-color: $color-watershed-dark;
+    box-shadow: 0 0 0 0 $color-watershed-dark;
+    &:hover,
+    &:focus {
+      box-shadow: 0 0 0 $button-shadow-effect $color-watershed-dark;
+    }
+  }
 }
 
 .is-unccd {
@@ -462,19 +495,31 @@ a:hover .tech-icon {
 .is-approaches .tech-section-group-title {
   color: $color-approach;
 }
+.is-cca .tech-section-group-title {
+  color: $color-cca;
+}
+.is-watershed .tech-section-group-title {
+  color: $color-watershed;
+}
 
 .tech-section-header {
   overflow: hidden;
   padding: 0 rem-calc(24);
 }
 .is-technologies .tech-section-header {
-  background-color: rgba($color-tech, 0.1);
+  background-color: rgba($color-tech, 0.15);
 }
 .is-approaches .tech-section-header {
   background-color: rgba($color-approach, 0.1);
 }
+.is-cca .tech-section-header {
+  background-color: rgba($color-cca, 0.1);
+}
 .is-unccd .tech-section-header {
   background-color: rgba($color-unccd, 0.1);
+}
+.is-watershed .tech-section-header {
+  background-color: rgba($color-watershed, 0.1);
 }
 
 .tech-section-main-title {
@@ -501,6 +546,71 @@ a:hover .tech-icon {
   line-height: rem-calc(24);
   border-radius: 0;
 }
+
+.tech-overall-progress {
+  position: relative;
+  height: rem-calc(32);
+  display: block;
+  text-align: center;
+
+  .steps {
+    display: inline-block;
+    line-height: rem-calc(32);
+  }
+  .meter {
+    position: absolute;
+    display: block;
+    top: 0;
+    bottom: 0;
+    left: 0;
+  }
+}
+.is-technologies .tech-overall-progress .meter {
+  background-color: rgba($color-tech, 0.3);
+}
+.is-technologies .tech-overall-progress .steps {
+  color: $color-tech;
+}
+.is-technologies .tech-overall-progress {
+  background-color: rgba($color-tech, 0.1);
+}
+.is-approaches .tech-overall-progress .meter {
+  background-color: rgba($color-approach, 0.3);
+}
+.is-approaches .tech-overall-progress .steps {
+  color: $color-approach;
+}
+.is-approaches .tech-overall-progress {
+  background-color: rgba($color-approach, 0.1);
+}
+.is-cca .tech-overall-progress .meter {
+  background-color: rgba($color-cca, 0.3);
+}
+.is-cca .tech-overall-progress .steps {
+  color: $color-cca;
+}
+.is-cca .tech-overall-progress {
+  background-color: rgba($color-cca, 0.1);
+}
+.is-watershed .tech-overall-progress .meter {
+  background-color: rgba($color-watershed, 0.3);
+}
+.is-watershed .tech-overall-progress .steps {
+  color: $color-watershed;
+}
+.is-watershed .tech-overall-progress {
+  background-color: rgba($color-watershed, 0.1);
+}
+.is-unccd .tech-overall-progress .meter {
+  background-color: rgba($color-unccd, 0.3);
+}
+.is-unccd .tech-overall-progress .steps {
+  color: $color-unccd;
+}
+.is-unccd .tech-overall-progress {
+  background-color: rgba($color-unccd, 0.1);
+}
+
 .tech-section-progress {
   position: relative;
   flex: 1;
@@ -538,15 +648,33 @@ a:hover .tech-icon {
 .is-approaches .tech-section-progress .meter {
   background-color: rgba($color-approach, 0.3);
 }
+.is-cca .tech-section-progress .meter {
+  background-color: rgba($color-cca, 0.3);
+}
+.is-watershed .tech-section-progress .meter {
+  background-color: rgba($color-watershed, 0.3);
+}
+.is-unccd .tech-section-progress .meter {
+  background-color: rgba($color-unccd, 0.3);
+}
 .is-technologies .tech-section-progress .steps {
   color: $color-tech;
 }
 .is-approaches .tech-section-progress .steps {
   color: $color-approach;
 }
+.is-cca .tech-section-progress .steps {
+  color: $color-cca;
+}
+.is-watershed .tech-section-progress .steps {
+  color: $color-watershed;
+}
+.is-unccd .tech-section-progress .steps {
+  color: $color-unccd;
+}
 
 
-.tech-section-content {
+.tech-section-content, .tech-links-content {
   padding: rem-calc(36);
 }
 
@@ -576,7 +704,7 @@ a:hover .tech-icon {
 }
 
 .aside-questiongroup {
-  margin-left: 125px;
+  margin-left: 65px;
   h5, p, ul {
     margin-top: rem-calc(4);
   }

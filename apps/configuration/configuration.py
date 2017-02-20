@@ -2,6 +2,7 @@ import collections
 import datetime
 
 import floppyforms as forms
+from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse, NoReverseMatch
 from django.forms import BaseFormSet, formset_factory
@@ -13,7 +14,9 @@ from configuration.models import (
     Configuration,
     Key,
     Questiongroup)
-from configuration.utils import get_choices_from_model
+from configuration.utils import get_choices_from_model, \
+    get_choices_from_questiongroups
+from notifications.models import Log
 from qcat.errors import (
     ConfigurationError,
     ConfigurationErrorInvalidCondition,
@@ -217,6 +220,7 @@ class QuestionnaireQuestion(BaseConfigurationObject):
         'keyword',
         'view_options',
         'form_options',
+        'summary',
     ]
     valid_field_types = [
         'bool',
@@ -241,7 +245,10 @@ class QuestionnaireQuestion(BaseConfigurationObject):
         'float',
         'map',
         'select_model',
+        'select_conditional_questiongroup',
+        'select_conditional_custom',
         'display_only',
+        'wms_layer',
     ]
     translation_original_prefix = 'original_'
     translation_translation_prefix = 'translation_'
@@ -352,6 +359,7 @@ class QuestionnaireQuestion(BaseConfigurationObject):
 
         self.filterable = self.view_options.get('filter', False) is True
 
+        self.summary = self.key_config.get('summary')
         self.images = []
         self.choices = ()
         self.choices_helptexts = []
@@ -362,12 +370,13 @@ class QuestionnaireQuestion(BaseConfigurationObject):
             self.choices = ((1, self.label),)
         elif self.field_type in [
                 'measure', 'checkbox', 'image_checkbox', 'select_type',
-                'select', 'radio']:
+                'select', 'radio', 'select_conditional_custom']:
             self.value_objects = self.configuration_object.values.all()
             if len(self.value_objects) == 0:
                 raise ConfigurationErrorNotInDatabase(
                     self, '[values of key {}]'.format(self.keyword))
-            if self.field_type in ['select_type', 'select']:
+            if self.field_type in [
+                    'select_type', 'select', 'select_conditional_custom']:
                 choices = [('', '-', '')]
             else:
                 choices = []
@@ -496,7 +505,7 @@ class QuestionnaireQuestion(BaseConfigurationObject):
 
     def add_form(
             self, formfields, templates, options, show_translation=False,
-            edit_mode='edit'):
+            edit_mode='edit', questionnaire_data=None):
         """
         Adds one or more fields to a dictionary of formfields.
 
@@ -565,7 +574,13 @@ class QuestionnaireQuestion(BaseConfigurationObject):
 
         attrs.update(self.form_options.get('field_options', {}))
 
-        if self.field_type == 'char':
+        # Disable inherited questions.
+        if self.parent_object.inherited_configuration:
+            attrs.update({
+                'disabled': 'disabled'
+            })
+
+        if self.field_type in ['char', 'wms_layer']:
             max_length = self.max_length
             if max_length is None:
                 max_length = 2000
@@ -664,6 +679,8 @@ class QuestionnaireQuestion(BaseConfigurationObject):
                 required=self.required)
         elif self.field_type in ['checkbox', 'cb_bool']:
             widget = Checkbox(attrs=attrs)
+            if self.form_options.get('layout', '') == 'measure':
+                widget = MeasureCheckbox()
             widget.options = field_options
             field = forms.MultipleChoiceField(
                 label=self.label, widget=widget, choices=self.choices,
@@ -684,7 +701,11 @@ class QuestionnaireQuestion(BaseConfigurationObject):
                 widget=widget, required=self.required, label=self.label)
             field = forms.CharField(
                 required=self.required, widget=forms.HiddenInput())
-        elif self.field_type == 'select_type':
+        elif self.field_type in ['select_type', 'select_conditional_custom']:
+            if self.field_type == 'select_conditional_custom':
+                attrs.update({
+                    'disabled': 'disabled'
+                })
             widget = Select(attrs=attrs)
             widget.options = field_options
             widget.searchable = True
@@ -711,6 +732,22 @@ class QuestionnaireQuestion(BaseConfigurationObject):
             field = forms.ChoiceField(
                 label=self.label, widget=widget, choices=choices,
                 required=self.required)
+        elif self.field_type == 'select_conditional_questiongroup':
+            attrs.update({
+                'data-key-keyword': self.keyword,
+            })
+            widget = Select(attrs=attrs)
+            widget.options = field_options
+            widget.searchable = True
+            choices = [('', '-')]
+            questiongroups = self.form_options.get(
+                'options_by_questiongroups', [])
+            widget.options_order = questiongroups
+            choices.extend(get_choices_from_questiongroups(
+                questionnaire_data, questiongroups, self.configuration_keyword))
+            field = ConditionalQuestiongroupChoiceField(
+                label=self.label, widget=widget, choices=choices,
+                required=self.required, question=self)
         else:
             raise ConfigurationErrorInvalidOption(
                 self.field_type, 'type', self)
@@ -760,9 +797,21 @@ class QuestionnaireQuestion(BaseConfigurationObject):
             'additional_translations': self.additional_translations,
         })
         value = data.get(self.keyword)
+        if self.field_type in ['select_conditional_questiongroup']:
+            # Determine the options currently valid based on availability of
+            # certain questiongroups in the data JSON.
+            questiongroups = self.form_options.get(
+                'options_by_questiongroups', [])
+            questionnaire_data = {}
+            if questionnaire_object:
+                questionnaire_data = questionnaire_object.data
+            self.choices = get_choices_from_questiongroups(
+                questionnaire_data, questiongroups, self.configuration_keyword)
         if self.field_type in [
                 'bool', 'measure', 'checkbox', 'image_checkbox',
-                'select_type', 'select', 'cb_bool', 'radio']:
+                'select_type', 'select', 'cb_bool', 'radio',
+                'select_conditional_questiongroup',
+                'select_conditional_custom']:
             # Look up the labels for the predefined values
             if not isinstance(value, list):
                 value = [value]
@@ -796,7 +845,9 @@ class QuestionnaireQuestion(BaseConfigurationObject):
                 'decimals': self.form_options.get(
                     'field_options', {}).get('decimals'),
             })
-        elif self.field_type in ['bool', 'select_type', 'select']:
+        elif self.field_type in ['bool', 'select_type', 'select',
+                                 'select_conditional_questiongroup',
+                                 'select_conditional_custom']:
             template_name = 'textinput'
             template_values.update({
                 'key': self.label_view,
@@ -907,6 +958,12 @@ class QuestionnaireQuestion(BaseConfigurationObject):
             })
         elif self.field_type in ['link_id']:
             return '\n'
+        elif self.field_type in ['wms_layer']:
+            template_name = 'wms_layer'
+            template_values.update({
+                'layer': value,
+                'wms_url': self.view_options.get('wms_url'),
+            })
         else:
             raise ConfigurationErrorInvalidOption(
                 self.field_type, 'type', self)
@@ -923,7 +980,11 @@ class QuestionnaireQuestion(BaseConfigurationObject):
                     if v == choice[1]:
                         current_level = MAX_MEASURE_LEVEL
                 all_values.append((current_level, choice[1]))
-            template_values.update({'all_values': all_values})
+            template_values.update({
+                'all_values': all_values,
+                'label_text_direction': self.view_options.get(
+                    'label_text_direction')
+            })
 
         template_name = self.view_options.get('template', template_name)
         if template_name == 'raw':
@@ -969,6 +1030,8 @@ class QuestionnaireQuestiongroup(BaseConfigurationObject):
     name_parent = 'subcategories'
     name_children = 'questions'
     Child = QuestionnaireQuestion
+    inherited_configuration = None
+    inherited_questiongroup = None
 
     def __init__(self, parent_object, configuration):
         """
@@ -1077,12 +1140,18 @@ class QuestionnaireQuestiongroup(BaseConfigurationObject):
 
         self.detail_level = self.form_options.get('detail_level')
 
+        self.inherited_configuration = self.configuration.get(
+            'inherited_configuration')
+        self.inherited_questiongroup = self.configuration.get(
+            'inherited_questiongroup')
+
         # TODO
         self.required = False
 
     def get_form(
             self, post_data=None, initial_data=None, show_translation=False,
-            edit_mode='edit', edited_questiongroups=[], initial_links=None):
+            edit_mode='edit', edited_questiongroups=[], initial_links=None,
+            questionnaire_data=None):
         """
         Returns:
             ``forms.formset_factory``. A formset consisting of one or
@@ -1105,7 +1174,7 @@ class QuestionnaireQuestiongroup(BaseConfigurationObject):
         for f in self.questions:
             formfields, templates, options = f.add_form(
                 formfields, templates, options, show_translation,
-                edit_mode=edit_mode)
+                edit_mode=edit_mode, questionnaire_data=questionnaire_data)
 
         if self.numbered != '':
             formfields['__order'] = forms.IntegerField(
@@ -1173,6 +1242,26 @@ class QuestionnaireQuestiongroup(BaseConfigurationObject):
                 'initial_links': curr_initial_links,
             })
 
+        # This is a fix for editing UNCCD cases where boolean values were stored
+        # incorrectly as "false" and "true" instead of 0 and 1.
+        if initial_data is not None:
+            for data_dict in initial_data:
+                for key, value in data_dict.items():
+                    if key not in ['unccd_partnership', 'unccd_property_rights',
+                                   'unccd_local_stakeholders',
+                                   'unccd_population_involved',
+                                   'unccd_impact_biodiversity_conservation',
+                                   'unccd_impact_cc_mitigation',
+                                   'unccd_impact_cc_adaptation',
+                                   'unccd_cost_benefit_analysis',
+                                   'unccd_technology_disseminated',
+                                   'unccd_incentives', 'unccd_replicability']:
+                        continue
+                    if value is False:
+                        data_dict[key] = 0
+                    else:
+                        data_dict[key] = 1
+
         return config, FormSet(
             post_data, prefix=self.keyword, initial=initial_data)
 
@@ -1213,6 +1302,7 @@ class QuestionnaireQuestiongroup(BaseConfigurationObject):
         config.update({
             'numbered': self.numbered,
             'label': self.label,
+            'label_class': self.view_options.get('label_class'),
         })
         template_values = {
             'questiongroups': questiongroups,
@@ -1240,6 +1330,19 @@ class QuestionnaireQuestiongroup(BaseConfigurationObject):
             if question.keyword == key_keyword:
                 return question
         return None
+
+    def get_top_subcategory(self):
+        """
+        Helper function to get the top subcategory of a questiongroup. This is
+        used to display a nicer error message in the form, also stating the
+        subcategory (with numbering) in which the error occurred.
+        """
+        parent = self.parent_object
+        next_parent = parent.parent_object
+        while not isinstance(next_parent, QuestionnaireCategory):
+            parent = next_parent
+            next_parent = next_parent.parent_object
+        return parent
 
     def get_raw_data(self, data):
         """
@@ -1437,7 +1540,8 @@ class QuestionnaireSubcategory(BaseConfigurationObject):
                     post_data=post_data, initial_data=questionset_initial_data,
                     show_translation=show_translation, edit_mode=edit_mode,
                     edited_questiongroups=edited_questiongroups,
-                    initial_links=initial_links))
+                    initial_links=initial_links,
+                    questionnaire_data=initial_data))
             config['next_level'] = 'questiongroups'
             if questiongroup.keyword in edited_questiongroups:
                 has_changes = True
@@ -1465,6 +1569,22 @@ class QuestionnaireSubcategory(BaseConfigurationObject):
             })
 
         return config, formsets
+
+    def has_content(self, data):
+        """
+        Whether this subcategory has content (data) or not.
+
+        Args:
+            data: The data dictionary.
+
+        Returns:
+            bool.
+        """
+        for questiongroup in self.questiongroups:
+            questiongroup_data = data.get(questiongroup.keyword, [])
+            if not is_empty_list_of_dicts(questiongroup_data):
+                return True
+        return False
 
     def get_details(self, data={}, links=None, questionnaire_object=None):
         """
@@ -1580,6 +1700,9 @@ class QuestionnaireSubcategory(BaseConfigurationObject):
             'questions': rendered_questions,
             'subcategories': subcategories,
             'label': self.label_view,
+            'label_position': self.view_options.get('label_position'),
+            'label_tag': self.view_options.get('label_tag'),
+            'label_class': self.view_options.get('label_class'),
             'numbering': self.form_options.get('numbering'),
             'helptext': self.helptext,
         })
@@ -1717,11 +1840,39 @@ class QuestionnaireCategory(BaseConfigurationObject):
             config.update({'configuration': configuration})
         return config, subcategory_formsets
 
+    def get_completeness(self, data):
+        """
+        Return the number of subcategories with content and the total number of
+        subcategories.
+
+        Args:
+            data: The data dictionary.
+
+        Returns:
+            int, int.
+        """
+        complete = 0
+        total = len(self.get_subcategories())
+        for subcategory in self.subcategories:
+            if subcategory.has_content(data) is True:
+                complete += 1
+        return complete, total
+
+    def get_subcategories(self):
+        """
+        Return a list of all subcategories.
+
+        Returns:
+            list.
+        """
+        return [c for c in self.subcategories if
+                c.questiongroups or c.subcategories]
+
     def get_details(
             self, data={}, permissions=[], edit_step_route='',
             questionnaire_object=None, csrf_token=None,
             edited_questiongroups=[], view_mode='view', links=None,
-            review_config=None, user=None):
+            review_config=None, user=None, completeness_percentage=0):
         view_template = 'details/category/{}.html'.format(
             self.view_options.get('template', 'default'))
         rendered_subcategories = []
@@ -1792,8 +1943,7 @@ class QuestionnaireCategory(BaseConfigurationObject):
         # disabled. Delete the following line to reenable it.
         has_changes = False
 
-        categories_with_content = [c for c in self.subcategories if
-                                   c.questiongroups or c.subcategories]
+        categories_with_content = self.get_subcategories()
 
         return render_to_string(
             view_template, {
@@ -1814,9 +1964,16 @@ class QuestionnaireCategory(BaseConfigurationObject):
                 'edit_step_route': edit_step_route,
                 'configuration_name': configuration,
                 'questionnaire_identifier': questionnaire_identifier,
+                'questionnaire_object': questionnaire_object,
                 'has_changes': has_changes,
                 'review_config': review_config,
                 'user': user,
+                'IS_ACTIVE_FEATURE_SUMMARY': settings.IS_ACTIVE_FEATURE_SUMMARY,
+                'notifications_href': Log.actions.get_url_for_questionnaire(
+                    user=user,
+                    questionnaire_code=questionnaire_object.code if questionnaire_object else None
+                ),
+                'completeness_percentage': completeness_percentage,
             })
 
     def get_raw_category_data(self, questionnaire_data):
@@ -1924,10 +2081,30 @@ class QuestionnaireSection(BaseConfigurationObject):
             form_options.update(configuration.get('form_options'))
         self.form_options = form_options
 
+    def get_completeness(self, data):
+        """
+        Return the number of subcategories with content and the total number of
+        subcategories.
+
+        Args:
+            data: The data dictionary.
+
+        Returns:
+            int, int.
+        """
+        complete = 0
+        total = 0
+        for category in self.categories:
+            complete_category, total_category = category.get_completeness(data)
+            total += total_category
+            complete += complete_category
+        return complete, total
+
     def get_details(
             self, data={}, permissions=[], review_config={},
             edit_step_route='', questionnaire_object=None, csrf_token=None,
-            edited_questiongroups=[], view_mode='view', links=None, user=None):
+            edited_questiongroups=[], view_mode='view', links=None, user=None,
+            completeness_percentage=0):
 
         view_template = 'details/section/{}.html'.format(
             self.view_options.get('template', 'default'))
@@ -1940,7 +2117,7 @@ class QuestionnaireSection(BaseConfigurationObject):
                 csrf_token=csrf_token,
                 edited_questiongroups=edited_questiongroups,
                 view_mode=view_mode, links=links, review_config=review_config,
-                user=user))
+                user=user, completeness_percentage=completeness_percentage))
 
         media_content = []
         media_additional = {}
@@ -1983,6 +2160,7 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
     """
     valid_options = [
         'sections',
+        'modules',
     ]
     name_current = '-'
     name_parent = '-'
@@ -1993,6 +2171,8 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
         self.keyword = keyword
         self.configuration_keyword = keyword
         self.sections = []
+        self.modules = []
+        self.inherited_data = {}
         self.configuration_object = configuration_object
         if self.configuration_object is None:
             self.configuration_object = Configuration.get_active_by_code(
@@ -2005,6 +2185,12 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
                 self.configuration_error = e
             else:
                 raise e
+
+    def get_modules(self):
+        return self.modules
+
+    def get_inherited_data(self):
+        return self.inherited_data
 
     def get_configuration_errors(self):
         return self.configuration_error
@@ -2059,10 +2245,30 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
             return questiongroup.get_question_by_key_keyword(keyword)
         return None
 
+    def get_completeness(self, data):
+        """
+        Return the number of subcategories with content and the total number of
+        subcategories.
+
+        Args:
+            data: The data dictionary.
+
+        Returns:
+            int, int.
+        """
+        complete = 0
+        total = 0
+        for section in self.sections:
+            complete_section, total_section = section.get_completeness(data)
+            complete += complete_section
+            total += total_section
+        return complete, total
+
     def get_details(
             self, data={}, permissions=[], review_config={},
             edit_step_route='', questionnaire_object=None, csrf_token=None,
-            edited_questiongroups=[], view_mode='view', links=None, user=None):
+            edited_questiongroups=[], view_mode='view', links=None, user=None,
+            completeness_percentage=0):
         rendered_sections = []
         for section in self.sections:
             rendered_sections.append(section.get_details(
@@ -2073,7 +2279,8 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
                 edited_questiongroups=edited_questiongroups,
                 view_mode=view_mode,
                 links=links,
-                user=user))
+                user=user,
+                completeness_percentage=completeness_percentage))
         return rendered_sections
 
     def get_toc_data(self):
@@ -2131,6 +2338,10 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
 
         images = []
         for image in image_questiongroups:
+            # Maybe it is not a real image (e.g. maps can also be uploaded as
+            # images)
+            if image.get('image') is None:
+                continue
             image_data = File.get_data(uid=image.get('image'))
             images.append({
                 'image': image_data.get('url'),
@@ -2248,6 +2459,9 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
                     value = question_data.get(list_entry[1])
                     if list_entry[2] == 'image':
                         key = 'image'
+                        if key in questionnaire_value:
+                            # If there is already an image, do not add it again
+                            continue
                         image_data = File.get_data(uid=value)
                         interchange_list = image_data.get('interchange_list')
                         if interchange_list:
@@ -2437,6 +2651,19 @@ class QuestionnaireConfiguration(BaseConfigurationObject):
             self.sections.append(QuestionnaireSection(self, conf_section))
         self.children = self.sections
 
+        self.modules = self.configuration.get('modules', [])
+
+        inherited_data = {}
+        for qg in self.get_questiongroups():
+            if qg.inherited_configuration:
+                inherited_by_configuration = inherited_data.get(
+                    qg.inherited_configuration, {})
+                inherited_by_configuration.update(
+                    {qg.inherited_questiongroup: qg.keyword})
+                inherited_data[
+                    qg.inherited_configuration] = inherited_by_configuration
+        self.inherited_data = inherited_data
+
 
 def validate_type(obj, type_, conf_name, type_name, parent_conf_name):
     """
@@ -2539,8 +2766,13 @@ class Select(forms.Select):
         available within the template of the widget.
         """
         ctx = super(Select, self).get_context_data()
+        try:
+            options_order = self.options_order
+        except AttributeError:
+            options_order = []
         ctx.update({
             'searchable': self.searchable,
+            'options_order': options_order,
             'options': self.options,
         })
         return ctx
@@ -2611,6 +2843,21 @@ class ImageCheckbox(forms.CheckboxSelectMultiple):
         return ctx
 
 
+class ConditionalQuestiongroupChoiceField(forms.ChoiceField):
+    """
+    A Choice field whose choices are based on the presence of certain
+    questiongroups in the data JSON.
+    """
+    def __init__(self, *args, **kwargs):
+        self.question = kwargs.pop('question')
+        super(ConditionalQuestiongroupChoiceField, self).__init__(*args, **kwargs)
+
+    def validate(self, value):
+        questiongroups = self.question.form_options.get(
+            'options_by_questiongroups', [])
+        return value in questiongroups
+
+
 class FileUpload(forms.FileInput):
     template_name = 'form/field/file_upload.html'
 
@@ -2620,3 +2867,6 @@ class RequiredFormSet(BaseFormSet):
         super(RequiredFormSet, self).__init__(*args, **kwargs)
         for form in self.forms:
             form.empty_permitted = True
+
+class MeasureCheckbox(forms.CheckboxSelectMultiple):
+    template_name = 'form/field/checkbox_measure.html'

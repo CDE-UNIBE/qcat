@@ -58,6 +58,12 @@ function updateNumbering() {
             $(this).html(counter++ + ':');
         });
     });
+    $('.questiongroup-numbered-table').each(function() {
+        var counter = 1;
+        $(this).find('.numbered-cell').each(function() {
+            $(this).html(counter++ + '.');
+        });
+    });
 }
 
 
@@ -146,7 +152,7 @@ $(function () {
             var isCollapsed = $(this).data('is-collapsed'),
                 expandAll = $(this).find('.js-is-expanded'),
                 collapseAll = $(this).find('.js-is-collapsed'),
-                content = $('.tech-section-content');
+                content = $($(this).data('selector'));
 
             if (isCollapsed) {
                 // Expand all

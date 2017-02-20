@@ -3,15 +3,19 @@ import copy
 from unittest.mock import patch, Mock, call, MagicMock
 
 from collections import namedtuple
+
+from django.conf import settings
 from django.http import QueryDict
 from django.test.utils import override_settings
 from django.utils.translation import ugettext_lazy as _
+from model_mommy import mommy
 
 from accounts.models import User
 from accounts.tests.test_models import create_new_user
 from configuration.configuration import QuestionnaireConfiguration
 from qcat.tests import TestCase
-from questionnaire.models import Questionnaire, Flag
+from questionnaire.errors import QuestionnaireLockedException
+from questionnaire.models import Questionnaire, Flag, Lock
 from questionnaire.serializers import QuestionnaireSerializer
 from questionnaire.utils import (
     clean_questionnaire_data,
@@ -310,6 +314,48 @@ class CleanQuestionnaireDataTest(TestCase):
         cleaned, errors = clean_questionnaire_data(data, self.conf)
         self.assertEqual(errors, [])
         self.assertEqual(cleaned['qg_37'][0]['key_52'], 2)
+
+    def test_select_conditional_questiongroup_cleaned_if_qg_not_available(self):
+        # No qg_41
+        data = {
+            "qg_44": [{"key_60": "qg_41", "key_61": {"en": "foo"}}]}
+        cleaned, errors = clean_questionnaire_data(data, self.conf)
+        self.assertEqual(errors, [])
+        self.assertEqual(cleaned['qg_44'], [{"key_61": {"en": "foo"}}])
+
+    def test_select_conditional_questiongroup_cleaned_if_qg_not_available_2(self):
+        # No qg_41
+        data = {
+            "qg_41": [{"key_57": ""}],
+            "qg_44": [{"key_60": "qg_41", "key_61": {"en": "foo"}}]}
+        cleaned, errors = clean_questionnaire_data(data, self.conf)
+        self.assertEqual(errors, [])
+        self.assertEqual(cleaned['qg_44'], [{"key_61": {"en": "foo"}}])
+
+    def test_select_conditional_questiongroup_cleaned_if_qg_not_available_multi(
+            self):
+        # No qg_41
+        data = {
+            "qg_42": [{"key_57": "value_57_3"}],
+            "qg_44": [
+                {"key_60": "qg_41", "key_61": {"en": "foo"}},
+                {"key_60": "qg_42", "key_61": {"en": "bar"}}
+            ]}
+        cleaned, errors = clean_questionnaire_data(data, self.conf)
+        self.assertEqual(errors, [])
+        self.assertEqual(len(cleaned['qg_44']), 2)
+        self.assertIn({"key_61": {"en": "foo"}}, cleaned['qg_44'])
+        self.assertIn(
+            {"key_60": "qg_42", "key_61": {"en": "bar"}}, cleaned['qg_44'])
+
+    def test_select_conditional_questiongroup_passes(self):
+        # qg_41 available
+        data = {
+            "qg_41": [{"key_57": "value_57_3"}],
+            "qg_44": [{"key_60": "qg_41", "key_61": {"en": "foo"}}]}
+        cleaned, errors = clean_questionnaire_data(data, self.conf)
+        self.assertEqual(errors, [])
+        self.assertEqual(cleaned, data)
 
 
 class IsValidQuestionnaireFormatTest(TestCase):
@@ -635,6 +681,7 @@ class GetLinkDataTest(TestCase):
         link_data = get_link_data([link])
         self.assertEqual(link_data, {'foo': [{
             'code': link.code,
+            'configuration': link.get_original_configuration().code,
             'id': link.id,
             'link': mock_get_link_display.return_value,
             'name': 'Unknown name',
@@ -959,7 +1006,7 @@ class GetListValuesTest(TestCase):
         self.assertEqual(ret_1.get('code'), 'code')
         self.assertEqual(ret_1.get('compilers'), ['compiler'])
         self.assertEqual(ret_1.get('editors'), ['editor'])
-        self.assertEqual(ret_1.get('links'), [])
+        self.assertEqual(ret_1.get('links'), {})
 
     @patch('questionnaire.utils.get_link_data')
     def test_db_uses_provided_configuration(self, mock_get_link_data):
@@ -1062,7 +1109,8 @@ class HandleReviewActionsTest(TestCase):
             'The questionnaire could not be submitted because you do not have '
             'permission to do so.')
 
-    def test_submit_updates_status(self, mock_messages):
+    @patch('questionnaire.signals.change_status.send')
+    def test_submit_updates_status(self, moc_change_status, mock_messages):
         RolesPermissions = namedtuple(
             'RolesPermissions', ['roles', 'permissions'])
         self.obj.get_roles_permissions.return_value = RolesPermissions(
@@ -1074,6 +1122,55 @@ class HandleReviewActionsTest(TestCase):
         mock_messages.success.assert_called_once_with(
             self.request,
             'The questionnaire was successfully submitted.')
+
+    def test_submit_fails_for_locked_questionnaire(self, mock_messages):
+        RolesPermissions = namedtuple(
+            'RolesPermissions', ['roles', 'permissions'])
+
+        questionnaire = mommy.make(
+            Questionnaire,
+            code='007',
+            status=1
+        )
+        questionnaire.get_roles_permissions = lambda user: RolesPermissions(
+            roles=[], permissions=['submit_questionnaire'])
+        mommy.make(
+            Lock,
+            questionnaire_code=questionnaire.code,
+            user=create_new_user(),
+            is_finished=False
+        )
+        self.request.POST = {'submit': 'foo'}
+        self.request.user = create_new_user(id=2, email='oddjob@mean.com')
+        with self.assertRaises(QuestionnaireLockedException):
+            handle_review_actions(self.request, questionnaire, 'sample')
+
+    def test_submit_succeeds_for_locked_compiler(self, mock_messages):
+        RolesPermissions = namedtuple(
+            'RolesPermissions', ['roles', 'permissions'])
+
+        questionnaire = mommy.make(
+            Questionnaire,
+            code='007',
+            status=1
+        )
+        questionnaire.get_roles_permissions = lambda user: RolesPermissions(
+            roles=[], permissions=['submit_questionnaire'])
+
+        compiler = create_new_user()
+
+        mommy.make(
+            Lock,
+            questionnaire_code=questionnaire.code,
+            user=compiler,
+            is_finished=False
+        )
+        self.request.POST = {'submit': 'foo'}
+        self.request.user = compiler
+        handle_review_actions(self.request, questionnaire, 'sample')
+        self.assertEqual(
+            questionnaire.status, settings.QUESTIONNAIRE_SUBMITTED
+        )
 
     def test_review_error_if_previous_status_wrong(self, mock_messages):
         self.obj.status = 3
@@ -1095,7 +1192,8 @@ class HandleReviewActionsTest(TestCase):
             'The questionnaire could not be reviewed because you do not have '
             'permission to do so.')
 
-    def test_review_updates_status(self, mock_messages):
+    @patch('questionnaire.signals.change_status.send')
+    def test_review_updates_status(self, mock_change_status, mock_messages):
         RolesPermissions = namedtuple(
             'RolesPermissions', ['roles', 'permissions'])
         self.obj.get_roles_permissions.return_value = RolesPermissions(
@@ -1131,9 +1229,10 @@ class HandleReviewActionsTest(TestCase):
     @patch('questionnaire.utils.Questionnaire')
     @patch('questionnaire.utils.delete_questionnaires_from_es')
     @patch('questionnaire.utils.put_questionnaire_data')
+    @patch('questionnaire.signals.change_status.send')
     def test_publish_updates_status_of_previously_public(
-            self, mock_put_data, mock_delete_data, mock_Questionnaire,
-            mock_messages):
+            self, mock_change_status, mock_put_data, mock_delete_data,
+            mock_Questionnaire, mock_messages):
         mock_put_data.return_value = None, []
         RolesPermissions = namedtuple(
             'RolesPermissions', ['roles', 'permissions'])
@@ -1153,9 +1252,10 @@ class HandleReviewActionsTest(TestCase):
     @patch('questionnaire.utils.Questionnaire')
     @patch('questionnaire.utils.delete_questionnaires_from_es')
     @patch('questionnaire.utils.put_questionnaire_data')
+    @patch('questionnaire.signals.change_status.send')
     def test_publish_removes_previously_public_from_es(
-            self, mock_put_data, mock_delete_data, mock_Questionnaire,
-            mock_messages):
+            self, mock_change_status, mock_put_data, mock_delete_data,
+            mock_Questionnaire, mock_messages):
         mock_put_data.return_value = None, []
         RolesPermissions = namedtuple(
             'RolesPermissions', ['roles', 'permissions'])
@@ -1172,7 +1272,9 @@ class HandleReviewActionsTest(TestCase):
         mock_delete_data.assert_called_once_with('sample', [prev])
 
     @patch('questionnaire.utils.put_questionnaire_data')
-    def test_publish_updates_status(self, mock_put_data, mock_messages):
+    @patch('questionnaire.signals.change_status.send')
+    def test_publish_updates_status(self, mock_change_status, mock_put_data,
+                                    mock_messages):
         mock_put_data.return_value = None, []
         RolesPermissions = namedtuple(
             'RolesPermissions', ['roles', 'permissions'])
@@ -1190,8 +1292,9 @@ class HandleReviewActionsTest(TestCase):
             'The questionnaire was successfully set public.')
 
     @patch('questionnaire.utils.put_questionnaire_data')
+    @patch('questionnaire.signals.change_status.send')
     def test_publish_calls_put_questionnaire_data(
-            self, mock_put_data, mock_messages):
+            self, mock_change_status, mock_put_data, mock_messages):
         mock_put_data.return_value = None, []
         RolesPermissions = namedtuple(
             'RolesPermissions', ['roles', 'permissions'])
@@ -1206,8 +1309,9 @@ class HandleReviewActionsTest(TestCase):
         mock_put_data.assert_called_once_with('sample', [self.obj])
 
     @patch('questionnaire.utils.put_questionnaire_data')
+    @patch('questionnaire.signals.change_status.send')
     def test_publish_calls_put_questionnaire_data_for_all_links(
-            self, mock_put_data, mock_messages):
+            self, mock_change_status, mock_put_data, mock_messages):
         mock_put_data.return_value = None, []
         mock_link = Mock()
         RolesPermissions = namedtuple(
@@ -1261,7 +1365,8 @@ class HandleReviewActionsTest(TestCase):
             'Assigned users were successfully updated')
 
     @patch('questionnaire.utils.typo3_client')
-    def test_assign_adds_new_user(self, mock_typo3_client, mock_messages):
+    @patch('questionnaire.signals.change_member.send')
+    def test_assign_adds_new_user(self, mock_change_member, mock_typo3_client, mock_messages):
         self.obj.status = 2
         self.request.POST = {
             'assign': 'foo',
@@ -1283,7 +1388,8 @@ class HandleReviewActionsTest(TestCase):
             self.request,
             'Assigned users were successfully updated')
 
-    def test_assign_removes_user(self, mock_messages):
+    @patch('questionnaire.signals.change_member.send')
+    def test_assign_removes_user(self, mock_change_member, mock_messages):
         self.obj.status = 2
         self.request.POST = {
             'assign': 'foo',
@@ -1379,6 +1485,7 @@ class UnccdFlagTest(TestCase):
         handle_review_actions(self.request, questionnaire, 'sample')
         mock_messages.success.assert_called_once_with(
             self.request, 'The flag was successfully set.')
+
 
 @patch('questionnaire.utils.messages')
 class UnccdUnflagTest(TestCase):

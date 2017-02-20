@@ -6,6 +6,7 @@ from uuid import UUID
 from django.apps import apps
 from django.contrib import messages
 from django.db.models import Q
+from django.db.models.signals import pre_save
 from django.template.loader import render_to_string
 from django.shortcuts import redirect
 from django.utils.functional import Promise
@@ -20,21 +21,24 @@ from configuration.configuration import (
 from configuration.utils import (
     ConfigurationList,
     get_configuration_query_filter,
-    get_choices_from_model)
+    get_choices_from_model, get_choices_from_questiongroups)
 from qcat.errors import QuestionnaireFormatError
+from questionnaire.errors import QuestionnaireLockedException
+from questionnaire.receivers import prevent_updates_on_published_items
 from questionnaire.serializers import QuestionnaireSerializer
 from search.index import (
     put_questionnaire_data,
     delete_questionnaires_from_es,
 )
-from .models import Questionnaire, Flag
 from .conf import settings
-
+from .models import Questionnaire, Flag, Lock
+from .signals import change_status, change_member, delete_questionnaire
 
 logger = logging.getLogger(__name__)
 
 
-def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
+def clean_questionnaire_data(
+        data, configuration, deep_clean=True, users=[], no_limit_check=False):
     """
     Clean a questionnaire data dictionary so it can be saved to the
     database. This namely removes all empty values and parses measured
@@ -96,6 +100,9 @@ def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
                 'appears {} times'.format(
                     qg_keyword, questiongroup.max_num, len(qg_data_list)))
             continue
+        if questiongroup.inherited_configuration:
+            # Do not store linked questiongroups
+            continue
         cleaned_qg_list = []
         ordered_qg = False
         for qg_data in qg_data_list:
@@ -132,13 +139,18 @@ def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
                                 value, key, qg_keyword))
                         continue
                 if question.field_type in [
-                        'bool', 'measure', 'select_type', 'select', 'radio']:
+                        'bool', 'measure', 'select_type', 'select', 'radio',
+                    'select_conditional_custom']:
                     if value not in [c[0] for c in question.choices]:
                         errors.append(
                             'Value "{}" is not valid for key "{}" ('
                             'questiongroup "{}").'.format(
                                 value, key, qg_keyword))
                         continue
+                elif question.field_type in [
+                    'select_conditional_questiongroup']:
+                    # This is checked later.
+                    pass
                 elif question.field_type in [
                         'checkbox', 'image_checkbox', 'cb_bool']:
                     if not isinstance(value, list):
@@ -162,7 +174,13 @@ def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
                                 'questiongroup "{}").'.format(
                                     value, key, qg_keyword))
                             continue
-                elif question.field_type in ['char', 'text']:
+                    max_cb = question.form_options.get('field_options', {}).get(
+                        'data-cb-max-choices')
+                    if max_cb and len(value) > max_cb:
+                        errors.append('Key "{}" has too many values: {}'.format(
+                            key, value))
+                        continue
+                elif question.field_type in ['char', 'text', 'wms_layer']:
                     if not isinstance(value, dict):
                         errors.append(
                             'Value "{}" of key "{}" needs to be a dict.'
@@ -171,12 +189,21 @@ def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
                     translations = {}
                     for locale, translation in value.items():
                         if translation:
-                            if (question.max_length and
+                            if (not no_limit_check and question.max_length and
                                     len(translation) > question.max_length):
-                                errors.append(
-                                    'Value "{}" of key "{}" exceeds the '
-                                    'max_length of {}.'.format(
-                                        translation, key, question.max_length))
+
+                                subcategory = questiongroup.get_top_subcategory()
+                                subcategory_name = '{} {}'.format(
+                                    subcategory.form_options.get('numbering'),
+                                    subcategory.label)
+                                error_msg = 'Value of question "{}" of ' \
+                                            'subcategory "{}" is too long. It ' \
+                                            'can only contain {} ' \
+                                            'characters.'.format(
+                                                question.label,
+                                                subcategory_name,
+                                                question.max_length)
+                                errors.append(error_msg)
                                 continue
                             translations[locale] = translation
                     value = translations
@@ -200,7 +227,11 @@ def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
                     if str(value) not in [str(c[0]) for c in choices]:
                         errors.append('The value is not a valid choice of model'
                                       ' "{}"'.format(model))
-                    value = int(value)
+                        continue
+                    try:
+                        value = int(value)
+                    except TypeError:
+                        value = None
                 elif question.field_type in ['todo']:
                     value = None
                 elif question.field_type in ['image', 'file', 'date']:
@@ -285,6 +316,52 @@ def clean_questionnaire_data(data, configuration, deep_clean=True, users=[]):
                     format(
                         questiongroup.keyword,
                         questiongroup.questiongroup_condition))
+
+    # Check for select_conditional_questiongroup questions. This needs to be
+    # done after cleaning the data JSON as these questions depend on other
+    # questiongroups. Empty questiongroups (eg. {'qg_42': [{'key_57': ''}], ...}
+    # are now cleaned.
+    for qg_keyword, cleaned_qg_list in cleaned_data.items():
+
+        questiongroup = configuration.get_questiongroup_by_keyword(qg_keyword)
+        if questiongroup is None:
+            continue
+
+        select_conditional_questiongroup_data_list = []
+        select_conditional_questiongroup_found = False
+
+        for qg_data in cleaned_qg_list:
+            select_conditional_questiongroup_data = {}
+            for key, value in qg_data.items():
+
+                question = questiongroup.get_question_by_key_keyword(key)
+                if question is None:
+                    continue
+
+                if question.field_type in ['select_conditional_questiongroup']:
+                    select_conditional_questiongroup_found = True
+
+                    # Set currently valid question choices
+                    questiongroups = question.form_options.get(
+                        'options_by_questiongroups', [])
+                    question.choices = get_choices_from_questiongroups(
+                        cleaned_data, questiongroups,
+                        configuration.configuration_keyword)
+
+                    if value in [c[0] for c in question.choices]:
+                        # Only copy values which are valid options.
+                        select_conditional_questiongroup_data[key] = value
+
+                else:
+                    select_conditional_questiongroup_data[key] = value
+
+            select_conditional_questiongroup_data_list.append(
+                select_conditional_questiongroup_data)
+
+        if select_conditional_questiongroup_found:
+            cleaned_data[
+                qg_keyword] = select_conditional_questiongroup_data_list
+
     return cleaned_data, errors
 
 
@@ -699,6 +776,7 @@ def get_link_data(linked_objects, link_configuration_code=None):
                   "id": 1,
                   "code": "code_of_questionnaire_with_id_1",
                   "name": "Name of Questionnaire with ID 1",
+                  "configuration": "configuration_of_q"
                 }
               ]
             }
@@ -717,12 +795,18 @@ def get_link_data(linked_objects, link_configuration_code=None):
             original_lang = None
         name = name_data.get(get_language(), name_data.get(original_lang, ''))
 
+        configuration = 'unknown'
+        original_configuration = link.get_original_configuration()
+        if original_configuration:
+            configuration = original_configuration.code
+
         link_list = links.get(link_configuration_code, [])
         link_list.append({
             'id': link.id,
             'code': link.code,
             'name': name,
-            'link': get_link_display(link_configuration_code, name, link.code)
+            'link': get_link_display(link_configuration_code, name, link.code),
+            'configuration': configuration,
         })
         links[link_configuration_code] = link_list
 
@@ -878,6 +962,14 @@ def get_query_status_filter(request):
     if request.user.is_authenticated():
 
         permissions = request.user.get_all_permissions()
+
+        # If "view_questionnaire" is part of the permissions, return all
+        # statuses
+        if 'questionnaire.view_questionnaire' in permissions:
+            return Q(status__in=[settings.QUESTIONNAIRE_DRAFT,
+                                 settings.QUESTIONNAIRE_SUBMITTED,
+                                 settings.QUESTIONNAIRE_REVIEWED,
+                                 settings.QUESTIONNAIRE_PUBLIC])
 
         # Reviewers see all Questionnaires with status "submitted".
         if 'questionnaire.review_questionnaire' in permissions:
@@ -1133,15 +1225,17 @@ def get_list_values(
             lang=get_language()
         )
 
-        links = []
-        link_codes = []
+        # Reorder the links: Group them by linked configuration
+        links = {}
         if with_links is True:
             link_data = get_link_data(obj.links.filter(status_filter))
-            for configuration, link_dicts in link_data.items():
-                for link in link_dicts:
-                    if link.get('code') not in link_codes:
-                        link_codes.append(link.get('code'))
-                        links.append(link.get('link'))
+
+            for questionnaire_configuration, link_dicts in link_data.items():
+                for link_dict in link_dicts:
+                    link_configuration = link_dict.get('configuration')
+                    if link_configuration not in links:
+                        links[link_configuration] = []
+                    links[link_configuration].append(link_dict)
 
         template_value.update({
             'links': links,
@@ -1180,7 +1274,6 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
         (typically a redirect) or None.
     """
     roles_permissions = questionnaire_object.get_roles_permissions(request.user)
-    roles = roles_permissions.roles
     permissions = roles_permissions.permissions
 
     if request.POST.get('submit'):
@@ -1198,13 +1291,29 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
                 ' do not have permission to do so.')
             return
 
-        # Delete the old data and update the status
+        # Update the status
         questionnaire_object.status = settings.QUESTIONNAIRE_SUBMITTED
-        questionnaire_object.data_old = None
-        questionnaire_object.save()
+        try:
+            questionnaire_object.save()
+        except QuestionnaireLockedException:
+            # In case the questionnaire is still locked for the compiler, unlock
+            # all previous logs
+            Lock.objects.filter(
+                user=request.user,
+                questionnaire_code=questionnaire_object.code
+            ).update(
+                is_finished=True
+            )
+            questionnaire_object.save()
 
         messages.success(
             request, _('The questionnaire was successfully submitted.'))
+        change_status.send(
+            sender=settings.NOTIFICATIONS_CHANGE_STATUS,
+            questionnaire=questionnaire_object,
+            user=request.user,
+            message=request.POST.get('message', '')
+        )
 
     elif request.POST.get('review'):
 
@@ -1231,6 +1340,12 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
 
         messages.success(
             request, _('The questionnaire was successfully reviewed.'))
+        change_status.send(
+            sender=settings.NOTIFICATIONS_CHANGE_STATUS,
+            questionnaire=questionnaire_object,
+            user=request.user,
+            message=request.POST.get('message', '')
+        )
 
     elif request.POST.get('publish'):
 
@@ -1257,8 +1372,13 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
         for previous_object in previously_public:
             previous_object.status = settings.QUESTIONNAIRE_INACTIVE
             previous_object.save()
-            delete_questionnaires_from_es(
-                configuration_code, [previous_object])
+            delete_questionnaires_from_es(configuration_code, [previous_object])
+            change_status.send(
+                sender=settings.NOTIFICATIONS_CHANGE_STATUS,
+                questionnaire=previous_object,
+                user=request.user,
+                message=_('New version was published')
+            )
 
         questionnaire_object.status = settings.QUESTIONNAIRE_PUBLIC
         questionnaire_object.save()
@@ -1286,6 +1406,12 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
 
         messages.success(
             request, _('The questionnaire was successfully set public.'))
+        change_status.send(
+            sender=settings.NOTIFICATIONS_CHANGE_STATUS,
+            questionnaire=questionnaire_object,
+            user=request.user,
+            message=request.POST.get('message', '')
+        )
 
     elif request.POST.get('reject'):
 
@@ -1319,6 +1445,13 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
 
         messages.success(
             request, _('The questionnaire was successfully rejected.'))
+        change_status.send(
+            sender=settings.NOTIFICATIONS_CHANGE_STATUS,
+            questionnaire=questionnaire_object,
+            user=request.user,
+            is_rejected=True,
+            message=request.POST.get('reject-message', '')
+        )
 
         # Query the permissions again, if the user does not have
         # edit rights on the now draft questionnaire, then route him
@@ -1373,6 +1506,14 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
 
             # Add the user
             questionnaire_object.add_user(user, role)
+            if user not in previous_users:
+                change_member.send(
+                    sender=settings.NOTIFICATIONS_ADD_MEMBER,
+                    questionnaire=questionnaire_object,
+                    user=request.user,
+                    affected=user,
+                    role=role
+                )
 
             # Remove user from list of previous users
             if user in previous_users:
@@ -1380,6 +1521,14 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
 
         # Remove remaining previous users
         for user in previous_users:
+            # send signal while user is still related.
+            change_member.send(
+                sender=settings.NOTIFICATIONS_REMOVE_MEMBER,
+                questionnaire=questionnaire_object,
+                user=request.user,
+                affected=user,
+                role=role
+            )
             questionnaire_object.remove_user(user, role)
 
         if not user_error:
@@ -1429,6 +1578,8 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
 
         # Then flag it
         new_version.add_flag(flag)
+
+        # todo: if this feature is used, add a notification.
 
         # Add the user who flagged it
         new_version.add_user(request.user, settings.QUESTIONNAIRE_FLAGGER)
@@ -1481,12 +1632,36 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
             'The flag was successfully removed. Please note that this created '
             'a new version which needs to be reviewed. In the meantime, you '
             'are seeing the public version which still shows the flag.'))
+        change_status.send(
+            sender=settings.NOTIFICATIONS_CHANGE_STATUS,
+            questionnaire=new_version,
+            user=request.user,
+            message=_('New version due to unccd flagging')
+        )
 
     elif request.POST.get('delete'):
+        if questionnaire_object.status == settings.QUESTIONNAIRE_PUBLIC:
+            pre_save.disconnect(
+                prevent_updates_on_published_items, sender=Questionnaire)
         questionnaire_object.is_deleted = True
         questionnaire_object.save()
+        if questionnaire_object.status == settings.QUESTIONNAIRE_PUBLIC:
+            delete_questionnaires_from_es(
+                configuration_code, [questionnaire_object])
+            pre_save.connect(
+                prevent_updates_on_published_items, sender=Questionnaire)
         messages.success(request, _('The questionnaire was succesfully removed'))
-        return redirect('account_questionnaires')
+        delete_questionnaire.send(
+            sender=settings.NOTIFICATIONS_DELETE,
+            questionnaire=questionnaire_object,
+            user=request.user
+        )
+        # Redirect to the overview of the user's questionnaires if there is no
+        # other version of the questionnaire left to show.
+        other_questionnaire = query_questionnaire(
+            request, questionnaire_object.code).first()
+        if other_questionnaire is None:
+            return redirect('account_questionnaires')
 
 
 def compare_questionnaire_data(data_1, data_2):
@@ -1559,7 +1734,17 @@ def prepare_list_values(data, config, **kwargs):
     del data['list_data']
 
     if 'links' in data and isinstance(data['links'], dict):
+        # TODO: Is this ever used anymore?
         data['links'] = data['links'].get(language, original_language)
+
+    # Reorder the links: Group them by linked configuration
+    links = {}
+    for link in data.get('links', []):
+        link_configuration = link.get('configuration')
+        if link_configuration not in links:
+            links[link_configuration] = []
+        links[link_configuration].append(link)
+    data['links'] = links
 
     # 'translations' must not list the currently active language
     if data['translations']:
@@ -1575,20 +1760,3 @@ def prepare_list_values(data, config, **kwargs):
     )
 
     return data
-
-
-def get_review_config_dict(
-        status, token, permissions, roles, view_mode, url, is_blocked,
-        blocked_by, form_url, has_release):
-    return {
-        'review_status': status,
-        'csrf_token_value': token,
-        'permissions': permissions,
-        'roles': roles,
-        'mode': view_mode,
-        'url': url,
-        'is_blocked': is_blocked,
-        'blocked_by': blocked_by,
-        'form_action_url': form_url,
-        'has_release': has_release,  # flag if this questionnaire has a published version - controlling the first tab.
-    }

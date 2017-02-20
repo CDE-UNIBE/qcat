@@ -1,0 +1,98 @@
+{% extends 'sample/base.html' %}
+
+{% load compress %}
+{% load i18n %}
+{% load sekizai_tags %}
+{% load staticfiles %}
+
+{% block content %}
+  <form role="main" id="module-form" action="{% url 'sample:add_module_action' %}" method="POST">
+    {% csrf_token %}
+    <div class="row large-no-gutters">
+      <div class="small-12 columns">
+        <h1 class="is-title">
+          <a href="{% url 'wocat:add' %}" title="Back" class="button-back"><svg class="icon"><use xlink:href="#icon-caret_left"></use></svg></a>
+          {% trans "Add SLM Module" %}
+        </h1>
+        <p>
+          {% trans "SAMPLE: More information about the modules and stuff." %}
+        </p>
+      </div>
+    </div>
+    <div class="row large-no-gutters">
+      <div class="small-12 columns">
+        <div class="card">
+          <div class="card-well">
+            <h3>
+              {% trans "1. Select a Technology" %}
+            </h3>
+            <p>
+              {% trans "Search and select a Technology to which you would like to add a module." %}
+            </p>
+            <div class="list-item modules-q-search">
+              <div class="link-search search-field">
+                <input type="search" class="link-search-field" placeholder="{% trans 'Search' %}"
+                     data-translation-no-results="{% trans 'No results found' %}"
+                     data-translation-too-many-results="{% trans 'Too many results found, please narrow the search' %}"
+                     data-search-url="{% url 'sample:questionnaire_link_search' %}">
+              </div>
+              <div class="link-preview"></div>
+              <span class="link-name"></span>
+              <input type="hidden" name="link_id" id="input_questionnaire_id">
+              <input type="hidden" name="configuration" value="sample">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row large-no-gutters hide" id="modules-select-module">
+      <div class="small-12 columns">
+        <div class="card">
+          <div class="card-well">
+            <h3>
+              {% trans "2. Select a module" %}
+            </h3>
+            <p>
+              {% trans "Select a module which you would like to add to the Technology." %}
+            </p>
+            <div id="modules-available">
+              <img class="module-loading" src="{% static 'assets/img/ajax-loader.gif' %}">
+            </div>
+          </div>
+        </div>
+      </div>
+    </div>
+    <div class="row large-no-gutters hide" id="modules-create">
+      <div class="small-12 columns">
+        <div class="card">
+          <div class="card-well">
+            <h3>
+              {% trans "3. Create the module" %}
+            </h3>
+            <input type="submit" value="{% trans "Create" %}" class="button">
+          </div>
+        </div>
+      </div>
+    </div>
+  </form>
+
+  {% addtoblock 'js' %}
+    <script src="{% static 'js/wizard.min.js' %}"></script>
+    <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+    <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+
+{#    {% compress js %}#}
+      <script src="{% static 'questionnaire/js/moduleActions.js' %}"></script>
+      <script type="text/javascript">
+        $(function() {
+          $('#module-form').bindModuleActions({
+            checkUrl: '{% url 'sample:check_modules' %}',
+            csrfToken: '{{ csrf_token }}',
+            questionnaireConfiguration: 'sample'
+          });
+        });
+      </script>
+{#    {% endcompress %}#}
+  {% endaddtoblock %}
+
+{% endblock %}

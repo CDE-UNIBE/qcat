@@ -6,7 +6,6 @@ from django.template.loader import render_to_string
 
 from accounts.decorators import force_login_check
 from questionnaire.views import (
-    generic_questionnaire_details,
     generic_questionnaire_link_search,
     generic_questionnaire_list,
     generic_questionnaire_view_step,
@@ -58,28 +57,6 @@ def questionnaire_view_step(request, identifier, step):
     return generic_questionnaire_view_step(
         request, identifier, step, 'sample',
         page_title='SAMPLE')
-
-
-def questionnaire_details(request, identifier):
-    """
-    View to show the details of an existing SAMPLE questionnaire.
-
-    .. seealso::
-        The actual rendering of the details is handled by the generic
-        questionnaire function
-        :func:`questionnaire.views.questionnaire_details`
-
-    Args:
-        ``request`` (django.http.HttpResponse): The request object.
-
-        ``identifier`` (str): The identifier of the Questionnaire
-        object.
-
-    Returns:
-        ``HttpResponse``. A rendered Http Response.
-    """
-    return generic_questionnaire_details(
-        request, identifier, 'sample', 'sample')
 
 
 def questionnaire_list_partial(request):

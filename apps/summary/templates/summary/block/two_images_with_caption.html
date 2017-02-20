@@ -1,0 +1,12 @@
+	<div class="row compact">
+		{% for list_item in content.images  %}
+		  <div class="{% if content.images|length == 1 %} small-12 columns {% else %} small-6 columns {% endif %}">
+        <div class="img-column-container">
+          <img class="img-column" src="{{ list_item.url }}">
+        </div>
+        <div class="img-caption">
+          {{ list_item.caption }}
+        </div>
+		  </div>
+    {% endfor %}
+	</div>

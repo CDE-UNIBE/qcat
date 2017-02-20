@@ -1,0 +1,84 @@
+{% load i18n %}
+{% load staticfiles %}
+
+<article role="article" class="tech-item is-cca">
+  <figure class="tech-thumbnail">
+    <a href="{% url 'cca:questionnaire_details' item.code %}" title="">
+      {% if item.image %}
+        <img src="{{ item.image }}" alt="{{ item.name }}" />
+      {% else %}
+        <img src="{% static "assets/img/picture.svg" %}" alt="{{ item.name }}">
+      {% endif %}
+    </a>
+    {% if item.configurations_property.0 %}
+      <figcaption class="tech-type is-{{ item.configurations_property.0 }}">
+        <span>{{ item.configurations_property.0 }}</span>
+      </figcaption>
+    {% elif item.configurations.0 %}
+      <figcaption class="tech-type is-{{ item.configurations.0 }}">
+        <span class="is-{{ item.configurations.0 }}">{{ item.configurations.0 }}</span>
+      </figcaption>
+    {% endif %}
+  </figure>
+
+  <div class="tech-item-content">
+    {% for flag in item.flags_property %}
+      <span class="tech-status label is-{{ flag.flag }}">{{ flag.name }}</span>
+    {% endfor %}
+    {% for flag in item.flags %}
+      <span class="tech-status label is-{{ flag.flag }}">{{ flag.name }}</span>
+    {% endfor %}
+    {% if item.status.0 and item.status.0 != 'public' %}
+      <span class="tech-status label is-{{ item.status.0 }}">{{ item.status.1 }}</span>
+    {% endif %}
+    <header>
+      <h2 class="tech-item-title">
+        <a href="{% url 'cca:questionnaire_details' item.code %}">
+          {% trans "Climate Change Adaptation Module" as no_title %}
+          {% if not item.native_configuration %}<small>[{{ item.configurations|join:"|" }}]</small> {% endif %}{{ item.name|default:no_title|truncatewords:8 }} <span class="is-light">{% if item.country %}[{{ item.country }}]{% endif %}</span>
+        </a>
+      </h2>
+    </header>
+    <main class="tech-item-description">
+      {% trans "No description available." as no_description %}
+      <p>{{ item.tech_definition|truncatewords:50|default:no_description }}</p>
+      <ul class="tech-infos is-light is-muted">
+        <li>{% if item.compilers|length > 1 %}{% trans "Compilers:" %}{% else %}{% trans "Compiler:" %}{% endif %} {% for compiler in item.compilers %}{{ compiler.name }}{% if not forloop.last %}, {% endif %}{% empty %}&ndash;{% endfor %}</li>
+        <li><time datetime="{{ item.created|date:"c" }}" pubdate="pubdate">{{ item.created|date:"SHORT_DATETIME_FORMAT"|default:"&ndash;" }}</time></li>
+      </ul>
+    </main>
+    <footer class="tech-item-footer">
+
+      {# Translations #}
+      {% if item.translations %}
+        <ul class="left tech-lang-list sub-nav-square">
+          {% for translation in item.translations %}
+            <li>
+              {% language translation.0 %}
+                <a href="{% url 'cca:questionnaire_details' item.code %}" class="is-cca" title="{% trans "This SLM practice is also available in:" %} {% trans translation.1 %}" data-tooltip="">{{ translation.0 }}</a>
+              {% endlanguage %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {# Links and modules #}
+      {% if item.links %}
+        <ul class="right tech-attached sub-nav-square">
+          {% for link_configuration, links in item.links.items %}
+            <li>
+              {% if link_configuration == 'technologies' %}
+                {# For CCA Modules, all links should be to Technologies. #}
+                <a href="{% url 'cca:questionnaire_details' item.code %}" class="is-tech" title="{% trans "This Module is linked to a SLM Technology" %}" data-tooltip=""><svg class="icon"><use xlink:href="#icon-technology"></use></svg>
+                  {% if item.links|length > 1 %}
+                    <span class="number">{{ item.links|length }}</span>
+                  {% endif %}
+                </a>
+              {% endif %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </footer>
+  </div>
+</article>

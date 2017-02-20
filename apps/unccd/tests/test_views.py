@@ -5,7 +5,6 @@ from unittest.mock import patch, Mock
 from accounts.tests.test_models import create_new_user
 from qcat.tests import TestCase
 from unccd.views import (
-    questionnaire_details,
     questionnaire_list,
     questionnaire_list_partial,
 )
@@ -119,12 +118,12 @@ class QuestionnaireDetailsTest(TestCase):
         self.assertTemplateUsed(res, 'questionnaire/details.html')
         self.assertEqual(res.status_code, 200)
 
-    @patch('unccd.views.generic_questionnaire_details')
-    def test_calls_generic_function(self, mock_questionnaire_details):
-        request = self.factory.get(self.url)
-        questionnaire_details(request, 'foo')
-        mock_questionnaire_details.assert_called_once_with(
-            request, *get_valid_details_values())
+    # @patch('unccd.views.generic_questionnaire_details')
+    # def test_calls_generic_function(self, mock_questionnaire_details):
+    #     request = self.factory.get(self.url)
+    #     questionnaire_details(request, 'foo')
+    #     mock_questionnaire_details.assert_called_once_with(
+    #         request, *get_valid_details_values())
 
 
 class QuestionnaireListPartialTest(TestCase):

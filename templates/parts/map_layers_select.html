@@ -1,0 +1,11 @@
+<select name="{{ select_name }}">
+  <option value="googlesatellite"{% if selected == 'googlesatellite' %} selected="selected"{% endif %}>Google Satellite</option>
+  <option value="googlemaps"{% if selected == 'googlemaps' %} selected="selected"{% endif %}>Google Maps</option>
+  <option value="googlehybrid"{% if selected == 'googlehybrid' %} selected="selected"{% endif %}>Google Hybrid</option>
+  <option value="osm"{% if selected == 'osm' %} selected="selected"{% endif %}>OpenStreetMap</option>
+  <option value="opentopo"{% if selected == 'opentopo' %} selected="selected"{% endif %}>OpenTopoMap</option>
+  <option value="komoot"{% if selected == 'komoot' %} selected="selected"{% endif %}>Komoot (OSM)</option>
+  <option value="landscape"{% if selected == 'landscape' %} selected="selected"{% endif %}>Thunderforest Landscape</option>
+  <option value="worldtopo"{% if selected == 'worldtopo' %} selected="selected"{% endif %}>Esri WorldTopoMap</option>
+  <option value="aerial"{% if selected == 'aerial' %} selected="selected"{% endif %}>Esri WorldImagery</option>
+</select>

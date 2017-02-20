@@ -60,7 +60,7 @@
           </div>
           {% if edit_mode == 'edit' %}
             <div class="columns small-12 medium-3 panel" data-equalizer-watch>
-              <a id="button-submit" class="button nobr expand is-{{ configuration_name }}" onclick="document.getElementById('wizard-form').submit();">
+              <a id="button-submit" class="button nobr expand is-{{ configuration_name }}" onclick="submitWizardForm();">
                 <svg class="icon-lines is-small"><use xlink:href="#icon-chevron-thin-left"></use></svg>
                 {% trans "Save and back" %}
               </a>
@@ -106,7 +106,7 @@
 
       {% if edit_mode == 'edit' %}
         <div class="submit-buttons-bottom row">
-          <a id="button-submit" class="button is-{{ configuration_name }}" onclick="document.getElementById('wizard-form').submit();">
+          <a id="button-submit" class="button is-{{ configuration_name }}" onclick="submitWizardForm();">
             <svg class="icon-lines is-small"><use xlink:href="#icon-chevron-thin-left"></use></svg>
             {% trans "Save and go to overview" %}
           </a>
@@ -118,7 +118,6 @@
       {% endif %}
     </main>
   </form>
-
 {% endblock %}
 
 {% block bottom %}
@@ -127,12 +126,36 @@
   <script type="text/javascript">
     Dropzone.autoDiscover = false;
 
+    function submitWizardForm() {
+      // Enable all disabled form elements before submitting.
+      var form = document.getElementById('wizard-form');
+      var elements = form.elements;
+      for (var i = 0, len = elements.length; i < len; ++i) {
+          elements[i].disabled = false;
+      }
+      form.submit();
+    }
+
     // Helper for 'save and to next section
     (function($) {
       $('.button-submit-goto-next-section').click(function() {
         $('#goto-next-section').val('true');
-        $('#wizard-form').submit();
+        submitWizardForm();
       });
+
+      // lock questionnaire while window is open
+      {% if view.object %}
+        setInterval(function(){
+          $.ajax({
+            url: '{% url 'lock_questionnaire' view.object.code %}',
+            type: 'POST',
+            beforeSend: function (xhr, settings) {
+              xhr.setRequestHeader("X-CSRFToken", '{{ csrf_token }}');
+            }
+          });
+        }, {{ lock_interval }});
+      {% endif %}
+
     })(jQuery);
   </script>
   {% compress js %}

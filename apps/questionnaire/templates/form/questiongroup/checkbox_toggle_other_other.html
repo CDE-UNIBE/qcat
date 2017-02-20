@@ -1,0 +1,98 @@
+{% comment %}
+  The questiongroup has a checkbox (labelled with label of the QG), the questions only appear after clicking the checkbox.
+
+  config: The configuration of the questiongroup
+
+  formset: The (repeating) forms as formset
+
+{% endcomment %}
+
+{% load i18n %}
+{% load floppyforms %}
+{% load list_to_columns %}
+
+<div{% if config.questiongroup_condition %} id="{{ config.questiongroup_condition }}"{% endif %} class="small-12 columns questiongroup{% if config.numbered %} questiongroup-numbered-{{ config.numbered }}{% endif %}{% if config.numbered == 'prefix' %} sortable{% endif %}">
+
+  {% if config.detail_level %}
+    <ul class="accordion plus-questiongroup" role="tablist" data-accordion="">
+      <li class="accordion-navigation">
+        <a data-toggle="{{ config.keyword }}" href="#{{ config.keyword }}">{% trans "+ [TODO] Advanced Questions" %}</a>
+        <div id="{{ config.keyword }}" class="content active">
+  {% endif %}
+
+  <div class="small-12 medium-4 columns">
+    <label class="input-multiline">
+      <input type="checkbox" class="cb-toggle-questiongroup" data-container="{{ config.keyword }}"{% if edit_mode != "edit" %} disabled="disabled"{% endif %}>
+      <span{% if config.helptext %} class="has-tip" title="{{ config.helptext }}" aria-haspopup="true" data-tooltip=""{% endif %}>
+        {{ config.label }}
+        {% if config.helptext %}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg>{% endif %}
+      </span>
+    </label>
+  </div>
+
+  <div id="{{ config.keyword }}" class="small-12 medium-8 columns cb-toggle-questiongroup-content" style="display:none;">
+
+    {{ formset.management_form }}
+
+    {% for qg_form in formset.forms %}
+
+      {% if config.numbered == 'prefix' %}
+        <div class="row">
+          <div class="questiongroup-numbered-left">
+            <p class="questiongroup-numbered-number"></p><span class="has-tip" title="{% trans 'Drag and drop the number to order the list' %}" aria-haspopup="true" data-tooltip="">?</span>
+          </div>
+          <div class="questiongroup-numbered-right">
+      {% endif %}
+
+      <div class="list-item{% if formset.max_num > formset.min_num %} is-removable" data-questiongroup-keyword="{{ config.keyword }}{% endif %}">
+        {% for field in qg_form.visible_fields %}
+
+          {% if forloop.counter == 1 %}
+            <div class="row">
+          {% endif %}
+
+          {% if forloop.counter == 1 or forloop.counter == 3 %}
+            <div class="medium-3 columns">
+          {% elif forloop.counter == 2 %}
+            <div class="medium-6 columns">
+          {% endif %}
+
+          {% with template=config.templates|get_by_keyword:field.name options=config.options|get_by_keyword:field.name %}
+            {% if template %}
+              {% formrow field using template %}
+            {% else %}
+              {% formrow field using "form/question/default.html" %}
+            {% endif %}
+          {% endwith %}
+
+          {% if forloop.counter >= 1 and forloop.counter <= 3 %}
+            </div>
+          {% endif %}
+
+          {% if forloop.counter == 3 %}
+            </div>
+          {% endif %}
+
+        {% endfor %}
+        {% for field in qg_form.hidden_fields %}{% formfield field %}{% endfor %}
+        <div class="columns right">
+          <a class="right list-item-action link is-{{ configuration_name }} bottom-margin" data-remove-this="" {% if forloop.counter <= formset.min_num and formset|length <= formset.min_num %}
+          style="display: none;"{% endif %}>{% trans "Remove" %}</a>
+        </div>
+      </div>
+
+      {% if config.numbered == 'prefix' %}
+          </div>
+        </div>
+      {% endif %}
+
+    {% endfor %}
+    {% if formset.max_num > formset.min_num %}
+      <div class="row list-action">
+        <div class="small-12 columns">
+          <p><a data-add-item="" data-questiongroup-keyword="{{ config.keyword }}" class="link is-{{ configuration_name }}" {% if formset.total_form_count >= formset.max_num or edit_mode != 'edit' %} style="display:none;"{% endif %}>{% trans 'Add More' %}</a></p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+</div>

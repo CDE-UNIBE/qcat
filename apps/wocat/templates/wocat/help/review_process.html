@@ -26,7 +26,8 @@
       <h2 class="is-group">
         {% trans "Roles" %}
       </h2>
-      {% include 'wocat/help/questionnaire_roles.html' %}
+      {% trans 'SLM Technology / Approach' as questionnaire_type %}
+      {% include 'wocat/help/questionnaire_roles.html' with questionnaire_type=questionnaire_type %}
 
     </section>
   </main>

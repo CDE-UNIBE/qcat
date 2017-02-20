@@ -1,0 +1,28 @@
+{% comment %}
+
+  Template to render a checkbox form field in the style of a measure bar.
+
+{% endcomment %}
+
+{% load list_to_columns %}
+
+<div class="row">
+  <div class="small-12 columns button-bar"
+       {% if options.question_conditions %} data-question-conditions="{{ options.question_conditions }}"{% endif %}>
+    <ul class="button-switch radius measure">
+    {% for group_name, choices in optgroups %}
+      {% for choice in choices %}
+        <li>
+          <input {% if choice.0 in value %}checked="checked" {% endif %}
+                 type="checkbox"
+                 id="{{ attrs.id }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}"
+                 name="{{ name }}" value="{{ choice.0 }}"
+                  {% if questiongroup_conditions %} data-questiongroup-condition="{{ questiongroup_conditions }}"{% endif %}
+                  {% include "floppyforms/attrs.html" %}>
+          <label for="{{ attrs.id }}_{{ forloop.parentloop.counter }}_{{ forloop.counter }}" class="button small secondary"><span>{{ choice.1 }}</span></label>
+        </li>
+      {% endfor %}
+    {% endfor %}
+    </ul>
+  </div>
+</div>

@@ -1,0 +1,5 @@
+<ul class="chart-measure-labelled">
+  {% for value in all_values %}
+    <li class="step is-level-{{ value.0|default:0 }}"></li>
+  {% endfor %}
+</ul>

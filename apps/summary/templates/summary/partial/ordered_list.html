@@ -1,0 +1,9 @@
+<ol {% if class %}class="{{ class }}"{% endif %}>
+  {% for list_item in list_items %}
+    <li {% if list_item.highlighted %} class="true"{% endif %}>
+      {% if list_item.title %}{{ list_item.title }}:{% endif %}
+      {{ list_item.text|safe}}
+      {% if list_item.subtext %}<ul><li>{{ list_item.subtext }}</li></ul>{% endif %}
+    </li>
+  {% endfor %}
+</ol>

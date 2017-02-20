@@ -1,17 +1,22 @@
+from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
 from unittest.mock import patch
 
 from accounts.client import Typo3Client
 from accounts.models import User
 from accounts.tests.test_views import accounts_route_questionnaires
+from model_mommy import mommy
+
 from functional_tests.base import FunctionalTest
-from questionnaire.models import Questionnaire
+from questionnaire.models import Questionnaire, QuestionnaireConfiguration, \
+    QuestionnaireMembership, Lock
+from configuration.models import Configuration
 from sample.tests.test_views import (
     get_position_of_category,
-    route_home,
     route_questionnaire_details,
     route_questionnaire_new,
-)
+    get_categories)
 
 from django.contrib.auth.models import Group
 from accounts.tests.test_models import create_new_user
@@ -41,6 +46,34 @@ def has_no_old_version_overview(browser):
     browser.findByNot(
         'xpath', '//p[contains(text(), "There is an old version which is '
         'different than the current one.")]')
+
+
+def get_sample_4_5_options(testcase, index=0):
+    return testcase.findManyBy(
+        'xpath',
+        '//select[@id="id_qg_43-{}-key_58"]/option[not(@value="")]'.format(
+            index))
+
+
+def get_sample_4_6_options(testcase, index=0):
+    return testcase.findManyBy(
+        'xpath',
+        '//select[@id="id_qg_46-{}-key_63"]/option[not(@value="")]'.format(
+            index))
+
+
+def get_sample_5_4_options(testcase, index=0):
+    return testcase.findManyBy(
+        'xpath',
+        '//select[@id="id_qg_44-{}-key_60"]/option[not(@value="")]'.format(
+            index))
+
+
+def get_sample_5_5_options(testcase, index=0):
+    return testcase.findManyBy(
+        'xpath',
+        '//select[@id="id_qg_45-{}-key_62"]/option[not(@value="")]'.format(
+            index))
 
 
 @patch.object(Typo3Client, 'get_user_id')
@@ -376,6 +409,8 @@ class EditTest(FunctionalTest):
         self.toggle_all_sections()
         self.checkOnPage('asdf')
 
+    from nose.plugins.attrib import attr
+    @attr('foobar')
     def test_edit_questionnaire(self, mock_get_user_id):
 
         user = create_new_user(id=6, email='mod@bar.com')
@@ -430,12 +465,13 @@ class EditTest(FunctionalTest):
         self.findBy('xpath', '//p[text()="asdf"]')
 
         # She sees the edit buttons
-        self.findBy(
-            'xpath', '(//a[contains(text(), "Edit this section")])[2]')
+        edit_buttons = self.findManyBy(
+            'xpath', '//a[contains(text(), "Edit this section")]')
+        self.assertEqual(len(edit_buttons), len(get_categories()))
 
         # She sees the possibility to view the questionnaire
         self.review_action('view')
-        self.assertIn(url, self.browser.current_url)
+        self.assertIn(url, self.browser.current_url + '#top')
 
         # All the changes are there
         self.findBy('xpath', '//p[text()="Bar"]')
@@ -443,8 +479,9 @@ class EditTest(FunctionalTest):
         self.findBy('xpath', '//p[text()="asdf"]')
 
         # There are no buttons to edit the sections anymore
-        self.findByNot(
-            'xpath', '(//a[contains(text(), "Edit this section")])[2]')
+        edit_buttons = self.findManyBy(
+            'xpath', '//a[contains(text(), "Edit this section")]')
+        self.assertEqual(len(edit_buttons), 0)
 
     # def test_show_message_of_changed_versions(self, mock_get_user_id):
     #
@@ -582,3 +619,574 @@ class EditTest(FunctionalTest):
     #     # She edits it again and sees there is no change message
     #     self.findBy('xpath', '//a[contains(text(), "Edit")]').click()
     #     has_no_old_version_overview(self)
+
+
+@patch.object(Typo3Client, 'get_user_id')
+class CustomToOptionsTest(FunctionalTest):
+
+    fixtures = ['sample_global_key_values', 'sample']
+
+    def test_custom_to_options(self, mock_get_user_id):
+        # Alice logs in
+        self.doLogin()
+
+        # She goes to step 5 of the SAMPLE form
+        self.browser.get(
+            self.live_server_url + reverse(route_questionnaire_new))
+        self.click_edit_section('cat_5')
+
+        # She sees that no labels are selected in key_65 and key_67
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]/a/span[text()="-"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen"]/a/span[text()="-"]')
+
+        # She sees that the label fields are disabled
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen" and contains(@class, '
+                    '"disabled")]/a/span[text()="-"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen" and contains(@class, '
+                    '"disabled")]/a/span[text()="-"]')
+
+        # She selects Value 1 of key 64
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "Value 64 1")]').click()
+
+        # She sees the labels were updated in key_65 and key_67
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]/a/span[text()="'
+                    'Value 66 1 Left"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen"]/a/span[text()="'
+                    'Value 66 1 Right"]')
+
+        # She deselects the value in key 64
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "-")]').click()
+
+        # She sees the labels were reset
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]/a/span[text()="-"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen"]/a/span[text()="-"]')
+
+        # She selects Value 1 of key 64 again
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "Value 64 1")]').click()
+
+        # She submits the step and sees the values were submitted correctly
+        self.submit_form_step()
+        self.findBy('xpath',
+                    '//span[contains(@class, "chart-measure-label-left") and '
+                    'contains(text(), "Value 66 1 Left")]')
+        self.findBy('xpath',
+                    '//span[contains(@class, "chart-measure-label-right") and '
+                    'contains(text(), "Value 66 1 Right")]')
+
+        # She goes back to the form
+        self.click_edit_section('cat_5')
+
+        # She sees the fields were populated correctly
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen" and contains(@class, '
+                    '"disabled")]/a/span[text()="Value 66 1 Left"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen" and contains(@class, '
+                    '"disabled")]/a/span[text()="Value 66 1 Right"]')
+
+        # She sees the labels were updated in key_65 and key_67
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]/a/span[text()="'
+                    'Value 66 1 Left"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen"]/a/span[text()="'
+                    'Value 66 1 Right"]')
+
+        # She selects Value 2 of key 64
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "Value 64 2")]').click()
+
+        # She sees the labels were updated in key_65 and key_67
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]/a/span[text()="'
+                    'Value 66 2 Left"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen"]/a/span[text()="'
+                    'Value 66 2 Right"]')
+
+        # She sees that the label fields are disabled
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen" and contains(@class, '
+                    '"disabled")]/a/span[text()="Value 66 2 Left"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen" and contains(@class, '
+                    '"disabled")]/a/span[text()="Value 66 2 Right"]')
+
+        # She selects Value 3 of key 64
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_64_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "Value 64 3")]').click()
+
+        # She sees the labels were updated and show the first value possible
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]/a/span[text()="'
+                    'Value 66 3A Left"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen"]/a/span[text()="'
+                    'Value 66 3A Right"]')
+
+        # She sees the field is not disabled anymore
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen" and not(contains('
+                    '@class, "disabled"))]/a/span[text()="Value 66 3A Left"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen" and not(contains('
+                    '@class, "disabled"))]/a/span[text()="Value 66 3A Right"]')
+
+        # She sees she cannot select "Value 66 1 Left"
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "Value 66 2 Left")]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]/a/span[text()="'
+                    'Value 66 3A Left"]')
+
+        # However, she can select "Value 66 3B Left"
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "Value 66 3B Left")]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen"]/a/span[text()="'
+                    'Value 66 3B Left"]')
+
+        # She submits the step and sees the values were submitted correctly
+        self.submit_form_step()
+        self.findBy('xpath',
+                    '//span[contains(@class, "chart-measure-label-left") and '
+                    'contains(text(), "Value 66 3B Left")]')
+        self.findBy('xpath',
+                    '//span[contains(@class, "chart-measure-label-right") and '
+                    'contains(text(), "Value 66 3A Right")]')
+
+        # She goes back to step 5 of the form and sees the values were
+        # initialized correctly, the label fields are not disabled
+        self.click_edit_section('cat_5')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_65_chosen" and not(contains('
+                    '@class, "disabled"))]/a/span[text()="Value 66 3B Left"]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_47_0_key_67_chosen" and not(contains('
+                    '@class, "disabled"))]/a/span[text()="Value 66 3A Right"]')
+
+
+@patch.object(Typo3Client, 'get_user_id')
+class LinkedChoicesTest(FunctionalTest):
+
+    fixtures = ['sample_global_key_values', 'sample']
+
+    def test_linked_across_step(self, mock_get_user_id):
+        # Alice logs in
+        self.doLogin()
+
+        # She goes to step 5 of the SAMPLE form
+        self.browser.get(
+            self.live_server_url + reverse(route_questionnaire_new))
+        self.click_edit_section('cat_5')
+
+        # She sees that there are no choices available for 5.4
+        self.assertEqual(len(get_sample_5_4_options(self)), 0)
+
+        # She goes to section 4 of the SAMPLE form
+        self.submit_form_step()
+        self.click_edit_section('cat_4')
+
+        # She selects some options in 4.4
+        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@data-container="qg_40"]').click()
+        self.findBy('xpath',
+                    '//select[@id="id_qg_40-0-key_57"]/option['
+                    '@value="value_57_1"]').click()
+
+        self.findBy('xpath', '//input[@data-container="qg_41"]').click()
+        self.findBy('xpath',
+                    '//select[@id="id_qg_41-0-key_57"]/option['
+                    '@value="value_57_2"]').click()
+
+        self.findBy('xpath', '//input[@data-container="qg_42"]').click()
+        self.findBy('xpath',
+                    '//select[@id="id_qg_42-0-key_57"]/option['
+                    '@value="value_57_3"]').click()
+
+        # She submits the step and goes to step 5 again
+        self.submit_form_step()
+        self.click_edit_section('cat_5')
+
+        # She sees that in 5.4, there are now 3 choices available.
+        self.assertEqual(len(get_sample_5_4_options(self)), 3)
+
+        # She fills out a first questiongroup
+        self.findBy('xpath',
+                    '//div[@id="id_qg_44_0_key_60_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_44_0_key_60_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "QG 40")]').click()
+        self.findBy('id', 'id_qg_44-0-original_key_61').send_keys('Foo')
+
+        # She also fills out a second questiongroup
+        self.form_click_add_more('qg_44')
+        self.assertEqual(len(get_sample_5_4_options(self, index=1)), 3)
+        self.findBy('xpath',
+                    '//div[@id="id_qg_44_1_key_60_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_44_1_key_60_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "QG 42")]').click()
+        self.findBy('id', 'id_qg_44-1-original_key_61').send_keys('Bar')
+
+        # She sees that in 5.5, there are only 2 choices available (no qg_42)
+        self.assertEqual(len(get_sample_5_5_options(self)), 2)
+
+        # She submits the form step and sees that the values are there.
+        self.submit_form_step()
+        self.findBy('xpath',
+                    '//h3[contains(text(), "Subcategory 5_4")]/following::p['
+                    'contains(text(), "QG 40")]')
+
+        # She goes back to step 4
+        self.click_edit_section('cat_4')
+
+        # She deselects a value
+        self.findBy('xpath',
+                    '//select[@id="id_qg_40-0-key_57"]/option['
+                    '@value=""]').click()
+
+        # She submits the step and goes back to step 5
+        self.submit_form_step()
+        self.findByNot('xpath',
+                    '//h3[contains(text(), "Subcategory 5_4")]/following::p['
+                    'contains(text(), "QG 40")]')
+
+        self.click_edit_section('cat_5')
+
+        # She sees that the option is not selected anymore, all the other
+        # values are there
+        self.assertEqual(len(get_sample_5_4_options(self)), 2)
+        self.assertEqual(len(get_sample_5_4_options(self, index=1)), 2)
+        self.findBy('xpath',
+                    '//div[@id="id_qg_44_0_key_60_chosen"]/a/span[text()="-"]')
+        self.assertEqual(
+            self.findBy('id', 'id_qg_44-0-original_key_61').get_attribute(
+                'value'), 'Foo')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_44_1_key_60_chosen"]/a/span['
+                    'text()="QG 42"]')
+        self.assertEqual(
+            self.findBy('id', 'id_qg_44-1-original_key_61').get_attribute(
+                'value'), 'Bar')
+
+        # She sees that in 5.5, there is only one option left
+        self.assertEqual(len(get_sample_5_5_options(self)), 1)
+
+    def test_linked_choices_within_step(self, mock_get_user_id):
+        # Alice logs in
+        self.doLogin()
+
+        # She goes to step 4 of the SAMPLE form
+        self.browser.get(
+            self.live_server_url + reverse(route_questionnaire_new))
+        self.click_edit_section('cat_4')
+
+        # She sees that no extremes can be selected in 4.5
+        self.assertEqual(len(get_sample_4_5_options(self)), 0)
+
+        # She selects some questiongroups in 4.4 and sees that they are now
+        # available for selection in 4.5
+        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@data-container="qg_40"]').click()
+        # It is not sufficient to click the checkbox of the questiongroup, an
+        # actual value of the questiongroup must be selected.
+        self.assertEqual(len(get_sample_4_5_options(self)), 0)
+        self.findBy('xpath',
+                    '//select[@id="id_qg_40-0-key_57"]/option['
+                    '@value="value_57_1"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 1)
+
+        # The same option is also available in 4.6
+        self.assertEqual(len(get_sample_4_6_options(self)), 1)
+
+        # She deselects the value again and sees the option disappears in 4.5
+        self.findBy('xpath',
+                    '//select[@id="id_qg_40-0-key_57"]/option['
+                    '@value=""]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 0)
+        self.assertEqual(len(get_sample_4_6_options(self)), 0)
+
+        # She selects a value again, the option appears in 4.5
+        self.findBy('xpath',
+                    '//select[@id="id_qg_40-0-key_57"]/option['
+                    '@value="value_57_2"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 1)
+
+        # The same option is also available in 4.6
+        self.assertEqual(len(get_sample_4_6_options(self)), 1)
+
+        # She changes the value of 4.5, still the option appears only once
+        self.findBy('xpath',
+                    '//select[@id="id_qg_40-0-key_57"]/option['
+                    '@value="value_57_1"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 1)
+        self.assertEqual(len(get_sample_4_6_options(self)), 1)
+
+        # She also selects another value in 4.4
+        self.findBy('xpath', '//input[@data-container="qg_41"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 1)
+        self.findBy('xpath',
+                    '//select[@id="id_qg_41-0-key_57"]/option['
+                    '@value="value_57_1"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 2)
+
+        # The same option is also available in 4.6
+        self.assertEqual(len(get_sample_4_6_options(self)), 2)
+
+        # She selects an option in 4.6
+        self.findBy('xpath',
+                    '//div[@id="id_qg_46_0_key_63_chosen"]').click()
+        self.findBy('xpath',
+                '//div[@id="id_qg_46_0_key_63_chosen"]//ul[@class="chosen-'
+                'results"]/li[contains(text(), "QG 41")]').click()
+
+        # She also selects value 3 of 4.4, but sees that this one is not in the
+        # list of options for 4.5
+        self.findBy('xpath', '//input[@data-container="qg_42"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 2)
+        self.findBy('xpath',
+                    '//select[@id="id_qg_42-0-key_57"]/option['
+                    '@value="value_57_1"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 2)
+
+        # However, the same option appears in 4.6
+        self.assertEqual(len(get_sample_4_6_options(self)), 3)
+
+        # In 4.6, the selected option is still qg_41
+        self.findBy('xpath', '//div[@id="id_qg_46_0_key_63_chosen"]/a/span['
+                             'text()="QG 41"]')
+
+        # She selects an option in 4.5 and fills out the additional key.
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_0_key_58_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_0_key_58_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "QG 41")]').click()
+        self.findBy('id', 'id_qg_43-0-original_key_59').send_keys('Foo')
+
+        # She also adds another option in 4.5 by clicking "Add more".
+        self.form_click_add_more('qg_43')
+        self.assertEqual(len(get_sample_4_5_options(self, index=1)), 2)
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_1_key_58_chosen"]').click()
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_1_key_58_chosen"]//ul[@class="chosen-'
+                    'results"]/li[contains(text(), "QG 40")]').click()
+        self.findBy('id', 'id_qg_43-1-original_key_59').send_keys('Bar')
+
+        # She deselects a value in 4.4
+        self.findBy('xpath',
+                    '//select[@id="id_qg_41-0-key_57"]/option['
+                    '@value=""]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 1)
+        self.assertEqual(len(get_sample_4_5_options(self, index=1)), 1)
+
+        # She sees that the first questiongroup of 4.5 now has no value selected
+        # but the additional text field is still there.
+        self.findBy('xpath', '//div[@id="id_qg_43_0_key_58_chosen"]/a/span['
+                             'text()="-"]')
+        self.assertEqual(
+            self.findBy('id', 'id_qg_43-0-original_key_59').get_attribute(
+                'value'), 'Foo')
+
+        # The second questiongroup of 4.5 is untouched
+        self.findBy('xpath', '//div[@id="id_qg_43_1_key_58_chosen"]/a/span['
+                             'text()="QG 40"]')
+        self.assertEqual(
+            self.findBy('id', 'id_qg_43-1-original_key_59').get_attribute(
+                'value'), 'Bar')
+
+        # She submits the step and sees the values are submitted correctly
+        self.submit_form_step()
+
+        # She opens section 4 again and sees that she can still only select
+        # certain options in 4.5
+        self.click_edit_section('cat_4')
+        self.assertEqual(len(get_sample_4_5_options(self)), 1)
+        self.assertEqual(len(get_sample_4_5_options(self, index=1)), 1)
+
+        # The same option is also available in 4.6 (plus qg_42)
+        self.assertEqual(len(get_sample_4_6_options(self)), 2)
+
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_0_key_58_chosen"]/a/span[text()="-"]')
+        self.assertEqual(
+            self.findBy('id', 'id_qg_43-0-original_key_59').get_attribute(
+                'value'), 'Foo')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_1_key_58_chosen"]/a/span['
+                    'text()="QG 40"]')
+        self.assertEqual(
+            self.findBy('id', 'id_qg_43-1-original_key_59').get_attribute(
+                'value'), 'Bar')
+
+    def test_linked_choices_order(self, mock_get_user_id):
+        # Alice logs in
+        self.doLogin()
+
+        # She goes to step 4 of the SAMPLE form
+        self.browser.get(
+            self.live_server_url + reverse(route_questionnaire_new))
+        self.click_edit_section('cat_4')
+
+        # She sees that no extremes can be selected in 4.5
+        self.assertEqual(len(get_sample_4_5_options(self)), 0)
+
+        # She selects some questiongroups in 4.4 and sees that they are now
+        # available for selection in 4.5
+        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@data-container="qg_41"]').click()
+        self.findBy('xpath',
+                    '//select[@id="id_qg_41-0-key_57"]/option['
+                    '@value="value_57_1"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 1)
+
+        # She selects another option
+        self.findBy('xpath', '//input[@data-container="qg_40"]').click()
+        self.findBy('xpath',
+                    '//select[@id="id_qg_40-0-key_57"]/option['
+                    '@value="value_57_2"]').click()
+        self.assertEqual(len(get_sample_4_5_options(self)), 2)
+
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_0_key_58_chosen"]').click()
+
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_0_key_58_chosen"]//ul[@class="chosen-'
+                    'results"]/li[2][contains(text(), "QG 40")]')
+        self.findBy('xpath',
+                    '//div[@id="id_qg_43_0_key_58_chosen"]//ul[@class="chosen-'
+                    'results"]/li[3][contains(text(), "QG 41")]')
+
+
+@patch.object(Typo3Client, 'get_user_id')
+class LockTest(FunctionalTest):
+    """
+    Tests for questionnaire locking.
+    """
+    fixtures = ['sample_global_key_values', 'sample']
+
+    def setUp(self):
+        super().setUp()
+        self.jay = mommy.make(
+            get_user_model(),
+            firstname='jay',
+            email = 'jay@spam.com'
+        )
+        self.robin = mommy.make(
+            get_user_model(),
+            firstname='robin',
+            email='robin@spam.com'
+        )
+        self.questionnaire = mommy.make(
+            model=Questionnaire,
+            data={},
+            code='sample_1',
+            status=settings.QUESTIONNAIRE_DRAFT,
+        )
+        # Create a valid questionnaire with the least required data.
+        mommy.make(
+            model=QuestionnaireConfiguration,
+            questionnaire=self.questionnaire,
+            configuration=Configuration.objects.filter(code='sample').first(),
+            original_configuration=True
+        )
+        mommy.make(
+            model=QuestionnaireMembership,
+            user=self.jay,
+            questionnaire=self.questionnaire,
+            role='compiler'
+        )
+        mommy.make(
+            model=QuestionnaireMembership,
+            user=self.robin,
+            questionnaire=self.questionnaire,
+            role='editor'
+        )
+        self.questionnaire_edit_url = '{}{}'.format(
+            self.live_server_url,
+            reverse('sample:questionnaire_edit', args=['sample_1'])
+        )
+        self.questionnaire_view_url = '{}{}'.format(
+            self.live_server_url,
+            self.questionnaire.get_absolute_url()
+        )
+
+    def test_edit_adds_lock(self, mock_get_user_id):
+        # Jay loggs in and starts editing a section.
+        self.doLogin(user=self.jay)
+        self.browser.get(self.questionnaire_edit_url)
+        self.findManyBy('link_text', 'Edit this section')[0].click()
+
+        # Robin logs in and views the questionnaire
+        self.doLogin(user=self.robin)
+        self.browser.get(self.questionnaire_view_url)
+        # but the questionnaire is locked
+        self.assertTrue(
+            Lock.with_status.is_blocked('sample_1').exists()
+        )
+        # and the edit button has no url, but a message about the locked status
+        edit_button = self.findBy('link_text', 'Edit')
+        self.assertTrue(
+            edit_button.get_attribute('disabled')
+
+        )
+        self.findBy('xpath', '//*[text()[contains(.,"This questionnaire is '
+                             'locked for editing by jay None.")]]')
+
+        # if the url is accessed directly, a notification is shown
+        self.browser.get(self.questionnaire_edit_url)
+        self.findBy('xpath', '//div[contains(@class, "notification") '
+                             'and contains(@class, "warning")]')
+        # maybe: should the edit buttons be disabled?
+
+    def test_edit_locked(self, mock_get_user_id):
+        # The questionnaire is locked for Jay
+        Lock.objects.create(
+            questionnaire_code='sample_1', user=self.jay
+        )
+        self.doLogin(user=self.robin)
+        # Viewing the questionnaire is fine
+        self.browser.get(self.questionnaire_view_url)
+        # When Robin tries to edit a section, the browser gets redirected
+        self.browser.get('{}cat_1'.format(self.questionnaire_edit_url))
+        self.browser.implicitly_wait(3)
+        self.assertEqual(self.browser.current_url, self.questionnaire_view_url)
+
+    def test_refresh_lock(self, mock_get_user_id):
+        self.doLogin(user=self.jay)
+        self.browser.get(self.questionnaire_edit_url)
+        self.findManyBy('link_text', 'Edit this section')[0].click()
+        interval = (settings.QUESTIONNAIRE_LOCK_TIME - 1) * 60 * 1000
+        self.findBy('xpath', '//*[text()[contains(.,"{}")]]'.format(interval))

@@ -54,7 +54,7 @@
           {% for translation in item.translations %}
             <li>
               {% language translation.0 %}
-                <a href="{% url 'technologies:questionnaire_details' item.code %}" class="is-tech" title="{% trans "This SLM practice is also available in:" %} {% trans translation.1 %}" data-tooltip="">{{ translation.0 }}</a>
+                <a href="{% url 'unccd:questionnaire_details' item.code %}" class="is-unccd" title="{% trans "This SLM practice is also available in:" %} {% trans translation.1 %}" data-tooltip="">{{ translation.0 }}</a>
               {% endlanguage %}
             </li>
           {% endfor %}

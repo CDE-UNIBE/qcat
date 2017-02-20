@@ -1,7 +1,11 @@
+import sys
+
 from django.conf import settings
 from django.contrib.staticfiles.testing import StaticLiveServerTestCase
+from django.core import signing
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
+from django.utils.timezone import now
 from nose.plugins.attrib import attr
 from pyvirtualdisplay import Display
 from selenium import webdriver
@@ -9,6 +13,7 @@ from selenium.common.exceptions import NoSuchElementException
 from selenium.webdriver.firefox.firefox_binary import FirefoxBinary
 from unittest import skipUnless
 
+from selenium.webdriver.remote.webelement import WebElement
 from selenium.webdriver.support.wait import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from selenium.webdriver.common.by import By
@@ -55,15 +60,17 @@ class FunctionalTest(StaticLiveServerTestCase):
         Use FF as browser for functional tests.
         Create a virtual display, so the browser doesn't keep popping up.
         """
-        self.display = Display(visible=0, size=(1600, 900))
-        self.display.start()
+        if '-pop' not in sys.argv[1:]:
+            self.display = Display(visible=0, size=(1600, 900))
+            self.display.start()
         self.browser = webdriver.Firefox(
             firefox_binary=FirefoxBinary(settings.TESTING_FIREFOX_PATH))
         self.browser.implicitly_wait(3)
 
     def tearDown(self):
         self.browser.quit()
-        self.display.stop()
+        if '-pop' not in sys.argv[1:]:
+            self.display.stop()
 
     def findByNot(self, by, el):
         try:
@@ -179,6 +186,12 @@ class FunctionalTest(StaticLiveServerTestCase):
     def screenshot(self, filename='screenshot.png'):
         self.browser.save_screenshot(filename)
 
+    def form_click_add_more(self, questiongroup_keyword):
+        self.findBy(
+            'xpath',
+            '//a[@data-add-item and @data-questiongroup-keyword="{}"]'.format(
+                questiongroup_keyword)).click()
+
     def review_action(
             self, action, exists_only=False, exists_not=False,
             expected_msg_class='success'):
@@ -222,6 +235,9 @@ class FunctionalTest(StaticLiveServerTestCase):
         WebDriverWait(self.browser, 10).until(
             EC.visibility_of_element_located(
                 (By.XPATH, btn_xpath)))
+        if action == 'reject':
+            self.findBy('name', 'reject-message').send_keys("spam")
+
         if exists_only is True:
             self.findBy('xpath', '//div[contains(@class, "reveal-modal") and contains(@class, "open")]//a[contains(@class, "close-reveal-modal")]').click()
             import time; time.sleep(1)
@@ -229,7 +245,7 @@ class FunctionalTest(StaticLiveServerTestCase):
         self.findBy('xpath', btn_xpath).click()
         self.findBy(
             'xpath', '//div[contains(@class, "{}")]'.format(expected_msg_class))
-        if action != 'reject':
+        if action not in ['reject', 'delete']:
             self.toggle_all_sections()
 
     def submit_form_step(self):
@@ -253,7 +269,14 @@ class FunctionalTest(StaticLiveServerTestCase):
 
     def toggle_all_sections(self):
         self.wait_for('class_name', 'js-expand-all-sections')
-        self.findBy('class_name', 'js-expand-all-sections').click()
+        for el in self.findManyBy('xpath', '//div[contains(@class, "success")]'):
+            self.browser.execute_script("""
+                var element = arguments[0];
+                element.parentNode.removeChild(element);
+                """, el)
+        links = self.findManyBy('class_name', 'js-expand-all-sections')
+        for link in links:
+            link.click()
 
     def open_questionnaire_details(self, configuration, identifier=None):
         route = route_questionnaire_details_sample
@@ -275,11 +298,20 @@ class FunctionalTest(StaticLiveServerTestCase):
     def scroll_to_element(self, el):
         self.browser.execute_script("return arguments[0].scrollIntoView();", el)
 
-    def set_input_value(self, el_id, value):
-        self.browser.execute_script(
-            "document.getElementById('{}').setAttribute('value', '{}')".format(
-                el_id, value
-            ))
+    def set_input_value(self, element, value):
+        if not isinstance(element, WebElement):
+            element = self.findBy('id', element)
+        self.browser.execute_script("""
+            var element = arguments[0];
+                element.setAttribute('value', '{}')
+        """.format(value), element)
+
+    def get_text_excluding_children(self, element):
+        return self.browser.execute_script("""
+        return jQuery(arguments[0]).contents().filter(function() {
+            return this.nodeType == Node.TEXT_NODE;
+        }).text();
+        """, element)
 
     def clickUserMenu(self, user):
         self.findBy(
@@ -292,23 +324,69 @@ class FunctionalTest(StaticLiveServerTestCase):
                      '@class, "top-bar-lang")]/a').click()
         self.findBy('xpath', '//a[@data-language="{}"]'.format(locale)).click()
 
+    # @patch.object(Typo3Client, 'get_and_update_django_user')
+    # @patch.object(WocatAuthenticationBackend, 'authenticate')
+    # @patch('wocat.views.generic_questionnaire_list')
+    # def doLogin(self, mock_questionnaire_list, mock_authenticate,
+    #             mock_get_and_update_django_user, user=None):
+    #     self.doLogout()
+    #     if user is None:
+    #         user = create_new_user()
+    #     mock_authenticate.return_value = user
+    #     mock_authenticate.__name__ = ''
+    #     mock_get_and_update_django_user.return_value = user
+    #     mock_questionnaire_list.return_value = {}
+    #     with patch('accounts.client.typo3_client.get_user_id') as get_user_id:
+    #         get_user_id.return_value = user.id
+    #         self.browser.get(self.live_server_url + '/404_no_such_url/')
+    #         self.browser.add_cookie({'name': 'fe_typo_user', 'value': 'foo'})
+    #         self.browser.get(self.live_server_url + reverse(loginRouteName))
+
+    def doLogin(self, user=None):
+        """
+        A user is required for the login, this is a convenience wrapper to
+        login a non-specified user.
+        """
+        self.doLogout()
+        self._doLogin(user or create_new_user())
+
     @patch.object(Typo3Client, 'get_and_update_django_user')
     @patch.object(WocatAuthenticationBackend, 'authenticate')
+    @patch('django.contrib.auth.authenticate')
     @patch('wocat.views.generic_questionnaire_list')
-    def doLogin(self, mock_questionnaire_list, mock_authenticate,
-                mock_get_and_update_django_user, user=None):
-        self.doLogout()
-        if user is None:
-            user = create_new_user()
+    def _doLogin(self, user, mock_questionnaire_list, mock_django_auth,
+                 mock_authenticate, mock_get_and_update_django_user):
+        """
+        Mock the authentication to return the given user and put it to the
+        session - django.contrib.auth.login handles this.
+        Set the cookie so the custom middleware doesn't force-validate the login
+        against the login API.
+        """
+        mock_questionnaire_list.return_value = {}
+        auth_user = user
+        auth_user.backend = 'accounts.authentication.WocatAuthenticationBackend'
+        mock_django_auth.return_value = auth_user
         mock_authenticate.return_value = user
         mock_authenticate.__name__ = ''
         mock_get_and_update_django_user.return_value = user
-        mock_questionnaire_list.return_value = {}
-        with patch('accounts.client.typo3_client.get_user_id') as get_user_id:
-            get_user_id.return_value = user.id
-            self.browser.get(self.live_server_url + '/404_no_such_url/')
-            self.browser.add_cookie({'name': 'fe_typo_user', 'value': 'foo'})
-            self.browser.get(self.live_server_url + reverse(loginRouteName))
+
+        self.client.login(username='spam', password='eggs')
+        # note the difference: self.client != self.browser, copy the cookie.
+        self.browser.add_cookie({
+            'name': 'sessionid',
+            'value': self.client.cookies['sessionid'].value
+        })
+        self.browser.add_cookie({
+            'name': 'fe_typo_user',
+            'value': 'foo'
+        })
+        key = settings.ACCOUNTS_ENFORCE_LOGIN_COOKIE_NAME
+        salt = settings.ACCOUNTS_ENFORCE_LOGIN_SALT
+        self.browser.add_cookie({
+            'name': key,
+            'value': signing.get_cookie_signer(salt=key + salt).sign(now())
+        })
+        self.browser.get(self.live_server_url + reverse(loginRouteName))
 
     def doLogout(self):
         self.browser.delete_cookie('fe_typo_user')

@@ -35,11 +35,11 @@
     {% if unccd_countries %}
       <section class="tech-list small-12 columns">
         <div class="tech-group">
-          <h2 class="is-group">{% trans "Focal Point" %}</h2>
+          <h2 class="is-group">{% trans "UNCCD national focal point" %}</h2>
           <div class="row">
             <div class="small-12 columns user-unccd-focal-point">
-              <img src="{% static 'assets/img/unccd_footer_logo.png' %}" alt="{% trans "UNCCD" %}">
-              <span>{% trans "UNCCD Focal Point for country:" %} <strong>
+              <img src="{% static 'assets/img/unccd_logo.svg' %}" alt="{% trans "UNCCD" %}">
+              <span>{% trans "UNCCD focal point for country:" %} <strong>
               {% for country in unccd_countries %}
                 <a href="{{ country.1 }}" class="link">{{ country.0 }}</a>
               {% endfor %}

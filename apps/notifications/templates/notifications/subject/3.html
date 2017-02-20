@@ -1,0 +1,16 @@
+{% comment %}
+  template for 'changed review process status'
+{% endcomment %}
+
+{% load i18n %}
+{% load static %}
+
+
+{% spaceless %}<a href="{{ log.questionnaire.get_absolute_url }}" class="link">{{ log.questionnaire.code }}</a>
+  {% trans "is now" context "New status of the questionnaire, e.g. 'published'" %} {{ log.statusupdate.get_status_display|lower }}
+  ({% if log.statusupdate.is_rejected %}{% trans "rejected by" context "A questionnaire was rejected by..." %}{% else %}{% trans "approved by" context "A questionnaire was approved by..." %}{% endif %}
+  <a href="{% url 'user_details' log.catalyst_id %}" class="link">{{ log.catalyst.get_display_name }}</a>)
+  {% if log.statusupdate.message %}
+    {% include 'notifications/partial/message_modal.html' with message=log.statusupdate.message %}
+  {% endif %}.
+{% endspaceless %}

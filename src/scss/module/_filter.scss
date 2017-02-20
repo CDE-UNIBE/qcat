@@ -66,3 +66,22 @@
   background: $color-beige;
   color: #3e3b34;
 }
+
+// styles for chosen
+.chosen-container {
+  font-size: $paragraph-font-size !important;
+}
+
+.chosen-single {
+  border-radius: 0 !important;
+  padding: .375rem !important;
+  height: inherit !important;
+
+  > abbr {
+    cursor: pointer !important;
+    top: 12px !important;
+  }
+  > div {
+    top: 6px !important;
+  }
+}

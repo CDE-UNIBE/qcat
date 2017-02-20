@@ -6,7 +6,6 @@ from accounts.tests.test_models import create_new_user
 from qcat.tests import TestCase
 from sample.views import (
     home,
-    questionnaire_details,
     questionnaire_link_search,
     questionnaire_list,
     questionnaire_list_partial,
@@ -86,6 +85,7 @@ class SampleHomeTest(TestCase):
     @patch('sample.views.generic_questionnaire_list')
     def test_calls_generic_questionnaire_list(self, mock_questionnaire_list):
         request = self.factory.get(self.url)
+        request.user = create_new_user()
         home(request)
         mock_questionnaire_list.assert_called_once_with(
             request, 'sample', template=None, only_current=True,
@@ -182,12 +182,12 @@ class QuestionnaireDetailsTest(TestCase):
         self.assertTemplateUsed(res, 'questionnaire/details.html')
         self.assertEqual(res.status_code, 200)
 
-    @patch('sample.views.generic_questionnaire_details')
-    def test_calls_generic_function(self, mock_questionnaire_details):
-        request = self.factory.get(self.url)
-        questionnaire_details(request, 'foo')
-        mock_questionnaire_details.assert_called_once_with(
-            request, *get_valid_details_values())
+    # @patch('sample.views.generic_questionnaire_details')
+    # def test_calls_generic_function(self, mock_questionnaire_details):
+    #     request = self.factory.get(self.url)
+    #     questionnaire_details(request, 'foo')
+    #     mock_questionnaire_details.assert_called_once_with(
+    #         request, *get_valid_details_values())
 
 
 class QuestionnaireListPartialTest(TestCase):

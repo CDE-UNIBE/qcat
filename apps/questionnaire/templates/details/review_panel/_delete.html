@@ -1,0 +1,44 @@
+{% load i18n %}
+{% load questionnaire_tags %}
+
+
+<div class="row process-action">
+  <div class="medium-2 columns">
+    <a class="button expand alert" data-reveal-id="confirm-delete">{% trans "Delete" %}</a>
+  </div>
+  <div class="medium-10 columns">
+    <p>
+      {% if 'secretariat' in review_config.roles|get_flat_roles %}
+        {% with questionnaire_type=questionnaire_type %}
+          Delete this {{ questionnaire_type }}. As a member of the WOCAT secretariat, you can delete this {{ questionnaire_type }}.
+        {% endwith %}
+      {% else %}
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          Delete this {{ questionnaire_type }}. Only the compiler can delete a {{ questionnaire_type }} while it is in draft mode.
+        {% endblocktrans %}
+      {% endif %}
+    </p>
+
+  </div>
+  <div id="confirm-delete" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+    <h2>{% trans "Please confirm removal." %}</h2>
+    <p>
+      {% blocktrans with questionnaire_type=questionnaire_type %}
+        This {{ questionnaire_type }} will be deleted.
+      {% endblocktrans %}
+    </p>
+    <p>
+      {% if review_config.other_version_status %}
+        {% blocktrans with questionnaire_type=questionnaire_type status='<strong>'|add:review_config.other_version_status|add:'</strong>'|safe %}
+          This will only delete the current version of this {{ questionnaire_type }}. There is a previous version of this {{ questionnaire_type }} available with status {{ status }} which will remain visible, and will be displayed to you.
+        {% endblocktrans %}
+      {% else %}
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          This {{ questionnaire_type }} will not be visible anymore after deleting it.
+        {% endblocktrans %}
+      {% endif %}
+    </p>
+    <button name='delete' value='true' class="button alert" type="submit" form="review_form">{% trans "Delete" %}</button>
+    <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+  </div>
+</div>

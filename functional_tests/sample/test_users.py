@@ -1,3 +1,4 @@
+from accounts.middleware import WocatAuthenticationMiddleware
 from django.conf import settings
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
@@ -106,21 +107,21 @@ class UserTest(FunctionalTest):
 
         # The questionnaires are grouped by status
         # Draft
-        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[1]'
+        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[2]'
                              '/h2[text()="Draft"]')
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[1]//a['
             'contains(text(), "Foo 1")]')
 
         # Submitted
-        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[2]'
+        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[3]'
                              '/h2[text()="Submitted"]')
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[2]//a['
                      'contains(text(), "Foo 8")]')
 
         # Reviewed
-        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[3]'
+        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[4]'
                              '/h2[text()="Reviewed"]')
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[3]//a['
@@ -130,7 +131,7 @@ class UserTest(FunctionalTest):
                      'contains(text(), "Foo 9")]')
 
         # Public
-        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[4]'
+        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[5]'
                              '/h2[text()="Public"]')
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[5]//a['
@@ -187,7 +188,7 @@ class UserTest(FunctionalTest):
         # The questionnaires are grouped by status
 
         # Submitted
-        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[1]'
+        self.findBy('xpath', '(//div[contains(@class, "tech-group")])[2]'
                              '/h2[text()="Submitted"]')
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[1]//a['
@@ -746,9 +747,12 @@ class UserTest2(FunctionalTest):
             self.assertIn(user_tuple[0], ['compiler', 'landuser'])
             self.assertIn(user_tuple[1].id, [1, 1055, 2365])
 
-    def test_remove_user(self, mock_get_user_id, mock_questionnaire_list):
+    @patch.object(WocatAuthenticationMiddleware, 'process_request')
+    def test_remove_user(self, mock_process_request, mock_get_user_id,
+                         mock_questionnaire_list):
 
         mock_questionnaire_list.return_value = {}
+        mock_process_request.return_value = {}
         # Alice logs in
         self.doLogin()
 
@@ -953,7 +957,7 @@ class UserDetailTest(FunctionalTest):
         self.assertEqual(len(list_entries), 1)
 
         # And finally, the unccd focal point country switzerland is listed.
-        self.findBy('xpath', '//*[contains(text(), "Focal Point")]')
+        self.findBy('xpath', '//*[contains(text(), "focal point")]')
         self.findBy('xpath', '//div[contains(@class, "user-unccd-focal-point")]')
         self.findBy('xpath', '//a[text()="Switzerland"]')
 

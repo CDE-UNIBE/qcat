@@ -1,0 +1,17 @@
+<div class="row compact">
+  <div class="small-12 columns">
+    <h5>{{ title }}</h5>
+  </div>
+</div>
+<div class="row">
+  <div class="small-12 columns">
+    <ul class="bullets">
+      {% for list_item in content.items  %}
+  {#    <div class="institution_logo">#}
+  {#      <img src="{{ list_item.logo }}" alt="logo">#}
+        <li>{{ list_item.title }}</li>
+  {#    </div>#}
+      {% endfor %}
+    </ul>
+  </div>
+</div>

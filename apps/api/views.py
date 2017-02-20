@@ -23,18 +23,19 @@ class APIRoot(APIView):
     that are available.
 
     This API is intended to be consumed by partners.
+
+    Current version is: 2
     """
     http_method_names = ('get', )
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer, )
 
     def get(self, request, format=None):
         urls = {
-            'questionnaires': reverse('questionnaires-api-list',
+            'questionnaires': reverse('v2:questionnaires-api-list',
                                       request=request, format=format),
-            'auth token': reverse('obtain-api-token', request=request,
+            'auth token': reverse('v2:obtain-api-token', request=request,
                                   format=format),
-            'documentation': reverse('django.swagger.base.view',
-                                     request=request, format=format),
+            'documentation': reverse('api-docs', request=request, format=format),
         }
         return Response(urls)
 

@@ -156,6 +156,10 @@ fieldset .questiongroup:not(:first-of-type) h4 {
   margin-left: 2.5rem;
 }
 
+.questiongroup .checkbox-indent {
+  margin-left: rem-calc(18);
+}
+
 td.form-table-contains-inline {
   padding: 2px 0 0;
 }
@@ -186,6 +190,10 @@ td.form-table-contains-inline table tr td {
 h4.form-subcategory {
   margin-top: rem-calc(16);
 }
+h4.form-subcategory.header-checkbox-small-font {
+  font-size: rem-calc(14);
+}
+
 fieldset div h3.form-subcategory {
   margin-top: rem-calc(24);
 }
@@ -193,8 +201,8 @@ fieldset div:first-of-type h3.form-subcategory {
   margin-top: 0;
 }
 img.output-image-cb {
-  width: 100px;
-  height: 100px;
+  width: 50px;
+  height: 50px;
   float: left;
 }
 img.output-image-cb-sub {

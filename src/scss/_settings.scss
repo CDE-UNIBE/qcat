@@ -143,9 +143,14 @@ $color-violet       : #9a618c;
 $color-violet-dark  : #834173;
 $color-violet-light : #BB86AE;
 
+$color-yellow       : #e1c66b;
+
 $color-tech         : $color-green;
 $color-approach     : $color-orange-dark;
-$color-map          : $color-violet;
+$color-map          : $color-yellow;
+$color-watershed    : $color-violet;
+$color-watershed-dark: darken($color-watershed, 0.2);
+$color-cca 			: $color-blue-light;
 
 $color-yellow     : #FEFFEC;
 

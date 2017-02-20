@@ -4,9 +4,9 @@ import string
 from django.apps import apps
 from django.db.models import Q
 from configuration.cache import get_configuration
-from configuration.models import Project
+from configuration.models import Project, Questiongroup, Translation
 from questionnaire.models import Questionnaire, Flag
-
+from search.utils import check_aliases
 
 def get_configuration_query_filter(configuration, only_current=False):
     """
@@ -81,22 +81,32 @@ def get_configuration_index_filter(
         ``list``. A list of configuration codes (the index/indices) to
         be searched.
     """
+    default_configurations = [
+        'unccd', 'technologies', 'approaches', 'watershed']
+
     if query_param_filter:
-        configurations = []
+        query_configurations = []
         for q in query_param_filter:
             if q == 'all':
-                configurations.extend(['unccd', 'technologies', 'approaches'])
+                query_configurations.extend(default_configurations)
             else:
-                configurations.append(q)
-        return list(set(configurations))
+                query_configurations.append(q.lower())
+        configurations = list(set(query_configurations))
 
-    if only_current is True:
-        return [configuration]
+        if check_aliases(configurations) is True:
+            return configurations
+        else:
+            return default_configurations
 
-    if configuration == 'wocat':
-        return ['unccd', 'technologies', 'approaches']
+    configurations = [configuration.lower()]
 
-    return [configuration]
+    if only_current is False and configuration == 'wocat':
+        configurations = default_configurations
+
+    if check_aliases(configurations) is True:
+        return configurations
+    else:
+        return default_configurations
 
 
 class ConfigurationList(object):
@@ -176,6 +186,32 @@ def get_choices_from_model(model_name, only_active=True):
             choices.append((o.id, str(o)))
     except LookupError:
         pass
+    return choices
+
+
+def get_choices_from_questiongroups(
+        questionnaire_data: dict, questiongroups: list,
+        configuration_keyword: str) -> list:
+    """
+    Return a list of valid choices based on the presence of certain
+    questiongroups within a questionnaire data JSON.
+
+    Args:
+        questionnaire_data: The questionnaire data dict
+        questiongroups: A list of questiongroup keywords (basically a list of
+          all possible choices)
+        configuration_keyword: The keyword of the current configuration
+
+    Returns:
+        A list of possible choices [(keyword, label)]
+    """
+    configuration = get_configuration(configuration_keyword)
+    choices = []
+    for questiongroup in questiongroups:
+        if questiongroup in questionnaire_data:
+            questiongroup_object = configuration.get_questiongroup_by_keyword(
+                questiongroup)
+            choices.append((questiongroup, questiongroup_object.label))
     return choices
 
 

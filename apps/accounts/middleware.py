@@ -1,10 +1,10 @@
+import contextlib
 from datetime import timedelta
 from django.conf import settings
 from django.contrib.auth import logout, login
 from django.utils import dateparse
 from django.utils.timezone import now, utc
 
-from qcat.context_managers import ignored
 from .client import typo3_client
 
 
@@ -67,7 +67,7 @@ class WocatAuthenticationMiddleware(object):
                     self.refresh_login_timeout = True
 
         if force_login:
-            with ignored(KeyError):
+            with contextlib.suppress(KeyError):
                 del request.session[settings.ACCOUNTS_ENFORCE_LOGIN_NAME]
 
     def login_timeout_expired(self, login_timeout=None):

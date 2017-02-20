@@ -7,6 +7,7 @@
 
 {% load floppyforms %}
 {% load list_to_columns %}
+{% load i18n %}
 
 {% if config.next_level == 'subcategories' %}
   <p>{{ config.label }}</p>
@@ -27,41 +28,55 @@
         <h4>{{ questiongroup_config.label }}</h4>
       {% endif %}
     {% endfor %}
-    <table>
-      <thead>
-        <tr>
-          <th></th>
-          {% for header in config.table_headers %}
-            <th>
-              {% with helptext=config.table_helptexts|get_by_index:forloop.counter0 %}
-                {% if helptext %}
-                  <span class="has-tip left" title="{{ helptext }}" aria-haspopup="true" data-tooltip="">{{ header }}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg></span>
-                {% else %}
-                  {{ header }}
-                {% endif %}
-              {% endwith %}
-            </th>
-          {% endfor %}
-        </tr>
-      </thead>
-      <tbody>
-        {% for questiongroup_config, questiongroup_formset in formsets %}
-          {% if questiongroup_config.keyword in config.table_grouping.0 %}
-            {{ questiongroup_formset.management_form }}
+    {% for questiongroup_config, questiongroup_formset in formsets %}
+      {% if questiongroup_config.keyword in config.table_grouping.0 %}
+        {{ questiongroup_formset.management_form }}
+        <table class="outer-list-item questiongroup-numbered-table">
+          <thead>
+            <tr>
+              <th></th>
+              {% for header in config.table_headers %}
+                <th>
+                  {% with helptext=config.table_helptexts|get_by_index:forloop.counter0 %}
+                    {% if helptext %}
+                      <span class="has-tip left" title="{{ helptext }}" aria-haspopup="true" data-tooltip="">{{ header }}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg></span>
+                    {% else %}
+                      {{ header }}
+                    {% endif %}
+                  {% endwith %}
+                </th>
+              {% endfor %}
+            </tr>
+          </thead>
+          <tbody>
             {% for f in questiongroup_formset.forms %}
-              <tr>
-                <td>{{ forloop.counter }}.</td>
+              <tr class="list-item">
+                <td class="numbered-cell">{{ forloop.counter }}.</td>
                 {% for field in f.visible_fields %}
                   <td>
                     {% formrow field using "form/question/no_label.html" %}
                   </td>
                 {% endfor %}
+                {% for field in f.hidden_fields %}{% formfield field %}{% endfor %}
               </tr>
             {% endfor %}
+          </tbody>
+        </table>
+      {% endif %}
+    {% endfor %}
+    {% for questiongroup_config, questiongroup_formset in formsets %}
+      {% if questiongroup_config.keyword in config.table_grouping.0 %}
+        {% with formset=questiongroup_formset config=questiongroup_config %}
+          {% if formset.max_num > formset.min_num %}
+            <div class="row list-action action-below-table">
+              <div class="small-12 columns">
+                <p><a data-add-item="" data-add-table-row data-questiongroup-keyword="{{ config.keyword }}" class="link is-{{ configuration_name }}" {% if formset.total_form_count >= formset.max_num or edit_mode != 'edit' %} style="display:none;"{% endif %}>{% trans 'Add More' %}</a></p>
+              </div>
+            </div>
           {% endif %}
-        {% endfor %}
-      </tbody>
-    </table>
+        {% endwith %}
+      {% endif %}
+    {% endfor %}
     {% for questiongroup_config, questiongroup_formset in formsets %}
       {% if questiongroup_config.keyword not in config.table_grouping.0 %}
         {% form form using "form/questiongroup/default.html" with config=questiongroup_config formset=questiongroup_formset %}

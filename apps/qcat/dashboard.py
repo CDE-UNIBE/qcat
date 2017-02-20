@@ -44,6 +44,12 @@ class CustomIndexDashboard(Dashboard):
         ))
 
         self.children.append(modules.ModelList(
+            title='API',
+            column=1,
+            models=('api.*', 'rest_framework.*')
+        ))
+
+        self.children.append(modules.ModelList(
             title='Configurations',
             column=1,
             models=('configuration.*',),
@@ -51,9 +57,9 @@ class CustomIndexDashboard(Dashboard):
         ))
 
         self.children.append(modules.ModelList(
-            title='Translations',
+            title='Notifications',
             column=1,
-            models=('configuration.models.Translation',)
+            models=('notifications.*',),
         ))
 
         self.children.append(modules.ModelList(
@@ -63,10 +69,11 @@ class CustomIndexDashboard(Dashboard):
         ))
 
         self.children.append(modules.ModelList(
-            title='API',
+            title='Translations',
             column=1,
-            models=('api.*', 'rest_framework.*')
+            models=('configuration.models.Translation',)
         ))
+
 
         # # append an app list module for "Administration"
         # self.children.append(modules.ModelList(

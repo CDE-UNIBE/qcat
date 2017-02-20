@@ -15,10 +15,11 @@
         <li><a href="#" data-type="all">{% trans "All SLM Data" %}</a></li>
         <li><a href="#" data-type="technologies">{% trans "SLM Technologies" %}</a></li>
         <li><a href="#" data-type="approaches">{% trans "SLM Approaches" %}</a></li>
+        <li><a href="#" data-type="watershed">{% trans "Watershed and Runoff" %}</a></li>
       </ul>
       <input type="hidden" name="type" id="search-type" value="all">
     </div>
-    <input type="submit" class="search-submit button" id="submit-search" value="Search">
+    <input type="submit" class="search-submit button" id="submit-search" value="{% trans "Search" %}">
   </div>
 {#  <div class="search-option">#}
 {#    <a href="{% url 'wocat:questionnaire_list' %}">{% trans "Advanced filter" %}</a>#}

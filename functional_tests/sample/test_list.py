@@ -96,6 +96,10 @@ class ListTest(FunctionalTest):
         link.click()
         self.toggle_all_sections()
         self.checkOnPage('Key 3')
+        # The button to create a summary is on the page.
+        self.findBy('xpath', '//a[@href="{summary_url}"]'.format(
+            summary_url=reverse('questionnaire_summary', args=[3])
+        ))
 
         # She goes to the list page and sees all 4 questionnaires available.
         self.browser.get(self.live_server_url + reverse(
@@ -276,6 +280,9 @@ class ListTest(FunctionalTest):
             EC.visibility_of_element_located(
                 (By.ID, "cat_4-heading")))
         self.findBy('id', 'cat_4-heading').click()
+        WebDriverWait(self.browser, 10).until(
+            EC.visibility_of_element_located(
+                (By.ID, "key_14-heading")))
         self.findBy('id', 'key_14-heading').click()
         self.findBy('id', 'key_14_value_14_1').click()
         self.apply_filter()
@@ -1048,7 +1055,9 @@ class ListTest(FunctionalTest):
         self.assertEqual(len(active_filters), 0)
 
         # She sees a datalist to filter by project
-        project_filter = self.findBy('id', 'filter-project')
+        project_filter = self.findBy(
+            'xpath', '//div/label[@for="filter-project"]/../div'
+        )
 
         url = self.browser.current_url
 
@@ -1060,7 +1069,12 @@ class ListTest(FunctionalTest):
                 (By.CLASS_NAME, "loading-indicator")))
 
         # She enters a project
-        project_filter.send_keys('The first Project (TFP)')
+        project_filter.click()
+
+        project_filter.find_element_by_xpath(
+            '//ul[@class="chosen-results"]/li[text()="The first Project (TFP)"]'
+        ).click()
+
         self.apply_filter()
         WebDriverWait(self.browser, 10).until(
             EC.invisibility_of_element_located(
@@ -1085,21 +1099,6 @@ class ListTest(FunctionalTest):
         filter_1 = self.findBy('xpath', '//div[@id="active-filters"]//li[1]')
         self.assertIn('The first Project (TFP)', filter_1.text)
 
-        # She enters another project which does not exist
-        project_filter.clear()
-        project_filter.send_keys('Foo')
-        self.apply_filter()
-        WebDriverWait(self.browser, 10).until(
-            EC.invisibility_of_element_located(
-                (By.CLASS_NAME, "loading-indicator")))
-
-        # Nothing is visible with this filter
-        list_entries = self.findManyBy(
-            'xpath', '//article[contains(@class, "tech-item")]')
-        self.assertEqual(len(list_entries), 0)
-        filter_1 = self.findBy('xpath', '//div[@id="active-filters"]//li[1]')
-        self.assertIn('Foo', filter_1.text)
-
         # She hits the button to remove all filters
         self.findBy('id', 'filter-reset').click()
 
@@ -1121,7 +1120,10 @@ class ListTest(FunctionalTest):
         self.assertEqual(len(active_filters), 0)
 
         # She sets a filter again and reloads the page
-        project_filter.send_keys('first')
+        project_filter.click()
+        project_filter.find_element_by_xpath(
+            '//ul[@class="chosen-results"]/li[text()="The first Project (TFP)"]'
+        ).click()
         self.apply_filter()
         WebDriverWait(self.browser, 10).until(
             EC.invisibility_of_element_located(
@@ -1149,8 +1151,14 @@ class ListTest(FunctionalTest):
         self.assertIn('first', filter_1.text)
 
         # She sees the text in the input field matches the project
-        project_filter = self.findBy('id', 'filter-project')
-        self.assertEqual(project_filter.get_attribute('value'), 'first')
+
+        project_filter = self.findBy(
+            'xpath', '//div/label[@for="filter-project"]/../div/a/span'
+        )
+        self.assertEqual(
+            project_filter.text,
+            'The first Project (TFP)'
+        )
 
         # She removes the filter and sees that the input field has been
         # reset
@@ -1158,7 +1166,7 @@ class ListTest(FunctionalTest):
         WebDriverWait(self.browser, 10).until(
             EC.invisibility_of_element_located(
                 (By.CLASS_NAME, "loading-indicator")))
-        self.assertEqual(project_filter.get_attribute('value'), '')
+        self.assertEqual(project_filter.text, 'Select or type a project name')
 
         # She clicks "filter" again and sees that nothing is happening.
         # She submits the filter and sees no values were submitted
@@ -1170,14 +1178,6 @@ class ListTest(FunctionalTest):
         self.assertEqual(
             self.browser.current_url, '{}?'.format(
                 self.live_server_url + reverse(route_questionnaire_list)))
-
-        # She enters some imaginary project again and reloads the page
-        project_filter = self.findBy('id', 'filter-project')
-        project_filter.send_keys('Nonsense')
-        self.apply_filter()
-        WebDriverWait(self.browser, 10).until(
-            EC.invisibility_of_element_located(
-                (By.CLASS_NAME, "loading-indicator")))
 
     def test_filter_search(self):
 
@@ -1432,7 +1432,6 @@ class ListTest(FunctionalTest):
         search_field = self.findBy('xpath', '//input[@type="search"]')
         self.assertEqual(search_field.get_attribute('value'), '')
 
-
     def test_filter_country(self):
 
         # Alice goes to the list view
@@ -1452,9 +1451,11 @@ class ListTest(FunctionalTest):
             'xpath', '//div[@id="active-filters"]//li')
         self.assertEqual(len(active_filters), 0)
 
-        # She sees a datalist to filter by country
-        country_filter = self.findBy('id', 'filter-country')
 
+        # She sees a chosen container to filter by country and opens it
+        country_filter = self.findBy(
+            'xpath', '//div/label[@for="filter-country"]/../div')
+        country_filter.click()
         url = self.browser.current_url
 
         # She submits the filter and sees no values were submitted
@@ -1464,8 +1465,13 @@ class ListTest(FunctionalTest):
             EC.invisibility_of_element_located(
                 (By.CLASS_NAME, "loading-indicator")))
 
-        # She enters a country
-        country_filter.send_keys('Switzerland')
+        # She opens the country filter again and selects the value for
+        # switzerland
+        country_filter.click()
+        country_filter.find_element_by_xpath(
+            '//ul[@class="chosen-results"]/li[text()="Switzerland"]'
+        ).click()
+
         self.apply_filter()
         WebDriverWait(self.browser, 10).until(
             EC.invisibility_of_element_located(
@@ -1475,6 +1481,7 @@ class ListTest(FunctionalTest):
         # are filtered
         list_entries = self.findManyBy(
             'xpath', '//article[contains(@class, "tech-item")]')
+
         self.assertEqual(len(list_entries), 3)
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[1]//a['
@@ -1495,21 +1502,6 @@ class ListTest(FunctionalTest):
         self.assertEqual(len(active_filters), 1)
         filter_1 = self.findBy('xpath', '//div[@id="active-filters"]//li[1]')
         self.assertEqual(filter_1.text, 'Country: Switzerland')
-
-        # She enters another country which does not exist
-        country_filter.clear()
-        country_filter.send_keys('Foo Country')
-        self.apply_filter()
-        WebDriverWait(self.browser, 10).until(
-            EC.invisibility_of_element_located(
-                (By.CLASS_NAME, "loading-indicator")))
-
-        # Nothing is visible with this filter
-        list_entries = self.findManyBy(
-            'xpath', '//article[contains(@class, "tech-item")]')
-        self.assertEqual(len(list_entries), 0)
-        filter_1 = self.findBy('xpath', '//div[@id="active-filters"]//li[1]')
-        self.assertEqual(filter_1.text, 'Country: Foo Country')
 
         # She hits the button to remove all filters
         self.findBy('id', 'filter-reset').click()
@@ -1532,7 +1524,10 @@ class ListTest(FunctionalTest):
         self.assertEqual(len(active_filters), 0)
 
         # She sets a filter again and reloads the page
-        country_filter.send_keys('Afghanistan')
+        country_filter.click()
+        country_filter.find_element_by_xpath(
+            '//ul[@class="chosen-results"]/li[text()="Afghanistan"]'
+        ).click()
         self.apply_filter()
         WebDriverWait(self.browser, 10).until(
             EC.invisibility_of_element_located(
@@ -1560,8 +1555,13 @@ class ListTest(FunctionalTest):
         self.assertEqual(filter_1.text, 'Country: Afghanistan')
 
         # She sees the text in the input field matches the country
-        country_filter = self.findBy('id', 'filter-country')
-        self.assertEqual(country_filter.get_attribute('value'), 'Afghanistan')
+        selected_country = self.findBy(
+            'class_name', 'chosen-single'
+        ).find_element_by_tag_name('span')
+        self.assertEqual(
+            selected_country.text,
+            'Afghanistan'
+        )
 
         # She removes the filter and sees that the input field has been
         # reset
@@ -1569,7 +1569,7 @@ class ListTest(FunctionalTest):
         WebDriverWait(self.browser, 10).until(
             EC.invisibility_of_element_located(
                 (By.CLASS_NAME, "loading-indicator")))
-        self.assertEqual(country_filter.get_attribute('value'), '')
+        self.assertEqual(selected_country.text, 'Select or type a country name')
 
         # She clicks "filter" again and sees that nothing is happening.
         # She submits the filter and sees no values were submitted
@@ -1581,23 +1581,6 @@ class ListTest(FunctionalTest):
         self.assertEqual(
             self.browser.current_url, '{}?'.format(
                 self.live_server_url + reverse(route_questionnaire_list)))
-
-        # She enters some imaginary country again and reloads the page
-        country_filter = self.findBy('id', 'filter-country')
-        country_filter.send_keys('Bar Country')
-        self.apply_filter()
-        WebDriverWait(self.browser, 10).until(
-            EC.invisibility_of_element_located(
-                (By.CLASS_NAME, "loading-indicator")))
-
-        url = self.browser.current_url
-        self.browser.get(url)
-
-        # The input remains although the country does not exist.
-        country_filter = self.findBy('id', 'filter-country')
-        # TODO: This is not entirely correct as " " is turned to "+".
-        # Fix it if you like.
-        self.assertEqual(country_filter.get_attribute('value'), 'Bar+Country')
 
 
 @override_settings(ES_INDEX_PREFIX=TEST_INDEX_PREFIX)
@@ -1659,6 +1642,10 @@ class ListTestLinks(FunctionalTest):
         self.submit_form_step()
 
         # She also links another questionnaire
+        self.wait_for(
+            'xpath',
+            '//a[contains(@href, "/edit/") and contains(@href, "cat_5")]'
+        )
         self.click_edit_section('cat_5')
         self.findBy(
             'xpath', '//input[contains(@class, "link-search-field")]'
@@ -1700,6 +1687,9 @@ class ListTestLinks(FunctionalTest):
         self.findBy('name', 'qg_1-0-original_key_1').send_keys('Foo')
         self.findBy('name', 'qg_1-0-original_key_3').send_keys('Bar')
         self.submit_form_step()
+        btn = '//a[contains(@href, "/edit/") and contains(@href, "cat_5")]'
+        self.wait_for('xpath', btn)
+
         self.click_edit_section('cat_5')
         self.findBy(
             'xpath', '//input[contains(@class, "link-search-field")]'
@@ -2060,6 +2050,7 @@ class ListTestStatus(FunctionalTest):
 
         # The moderator publishes the questionnaire
         self.browser.get(url)
+        self.wait_for('id', 'review-panel')
         self.review_action('review')
         self.review_action('publish')
 

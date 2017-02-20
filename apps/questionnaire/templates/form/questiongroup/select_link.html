@@ -20,6 +20,8 @@
 
   {{ formset.management_form }}
 
+  {% include "form/errors.html" with errors=formset.non_form_errors %}
+
   {% form form using %}
 
     {% for qg_form in formset.forms %}

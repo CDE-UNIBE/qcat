@@ -1,0 +1,23 @@
+{% load i18n %}
+
+<div class="small-4 columns location">
+  {% include 'summary/partial/title_bar.html' with title=title %}
+  <img src="{{ content.map.url }}">
+  <p class="location_text">
+    <b>{{ content.infos.location.title }}:</b> {{ content.infos.location.text }}
+  </p>
+  <p><b>{{ content.infos.sites.title }}:</b> {{ content.infos.sites.text }}</p>
+  <div class="paragraph"><b>{% trans "Geo-reference" %}</b>
+    <ul class="bullets">
+      {% for list_item in content.infos.geo_reference %}
+        <li>
+          {{ list_item }}
+        </li>
+      {% endfor %}
+    </ul>
+  </div>
+  <p><b>{{ content.infos.spread.title }}:</b> {{ content.infos.spread.text }}</p>
+  <p><b>{{ content.infos.date.title }}:</b> {{ content.infos.date.text }}</p>
+  <b>{{ content.infos.introduction.title }}</b><br>
+  {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.infos.introduction.items %}
+</div>

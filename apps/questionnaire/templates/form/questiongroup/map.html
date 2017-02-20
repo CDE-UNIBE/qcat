@@ -4,22 +4,13 @@
 {% endcomment %}
 
 {% load i18n %}
+{% load compress %}
 {% load floppyforms %}
 {% load list_to_columns %}
 {% load sekizai_tags %}
 {% load staticfiles %}
 
-{% addtoblock 'js' %}
-  <script src="{% static 'js/ol.min.js' %}" type="text/javascript"></script>
-  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
-  <script src="{% static 'js/map.min.js' %}"></script>
-{% endaddtoblock %}
-
-{% addtoblock 'css' %}
-  <link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
-{% endaddtoblock %}
-
-<div class="questiongroup">
+<div class="questiongroup" id="form-map-questiongroup-{{ config.keyword }}">
 
   {% if config.label %}
     <{{ config.label_tag|default:"h4" }} class="{% if config.label_class %}{{ config.label_class }}{% endif %}">
@@ -31,106 +22,104 @@
 
   {{ formset.management_form }}
 
+  {% include "form/errors.html" with errors=formset.non_form_errors %}
+
   {% for qg_form in formset.forms %}
 
     <div class="row list-item{% if config.row_class %} {{ config.row_class }}{% endif %}{% if formset.max_num > formset.min_num %} is-removable" data-questiongroup-keyword="{{ config.keyword }}{% endif %}">
 
       <div class="map-container">
         <div class="map-controls">
-          <input type="radio" id="{{ config.keyword }}_{{ forloop.counter }}_1" value="draw" name="map-actions" previousvalue="checked">
-          <label class="button small tip-right" for="{{ config.keyword }}_{{ forloop.counter }}_1" title="{% trans "Add a point by clicking on the map" %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-location2"></use></svg>
-          </label>
-          <input type="radio" id="{{ config.keyword }}_{{ forloop.counter }}_2" value="modify" name="map-actions" previousvalue="false" disabled="disabled">
-          <label class="button small tip-right map-btn-disabled map-btn-toggle" for="{{ config.keyword }}_{{ forloop.counter }}_2" title="{% trans "Click and hold an existing point on the map to move it." %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-edit"></use></svg>
-          </label>
-          <input type="radio" id="{{ config.keyword }}_{{ forloop.counter }}_3" value="delete" name="map-actions" previousvalue="false" disabled="disabled">
-          <label class="button small tip-right map-btn-disabled map-btn-toggle" for="{{ config.keyword }}_{{ forloop.counter }}_3" title="{% trans "Delete an existing point on the map by clicking it." %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-cross2"></use></svg>
-          </label>
-          <button type="button" class="button small tip-right has-top-margin button-feature-count" title="{% trans "Number of points on the map" %}" data-tooltip="">
-          </button>
-          <button type="button" class="button small tip-right button-show-features map-btn-disabled map-btn-toggle" title="{% trans "Zoom to all points on the map" %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-shrink"></use></svg>
-          </button>
-          <button type="button" class="button small tip-right button-delete-features map-btn-danger map-btn-disabled map-btn-toggle" title="{% trans "Delete all points from the map" %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-bin"></use></svg>
-          </button>
-          <button type="button" class="button small tip-right map-layers-show has-top-margin" title="{% trans "Show and change the map layer" %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-stack"></use></svg>
-          </button>
-          <button type="button" class="button small tip-right map-coordinates-show" title="{% trans "Set a point based on GPS coordinates" %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-compass2"></use></svg>
-          </button>
-          <button type="button" class="button small tip-right map-search-show" title="{% trans "Search and zoom to a location on the map" %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-search"></use></svg>
-          </button>
-          <button type="button" class="button small tip-right map-change-size has-top-margin" title="{% trans "Change the size of the map" %}" data-tooltip="">
-            <svg class="icon-lines is-inline"><use xlink:href="#icon-enlarge2"></use></svg>
-          </button>
+          <div class="map-controls-group">
+            <input type="radio" id="{{ config.keyword }}_{{ forloop.counter }}_1" value="draw" name="map-actions" previousvalue="checked">
+            <label class="map-controls-button button small tip-right" for="{{ config.keyword }}_{{ forloop.counter }}_1" title="{% trans "Add a point by clicking on the map" %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-location2"></use></svg>
+            </label>
+            <input type="radio" id="{{ config.keyword }}_{{ forloop.counter }}_2" value="modify" name="map-actions" previousvalue="false" disabled="disabled">
+            <label class="map-controls-button button small tip-right map-btn-disabled map-btn-toggle" for="{{ config.keyword }}_{{ forloop.counter }}_2" title="{% trans "Click and hold an existing point on the map to move it." %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-edit"></use></svg>
+            </label>
+            <input type="radio" id="{{ config.keyword }}_{{ forloop.counter }}_3" value="delete" name="map-actions" previousvalue="false" disabled="disabled">
+            <label class="map-controls-button button small tip-right map-btn-disabled map-btn-toggle" for="{{ config.keyword }}_{{ forloop.counter }}_3" title="{% trans "Delete an existing point on the map by clicking it." %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-cross2"></use></svg>
+            </label>
+          </div>
+          <div class="map-controls-group">
+            <button type="button" class="map-controls-button button small tip-right button-feature-count js-btn-feature-count" title="{% trans "Number of points on the map" %}" data-tooltip="">
+            </button>
+            <button type="button" class="map-controls-button button small tip-right map-btn-disabled map-btn-toggle js-btn-show-features" title="{% trans "Zoom to all points on the map" %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-shrink"></use></svg>
+            </button>
+            <button type="button" class="map-controls-button button small tip-right map-btn-danger map-btn-disabled map-btn-toggle js-btn-delete-features" title="{% trans "Delete all points from the map" %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-bin"></use></svg>
+            </button>
+          </div>
+          <div class="map-controls-group">
+            <button type="button" class="map-controls-button button small tip-right js-btn-coordinates-show" title="{% trans "Set a point based on GPS coordinates" %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-compass2"></use></svg>
+            </button>
+            <button type="button" class="map-controls-button button small tip-right js-btn-search-show" title="{% trans "Search and zoom to a location on the map" %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-search"></use></svg>
+            </button>
+          </div>
         </div>
-        <div class="map-coordinates map-menu hide">
-          <a class="map-coordinates-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
+        <div class="map-overlay hide js-map-points">
+          <a class="map-overlay-close js-btn-overlay-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
+          <div class="row">
+            <div class="small-12 columns"><h4>{% trans "List of all points on the map:" %}</h4></div>
+            <div class="small-12 columns map-points-list" data-empty-text="{% trans 'No points on the map.' %}"><!-- Points list --></div>
+          </div>
+        </div>
+        <div class="map-overlay hide js-map-coordinates">
+          <a class="map-overlay-close js-btn-overlay-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
           <div class="row map-coordinates-parse">
             <br/>
-            {% trans 'Please enter the coordinates in the field below. The coordinates must be of format "Latitude, Longitude", eg. "46.9526, 7.4352".' as msg %}
+            {% trans 'Please enter the coordinates in the field below. The coordinates must be in decimal degrees of format "Latitude, Longitude", eg. 46.9526, 7.4352. Use the link below to convert from degrees, minutes and seconds to decimal degrees.' as msg %}
             {% include "form/helptext.html" with helptext=msg %}
+            <div class="small-12 columns map-converter-link">
+              <a href="http://www.latlong.net/degrees-minutes-seconds-to-decimal-degrees" target="_blank">http://www.latlong.net</a>
+            </div>
             <div class="small-9 columns">
               <label for="map-coordinates-field">{% trans "Coordinates:" %}</label>
               <input type="text" class="map-coordinates-field" placeholder="46.9526, 7.4352">
             </div>
             <div class="small-3 columns">
-              <label></label>
-              <button type="button" class="button small button-parse-coordinates">Parse</button>
+              <label>&nbsp;</label>
+              <button type="button" class="button small button-parse-coordinates js-btn-parse-coordinates">Parse</button>
             </div>
-            <div class="small-12 columns map-coordinates-log">
-              <p><!-- Log --></p>
-            </div>
+            <div class="small-12 columns map-coordinates-log"><!-- Log --></div>
+            <div class="small-12 columns"><label>{% trans "List of all points on the map:" %}</label></div>
+            <div class="small-12 columns map-points-list" data-empty-text="{% trans 'No points on the map.' %}"><!-- Points list --></div>
           </div>
         </div>
-        <div class="map-layers map-menu hide">
-          <a class="map-layers-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
-          <div class="row map-layers-list">
-            <br/>
-            {% trans 'Select a layer from the list below.' as msg %}
-            {% include "form/helptext.html" with helptext=msg %}
-            <label>
-              <input type="radio" value="osm" name="map-layers">
-              <span>OpenStreetMap</span>
-            </label>
-            <label>
-              <input type="radio" value="opentopo" name="map-layers">
-              <span>OpenTopoMap</span>
-            </label>
-            <label>
-              <input type="radio" value="komoot" name="map-layers" checked="checked">
-              <span>Komoot (OSM)</span>
-            </label>
-            <label>
-              <input type="radio" value="landscape" name="map-layers">
-              <span>Thunderforest Landscape</span>
-            </label>
-            <label>
-              <input type="radio" value="worldtopo" name="map-layers">
-              <span>Esri WorldTopoMap</span>
-            </label>
-            <label>
-              <input type="radio" value="aerial" name="map-layers">
-              <span>Esri WorldImagery</span>
-            </label>
-          </div>
-        </div>
-        <div class="map-search map-menu hide">
-          <a class="map-search-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
+        <div class="map-overlay hide js-map-search">
+          <a class="map-overlay-close js-btn-overlay-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
           <div class="row map-search-container">
             <br/>
             {% trans 'Enter the name of a village, city, etc. in the textfield below and select one of the results to zoom to its location.' as msg %}
             {% include "form/helptext.html" with helptext=msg %}
-            <input type="search" class="map-search-field" placeholder="Search for a village, city, etc." data-translation-no-results="{% trans 'No results found' %}" data-translation-too-many-results="{% trans 'Too many results found, please narrow the search' %}" data-current-locale="{{ request.LANGUAGE_CODE }}">
+            <input type="search" class="js-map-search-field" placeholder="Search for a village, city, etc." data-translation-no-results="{% trans 'No results found' %}" data-translation-too-many-results="{% trans 'Too many results found, please narrow the search' %}" data-current-locale="{{ request.LANGUAGE_CODE }}">
           </div>
         </div>
-        <div class="map-form-container"></div>
+        <div>
+          <div class="map-layers">
+            <div class="row">
+              <div class="columns small-4">
+                {% include 'parts/map_layers_select.html' with select_name='map-layers-0' selected='googlehybrid'%}
+              </div>
+              <div class="columns small-4">
+                <div class="nstSlider map-layers-slider" data-range_min="0" data-range_max="100"
+                           data-cur_min="0">
+                  <div class="leftGrip"></div>
+                </div>
+              </div>
+              <div class="columns small-4">
+                {% include 'parts/map_layers_select.html' with select_name='map-layers-1' selected='osm'%}
+              </div>
+            </div>
+          </div>
+          <div class="map-form-container"><!-- Map --></div>
+        </div>
       </div>
 
       {% for field in qg_form.visible_fields %}
@@ -150,3 +139,26 @@
   {% endfor %}
 
 </div>
+
+{% addtoblock 'js' %}
+  <script src="https://maps.googleapis.com/maps/api/js?v=3&key={{ GOOGLE_MAPS_JAVASCRIPT_API_KEY }}"></script>
+  <script type="text/javascript" src="{% static 'js/ol3gm.min.js' %}"></script>
+  <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+  <script src="{% static 'js/map.min.js' %}"></script>
+{% endaddtoblock %}
+
+{% addtoblock 'js' %}
+  {% compress js %}
+  <script>
+  $(function() {
+    $('#form-map-questiongroup-{{ config.keyword }}').bindMapActions();
+  });
+  </script>
+  {% endcompress %}
+{% endaddtoblock %}
+
+{% addtoblock 'css' %}
+  <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" />
+  <link rel="stylesheet" href="{% static 'css/ol3gm.css' %}" type="text/css">
+  <link rel="stylesheet" href="{% static 'css/ol.css' %}" type="text/css">
+{% endaddtoblock %}

@@ -21,6 +21,8 @@
 <div{% if config.questiongroup_condition %} id="{{ config.questiongroup_condition }}"{% endif %} class="questiongroup{% if config.numbered %} questiongroup-numbered-{{ config.numbered }}{% endif %}{% if config.numbered == 'prefix' %} sortable{% endif %}">
 {{ formset.management_form }}
 
+{% include "form/errors.html" with errors=formset.non_form_errors %}
+
 {% for qg_form in formset.forms %}
 
   <div class="list-item row{% if config.row_class %} {{ config.row_class }}{% endif %}">
@@ -59,6 +61,7 @@
                   {% formrow field using "form/question/no_label.html" %}
                 </td>
               {% endif %}
+              {% for field in qg_form.hidden_fields %}{% formfield field %}{% endfor %}
             {% endfor %}
           </tr>
         </tbody>

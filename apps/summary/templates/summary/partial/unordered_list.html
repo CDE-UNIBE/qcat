@@ -1,0 +1,9 @@
+<ul {% if class %}class="{{ class }}"{% endif %}>
+  {% for list_item in list_items %}
+    <li {% if list_item.highlighted %} class="true"{% endif %}>
+      {% if list_item.title %}<b>{{ list_item.title }}:</b>{% endif %}
+      {{ list_item.text|safe}}
+      {% if list_item.subtext %}<span class="subtext">{{ list_item.subtext }}</span>{% endif %}
+    </li>
+  {% endfor %}
+</ul>

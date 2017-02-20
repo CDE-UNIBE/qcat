@@ -1,0 +1,20 @@
+{% comment %}
+
+  This partial template can be included to display a list of WOCAT
+  Watersheds.
+
+  Required attributes:
+
+  - list_values
+
+{% endcomment %}
+
+{% load i18n %}
+
+{% for list_entry in list_values %}
+  {% with configuration=list_entry.configuration|stringformat:"s"|add:"/questionnaire/partial/list_item.html" %}
+    {% include configuration with item=list_entry %}
+  {% endwith %}
+{% empty %}
+  <p class="questionnaire-list-empty">{% trans "No Watershed found." %}</p>
+{% endfor %}

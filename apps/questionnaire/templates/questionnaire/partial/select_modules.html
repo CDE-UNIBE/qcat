@@ -1,0 +1,15 @@
+{% load i18n %}
+
+{% if module_error %}
+  <div class="alert-box alert module-gallery-error">
+    {{ module_error }}
+  </div>
+{% endif %}
+
+{% for module in modules %}
+  {% with template_name=module.0|add:'/partial/select_module.html' existing=module.1 %}
+    {% include template_name %}
+  {% endwith %}
+{% empty %}
+  <p>{% trans "No modules found." %}</p>
+{% endfor %}

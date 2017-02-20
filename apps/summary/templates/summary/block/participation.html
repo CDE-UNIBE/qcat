@@ -1,0 +1,52 @@
+<div class="row compact">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+  </div>
+</div>
+<div class="row">
+  <div class="small-12 columns">
+    <h5>{{ content.stakeholders.title }}</h5>
+    <ul class="bullets">
+    {% for list_item in content.stakeholders.items  %}
+      <li>
+       {{ list_item }}
+      </li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+<div class="row avoidbreak">
+<hr>
+  <div class="small-12 columns">
+      <h5>{{ content.involvement.title }}</h5>
+      {% include 'summary/partial/range_vertical_title.html' with class="highlights_list" list_items=content.involvement.partials %}
+  </div>
+</div>
+<div class="row avoidbreak">
+<hr>
+  <div class="small-12 columns">
+    <p>
+      <img src="{{ content.flow_chart.url }}" align="left" class="flow-chart">
+      <p><strong>{{ content.flow_chart.title }}</strong></p>
+      {{ content.flow_chart.text|linebreaksbr }}
+    </p>
+  </div>
+</div>
+<div class="row avoidbreak">
+<hr>
+  <div class="small-12 columns">
+    <div class="row">
+      <div class="small-12 columns">
+        <h5>{{ content.decision_making.title }}</h5>
+      </div>
+    </div>
+    <div class="row">
+      {% for item in content.decision_making.elements %}
+      <div class="small-6 columns">
+          <p>{{ item.title }}</p>
+          {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=item.items %}
+      </div>
+      {% endfor %}
+    </div>
+  </div>
+</div>

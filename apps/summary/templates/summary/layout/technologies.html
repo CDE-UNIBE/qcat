@@ -1,0 +1,32 @@
+{% load static %}
+
+<!DOCTYPE html>
+<html lang="en">
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Summary</title>
+    <link rel="stylesheet" href="{{ request.scheme }}://{{ request.get_host }}{% static 'css/summary.css' %}" />
+  </head>
+  <body class="summary is-technologies">
+    {% include 'summary/block/header_image.html' with content=block.header_image.partials %}
+    {% include 'summary/block/title.html' with content=block.title.partials %}
+    <div class="row">
+      {% include 'summary/block/description.html' with content=block.description.partials title=block.description.title %}
+      {% include 'summary/block/location.html' with content=block.location.partials title=block.location.title %}
+    </div>
+    {% include 'summary/block/two_images_with_caption.html' with content=block.images.partials %}
+    {% include 'summary/block/classification.html' with content=block.classification.partials title=block.classification.title %}
+    {% include 'summary/block/specifications.html' with content=block.technical_drawing.partials title=block.technical_drawing.title %}
+    {% include 'summary/block/establishment_and_maintenance.html' with content=block.establishment_costs.partials title=block.establishment_costs.title %}
+    {% include 'summary/block/natural_environment.html' with content=block.natural_environment.partials title=block.natural_environment.title %}
+    {% include 'summary/block/human_environment.html' with content=block.human_environment.partials title=block.human_environment.title %}
+    {% include 'summary/block/impacts.html' with content=block.impacts.partials title=block.impacts.title %}
+    {% include 'summary/block/climate_change.html' with content=block.climate_change %}
+    {% include 'summary/block/adoption_adaptation.html' with content=block.adoption_adaptation.partials title=block.adoption_adaptation.title %}
+    {% include 'summary/block/conclusion.html' with content=block.conclusion.partials title=block.conclusion.title %}
+    {% include 'summary/block/references.html' with content=block.references.partials title=block.references.title %}
+    {% include 'summary/block/project_institution.html' with content=block.project_institution title=block.project_institution.title %}
+  </body>
+</html>

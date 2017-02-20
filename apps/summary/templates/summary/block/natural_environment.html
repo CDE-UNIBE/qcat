@@ -1,0 +1,96 @@
+<div class="row compact">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+  </div>
+</div>
+<div class="row">
+  <div class="small-3 columns">
+      <h5>{{ content.rainfall.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.rainfall.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.zone.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.zone.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.specifications.title }}</h5>
+      {{ content.specifications.text }}
+  </div>
+  <div class="small-3 columns">
+  </div>
+</div>
+<div class="row">
+<hr>
+  <div class="small-3 columns">
+      <h5>{{ content.slope.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.slope.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.landforms.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.landforms.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.altitude.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.altitude.items %}
+  </div>
+  <div class="small-3 columns">
+    <h5>{{ content.convex.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.convex.items %}
+  </div>
+</div>
+<div class="row">
+<hr>
+  <div class="small-3 columns">
+      <h5>{{ content.soil_depth.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.soil_depth.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.soil_texture_top.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.soil_texture_top.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.soil_texture_below.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.soil_texture_below.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.topsoil.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.topsoil.items %}
+  </div>
+  <div class="small-3 columns">
+  </div>
+</div>
+<div class="row">
+<hr>
+  <div class="small-3 columns">
+      <h5>{{ content.groundwater.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.groundwater.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.surface_water.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.surface_water.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.water_quality.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.water_quality.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.salinity.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.salinity.items %}
+      <br>
+      <h5>{{ content.flooding.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.flooding.items %}
+  </div>
+</div>
+<div class="row">
+  <hr>
+  <div class="small-3 columns">
+      <h5>{{ content.species.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.species.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.habitat.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.habitat.items %}
+  </div>
+  <div class="small-3 columns"></div>
+  <div class="small-3 columns"></div>
+</div>

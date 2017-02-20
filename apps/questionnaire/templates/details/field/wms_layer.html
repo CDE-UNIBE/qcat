@@ -1,0 +1,9 @@
+{% load i18n %}
+{% load static %}
+
+{#<div class="file-preview-container">#}
+  <img src="{% static 'assets/img/ajax-loader.gif' %}" alt="{% trans "Loading ..." %}" class="js-wms-preview" data-wms-url="{{ wms_url }}" data-wms-layer="{{ layer }}">
+{#  <span class="text-content"><span>#}
+{#    <svg class="icon"><use xlink:href="#icon-map"></use></svg>#}
+{#  </span></span>#}
+{#</div>#}

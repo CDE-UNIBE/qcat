@@ -1,4 +1,6 @@
-<h3>{{ numbering|default:'' }} {{ label }}</h3>
+{% if label_position != 'none' %}
+  <{{ label_tag|default:"h3" }}{% if label_class %} class="{{ label_class }}"{% endif %}>{{ numbering|default:'' }} {{ label }}</{{ label_tag|default:"h3" }}>
+{% endif %}
 {% if media_content %}
   {% include 'details/media_gallery.html' %}
 {% endif %}

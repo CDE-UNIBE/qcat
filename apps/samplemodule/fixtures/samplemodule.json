@@ -1,0 +1,194 @@
+[
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "samplemodule": {
+          "label": {
+            "en": "ModKey 1",
+            "es": "ModClave 1"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 23001
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "samplemodule": {
+          "label": {
+            "en": "ModSubcategory 1_1",
+            "es": "ModSubcategoría 1_1"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 24701
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "samplemodule": {
+          "label": {
+            "en": "ModCategory 1",
+            "es": "ModCategoría 1"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 24901
+  },
+  {
+    "fields": {
+      "translation_type": "category",
+      "data": {
+        "samplemodule": {
+          "label": {
+            "en": "ModSection 1",
+            "es": "ModSection 1"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 24991
+  },
+  {
+    "fields": {
+      "keyword": "modkey_01",
+      "translation": 23001,
+      "configuration": {
+        "type": "char"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 22001
+  },
+  {
+    "fields": {
+      "keyword": "modqg_01",
+      "translation": null,
+      "configuration": {}
+    },
+    "model": "configuration.questiongroup",
+    "pk": 22001
+  },
+  {
+    "fields": {
+      "keyword": "modqg_sample_01",
+      "translation": null,
+      "configuration": {
+        "inherited_configuration": "sample",
+        "inherited_questiongroup": "qg_1"
+      }
+    },
+    "model": "configuration.questiongroup",
+    "pk": 22002
+  },
+  {
+    "fields": {
+      "keyword": "modqg_sample_02",
+      "translation": null,
+      "configuration": {
+        "inherited_configuration": "sample",
+        "inherited_questiongroup": "qg_3"
+      }
+    },
+    "model": "configuration.questiongroup",
+    "pk": 22003
+  },
+  {
+    "fields": {
+      "keyword": "modsubcat_1_1",
+      "translation": 24701
+    },
+    "model": "configuration.category",
+    "pk": 22001
+  },
+  {
+    "fields": {
+      "keyword": "modcat_1",
+      "translation": 24901
+    },
+    "model": "configuration.category",
+    "pk": 22701
+  },
+  {
+    "fields": {
+      "keyword": "modsection_1",
+      "translation": 24991
+    },
+    "model": "configuration.category",
+    "pk": 22791
+  },
+  {
+    "pk": 22001,
+    "fields": {
+      "code": "samplemodule",
+      "description": "Description of Sample Module Configuration",
+      "active": true,
+      "activated": "2015-01-08T10:12:59.337Z",
+      "data": {
+        "sections": [
+          {
+            "keyword": "modsection_1",
+            "categories": [
+              {
+                "keyword": "modcat_1",
+                "view_options": {
+                  "template": "samplemodule_header",
+                  "with_metadata": true
+                },
+                "subcategories": [
+                  {
+                    "keyword": "modsubcat_1_1",
+                    "questiongroups": [
+                      {
+                        "keyword": "modqg_01",
+                        "questions": [
+                          {
+                            "keyword": "modkey_01",
+                            "view_options": {
+                              "in_list": true,
+                              "is_name": true
+                            }
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "modqg_sample_01",
+                        "questions": [
+                          {
+                            "keyword": "key_1"
+                          }
+                        ]
+                      },
+                      {
+                        "keyword": "modqg_sample_02",
+                        "questions": [
+                          {
+                            "keyword": "key_4"
+                          }
+                        ]
+                      }
+                    ]
+                  }
+                ]
+              }
+            ]
+          }
+        ]
+      },
+      "created": "2015-01-09T10:12:59.337Z",
+      "base_code": "",
+      "name": "SampleModule Configuration"
+    },
+    "model": "configuration.configuration"
+  }
+]

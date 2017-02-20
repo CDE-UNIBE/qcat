@@ -1,0 +1,16 @@
+{% extends 'base.html' %}
+
+{% load staticfiles %}
+{% load i18n %}
+
+{% block title %}{% trans "WOCAT Watershed" %}{% endblock %}
+
+{% block bodyclass %}layout-tech is-watershed{% endblock %}
+{% block navclass %}is-watershed{% endblock %}
+
+{% block header %}
+  {% include "wocat/partial/top.html" with current='watershed' %}
+{% endblock %}
+
+{% block bottom %}
+{% endblock %}

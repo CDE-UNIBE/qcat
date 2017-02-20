@@ -8,7 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db.models import Q
 from django.http import Http404
 from django.http import HttpResponseRedirect, JsonResponse
-from django.shortcuts import render, get_object_or_404, redirect, resolve_url
+from django.shortcuts import get_object_or_404, redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.utils.http import is_safe_url
 from django.utils.timezone import now
@@ -129,7 +129,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
             'status', flat=True
         )
         status_choices = dict(STATUSES)  # cast to dict for easier access.
-        return {status: status_choices[status] for status in statuses}
+        return {status: _(status_choices[status]) for status in statuses}
 
     def get_context_data(self, **kwargs):
         context = super().get_context_data(**kwargs)

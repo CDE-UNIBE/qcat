@@ -1,0 +1,11 @@
+{% comment %}
+  template for 'invite member'
+{% endcomment %}
+
+{% load i18n %}
+
+{% spaceless %}
+  <a href="{{ log.questionnaire.get_absolute_url }}" class="link">{{ log.questionnaire.code }}</a>
+  {% trans "has a new" %} {{ log.memberupdate.role }}: <a href="{% url 'user_details' log.memberupdate.affected.id %}" class="link">{{ log.memberupdate.affected.get_display_name }}</a>
+  ({% trans "invited by"  %} <a href="{% url 'user_details' log.catalyst_id %}" class="link">{{ log.catalyst.get_display_name }}</a>).
+{% endspaceless %}

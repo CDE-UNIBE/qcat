@@ -1,0 +1,28 @@
+{% for questiongroup in questiongroups %}
+  <div class="row impacts">
+    <div class="medium-3 columns">
+      <p>{{ config.label }}</p>
+    </div>
+    <div class="medium-9 columns output-impacts">
+      {% for question in questiongroup %}
+        {% if forloop.counter == 1 %}
+          <div class="row">
+            <div class="small-2 columns chart-measure-col-left">
+              <span class="chart-measure-label-left">{{ question }}</span>
+            </div>
+        {% elif forloop.counter == 2 %}
+            <div class="small-10 columns chart-measure-col-content">
+              {{ question }}
+        {% elif forloop.counter == 3 %}
+              <span class="chart-measure-label-right">{{ question }}</span>
+            </div>
+        {% else %}
+          M4{{ question }}
+        {% endif %}
+        {% if forloop.counter == 3 %}
+          </div>
+        {% endif %}
+      {% endfor %}
+    </div>
+  </div>
+{% endfor %}

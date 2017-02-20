@@ -20,7 +20,7 @@
         <div id="{{ config.keyword }}" class="content active">
   {% endif %}
 
-  <div class="small-12 medium-4 columns">
+  <div class="small-12 medium-4 columns{% if config.columns_class %} {{ config.columns_class }}{% endif %}">
     <label class="input-multiline">
       <input type="checkbox" class="cb-toggle-questiongroup" data-container="{{ config.keyword }}"{% if edit_mode != "edit" %} disabled="disabled"{% endif %}>
       <span{% if config.helptext %} class="has-tip" title="{{ config.helptext }}" aria-haspopup="true" data-tooltip=""{% endif %}>
@@ -29,9 +29,18 @@
       </span>
     </label>
   </div>
-  <div id="{{ config.keyword }}" class="small-12 medium-8 columns cb-toggle-questiongroup-content" style="display:none;">
+  <div id="{{ config.keyword }}"
+       class="small-12 medium-8 columns cb-toggle-questiongroup-content"
+       style="display:none;"
+      {% if config.questiongroup_to_options %}
+        data-questiongroup-to-options="{{ config.questiongroup_to_options|join:"," }}"
+        data-questiongroup-to-options-label="{{ config.label }}"
+        data-questiongroup-to-options-keyword="{{ config.keyword }}"
+      {% endif %}>
 
     {{ formset.management_form }}
+
+    {% include "form/errors.html" with errors=formset.non_form_errors %}
 
     {% for qg_form in formset.forms %}
 

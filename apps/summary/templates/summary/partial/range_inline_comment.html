@@ -1,0 +1,24 @@
+{% for range_item in list_items %}
+  <div class="row range" >
+    <div class="small-3 columns">
+      {{ range_item.label }}
+      <p class="comment">{{ range_item.comment }}</p>
+    </div>
+    <div class="small-9 columns no-wrap-container">
+      <div>
+        <div class="range_title range_min">
+          {{ range_item.min }}
+        </div>
+      </div>
+      <div>
+        {% for i in range_item.range %}
+          <div {% if i == range_item.selected %} class="range_true" {% endif %} class="range_square"></div>
+        {% endfor %}
+      </div>
+        <div class="range_title range_max">
+          {{ range_item.max }}
+        </div>
+    </div>
+  </div>
+{% endfor %}
+<hr>

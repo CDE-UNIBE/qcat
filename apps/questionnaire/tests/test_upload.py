@@ -57,8 +57,7 @@ class StoreFileTest(TestCase):
     def test_calls_get_file_extension_by_content_type(self, mock_func, mock_os):
         file = SimpleUploadedFile('img.png', open(valid_file, 'rb').read())
         file.content_type = 'image/png'
-        with self.assertRaises(Exception):
-            store_file(file)
+        store_file(file)
         mock_func.assert_called_once_with('image/png')
 
     @override_settings(UPLOAD_VALID_FILES=TEST_UPLOAD_VALID_FILES)

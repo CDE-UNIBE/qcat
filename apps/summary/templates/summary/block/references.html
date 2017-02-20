@@ -1,0 +1,23 @@
+<div class="row avoidbreak">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+  </div>
+  <div class="small-6 columns">
+    <h5>{{ content.compiler.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with list_items=content.compiler.items%}
+    <h5>{{ content.people.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with list_items=content.people.items %}
+  </div>
+  <div class="small-6 columns">
+    <h5>{{ content.references.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with list_items=content.references.items %}
+    </div>
+</div>
+<div class="row avoidbreak">
+  <div class="small-12 columns">
+    <h5>{{ content.more.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with list_items=content.more.items %}
+    <h5>{{ content.links.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with list_items=content.links.items %}
+  </div>
+</div>

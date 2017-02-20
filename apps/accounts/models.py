@@ -16,11 +16,14 @@ class User(AbstractBaseUser, PermissionsMixin):
 
     The user model has the following fields:
         * email (varchar, acts as username)
-        * name (varchar)
+        * firstname (varchar)
+        * lastname (varchar)
         * last_login (timestamp, automatically generated)
         * date_joined (timestamp, automatically generated)
         * is_superuser (boolean)
         * password (varchar, empty)
+        * language (varchar, empty)
+        * wants_messages (boolean, true)
 
     .. todo::
         How to handle the privileges with regard to different
@@ -32,6 +35,8 @@ class User(AbstractBaseUser, PermissionsMixin):
     lastname = models.CharField(max_length=255, null=True, blank=True)
     date_joined = models.DateTimeField(auto_now_add=True)
     typo3_session_id = models.CharField(max_length=255, blank=True)
+    # language = models.CharField(max_length=2, default='en', blank=True)
+    # wants_messages = models.BooleanField(default=True)
 
     USERNAME_FIELD = 'email'
     REQUIRED_FIELDS = []

@@ -1,0 +1,21 @@
+{% load static %}
+{% load i18n %}
+
+{% comment %}
+  Partially rendering the radio selection of this module.
+{% endcomment %}
+
+<div class="module-gallery-item">
+  <label class="module-gallery-label">
+    <svg class="icon-lines module-gallery-icon{% if existing %} is-unavailable{% endif %}"><use xlink:href="#icon-climate"></use></svg>
+    {% if existing %}
+      <svg class="icon-lines module-gallery-unavailable" data-tooltip="" title="{% trans 'This module exists already.' %}"><use xlink:href="#icon-information"></use></svg>
+    {% else %}
+      <input type="radio" id="module_cca" name="module" value="cca">
+    {% endif %}
+  </label>
+  <div class="module-gallery-description">
+    <span class="module-gallery-title">{% trans "Climate Change Adaptation Module" %}</span>
+    <p>{% trans "Questionnaire on Adaptation of SLM Technologies to Gradual Climate Changes and Climate-Related Extremes" %}</p>
+  </div>
+</div>

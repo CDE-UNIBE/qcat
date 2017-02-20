@@ -22,11 +22,11 @@
           {% for role_code, role_name in review_config.roles %}
           <div class="process-single-role">
             <h3 class="alert-box-title">
-              {% blocktrans with role=role_name %}
-              You are <strong>{{ role }}</strong> of this SLM Technology / Approach.
+              {% blocktrans with role=role_name questionnaire_type=questionnaire_type %}
+              You are <strong>{{ role }}</strong> of this {{ questionnaire_type }}.
               {% endblocktrans %}
             </h3>
-            {% include 'wocat/help/questionnaire_roles.html' with current_role=role_code %}
+            {% include 'wocat/help/questionnaire_roles.html' with current_role=role_code questionnaire_type=questionnaire_type %}
           </div>
           {% endfor %}
           <p><a href="{% url 'wocat:help_review_process' %}" class="link">{% trans "Learn more about the review process." %}</a></p>
@@ -35,19 +35,23 @@
 
         <div style='display:none'><input type='hidden' name='csrfmiddlewaretoken' value='{{ review_config.csrf_token_value }}'/></div>
         {% if review_config.review_status == 0 %}
-        {% include 'details/review_panel/welcome.html' %}
+          {% if review_config.data_type == 'technologies' or review_config.data_type == 'approaches' %}
+            {% include 'details/review_panel/welcome_qtqa.html' %}
+          {% elif review_config.data_type == 'watershed' %}
+            {% include 'details/review_panel/welcome_watershed.html' %}
+          {% endif %}
         {% elif review_config.review_status == 1 %}
         {# Edit #}
-        {% include 'details/review_panel/draft.html' %}
+        {% include 'details/review_panel/draft.html' with questionnaire_type=questionnaire_type %}
         {% elif review_config.review_status == 2 %}
         {# Review #}
-        {% include 'details/review_panel/review.html' %}
+        {% include 'details/review_panel/review.html' with questionnaire_type=questionnaire_type %}
         {% elif review_config.review_status == 3 %}
         {# Publish #}
-        {% include 'details/review_panel/publish.html' %}
+        {% include 'details/review_panel/publish.html' with questionnaire_type=questionnaire_type %}
         {% elif review_config.review_status == 4 %}
         {# Edit published questionnaire #}
-        {% include 'details/review_panel/edit.html' %}
+        {% include 'details/review_panel/edit.html' with questionnaire_type=questionnaire_type %}
         {% endif %}
       </form>
     </div>

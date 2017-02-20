@@ -1,0 +1,18 @@
+<div class="row">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+    <h5>{{ content.impacts.title }}</h5>
+    {% include 'summary/partial/range_inline_comment_vertical_title.html' with class="highlights_list" list_items=content.impacts.items %}
+  </div>
+</div>
+<div class="row">
+  <div class="small-6 columns">
+    <h5>{{ content.motivation.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.motivation.items %}
+  </div>
+  <div class="small-6 columns">
+    <h5>{{ content.sustainability.title }}</h5>
+    {{ content.sustainability.subtitle }}
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.sustainability.items %}
+  </div>
+</div>

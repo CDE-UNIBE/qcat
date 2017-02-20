@@ -19,10 +19,10 @@ class TranslationTest(FunctionalTest):
         # She sees that the page is in English because the available languages
         # are written in English.
         self.checkOnPage('English')
-        self.checkOnPage('Spanish')
+        self.checkOnPage('Español')
 
         # She changes the language to Spanish and sees that the available
         # languages are now written in Spanish.
         self.changeLanguage('es')
-        self.checkOnPage('Inglés')
+        self.checkOnPage('English')
         self.checkOnPage('Español')

@@ -156,6 +156,12 @@ input[type=checkbox].cb-long-label {
     margin-left: 1.5rem;
   }
 }
+fieldset.row.fieldset-no-border {
+  border: none;
+}
+fieldset.row.fieldset-no-padding {
+  padding: 0.5rem;
+}
 
 fieldset.row.has-changes {
   border-color: $primary-color;
@@ -191,6 +197,18 @@ form .single-item.single-item-checkbox-other {
 .questiongroup .row.list-item.no-bottom-margin {
   margin-bottom: 0;
   padding-bottom: 0;
+}
+
+select[disabled]+div.chosen-disabled {
+  opacity: 1 !important;
+
+  .chosen-single {
+    background: lighten(#ddd, 5);
+  }
+
+  .chosen-single div {
+    display: none;
+  }
 }
 
 /* USER SEARCH */

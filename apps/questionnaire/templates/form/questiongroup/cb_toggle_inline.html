@@ -24,6 +24,8 @@
 
   {{ formset.management_form }}
 
+  {% include "form/errors.html" with errors=formset.non_form_errors %}
+
   {% for qg_form in formset.forms %}
     <div class="list-item row{% if config.row_class %} {{ config.row_class }}{% endif %}{% if formset.max_num > formset.min_num %} is-removable" data-questiongroup-keyword="{{ config.keyword }}{% endif %}">
       <div class="small-6 columns">

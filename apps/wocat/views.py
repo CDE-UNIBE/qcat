@@ -4,7 +4,6 @@ from django.template.loader import render_to_string
 from django.views.generic import TemplateView
 
 from questionnaire.views import (
-    generic_questionnaire_details,
     generic_questionnaire_list,
 )
 
@@ -15,34 +14,6 @@ class HomeView(TemplateView):
 
     """
     template_name = 'wocat/home.html'
-
-    def get_context_data(self, **kwargs):
-        context = super().get_context_data(**kwargs)
-        context.update(**generic_questionnaire_list(
-            self.request, 'wocat', template=None
-        ))
-        return context
-
-
-def questionnaire_details(request, identifier):
-    """
-    View to show the details of an existing WOCAT questionnaire.
-
-    .. seealso::
-        The actual rendering of the details is handled by the generic
-        questionnaire function
-        :func:`questionnaire.views.questionnaire_details`
-
-    Args:
-        ``request`` (django.http.HttpResponse): The request object.
-
-        ``identifier`` (str): The identifier of the Questionnaire
-        object.
-
-    Returns:
-        ``HttpResponse``. A rendered Http Response.
-    """
-    return generic_questionnaire_details(request, identifier, 'wocat', 'wocat')
 
 
 def questionnaire_list_partial(request):

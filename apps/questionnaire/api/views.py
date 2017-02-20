@@ -5,6 +5,7 @@ from django.core.paginator import EmptyPage
 from django.http import Http404
 from django.utils.functional import cached_property
 from django.utils.translation import get_language
+from elasticsearch import TransportError
 from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
@@ -12,11 +13,12 @@ from rest_framework.utils.urls import remove_query_param, replace_query_param
 
 from api.views import LogUserMixin, PermissionMixin
 from configuration.cache import get_configuration
+from configuration.configured_questionnaire import ConfiguredQuestionnaire
 from search.search import advanced_search, get_element
 from ..conf import settings
 from ..models import Questionnaire
 from ..serializers import QuestionnaireSerializer
-from ..utils import get_list_values
+from ..utils import get_list_values, get_questionnaire_data_in_single_language
 from ..view_utils import ESPagination, get_paginator, get_page_parameter
 
 
@@ -82,10 +84,29 @@ class QuestionnaireAPIMixin(PermissionMixin, LogUserMixin, GenericAPIView):
 
         if self.add_detail_url:
             item['api_url'] = reverse(
-                'questionnaires-api-detail',
+                '{api_version}:questionnaires-api-detail'.format(
+                    api_version=self.request.version
+                ),
                 kwargs={'identifier': item['code']}
             )
         return item
+
+    def filter_dict(self, items):
+        """
+        Starting with API v2 only name and url to the detail page are displayed.
+        """
+        for item in items:
+            yield {
+                'name': item.get('name'),
+                'updated': item.get('updated'),
+                'code': item.get('code'),
+                'url': item.get('url'),
+                'details': reverse(
+                    '{api_version}:questionnaires-api-detail'.format(
+                        api_version=self.request.version
+                    ), kwargs={'identifier': item['code']}
+                ),
+            }
 
 
 class QuestionnaireListView(QuestionnaireAPIMixin):
@@ -122,7 +143,10 @@ class QuestionnaireListView(QuestionnaireAPIMixin):
 
         # Combine configuration and questionnaire values.
         list_values = get_list_values(es_hits=questionnaires)
-        return self.update_dict_keys(list_values)
+        if self.request.version == 'v1':
+            return self.update_dict_keys(list_values)
+        else:
+            return self.filter_dict(list_values)
 
     def get_es_paginated_results(self, offset):
         """
@@ -133,11 +157,25 @@ class QuestionnaireListView(QuestionnaireAPIMixin):
             ESPagination
 
         """
-        # Blank search returns all items within all indexes.
-        es_search_results = advanced_search(
-            limit=self.page_size,
-            offset=offset
-        )
+        try:
+            # Blank search returns all items within all indexes.
+            es_search_results = advanced_search(
+                limit=self.page_size, offset=offset
+            )
+        except TransportError:
+            # See https://redmine.cde.unibe.ch/issues/1098
+            es_search_results = advanced_search(limit=0)
+            total = es_search_results.get('hits', {}).get('total', 0)
+            # If the page is not within the valid total return an empty response
+            if total < offset:
+                logger.warn('Potential issue from skbp: Invalid API request '
+                            'with offset {}.'.format(offset))
+                es_search_results = {}
+            else:
+                # There really are more results than ES pagination is originally
+                # built for. Can be fixed by enabling deep pagination or such.
+                raise
+
         # Build a custom paginator.
         es_hits = es_search_results.get('hits', {})
         return ESPagination(es_hits.get('hits', []), es_hits.get('total', 0))
@@ -189,7 +227,8 @@ class QuestionnaireListView(QuestionnaireAPIMixin):
 
 class QuestionnaireDetailView(QuestionnaireAPIMixin):
     """
-    Return a single item from elasticsearch, if object is still valid on the model.
+    Return a single item from elasticsearch, if object is still valid on the
+    model.
     """
     add_detail_url = False
 
@@ -200,14 +239,18 @@ class QuestionnaireDetailView(QuestionnaireAPIMixin):
 
     def get_elasticsearch_item(self):
         """
-        Get a single element from elasticsearch. As the _id used for elasticsearch is the actual objects id, and not the
+        Get a single element from elasticsearch. As the _id used for
+        elasticsearch is the actual objects id, and not the
         code, resolve the id first.
 
         Returns: dict
 
         """
-        obj = self.get_current_object()
-        item = get_element(obj.id, obj.configurations.all().first().code)
+        self.obj = self.get_current_object()
+        item = get_element(
+            self.obj.id,
+            self.obj.configurations.all().first().code
+        )
         if not item:
             raise Http404()
 
@@ -215,17 +258,22 @@ class QuestionnaireDetailView(QuestionnaireAPIMixin):
 
     def serialize_item(self, item):
         """
-        Serialize the data and get the list values -- the same as executed within advanced_search (get_list_values) in
-        the QuestionnaireListView.
+        Serialize the data and get the list values -- the same as executed
+        within advanced_search (get_list_values) in the QuestionnaireListView.
         """
         serializer = QuestionnaireSerializer(data=item)
 
         if serializer.is_valid():
-            serializer.to_list_values(lang=get_language())
-            return serializer.validated_data
+            return self.prepare_data(serializer)
         else:
-            logger.warning('Invalid data on the serializer: {}'.format(serializer.errors))
+            logger.warning('Invalid data on the serializer: {}'.format(
+                serializer.errors)
+            )
             raise Http404()
+
+    def prepare_data(self, serializer):
+        serializer.to_list_values(lang=get_language())
+        return serializer.validated_data
 
     def get_current_object(self):
         """
@@ -237,3 +285,30 @@ class QuestionnaireDetailView(QuestionnaireAPIMixin):
         return get_object_or_404(
             Questionnaire.with_status.public(), code=self.kwargs['identifier']
         )
+
+
+class ConfiguredQuestionnaireDetailView(QuestionnaireDetailView):
+    """
+    Restore the fully configured questionnaires data.
+    """
+
+    def prepare_data(self, serializer: QuestionnaireSerializer) -> dict:
+        """
+        Merge configuration keyword, label and questionnaire data to a dict.
+        """
+        data = get_questionnaire_data_in_single_language(
+            questionnaire_data=serializer.validated_data['data'],
+            locale=get_language(),
+            original_locale=serializer.validated_data['original_locale']
+        )
+        configured_questionnaire = ConfiguredQuestionnaire(
+            config=serializer.config,
+            questionnaire=self.obj,
+            **data
+        )
+        return configured_questionnaire.store
+
+    def get(self, request, *args, **kwargs):
+        item = self.get_elasticsearch_item()
+        serialized = self.serialize_item(item)
+        return Response(serialized)

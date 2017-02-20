@@ -10,6 +10,6 @@ class WocatAuthenticationForm(forms.Form, AuthenticationForm):
     """
     username = forms.CharField(
         max_length=255, label=_(u"E-mail address"),
-        widget=forms.TextInput(attrs={'tabindex': 1}))
+        widget=forms.TextInput(attrs={'tabindex': 1, 'autofocus': True}))
     password = forms.CharField(
         label=_("Password"), widget=forms.PasswordInput(attrs={'tabindex': 2}))

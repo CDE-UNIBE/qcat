@@ -1,89 +1,53 @@
 # Shippable CI/CD configuration file.
 # http://docs.shippable.com/en/latest/config.html#configuration
-language: python
+language:
+  python
+
 python:
-   - "3.4"
+  - 3.5
+
+env:
+  global:
+    - secure: cXlr47zgwD8hOiJkbNJVg7FfOaTS6cjbV+IVK4WHccSM5TUuqN7ee5N6Eg1F+MANiwG2hAiabeH7c3h7omGU6T9Zrm/ysCmAS8o6V5gaLfdOnj0mcZr7a6ZmOHicOH6EKd2o3EhN4TzIkPk8Pe4CeCAiXzA47ennyCG9Nlv0Mp/mCu3fU1U1R/2Xb3eIEXM/Mg4T6aZjlilngrUtffo4qBQ7mzC+bPr/lQDIYEJJbDr0fMZvd5q6XC2Mlid06dLFLXXiceVB0Q1BRL2bMOnwrcj+nPaah1KG/i35AfmXjHw5+zQrRJ2diD4BRn6dPNFzO1Ap6Aa904ZHiJejFaG6XRSEb+/u1vvFICoThpRgGcRAgTHiEhKCLBPr1HEa86KRKW04jyst2r5DiFuiftdPNJ/rju0a0acsp9Nujf6Txqz4llGBfoJw2tSe7qbpPBOMDFGcqhwRQuYmjGO46plr9JxcFzmUBlJCU1k8agd0NPpgfYxX8cSSyUL3pDs2nmUG3uLV7VfGb7CKjpjnKU30zGA4+UWWlhUcK+nYJU2AZ5CwD6LKJdEG/8xPzUkmxAo/dSNf8wMpBzd3yr+qRIfUbE0zgUtEYw7vx8AGAHOFett+4n5lrZrcfuKJjLRvWoVWeBqhUddsEaSJ071VN6Hj6O3u3lPa1VXH05yJgmRmQzE=
+
+build:
+  pre_ci_boot:
+    image_name: drydock/u16pytall
+    image_tag: tip
+
+  ci:
+    - export LC_ALL=C
+    - sudo apt-get update && sudo apt-get -y install python3-pip libjpeg-dev libjpeg8-dev binutils libproj-dev gdal-bin
+    - echo "`pwd`/apps" > `python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"`/_qcat_path.pth
+    - echo "ProdDefaultSite" > envs/DJANGO_CONFIGURATION
+    - echo "qcat.settings" > envs/DJANGO_SETTINGS_MODULE
+    - echo "postgis://qcat:123456@localhost:5432/qcat" > envs/DATABASE_URL
+    - echo "123" > envs/DJANGO_SECRET_KEY
+    - pip3 install -r requirements/development.txt
+    - pip3 install -r requirements/production.txt
+    - unset LC_ALL
+
+  on_success:
+    - fab deploy:$BRANCH
+
+  cache: true
 
 branches:
   only:
     - develop
     - master
 
-env:
-  # secure keys must include:
-  # HOST_STRING_DEV
-  # HOST_STRING_LIVE
-  # OPBEAT_BEARER_DEV
-  # OPBEAT_URL_DEV
-  # OPBEAT_BEARER_LIVE
-  # OPBEAT_URL_LIVE
-  # AUTH_API_USER
-  # AUTH_API_KEY
-  # these values are used for testing / deployment only, so the must not
-  # necessarily match the proper values from develop / production.
+integrations:
+  notifications:
+    - integrationName: slack-integration
+      type: slack
+      recipients:
+        - "#server-info"
+      on_success: always
+      on_failure: always
 
-  global:
-    - secure: claEH+8RUpSTqwMbVmrNQX/tPPaq7BZxEZjImiV3YxZ2uk7PRYbpElCE8zsEtA/CAu9nLVZbZ+PT8q99ftw1Tvp5PN1w5YYKky+oQ8akqrF7xG+jsyxxdB8lNTxSPq46nnRa/3iH8H8NFj4lhJitjt4BzAQsP3pXsMBv7nTW4l00UUVU4hOd+Sf1SZlU5di9LERR6LsqGdsy9Hdb7Xek/Ljcb6Fq4mOfr8zpOOgqLXWSLJSVSiNR+6RdpkAh/79a/JIQwHTkbYHNJMSMVdgNZJzh6FuQ8h0A1rK0uIJJtnU7xTyxXCizastCvkX1vcekbXx2yFTaraP/p+o0jlV/eKpCAS8lmxt00cMp8nt2YOoRjJHur/dIFyKR/rEJ0Dj8zIt08/DkgEAK0OxxhU/PIf7nMrLWMaJ5DCC9YxlzGvz1xYzHzlwx6d3zFj9yORE6VdZ1nvA1FOlR09X58LibBveHJABDJqBuEDr0TUhhziqZ+3KFn+1/y+l4ouq5kqVJTlbTcXQENkzxo+IeJzG7YJCs1pxAVqByccYwW4JbGDJ8XopGEbihrwAHQDZW9qbEj4juDo+Ef9H2RVZqy7iDjnF+6x5ZEADdLUU/5TOsM0zIhBxLaEIQFEJwLLq2igMqyvEZU6/pSSwxUG8GZEervQi4eYJmfJn9bWZ2JBgloSB8vJBjBj8rTS4D+6kNAI8d4t9rh71PsKok/ArTb6czk282K+VvA+bbEE+Jw5NmqlFH9IkXHpwLqPGlF3uDy2cu6+Tu9n4PhLj1Grx+yRkQ71yN+PhSwZbADIXmn61eW4M9vYhRUovyi9aXlrfJq9tldh4dTc0gBww1eMQ/09PWmmnd65AmorThLqUmaky6l8OwUHe3/1qBCk06n3TGt6+DORaFUDhR1ZAY1e1nwhv5vQzp7fNMApetjzqvstShjabuiao5l3fldNFQNROg6w+EF84EIARJNB+HNUKhm9Ar2k+wcJEWqoi114UyMhCFxD6dwVbiiarO+p8bC9ebX/8D
-
-cache: true
-
-#addons:
-#  - firefox: "48.0"
-
-#services:
-#  - selenium
-
-install:
-#  - sudo npm install --global npm@1.4.21
-#  - sudo npm install -g grunt-cli
-#  - npm install
-#  - bower install --allow-root
-#  - grunt build
-  - pip3 install -r requirements/development.txt
-  - pip3 install -r requirements/production.txt
-
-before_script:
-#  - "/etc/init.d/xvfb start"
-#  - "export DISPLAY=:99.0"
-#  # postgres for tests
-#  - psql -c 'CREATE ROLE qcat_test LOGIN SUPERUSER INHERIT CREATEDB CREATEROLE REPLICATION;' -U postgres
-#  - psql -c 'CREATE DATABASE "qcat_test";' -U postgres
-#  - psql -c 'CREATE EXTENSION postgis;' -U postgres -d qcat_test
-#  - psql -c "ALTER USER qcat_test WITH PASSWORD '123456';" -U postgres
-#  # postgres for the application
-#  - psql -c 'CREATE ROLE qcat LOGIN SUPERUSER INHERIT CREATEDB CREATEROLE REPLICATION;' -U postgres
-#  - psql -c 'CREATE DATABASE "qcat";' -U postgres
-#  - psql -c 'CREATE EXTENSION postgis;' -U postgres -d qcat
-#  - psql -c "ALTER USER qcat WITH PASSWORD '123456';" -U postgres
-#  # Put our 'apps' directory to the sys.path so our apps can be loaded..
-  - echo "`pwd`/apps" > /home/shippable/build_ve/python/3.4/lib/python3.4/site-packages/_qcat_path.pth
-  - echo "ProdDefaultSite" > envs/DJANGO_CONFIGURATION
-  - echo "qcat.settings" > envs/DJANGO_SETTINGS_MODULE
-  - echo "postgis://qcat:123456@localhost:5432/qcat" > envs/DATABASE_URL
-  - echo "123" > envs/DJANGO_SECRET_KEY
-#  # Prepare application: load initial data and create static assets.
-#  - python manage.py migrate --noinput
-#  - python load_qcat_data
-#  - python create_es_indexes
-#  - python manage.py collectstatic --noinput
-#  # For selenium
-#  - "export DISPLAY=:99.0"
-
-#script:
-#  - flake8
-#  - coverage run --source='.' manage.py test
-
-#after_script:
-#  - "/etc/init.d/xvfb stop"
-
-after_success:
-#  - mv coverage.xml shippable/codecoverage/
-#  - mv unittests.xml shippable/testresults/
-#  - mv reports/*.xml shippable/testresults/ && rmdir reports
-  - fab $BRANCH deploy
-  - fab $BRANCH register_deployment
-
-notifications:
-  email:
-    on_success: change
-    on_failure: always
+    - integrationName: email
+      type: email
+      on_success: never
+      on_failure: never
+      on_pull_request: never

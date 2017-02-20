@@ -1,5 +1,5 @@
 {% if key and label_position != 'none' %}<{{ label_tag|default:"h5" }}>{{ key }}{% if key|last not in ".:!?" %}:{% endif %}</{{ label_tag|default:"h5" }}>{% endif %}
-<ul class="chart-horizontal-bars text-right">
+<ul class="chart-horizontal-bars text-{{ label_text_direction|default:"right" }}">
   {% for value in all_values %}
     <li class="chart-bar is-level-{{ value.0|default:0 }}">
       {{ value.1 }}

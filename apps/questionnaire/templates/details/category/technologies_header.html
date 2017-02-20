@@ -84,15 +84,17 @@
       <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-view"></use></svg>
       {% trans "View full content" %}
     </a>
-{#    <button href="#" class="button dropdown{% if not metadata.code %} disabled{% endif %}" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false">#}
-    <button href="#" class="button dropdown disabled" title="{% trans "Coming soon" %}" data-tooltip="" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false">
+    {% if IS_ACTIVE_FEATURE_SUMMARY %}
+      <button href="#" class="button dropdown" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false">
+    {% else %}
+      <button href="#" class="button dropdown disabled" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false" title="{% trans "Coming soon" %}" data-tooltip="">
+    {% endif %}
       <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-print"></use></svg>
       {% trans "Print summary" %}
     </button>
-    <ul id="tech-details-print" data-dropdown-content class="f-dropdown" aria-hidden="true">
-      <li><a href="#">Short summary</a></li>
-      <li><a href="#">Full output</a></li>
-    </ul>
+      <ul id="tech-details-print" data-dropdown-content class="f-dropdown" aria-hidden="true">
+        <li><a {% if not questionnaire_object.id %}disabled="disabled"{% else %}href="{% url 'questionnaire_summary' questionnaire_object.id %}"{% endif %}>{% trans "Full summary as PDF" %}</a></li>
+      </ul>
 {#    <button href="#" class="button dropdown{% if not metadata.code %} disabled{% endif %}" data-dropdown="tech-details-export" aria-controls="tech-details-export" aria-expanded="false">#}
     <button href="#" class="button dropdown disabled" title="{% trans "Coming soon" %}" data-tooltip="" data-dropdown="tech-details-export" aria-controls="tech-details-export" aria-expanded="false">
       <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-export"></use></svg>
@@ -101,18 +103,30 @@
     <ul id="tech-details-export" data-dropdown-content class="f-dropdown" aria-hidden="true">
       <li><a href="#">PDF</a></li>
     </ul>
+    {% if notifications_href %}
+      <a href="{{ notifications_href }}" class="button">
+        <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-info"></use></svg>
+        {% trans "See history" %}
+      </a>
+    {% endif %}
   </div>
 
   {% if review_config %}
-    {% include 'details/review_panel.html' with review_config=review_config %}
+    {% trans "SLM Technology" as questionnaire_type %}
+    {% include 'details/review_panel.html' with review_config=review_config questionnaire_type=questionnaire_type %}
   {% endif %}
 
   <div class="row tech-section-group">
     <h2 class="tech-section-group-title left">{% trans "View sections" %}</h2>
-    <a href="#" class="link right js-expand-all-sections" data-is-collapsed="true">
+    <a href="#" class="link right js-expand-all-sections" data-is-collapsed="true" data-selector=".tech-section-content">
       <span class="js-is-expanded">{% trans "Expand all" %}</span>
       <span class="js-is-collapsed hide">{% trans "Collapse all" %}</span>
     </a>
+  </div>
+
+  <div class="row tech-overall-progress">
+    <span class="steps">{% trans "Completeness:" %} {{ completeness_percentage }}%</span>
+    <span class="meter" style="width:{{ completeness_percentage }}%"></span>
   </div>
 
   {% if subcategories or 'edit_questionnaire' in permissions and 'edit' in view_mode %}

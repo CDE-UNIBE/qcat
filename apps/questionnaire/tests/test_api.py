@@ -1,4 +1,5 @@
-from unittest.mock import patch, MagicMock
+import logging
+from unittest.mock import patch, MagicMock, sentinel
 
 from django.conf import settings
 from django.http import Http404
@@ -9,25 +10,41 @@ from rest_framework.response import Response
 
 from accounts.tests.test_models import create_new_user
 from qcat.tests import TestCase
-from ..models import Questionnaire
-from ..serializers import QuestionnaireSerializer
-from ..api.views import QuestionnaireListView, QuestionnaireDetailView
+from questionnaire.models import Questionnaire
+from questionnaire.serializers import QuestionnaireSerializer
+from questionnaire.api.views import QuestionnaireListView, \
+    QuestionnaireDetailView,  QuestionnaireAPIMixin, \
+    ConfiguredQuestionnaireDetailView
+from search.index import delete_all_indices
+from search.tests.test_index import create_temp_indices
 
 
+TEST_INDEX_PREFIX = 'qcat_test_prefix_'
+
+
+@override_settings(ES_INDEX_PREFIX=TEST_INDEX_PREFIX)
 class QuestionnaireListViewTest(TestCase):
     fixtures = ['sample', 'sample_questionnaires']
 
     def setUp(self):
+        delete_all_indices()
+        create_temp_indices(['sample'])
         self.factory = RequestFactory()
         self.url = '/en/api/v1/questionnaires/sample_1/'
         self.request = self.factory.get(self.url)
-        self.view = self.setup_view(QuestionnaireListView(), self.request, identifier='sample_1')
+        self.request.version = 'v1'
+        self.view = self.setup_view(
+            QuestionnaireListView(), self.request, identifier='sample_1'
+        )
+
+    def tearDown(self):
+        delete_all_indices()
 
     @patch('questionnaire.api.views.advanced_search')
     def test_logs_call(self, mock_advanced_search):
         """
-        Use the requestfactory from the rest-framework, as this handles the custom
-        token authentication nicely.
+        Use the requestfactory from the rest-framework, as this handles the
+        custom token authentication nicely.
         """
         user = create_new_user()
         request = APIRequestFactory().get(self.url)
@@ -40,10 +57,13 @@ class QuestionnaireListViewTest(TestCase):
         questionnaire = Questionnaire.objects.get(code='sample_1')
         serialized = QuestionnaireSerializer(questionnaire).data
         item = self.view.replace_keys(serialized)
-        self.assertEqual(item.get('api_url'), '/en/api/v1/questionnaires/sample_1/')
+        self.assertEqual(
+            item.get('api_url'), '/en/api/v1/questionnaires/sample_1/'
+        )
 
     def test_current_page(self):
         request = self.factory.get('{}?page=5'.format(self.url))
+        request.version = 'v1'
         view = self.setup_view(self.view, request, identifier='sample_1')
         view.get_elasticsearch_items()
         self.assertEqual(view.current_page, 5)
@@ -107,20 +127,57 @@ class QuestionnaireListViewTest(TestCase):
             [{'language': 'a', 'text': 'foo'}]
         )
 
+    @patch.object(QuestionnaireAPIMixin, 'update_dict_keys')
+    def test_v1_filter(self, mock_update_dict_keys):
+        request = self.factory.get(self.url)
+        request.version = 'v1'
+        view = self.setup_view(self.view, request, identifier='sample_1')
+        view.get(self.request)
+        self.assertTrue(mock_update_dict_keys.called)
 
+    @patch.object(QuestionnaireAPIMixin, 'filter_dict')
+    def test_v2_filter(self, mock_filter_dict):
+        request = self.factory.get(self.url)
+        request.version = 'v2'
+        view = self.setup_view(self.view, request, identifier='sample_1')
+        view.get(self.request)
+        self.assertTrue(mock_filter_dict.called)
 
+    def test_api_url_detail_v1(self):
+        items = [{'code': 'spam'}]
+        updated = list(self.view.filter_dict(items))
+        self.assertEqual(
+            updated[0]['details'], '/en/api/v1/questionnaires/spam/'
+        )
+
+    def test_api_url_detail_v2(self):
+        items = [{'code': 'spam'}]
+        request = self.request
+        request.version = 'v2'
+        view = self.setup_view(self.view, request)
+        updated = list(view.filter_dict(items))
+        self.assertEqual(
+            updated[0]['details'], '/en/api/v2/questionnaires/spam/'
+        )
 
 
 class QuestionnaireDetailViewTest(TestCase):
+    """
+    Tests for v1
+    """
     fixtures = ['sample', 'sample_questionnaires']
 
     def setUp(self):
+        logging.disable(logging.CRITICAL)
         self.factory = RequestFactory()
         self.url = '/en/api/v1/questionnaires/sample_1/'
         self.request = self.factory.get(self.url)
+        self.request.version = 'v1'
         self.invalid_request = self.factory.get('/en/api/v1/questionnaires/foo')
         self.identifier = 'sample_1'
-        self.view = self.setup_view(QuestionnaireDetailView(), self.request, identifier=self.identifier)
+        self.view = self.setup_view(
+            QuestionnaireDetailView(), self.request, identifier=self.identifier
+        )
 
     def get_serialized_data(self):
         questionnaire = Questionnaire.objects.get(code=self.identifier)
@@ -155,13 +212,50 @@ class QuestionnaireDetailViewTest(TestCase):
             foo = item['api_url']  # noqa
 
     def test_serialized_item(self):
-        mock_list_values = MagicMock()
-        with patch.object(QuestionnaireSerializer, 'to_list_values', mock_list_values):
+        with patch.object(QuestionnaireSerializer, 'to_list_values') as values:
             self.view.serialize_item(self.get_serialized_data())
-            mock_list_values.assert_called_once_with(lang='en')
+            values.assert_called_once_with(lang='en')
 
     def test_failed_serialization(self):
         serialized = self.get_serialized_data()
         del serialized['status']
         with self.assertRaises(Http404):
             self.view.serialize_item(serialized)
+
+
+class ConfiguredQuestionnaireDetailViewTest(TestCase):
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.url = '/en/api/v2/questionnaires/sample_1/'
+        self.request = self.factory.get(self.url)
+        self.request.version = 'v2'
+        self.identifier = 'sample_1'
+        self.view = self.setup_view(
+            ConfiguredQuestionnaireDetailView(), self.request,
+            identifier=self.identifier
+        )
+        self.view.obj = None
+
+    @patch('questionnaire.api.views.get_language')
+    @patch('questionnaire.api.views.get_questionnaire_data_in_single_language')
+    def test_prepare_data_one_language(self, mock_single_language,
+                                       mock_get_language):
+        mock_get_language.return_value = sentinel.language
+        mock_serializer = MagicMock(validated_data={
+            'data': sentinel.data,
+            'original_locale': sentinel.original_locale
+        })
+        self.view.prepare_data(mock_serializer)
+        mock_single_language.assert_called_once_with(
+            locale=sentinel.language,
+            original_locale=sentinel.original_locale,
+            questionnaire_data=sentinel.data
+        )
+
+    @patch('questionnaire.api.views.get_questionnaire_data_in_single_language')
+    @patch('questionnaire.api.views.ConfiguredQuestionnaire')
+    def test_prepare_data(self, mock_conf, mock_single_language):
+        mock_single_language.return_value = {}
+        self.view.prepare_data(MagicMock())
+        self.assertTrue(mock_conf.called)

@@ -1,4 +1,5 @@
 import json
+import logging
 import uuid
 from datetime import datetime
 
@@ -15,7 +16,9 @@ from accounts.tests.test_models import create_new_user
 from configuration.models import Configuration
 from qcat.tests import TestCase
 from questionnaire.errors import QuestionnaireLockedException
-from questionnaire.models import Questionnaire, QuestionnaireLink, File
+from questionnaire.models import Questionnaire, QuestionnaireLink, File, Lock
+
+from ..conf import settings
 
 
 def get_valid_file():
@@ -123,6 +126,43 @@ class QuestionnaireModelTest(TestCase):
         self.assertEqual(q.code, previous.code)
         self.assertEqual(q.version, previous.version + 1)
 
+    def test_create_new_keeps_languages_from_previous_version(self):
+        previous = get_valid_questionnaire(self.user)
+        previous.status = 4
+        previous.add_translation_language(language='fr')
+        previous.add_translation_language(language='es')
+        self.assertEqual(len(previous.translations), 3)
+        self.assertEqual(previous.original_locale, 'en')
+        q = Questionnaire.create_new(
+            configuration_code='sample', data={}, user=self.user,
+            previous_version=previous)
+        self.assertEqual(len(q.translations), 3)
+        self.assertEqual(q.original_locale, 'en')
+        self.assertEqual(previous.translations, q.translations)
+
+    def test_create_new_keeps_users_from_previous_version(self):
+        user2 = create_new_user(
+            id=2, email='c@d.com', lastname='foo2', firstname='bar2')
+        user3 = create_new_user(
+            id=3, email='e@f.com', lastname='foo3', firstname='bar3')
+        previous = get_valid_questionnaire(self.user)
+        previous.status = 4
+        previous.add_user(user2, settings.QUESTIONNAIRE_EDITOR)
+        previous.add_user(user3, settings.QUESTIONNAIRE_REVIEWER)
+        previous_users = previous.get_users()
+        self.assertEqual(len(previous_users), 3)
+        self.assertIn(
+            (settings.QUESTIONNAIRE_COMPILER, self.user), previous_users)
+        self.assertIn((settings.QUESTIONNAIRE_EDITOR, user2), previous_users)
+        self.assertIn((settings.QUESTIONNAIRE_REVIEWER, user3), previous_users)
+        # Compiler starts a new version
+        q = Questionnaire.create_new(
+            configuration_code='sample', data={}, user=user2,
+            previous_version=previous)
+        current_users = q.get_users()
+        self.assertEqual(len(current_users), 3)
+        self.assertEqual(current_users, previous_users)
+
     @patch('configuration.utils.create_new_code')
     def test_create_new_calls_create_code(self, mock_create_new_code):
         mock_create_new_code.return_value = 'foo'
@@ -223,8 +263,9 @@ class QuestionnaireModelTest(TestCase):
         self.assertEqual(questionnaire.status, 1)
         roles, permissions = questionnaire.get_roles_permissions(self.user)
         self.assertEqual(roles, [('compiler', 'Compiler')])
-        self.assertEqual(len(permissions), 3)
+        self.assertEqual(len(permissions), 4)
         self.assertIn('edit_questionnaire', permissions)
+        self.assertIn('delete_questionnaire', permissions)
         self.assertIn('submit_questionnaire', permissions)
         self.assertIn('assign_questionnaire', permissions)
 
@@ -343,7 +384,12 @@ class QuestionnaireModelTest(TestCase):
             'questionnaire.assign_questionnaire']
         roles, permissions = questionnaire.get_roles_permissions(self.user)
         self.assertEqual(roles, [('secretariat', 'WOCAT Secretariat')])
-        self.assertEqual(permissions, ['assign_questionnaire'])
+        expected_permissions = ['assign_questionnaire', 'review_questionnaire',
+                                'delete_questionnaire', 'submit_questionnaire',
+                                'edit_questionnaire', 'publish_questionnaire']
+        self.assertTrue(
+            len(permissions) == len(expected_permissions) and sorted(
+                permissions) == sorted(expected_permissions))
 
     def test_get_permissions_anonymous_user(self):
         # Anonymous users have no rights.
@@ -417,7 +463,7 @@ class QuestionnaireModelTest(TestCase):
             configuration_code='sample', data={}, user=self.user)
         metadata = questionnaire.get_metadata()
         self.assertIsInstance(metadata, dict)
-        self.assertEqual(len(metadata), 9)
+        self.assertEqual(len(metadata), 10)
         self.assertEqual(metadata['created'], questionnaire.created)
         self.assertEqual(metadata['updated'], questionnaire.updated)
         self.assertEqual(
@@ -428,6 +474,7 @@ class QuestionnaireModelTest(TestCase):
         self.assertEqual(metadata['configurations'], ['sample'])
         self.assertEqual(metadata['translations'], ['en'])
         self.assertEqual(metadata['status'], ('draft', 'Draft'))
+        self.assertEqual(metadata['flags'], [])
 
     def test_has_links(self):
         questionnaire = get_valid_questionnaire(self.user)
@@ -472,9 +519,14 @@ class QuestionnaireModelTest(TestCase):
 
     def test_block_for_for_user(self):
         questionnaire = get_valid_questionnaire()
-        questionnaire.lock_questionnaire(questionnaire.code, self.user)
-        questionnaire.refresh_from_db()
-        self.assertEqual(questionnaire.blocked, self.user)
+        questionnaire.lock_questionnaire(
+            code=questionnaire.code,
+            user=self.user
+        )
+        lock = Lock.with_status.is_blocked(code=questionnaire.code)
+        self.assertEqual(
+            lock.first().user, self.user
+        )
 
     def test_blocked_questionnaire_raises_exception(self):
         questionnaire = get_valid_questionnaire()
@@ -552,6 +604,7 @@ class QuestionnaireModelTest(TestCase):
         self.assertIsNone(questionnaire.geom)
 
     def test_update_geometry_handles_invalid_geojson_2(self):
+        logging.disable(logging.CRITICAL)
         questionnaire = get_valid_questionnaire()
         questionnaire.data = {'qg_39': [{'key_56': json.dumps({
             "type": "FeatureCollection",
@@ -767,6 +820,7 @@ class FileModelTest(TestCase):
 
     @patch.object(File.objects, 'get')
     def test_get_data_gets_object_if_not_provided(self, mock_objects_get):
+        mock_objects_get.return_value = get_valid_file()
         File.get_data(file_object=None, uid='uid')
         mock_objects_get.assert_called_once_with(uuid='uid')
 

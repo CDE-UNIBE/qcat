@@ -62,16 +62,20 @@
       {% endif %}
 
       {# Links and modules #}
-      {# Links are supposed to point only to SAMPLEMULTI #}
       {% if item.links %}
         <ul class="right tech-attached sub-nav-square">
-          <li>
-            <a href="{% url 'sample:questionnaire_details' item.code %}" class="is-samplemulti" title="{% trans "This SLM Technology is linked to SLM Approaches" %}" data-tooltip=""><svg class="icon"><use xlink:href="#icon-approach"></use></svg>
-              {% if item.links|length > 1 %}
-                <span class="number">{{ item.links|length }}</span>
+          {% for link_configuration, links in item.links.items %}
+            <li>
+              {% if link_configuration == 'samplemulti' %}
+                {# Links are supposed to point only to SAMPLEMULTI #}
+                <a href="{% url 'sample:questionnaire_details' item.code %}" class="is-samplemulti" title="{% trans "This SLM Technology is linked to SLM Approaches" %}" data-tooltip=""><svg class="icon"><use xlink:href="#icon-approach"></use></svg>
+                  {% if item.links|length > 1 %}
+                    <span class="number">{{ item.links|length }}</span>
+                  {% endif %}
+                </a>
               {% endif %}
-            </a>
-          </li>
+            </li>
+          {% endfor %}
         </ul>
       {% endif %}
     </footer>

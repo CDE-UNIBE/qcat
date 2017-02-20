@@ -72,6 +72,7 @@
                   {% formrow field using "form/question/no_label.html" %}
                 </td>
               {% endfor %}
+              {% for field in qg_form.hidden_fields %}{% formfield field %}{% endfor %}
             </tr>
           {% endfor %}
         {% endif %}

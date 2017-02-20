@@ -84,14 +84,16 @@
         <div class="row is-flex" data-equalizer>
           <div class="small-12 medium-4 columns">
             <div class="card">
-              <div class="card-image-holder">
-                <img class="card-image" src="{% static 'assets/img/card_slm_technologies.jpg' %}">
-                <span class="card-image-overlay-container">
-                  <div class="card-image-overlay is-tech">
-                    <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-technology"></use></svg>
-                  </div>
-                </span>
-              </div>
+              <a href="{% url 'wocat:questionnaire_list' %}?type=technologies">
+                <div class="card-image-holder">
+                    <img class="card-image" src="{% static 'assets/img/card_slm_technologies.jpg' %}">
+                  <span class="card-image-overlay-container">
+                    <div class="card-image-overlay is-tech">
+                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-technology"></use></svg>
+                    </div>
+                  </span>
+                </div>
+              </a>
               <div class="card-well">
                 <h2 class="card-title">{% trans "SLM Technologies" %}</h2>
                 <p class="card-desc" data-equalizer-watch>{% trans "An <strong>SLM Technology</strong> is a land management practice that controls land degradation and enhances productivity and/ or other ecosystem services." %}</p>
@@ -101,14 +103,16 @@
           </div>
           <div class="small-12 medium-4 columns">
             <div class="card">
-              <div class="card-image-holder">
-                <img class="card-image" src="{% static 'assets/img/card_slm_approaches.jpg' %}">
-                <span class="card-image-overlay-container">
-                  <div class="card-image-overlay is-approach">
-                    <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-approach"></use></svg>
-                  </div>
-                </span>
-              </div>
+              <a href="{% url 'wocat:questionnaire_list' %}?type=approaches">
+                <div class="card-image-holder">
+                  <img class="card-image" src="{% static 'assets/img/card_slm_approaches.jpg' %}">
+                  <span class="card-image-overlay-container">
+                    <div class="card-image-overlay is-approach">
+                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-approach"></use></svg>
+                    </div>
+                  </span>
+                </div>
+              </a>
               <div class="card-well">
                 <h2 class="card-title">{% trans "SLM Approaches" %}</h2>
                 <p class="card-desc" data-equalizer-watch>{% trans "An <strong>SLM Approach</strong> defines the ways and means used to implement an SLM Technology, including the stakeholders involved and their roles." %}</p>
@@ -118,17 +122,40 @@
           </div>
           <div class="small-12 medium-4 columns">
             <div class="card">
-              <div class="card-image-holder">
-                <img class="card-image" src="{% static 'assets/img/card_slm_maps.jpg' %}">
-                <span class="card-image-overlay-container">
-                  <div class="card-image-overlay is-map">
-                    <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-map"></use></svg>
-                  </div>
-                </span>
-              </div>
+              <a href="{% url 'wocat:questionnaire_list' %}?type=watershed">
+                <div class="card-image-holder">
+                  <img class="card-image" src="{% static 'assets/img/card_watershed.jpg' %}">
+                  <span class="card-image-overlay-container">
+                    <div class="card-image-overlay is-watershed">
+                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-watershed"></use></svg>
+                    </div>
+                  </span>
+                </div>
+              </a>
               <div class="card-well">
-                <h2 class="card-title">{% trans "SLM Maps" %}</h2>
-                <p class="card-desc" data-equalizer-watch>{% trans "An <strong>SLM Map</strong> analyses and depicts the spatial distribution of SLM and land degradation processes, causes, and impacts." %}</p>
+                <h2 class="card-title">{% trans "Watershed and Runoff" %}</h2>
+                <p class="card-desc" data-equalizer-watch>{% trans "Mapping land management and assessing runoff and outflow from a watershed." %}</p>
+                <a href="{% url 'wocat:questionnaire_list' %}?type=watershed" class="button large expand">{% trans "View all" %}</a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row is-flex" data-equalizer>
+          <div class="small-12 medium-4 columns">
+            <div class="card">
+              <a href="http://qm.wocat.net/" target="_blank">
+                <div class="card-image-holder">
+                  <img class="card-image" src="{% static 'assets/img/card_slm_maps.jpg' %}">
+                  <span class="card-image-overlay-container">
+                    <div class="card-image-overlay is-map">
+                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-map"></use></svg>
+                    </div>
+                  </span>
+                </div>
+              </a>
+              <div class="card-well">
+                <h2 class="card-title">{% trans "Land Degradation / Conservation" %}</h2>
+                <p class="card-desc" data-equalizer-watch>{% trans "Mapping land management, degradation and conservation including driver, state and impacts." %}</p>
                 <a href="http://qm.wocat.net/" target="_blank" class="button large expand" title="{% trans "Maps are currently not yet available in the new database. Maps can be viewed or added in the old database (QM)." %}" aria-haspopup="true" data-tooltip="">
                   {% trans "View all" %}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg>
                 </a>

@@ -1,11 +1,16 @@
 from .config.common import BaseSettings
-from .config.mixins import CompressMixin, DevMixin, OpBeatMixin, ProdMixin, \
-    SecurityMixin, LogMixin, AuthenticationFeatureSwitch
+from .config.mixins import CompressMixin, DevMixin, SentryMixin, ProdMixin, \
+    SecurityMixin, LogMixin, TestMixin, AuthenticationFeatureSwitch
 
 
 class DevDefaultSite(DevMixin, AuthenticationFeatureSwitch, BaseSettings):
     pass
 
 
-class ProdDefaultSite(ProdMixin, CompressMixin, OpBeatMixin, SecurityMixin, LogMixin, BaseSettings):
+class TestDefaultSite(TestMixin, DevDefaultSite):
+    pass
+
+
+class ProdDefaultSite(ProdMixin, CompressMixin, SecurityMixin, SentryMixin,
+                      LogMixin, BaseSettings):
     pass

@@ -193,3 +193,20 @@ def get_escaped_string(query_string: str) -> str:
     for char in settings.ES_QUERY_RESERVED_CHARS:
         query_string = query_string.replace(char, '\\{}'.format(char))
     return query_string
+
+
+def get_indices_alias():
+    """
+    Return a list of all elasticsearch index aliases. Only ES indices which
+    start with the QCAT prefix are respected.
+
+    Returns:
+        list.
+    """
+    indices = []
+    for aliases in es.indices.get_aliases().values():
+        for alias in aliases.get('aliases', {}).keys():
+            if settings.ES_INDEX_PREFIX not in alias:
+                continue
+            indices.append(alias.replace(settings.ES_INDEX_PREFIX, ''))
+    return indices

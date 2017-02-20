@@ -37,6 +37,8 @@
 
   {{ formset.management_form }}
 
+  {% include "form/errors.html" with errors=formset.non_form_errors %}
+
   {% block rows %}
     {% form form using %}
       {% for f in formset.forms %}
@@ -84,25 +86,25 @@
 
                   {% if forloop.counter >= 4 %}
 
-                    {% with 'original_person_lastname original_person_institution_name original_person_address original_person_phone_1 original_person_email_1' as new_line %}
+                    {% with 'original_person_lastname translation_person_lastname original_person_institution_name translation_person_institution_name original_person_address translation_person_address original_person_phone_1 translation_person_phone_1 original_person_email_1 translation_person_email_1' as new_line %}
                       {% if field.name in new_line.split %}
                         <div class="row single-item">
                       {% endif %}
                     {% endwith %}
 
-                    {% with 'original_person_institution_name original_person_address' as full_line %}
+                    {% with 'original_person_institution_name translation_person_institution_name original_person_address translation_person_address' as full_line %}
                       {% if field.name in full_line.split %}
                         <div class="small-12 columns">
                       {% endif %}
                     {% endwith %}
 
-                    {% with 'original_person_lastname original_person_firstname person_gender' as cols %}
+                    {% with 'original_person_lastname translation_person_lastname original_person_firstname translation_person_firstname person_gender' as cols %}
                       {% if field.name in cols.split %}
                         <div class="small-4 columns">
                       {% endif %}
                     {% endwith %}
 
-                    {% with 'original_person_phone_1 original_person_phone_2 original_person_email_1 original_person_email_2' as cols %}
+                    {% with 'original_person_phone_1 translation_person_phone_1 original_person_phone_2 translation_person_phone_2 original_person_email_1 translation_person_email_1 original_person_email_2 translation_person_email_2' as cols %}
                       {% if field.name in cols.split %}
                         <div class="small-6 columns">
                       {% endif %}
@@ -118,25 +120,25 @@
                       {% endif %}
                     {% endwith %}
 
-                    {% with 'original_person_lastname original_person_firstname person_gender' as cols %}
+                    {% with 'original_person_lastname translation_person_lastname original_person_firstname translation_person_firstname person_gender' as cols %}
                       {% if field.name in cols.split %}
                         </div>
                       {% endif %}
                     {% endwith %}
 
-                    {% with 'original_person_phone_1 original_person_phone_2 original_person_email_1 original_person_email_2' as cols %}
+                    {% with 'original_person_phone_1 translation_person_phone_1 original_person_phone_2 translation_person_phone_2 original_person_email_1 translation_person_email_1 original_person_email_2 translation_person_email_2' as cols %}
                       {% if field.name in cols.split %}
                         </div>
                       {% endif %}
                     {% endwith %}
 
-                    {% with 'original_person_institution_name original_person_address' as full_line %}
+                    {% with 'original_person_institution_name translation_person_institution_name original_person_address translation_person_address' as full_line %}
                       {% if field.name in full_line.split %}
                         </div>
                       {% endif %}
                     {% endwith %}
 
-                    {% with 'person_gender original_person_institution_name original_person_address original_person_phone_2 original_person_email_2' as new_line %}
+                    {% with 'person_gender original_person_institution_name translation_person_institution_name original_person_address translation_person_address original_person_phone_2 translation_person_phone_2 original_person_email_2 translation_person_email_2' as new_line %}
                       {% if field.name in new_line.split %}
                         </div>
                       {% endif %}
@@ -144,6 +146,7 @@
 
                   {% endif %}
                 {% endfor %}
+                {% for field in f.hidden_fields %}{% formfield field %}{% endfor %}
               </div>
             </div>
             <div class="columns right">

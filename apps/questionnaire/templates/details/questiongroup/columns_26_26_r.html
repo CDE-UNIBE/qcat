@@ -1,0 +1,23 @@
+{% for questiongroup in questiongroups %}
+
+  <div class="row tech-output-columns">
+    {% if config.label %}
+      <h5>{{ config.label }}</h5>
+    {% endif %}
+
+    {% for question in questiongroup %}
+      {% if forloop.counter == 1 or forloop.counter == 3 %}
+        <div class="medium-6 columns top-margin">
+      {% elif forloop.counter >= 5 %}
+        <div class="medium-12 columns top-margin">
+      {% endif %}
+      {{ question }}
+      {% if forloop.counter == 2 or forloop.counter == 4 %}
+        </div>
+      {% elif forloop.counter >= 5 %}
+        </div>
+      {% endif %}
+    {% endfor %}
+  </div>
+
+{% endfor %}

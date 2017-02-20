@@ -1,0 +1,83 @@
+{% comment %}
+  A simple table where the questiongroup makes makes up an entire table row.
+  Each question is a cell, the table headers the label of the keys. Helptexts
+  for the keys are rendered as tooltip of the table header. If
+  config.numbered == 'display', an additional cell for the numbering is added at
+  the beginning of each row.
+
+  config: The configuration of the questiongroup
+
+  formset: The (repeating) forms as formset
+
+{% endcomment %}
+
+{% load i18n %}
+{% load floppyforms %}
+{% load list_to_columns %}
+
+{% if config.label %}
+  <h5>{{ config.label }}</h5><br>
+{% endif %}
+<div{% if config.questiongroup_condition %} id="{{ config.questiongroup_condition }}"{% endif %} class="questiongroup{% if config.numbered %} questiongroup-numbered-{{ config.numbered }}{% endif %}{% if config.numbered == 'prefix' %} sortable{% endif %}">
+  {% include "form/helptext.html" with helptext=config.helptext helptext_length=config.helptext_length %}
+  {{ formset.management_form }}  
+  <table class="outer-list-item">
+    {% for width in config.column_widths %}
+      <col width="{{ width }}">
+    {% endfor %}
+    <thead>
+      <tr>
+        {% if config.numbered == 'display' %}
+          <th class="table-numbered"></th>
+        {% endif %}
+        {% for field in formset.forms.0.visible_fields %}
+          {% if forloop.counter != 3 and forloop.counter != 5 %}
+            <th>
+              {% with options=config.options|get_by_keyword:field.name %}
+                {% if options.helptext %}
+                  <span class="has-tip left" title="{{ options.helptext }}" aria-haspopup="true" data-tooltip="">{{ field.label }}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg></span>
+                {% else %}
+                  {{ field.label }}
+                {% endif %}
+              {% endwith %}
+            </th>
+          {% endif %}
+        {% endfor %}
+        <th>{% trans "Remove" %}</th>
+      </tr>
+    </thead>
+    <tbody>
+      {% for qg_form in formset.forms %}
+        <tr class="list-item{% if formset.max_num > formset.min_num %} is-removable" data-questiongroup-keyword="{{ config.keyword }}{% endif %}">
+          {% if config.numbered == 'display' %}
+            <td>{{ forloop.counter }}.</td>
+          {% endif %}
+          {% for field in qg_form.visible_fields %}
+            {% if forloop.counter == 3 %}
+              <td>
+                {% formrow field using "form/question/inline_start.html" %}
+            {% elif forloop.counter == 4 %}
+                {% formrow field using "form/question/inline_middle.html" %}
+            {% elif forloop.counter == 5 %}
+                {% formrow field using "form/question/inline_end.html" %}
+              </td>
+            {% else %}
+              <td>
+                {% formrow field using "form/question/no_label.html" %}
+              </td>
+            {% endif %}
+          {% endfor %}
+          <td><a class="btn btn-link list-item-action" data-remove-this=""{% if forloop.counter <= formset.min_num and formset|length <= formset.min_num %} style="display: none;"{% endif %}>{% trans "Remove" %}</a></td>
+        </tr>
+      {% endfor %}
+    </tbody>
+  </table>
+
+  {% if formset.max_num > formset.min_num %}
+    <div class="row list-action action-below-table">
+      <div class="small-12 columns">
+        <p><a data-add-item="" data-add-table-row data-questiongroup-keyword="{{ config.keyword }}" class="link is-{{ configuration_name }}" {% if formset.total_form_count >= formset.max_num or edit_mode != 'edit' %} style="display:none;"{% endif %}>{% trans 'Add More' %}</a></p>
+      </div>
+    </div>
+  {% endif %}
+</div>

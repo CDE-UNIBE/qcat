@@ -1,0 +1,9 @@
+{% load date_format %}
+
+<ul class="chart-measure-labelled chart-year-bar">
+  {% for i in 'jfmamjjasond' %}
+    <li class="step is-level-{% if forloop.counter|check_month:selected_months %}5{% else %}1{% endif %}">
+      {{ forloop.counter|month_name }}
+    </li>
+  {% endfor %}
+</ul>

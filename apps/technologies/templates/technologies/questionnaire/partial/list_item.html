@@ -61,16 +61,25 @@
       {% endif %}
 
       {# Links and modules #}
-      {# TODO: For the time being, this shows all links as Approaches. This should be improved. #}
       {% if item.links %}
         <ul class="right tech-attached sub-nav-square">
-          <li>
-            <a href="{% url 'technologies:questionnaire_details' item.code %}" class="is-approach" title="{% trans "This SLM Technology is linked to SLM Approaches" %}" data-tooltip=""><svg class="icon"><use xlink:href="#icon-approach"></use></svg>
-              {% if item.links|length > 1 %}
-                <span class="number">{{ item.links|length }}</span>
+          {% for link_configuration, links in item.links.items %}
+            <li>
+              {% if link_configuration == 'approaches' %}
+                <a href="{% url 'technologies:questionnaire_details' item.code %}" class="is-approach" title="{% trans "This SLM Technology is linked to SLM Approaches" %}" data-tooltip=""><svg class="icon"><use xlink:href="#icon-approach"></use></svg>
+                  {% if links|length > 1 %}
+                    <span class="number">{{ links|length }}</span>
+                  {% endif %}
+                </a>
+              {% elif link_configuration == 'cca' %}
+                <a href="{% url 'technologies:questionnaire_details' item.code %}" class="is-cca" title="{% trans "This SLM Technology has a CCA module" %}" data-tooltip=""><svg class="icon"><use xlink:href="#icon-climate"></use></svg>
+                  {% if links|length > 1 %}
+                    <span class="number">{{ links|length }}</span>
+                  {% endif %}
+                </a>
               {% endif %}
-            </a>
-          </li>
+            </li>
+          {% endfor %}
         </ul>
       {% endif %}
     </footer>

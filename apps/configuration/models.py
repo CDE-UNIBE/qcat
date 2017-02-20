@@ -353,7 +353,7 @@ class Value(models.Model):
         return self.translation.get_translation(*args, **kwargs)
 
     def __str__(self):
-        return self.get_translation(keyword='label') or '[Value]'
+        return str(self.get_translation(keyword='label') or '[Value]')
 
 
 class Questiongroup(models.Model):

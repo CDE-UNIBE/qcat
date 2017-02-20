@@ -1,0 +1,48 @@
+{% load staticfiles %}
+{% load list_to_columns %}
+
+<h3>{{ numbering|default:'' }} {{ label }}</h3>
+{% if subcategories %}
+  {% for subcategory in subcategories %}
+    {{ subcategory }}
+  {% endfor %}
+{% else %}
+  {% for questiongroup in questions %}
+    {% if forloop.first %}
+      {% for qg_questions in questiongroup.questions %}
+        {% for question in qg_questions %}
+          {{ question }}
+        {% endfor %}
+      {% endfor %}
+    {% elif forloop.last and questiongroup.conditional_question == None %}
+      {% for qg_questions in questiongroup.questions %}
+        {% for question in qg_questions %}
+          {{ question }}
+        {% endfor %}
+      {% endfor %}  
+    {% elif forloop.counter == 2 %}      
+      {% for qg_questions in questiongroup.questions %}
+        {% for question in qg_questions %}
+          <h5>{{ question.key }}</h5>
+          {% for value in question.values %}
+            <div class="output-has-images">
+              <h4>{{ value.0 }}</h4>
+              <img class="output-image-cb" src="{% static value.1 %}" alt="{{ value.0 }}">
+              <div class="aside-questiongroup">
+                {% for questiongroup_sub in questions %}
+                  {% if questiongroup_sub.conditional_question == value.3 %}
+                    {% for qg_questions_sub in questiongroup_sub.questions %}
+                      {% for question_sub in qg_questions_sub %}
+                        {{ question_sub }}
+                      {% endfor %}
+                    {% endfor %}
+                  {% endif %}
+                {% endfor %}
+              </div>
+            </div>
+          {% endfor %}
+        {% endfor %}
+      {% endfor %}
+    {% endif %}
+  {% endfor %}
+{% endif %}

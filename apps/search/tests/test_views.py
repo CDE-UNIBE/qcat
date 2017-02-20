@@ -279,6 +279,7 @@ class SearchTest(TestCase):
     @patch('search.views.simple_search')
     def test_calls_simple_search_with_get_param(self, mock_simple_search):
         request = self.factory.get(self.url)
+        request.user = create_new_user()
         request.GET = {'q': 'foo'}
         search(request)
         mock_simple_search.assert_called_once_with('foo')

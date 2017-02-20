@@ -1,0 +1,13 @@
+<div class="row">
+  <div class="columns small-12">
+    <h1 class="tech-output-title">
+      {{ content.title }}
+      {% if content.country %}
+        <span class="country">({{ content.country }})</span>
+      {% endif %}
+    </h1>
+    {% if content.local_name %}
+      {{ content.local_name }}
+    {% endif %}
+  </div>
+</div>

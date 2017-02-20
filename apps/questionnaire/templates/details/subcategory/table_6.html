@@ -1,0 +1,109 @@
+{% load list_to_columns %}
+
+{% comment %}
+  Table where each questiongroup occupies one row. The first column is filled with the label of the questiongroup.
+
+  Further questions are rendered either before the table (questiongroup_config.layout == 'before_table') or after the table.
+{% endcomment %}
+
+<{{ label_tag|default:"h5" }}{% if label_class %} class="{{ label_class }}"{% endif %}>{{ numbering|default:'' }} {{ label }}</{{ label_tag|default:"h5" }}>
+{% if subcategories %}
+  {% for subcategory in subcategories %}
+    {{ subcategory }}
+  {% endfor %}
+{% else %}
+  {% for qg_config, qg_rendered in questiongroups %}
+    {% if qg_config.layout == 'before_table' %}
+      {{ qg_rendered }}
+    {% endif %}
+  {% endfor %}
+  {% if raw_questiongroups %}
+    <table class="small-12 output-table">
+      <thead>
+        <tr>
+          {% if layout == 'no_label_row' %}
+            <th style="width: 50%">{{ table_headers.0 }}</th>
+            {% for header in table_headers %}
+              {% if forloop.counter == 1 %}
+                <th style="width: 30%"></th>
+              {% elif forloop.counter == 3 %}
+                <th style="width: 50%">{{ header }}</th>
+              {% elif forloop.counter == 4 %}
+                <th>{{ header }}</th>
+              {% endif %}            
+            {% endfor %}
+          {% else %}
+            <th style="width: 50%"></th>
+            {% for header in table_headers %}
+              {% if forloop.counter == 1 %}
+                <th style="width: 30%"></th>
+              {% elif forloop.counter == 2 %}
+                <th style="width: 50%">{{ header }}</th>
+              {% elif forloop.counter == 3 %}
+                <th>{{ header }}</th>
+              {% endif %}            
+            {% endfor %}
+          {% endif %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for questiongroup in raw_questiongroups %}
+          {% if questiongroup.qg_keyword in table_grouping.0 %}
+            {% for qg in questiongroup.data_labelled %}
+              <tr>
+                {% if questiongroup.layout == 'no_label_row' %}
+                  <td rowspan="2">{{ qg.0.1.0 }}</td>
+                  {% for k, values in qg %}
+                    {% if forloop.counter == 2 or forloop.counter == 5 %}
+                      <td>{{ k }}</td>
+                    {% elif forloop.counter == 4 or forloop.counter == 7 %}
+                      <td>
+                        {% include 'details/field/year_bar.html' with selected_months=questiongroup.data|get_by_index:forloop.parentloop.counter0|get_by_index:forloop.counter0|get_by_index:1 %}
+                      </td>
+                    {% elif forloop.counter == 3 or forloop.counter == 6 %}
+                      <td>
+                        {% for v in values %}                        
+                          {{ v }}
+                        {% endfor %}
+                      </td>
+                    {% endif %}
+                    {% if forloop.counter == 4 %}
+                      </tr><tr>
+                    {% endif %}
+                  {% endfor %}
+                {% else %}
+                  {% if questiongroup.layout != 'no_label_row' %}
+                    <td rowspan="2">{{ questiongroup.label }}</td>
+                  {% endif %}
+                  {% for k, values in qg %}
+                    {% if forloop.counter == 1 or forloop.counter == 4 %}
+                      <td>{{ k }}</td>
+                    {% elif forloop.counter == 3 or forloop.counter == 6 %}
+                      <td>
+                        {% include 'details/field/year_bar.html' with selected_months=questiongroup.data|get_by_index:forloop.parentloop.counter0|get_by_index:forloop.counter0|get_by_index:1 %}
+                      </td>
+                    {% else %}     
+                      <td>
+                        {% for v in values %}
+                          {{ v }}
+                        {% endfor %}
+                      </td>
+                    {% endif %}
+                    {% if forloop.counter == 3 %}
+                      </tr><tr>
+                    {% endif %}
+                  {% endfor %}
+                {% endif %}
+              </tr>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+  {% for qg_config, qg_rendered in questiongroups %}
+    {% if qg_config.layout != 'before_table' %}
+      {{ qg_rendered }}
+    {% endif %}
+  {% endfor %}
+{% endif %}

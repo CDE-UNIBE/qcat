@@ -355,6 +355,21 @@
           "questionnaire"
         ],
         [
+          "view_questionnaire",
+          "questionnaire",
+          "questionnaire"
+        ],
+        [
+          "edit_questionnaire",
+          "questionnaire",
+          "questionnaire"
+        ],
+        [
+          "delete_questionnaire",
+          "questionnaire",
+          "questionnaire"
+        ],
+        [
           "add_project",
           "configuration",
           "project"

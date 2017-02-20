@@ -1,0 +1,9 @@
+{% load list_to_columns %}
+
+{% if not values|is_empty %}
+  {% if label_position != 'none' %}
+    <{{ label_tag|default:"h5" }}>{{ key }}{% if key|last not in ".:!?" %}:{% endif %}</{{ label_tag|default:"h5" }}>
+  {% endif %}
+
+  <p>{{ values|join:", " }}</p>
+{% endif %}

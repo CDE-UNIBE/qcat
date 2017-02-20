@@ -1,0 +1,73 @@
+<div class="row compact">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+  </div>
+</div>
+<div class="row">
+  <div class="small-3 columns">
+      <h5>{{ content.market.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.market.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.income.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.income.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.wealth.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.wealth.items %}
+  </div>
+
+  <div class="small-3 columns">
+      <h5>{{ content.mechanization.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.mechanization.items %}
+  </div>
+</div>
+<div class="row">
+<hr>
+  <div class="small-3 columns">
+      <h5>{{ content.sedentary.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.sedentary.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.individuals.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.individuals.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.gender.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.gender.items %}
+  </div>
+  <div class="small-3 columns">
+      <h5>{{ content.age.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.age.items %}
+  </div>
+  <div class="small-3 columns">
+  </div>
+</div>
+<div class="row">
+<hr>
+  <div class="small-3 columns">
+      <h5>{{ content.area.title }}</h5>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.area.items %}
+  </div>
+  <div class="small-3 columns">
+    <h5>{{ content.scale.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.scale.items %}
+  </div>
+  <div class="small-3 columns">
+    <h5>{{ content.ownership.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.ownership.items %}
+  </div>
+  <div class="small-3 columns">
+    <h5>{{ content.land_rights.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.land_rights.items %}
+    <h5>{{ content.water_rights.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.water_rights.items %}
+  </div>
+</div>
+<div class="row">
+<hr>
+  <div class="small-12 columns">
+    <h5>{{ content.access.title }}</h5>
+  {% include 'summary/partial/range.html' with class="highlights_list" list_items=content.access.items %}
+  </div>
+</div>

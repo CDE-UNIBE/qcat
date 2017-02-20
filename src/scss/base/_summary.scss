@@ -1,0 +1,448 @@
+@mixin no-line-wrap {
+  white-space: nowrap;
+  overflow: hidden;
+  text-overflow: ellipsis;
+}
+
+body.summary {
+  $base-line-height: 1rem;
+  background-color: white;
+  font-size: 0.75rem;
+  text-rendering: optimizeLegibility;
+  letter-spacing: -0.02rem;
+  line-height: $base-line-height;
+
+  a,
+  a:active {
+    color: $color-blue;
+  }
+
+  p {
+    line-height: 1rem;
+  }
+
+  h1 {
+    font-size: $h1-font-size;
+    margin-top: 0.5rem;
+
+  }
+  h2 {
+    font-size: $h2-font-size;
+    text-transform: uppercase;
+  }
+  h5 {
+    font-size: $h5-font-size;
+    font-weight: bold;
+    margin: 0.3rem 0rem 0rem 0rem;
+    display: inline-block;
+    width: 100%;
+    line-height: 1rem;
+  }
+
+  ul {
+    margin-left: 0rem;
+    line-height: 1rem;
+    li {
+      margin-top: 0rem;
+    }
+  }
+
+  img {
+    // see: https://github.com/wkhtmltopdf/wkhtmltopdf/issues/2135
+    z-index: 100;
+    position: relative;
+  }
+
+  .tech-section-header {
+    padding-left: 0;
+    padding-right: 0;
+    margin: 0.7rem 0rem 0.2rem 0rem
+  }
+
+  .overcome {
+    .subtext {
+        margin-left: 0.8rem;
+        font-style: italic;
+        font-weight: normal;
+      &::before {
+        font-size: 1rem;
+        content: '\2192';
+        height: 0;
+        width: 0;
+        left: -0.5em;
+        top: 0.1rem;
+        position: relative;
+        line-height: 0.8rem;
+      }
+    }
+  }
+
+  ul.bullets {
+    list-style-type: disc;
+    margin-left: 1rem;
+    margin-top: 0;
+    li:before {
+      font-size: small;
+    }
+    li {
+      list-style-type: disc;
+    }
+  }
+
+  .row {
+    margin-bottom: 0.6rem;
+    &.compact {
+      margin-bottom: 0;
+    }
+    &.tech-section-header {
+      margin-bottom: 0;
+    }
+    .location .row {
+      margin-bottom: 0;
+    }
+    .budget {
+      padding-right: 0;
+    }
+  }
+
+.location {
+  p,
+  div.paragraph {
+    border-bottom: 1px solid rgba(85, 116, 49, 0.15);
+    margin: 0;
+    line-height: 1rem;
+    padding-bottom: 0.3rem;
+    margin-bottom: 0.3rem;
+
+    &.border-top {
+      border-top: 1px solid rgba(85, 116, 49, 0.15);
+    }
+  }
+  ul {
+    margin-top: 0;
+    line-height: 1rem;
+  }
+}
+  .header-note {
+    margin-bottom: 0;
+    > div > div {
+      padding: 0.2rem;
+      color: #e86b28;
+      font-size: 1rem;
+      background-color: rgba(255, 255, 0, 0.8);
+    }
+  }
+  .header-img {
+    height: 350px;
+    width: 100%;
+    background-size: cover;
+    background-repeat: no-repeat;
+    max-width: 100%;
+  }
+  .img-caption {
+    background-color: rgba(85,116,49,.8);
+    color: white;
+    padding: 0.1rem 1rem 0.2rem 0.4rem;
+    font-size: 0.6rem;
+    line-height: 0.8rem;
+    font-weight: normal;
+  }
+
+  &.is-approaches .img-caption {
+    background-color: #e86b28;
+  }
+
+  .tech-section-content {
+    padding: 1rem 0rem 1rem 0rem;
+  }
+
+  .tech-section-header {
+/*    background-color: #edf0ea;
+*/    h2 {
+      padding-left: 0.4rem;
+      width: auto;
+    }
+  }
+
+   .wocat_logo
+  {
+    position: absolute;
+    top:7px;
+    right: 20px;
+    padding:5px;
+  }
+
+  .img-column
+  {
+    width:auto;
+    max-height: 290px;
+  }
+
+  .img-column-container
+  {
+    background-color: rgba(85, 116, 49, 0.15);
+    width: 100%;
+    height:290px;
+  }
+
+  .img-column-container img
+  {
+    height: 290px;
+  }
+
+  &.is-approaches .img-column-container
+  {
+    background-color: rgba($color-approach, 0.15);
+  }
+
+  .output-has-images .aside-questiongroup ul {
+    margin-top: 0;
+  }
+
+  .img_in_text
+  {
+    float: right;
+    max-width: 66%;
+    max-height: 300px;
+    margin: 0px 0px 20px 20px;
+  }
+
+  ol.numbers {
+    list-style: decimal !important;
+    list-style-position: inside;
+    margin-left: 1rem;
+    margin-top: 0rem;
+    line-height: 1rem;
+    text-transform: none !important;
+        li {
+      list-style-type: decimal;
+      margin-top:0px;
+          text-transform: none !important;
+
+      ul {
+        li {
+          list-style-type: decimal;
+          @extend .overcome;
+              text-transform: none !important;
+
+        }
+      }
+    }
+  }
+  .institution_logo {
+    width: 200px;
+    margin: 10px 20px 20px 0px;
+    float: left;
+    img {
+      max-width: 100%;
+      max-height: 100%;
+    }
+  }
+
+  .technology_table td
+  {
+    border: 0 solid black;
+    font-size: 0.75rem;
+    background-color: white;
+    line-height: $base-line-height;
+    letter-spacing: -0.02rem;
+    padding: 0;
+
+    &.indent_table
+    {
+      padding-left: 0.2rem;
+    }
+
+  }
+
+  td.td_category_title
+  {
+    background-color: rgba(85, 116, 49, 0.15);
+  }
+
+  .technology_table tr:nth-of-type(even)
+  {
+  }
+
+  .total_row
+  {
+    padding-top: 10px;
+
+    & td {
+      background-color: rgba(85, 116, 49, 0.3);
+    }
+  }
+
+  .calculation_costs_section
+  {
+    background-color: rgba(85, 116, 49, 0.15);
+    width: 100%;
+    padding: 0 10px 1px 10px;
+    margin: 5px 0;
+  }
+
+  &.is-approaches .calculation_costs_section
+  {
+    background-color: rgba($color-approach, 0.15);
+  }
+
+  .no-wrap-container {
+    @include no-line-wrap
+  }
+  .row.range
+  {
+    margin-bottom: 0.0rem;
+  }
+
+  .range_square
+  {
+    width: 15px;
+    height: 15px;
+    background-color: rgba(85, 116, 49, 0.15);
+    float: left;
+    margin: 0px 1px 1px 0px;
+  }
+
+  &.is-approaches .range_square
+  {
+    background-color: rgba($color-approach, 0.15);
+  }
+
+  .range_title
+  {
+    font-size: 10px;
+    padding: 0px 5px 0px 5px;
+    float: left;
+    /*min-width: 70px;*/
+    width: 76px;
+    @include no-line-wrap
+  }
+  .impacts .range_title
+  {
+    min-width: 70px;
+  }
+  .impacts .comments {
+    margin-top: 0.3rem;
+  }
+
+  .adaptation-comments {
+    margin-top: 21px;
+  }
+  .range.border .columns {
+    border-top: 1px solid #ccc;
+  }
+
+  .range_max
+  {
+    text-align: left;
+  }
+
+  .range_min
+  {
+    text-align: right;
+  }
+
+  .range_comment {
+    font-size: 10px;
+    display: inline-block;
+    position: absolute;
+  }
+
+  .range_true::before
+  {
+    background-color: #768f5a;
+    float: left;
+    margin: 0px 1px 1px 0px;
+    padding-left: 1px;
+    color: white;
+    width: 15px;
+    height: 15px;
+    line-height: 1em;
+    font-size: 1.2em;
+    font-weight: bold;
+    content: "\2713";
+  }
+
+  &.is-approaches .range_true::before
+  {
+    background-color: #e86b28;
+  }
+
+  p.location_text
+  {
+    margin-top: 0.3rem;
+  }
+
+ .divider
+ {
+    border-top: 1px solid rgba(85, 116, 49, 0.15);
+    border-bottom: 0px solid rgba(85, 116, 49, 0.15);
+    border-left: 0px solid rgba(85, 116, 49, 0.15);
+    border-right: 0px solid rgba(85, 116, 49, 0.15);
+    padding: 10px 0px 10px 0px;
+ }
+
+ &.is-approaches .divider
+ {
+    border-top-width: 1px;
+    border-style: solid;
+    border-color: rgba($color-approach, 0.15);;
+    border-bottom-width: 0px;
+    border-left-width: 0px;
+    border-right-width: 0px;
+ }
+
+ .avoidbreak
+ {
+    page-break-inside: avoid;
+ }
+
+ .nowrap
+ {
+    white-space: nowrap;
+ }
+
+ hr
+ {
+    border: 0;
+    height: 0;
+    border-top: 1px solid rgba(85, 116, 49, 0.15);
+    margin: 1px 10px 2px 10px;
+ }
+
+ &.is-approaches hr
+ {
+    border-top: 1px solid rgba($color-approach, 0.15);
+ }
+
+ .rotate
+ {
+  -webkit-transform: rotate(-90deg);
+  transform: rotate(-90deg);
+  -ms-transform: rotate(-90deg);
+  font-size: 10px;
+  width: 100px;
+  height: 90px;
+ }
+
+ .rotate-container
+ {
+  width: 100%;
+  line-height: 1rem;
+ }
+
+ p.comment {
+   line-height: 1rem;
+   font-style: italic;
+   font-size: 10px;
+ }
+ .text-right {
+   padding-right: rem-calc(10) !important;
+ }
+ .padding-bottom {
+   padding-bottom: 0.25rem;
+ }
+ .flow-chart {
+   margin-right: 1rem;
+ }
+}

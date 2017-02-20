@@ -12,6 +12,8 @@
     "jquery-nstSlider": "~1.0.11",
     "jquery-ui": "~1.11.4",
     "intro.js": "~2.0.0",
-    "openlayers": "https://github.com/openlayers/ol3/releases/download/v3.16.0/v3.16.0-dist.zip"
+    "handlebars": "~4.0.5",
+    "openlayers": "https://github.com/openlayers/ol3/releases/download/v3.16.0/v3.16.0-dist.zip",
+    "ol3gm": "https://github.com/mapgears/ol3-google-maps/releases/download/v0.13.1/ol3-google-maps-v0.13.1.zip"
   }
 }

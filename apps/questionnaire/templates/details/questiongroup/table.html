@@ -8,7 +8,7 @@
 {% endcomment %}
 
 {% if config.label and config.layout == 'label' %}
-  <h5>{{ config.label }}</h5>
+  <h5{% if config.label_class %} class="{{ config.label_class }}"{% endif %}>{{ config.label }}</h5>
 {% endif %}
 <table class="full-width">
   {% for width in config.column_widths %}

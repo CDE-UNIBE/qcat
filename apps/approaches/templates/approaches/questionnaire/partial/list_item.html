@@ -61,19 +61,19 @@
       {% endif %}
 
       {# Links and modules #}
-      {# TODO: For the time being, this shows all links as Technologies. This should be improved. #}
       {% if item.links %}
         <ul class="right tech-attached sub-nav-square">
-          <li>
-            <a href="{% url 'approaches:questionnaire_details' item.code %}" class="is-tech" title="{% trans "This SLM Approach is linked to SLM Technologies" %}" data-tooltip=""><svg class="icon"><use xlink:href="#icon-technology"></use></svg>
-              {% if item.links|length > 1 %}
-                <span class="number">{{ item.links|length }}</span>
+          {% for link_configuration, links in item.links.items %}
+            <li>
+              {% if link_configuration == 'technologies' %}
+                <a href="{% url 'approaches:questionnaire_details' item.code %}" class="is-tech" title="{% trans "This SLM Approach is linked to SLM Technologies" %}" data-tooltip=""><svg class="icon"><use xlink:href="#icon-technology"></use></svg>
+                  {% if item.links|length > 1 %}
+                    <span class="number">{{ item.links|length }}</span>
+                  {% endif %}
+                </a>
               {% endif %}
-            </a>
-          </li>
-{#          <li>#}
-{#            <a href=""><svg class="icon"><use xlink:href="#icon-climate"></use></svg></a>#}
-{#          </li>#}
+            </li>
+          {% endfor %}
         </ul>
       {% endif %}
     </footer>

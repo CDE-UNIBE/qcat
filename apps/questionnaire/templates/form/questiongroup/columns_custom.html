@@ -39,6 +39,8 @@
 
   {{ formset.management_form }}
 
+  {% include "form/errors.html" with errors=formset.non_form_errors %}
+
   {% for qg_form in formset.forms %}
 
     {% if config.numbered == 'prefix' %}

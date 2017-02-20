@@ -32,6 +32,7 @@ class BaseSettings(Configuration):
         'django.contrib.messages',
         'django.contrib.sitemaps',
         'django.contrib.staticfiles',
+        'django.contrib.humanize',
         'compressor',
         'django_nose',
         'django_extensions',
@@ -44,6 +45,7 @@ class BaseSettings(Configuration):
         'rest_framework',
         'rest_framework_swagger',
         'sekizai',
+        'wkhtmltopdf',
         'django_cas_ng',
         # Custom apps
         'accounts',
@@ -52,12 +54,17 @@ class BaseSettings(Configuration):
         'configuration',
         'qcat',
         'questionnaire',
+        'notifications',
         'sample',
         'samplemulti',
+        'samplemodule',
         'search',
+        'summary',
         'technologies',
         'unccd',
+        'watershed',
         'wocat',
+        'cca',
     )
 
     MIDDLEWARE_CLASSES = (
@@ -89,9 +96,19 @@ class BaseSettings(Configuration):
     # The first language is the default language.
     LANGUAGES = (
         ('en', _('English')),
-        ('es', _('Spanish')),
         ('fr', _('French')),
+        ('es', _('Spanish')),
+        ('ru', _('Russian')),
+        ('km', _('Khmer')),
+        ('ar', _('Arabic')),
+        ('bs', _('Bosnian')),
+        ('pt', _('Portuguese')),
     )
+    # languages with extraordinarily long words that need 'forced' line breaks
+    # to remain consistent in the box-layout.
+    WORD_WRAP_LANGUAGES = [
+        'km'
+    ]
 
     TIME_ZONE = 'Europe/Zurich'
     USE_I18N = True
@@ -131,6 +148,27 @@ class BaseSettings(Configuration):
         ('medium', (1440, 1080)),
         # 'large' is the original uploaded image.
     )
+    THUMBNAIL_ALIASES = {
+        'summary': {
+            'header_image': {
+                'size': (0, 700),
+                'crop': 'smart',
+                'upscale': True
+            },
+            'half_height': {
+                'size': (0, 290),
+                'crop': 'smart',
+            },
+            'map': {
+                'size': (300, 0)
+            },
+            'flow_chart': {
+                'size': (450, 0)
+            }
+        }
+    }
+
+    SUMMARY_PDF_PATH = join(MEDIA_ROOT, 'summary-pdf')
 
     TEMPLATE_DIRS = (
         join(BASE_DIR, 'templates'),
@@ -156,7 +194,7 @@ class BaseSettings(Configuration):
     LOGIN_URL = 'login'
 
     # TODO: Try if tests can be run with --with-fixture-bundling
-    TEST_RUNNER = 'django_nose.NoseTestSuiteRunner'
+    TEST_RUNNER = 'qcat.discover_runner.QcatTestSuiteRunner'
     NOSE_ARGS = [
         '--cover-html', '--cover-html-dir=coverage_html', '--cover-erase',
         '--cover-package=accounts,configuration,qcat,questionnaire,unccd',
@@ -202,6 +240,8 @@ class BaseSettings(Configuration):
             'anon': '10/day',
             'user': '2000/day',
         },
+        'DEFAULT_VERSIONING_CLASS':
+            'rest_framework.versioning.NamespaceVersioning',
         'PAGE_SIZE': 25,
     }
     SWAGGER_SETTINGS = {
@@ -246,29 +286,40 @@ class BaseSettings(Configuration):
 
     USE_CACHING = values.BooleanValue(default=True)
     CACHES = values.CacheURLValue(default='locmem://')
+    KEY_PREFIX = values.Value(environ_prefix='', default='')
 
     # If set to true, the template 503.html is displayed.
     MAINTENANCE_MODE = values.BooleanValue(environ_prefix='', default=False)
     MAINTENANCE_LOCKFILE_PATH = join(BASE_DIR, 'maintenance.lock')
 
-    # Settings for opbeat.
-    OPBEAT_ORGANIZATION_ID = values.Value(environ_prefix='')
-    OPBEAT_APP_ID = values.Value(environ_prefix='')
-    OPBEAT_SECRET_TOKEN = values.Value(environ_prefix='')
+    # "Feature toggles"
+    IS_ACTIVE_FEATURE_MODULE = values.BooleanValue(
+        environ_prefix='', default=False
+    )
+    IS_ACTIVE_FEATURE_WATERSHED = values.BooleanValue(
+        environ_prefix='', default=False
+    )
+    IS_ACTIVE_FEATURE_SUMMARY = values.BooleanValue(
+        environ_prefix='', default=False
+    )
 
-    # Settings for automated deploy with fabric.
-    OPBEAT_BEARER_DEV = values.Value(environ_prefix='')
-    OPBEAT_BEARER_LIVE = values.Value(environ_prefix='')
-
-    OPBEAT_URL_DEV = values.Value(environ_prefix='')
-    OPBEAT_URL_LIVE = values.Value(environ_prefix='')
+    SENTRY_DSN = values.Value(environ_prefix='')
 
     HOST_STRING_DEV = values.Value(environ_prefix='')
+    HOST_STRING_DEMO = values.Value(environ_prefix='')
     HOST_STRING_LIVE = values.Value(environ_prefix='')
 
-    WARN_HEADER = values.Value(environ_prefix='')
+    # touch file to reload uwsgi
+    TOUCH_FILE_DEV = values.Value(environ_prefix='')
+    TOUCH_FILE_DEMO = values.Value(environ_prefix='')
+    TOUCH_FILE_LIVE = values.Value(environ_prefix='')
 
-    # Settings for piwik integration. Tracking happens in the frontend (base template) and backend (API)
+    WARN_HEADER = values.Value(environ_prefix='')
+    NEXT_MAINTENANCE = join(BASE_DIR, 'envs/NEXT_MAINTENANCE')
+    DEPLOY_TIMEOUT = values.Value(environ_prefix='', default=900)
+
+    # Settings for piwik integration. Tracking happens in the frontend
+    # (base template) and backend (API)
     PIWIK_SITE_ID = values.IntegerValue(environ_prefix='', default=None)
     PIWIK_URL = values.Value(environ_prefix='')
     PIWIK_AUTH_TOKEN = values.Value(environ_prefix='')
@@ -276,6 +327,14 @@ class BaseSettings(Configuration):
 
     # google webdeveloper verification
     GOOGLE_WEBMASTER_TOOLS_KEY = values.Value(environ_prefix='')
+
+    # Google Maps Javascript API key
+    GOOGLE_MAPS_JAVASCRIPT_API_KEY = values.Value(environ_prefix='')
+
+    # Global switch to prevent sending mails.
+    SEND_MAILS = values.BooleanValue(default=False)
+
+    WOCAT_IMPORT_DATABASE_URL = values.Value(environ_prefix='')
 
     # TODO: Temporary test of UNCCD flagging.
     TEMP_UNCCD_TEST = values.ListValue(environ_prefix='')

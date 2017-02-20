@@ -1,0 +1,51 @@
+<div class="row compact">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+  </div>
+</div>
+<div class="row">
+  {#  <h5>{{ content.lead.text }}</h5> #}
+  <div class="small-6 columns">
+    <h5>{{ content.main_purpose.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.main_purpose.partials %}
+  </div>
+  <div class="small-6 columns">
+  	<h5>{{ content.landuse.title }}</h5>
+   	<p>
+      {% include 'summary/partial/image_with_caption.html' with list_items=content.landuse.partials %}
+    </p>
+    <h5>{{ content.water_supply.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.water_supply.partials.list %}
+    <p>
+      {% for list_item in content.water_supply.partials.text %}
+        <div>
+          {% if list_item.title %}<b>{{ list_item.title }}:</b>{% endif %}
+          {{ list_item.text|safe}}
+          {% if list_item.subtext %}<span class="subtext">{{ list_item.subtext }}</span>{% endif %}
+        </div>
+      {% endfor %}
+    </p>
+  </div>
+</div>
+<div class="row">
+<hr>
+  <div class="small-6 columns">
+    <h5>{{ content.purpose.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.purpose.partials %}
+  </div>
+  <div class="small-6 columns">
+    <h5>{{ content.degredation.title }}</h5>
+    {% include 'summary/partial/image_with_caption.html' with list_items=content.degredation.partials %}
+  </div>
+</div>
+<div class="row">
+<hr>
+  <div class="small-6 columns">
+    <h5>{{ content.slm_group.title }}</h5>
+    {% include 'summary/partial/unordered_list.html' with list_items=content.slm_group.partials class="bullets" %}
+	</div>
+  <div class="small-6 columns">
+    <h5>{{ content.measures.title }}</h5>
+    {% include 'summary/partial/image_with_caption.html' with list_items=content.measures.partials %}
+  </div>
+</div>

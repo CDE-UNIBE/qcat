@@ -9,7 +9,11 @@
     <li class="arrow{% if not page_obj.has_previous %} unavailable{% endif %}">
       <a href="#" {% if page_obj.has_previous %}data-page="{{ page_obj.previous_page_number }}"{% endif %} data-status="{{ view.status }}">&laquo;</a>
     </li>
-    <li>{{ page_obj.number }} / {{ page_obj.paginator.num_pages }}</li>
+    {% for page in page_obj.paginator.page_range %}
+      <li {% if page == page_obj.number %}class="current"{% endif %}>
+        <a href="#" data-page="{{ page }}" data-status="{{ view.status }}">{{ page }}</a>
+      </li>
+    {% endfor %}
     <li class="arrow{% if not page_obj.has_next %} unavailable{% endif %}">
       <a href="#" {% if page_obj.has_next %}data-page="{{ page_obj.next_page_number }}"{% endif %} data-status="{{ view.status }}">&raquo;</a>
     </li>

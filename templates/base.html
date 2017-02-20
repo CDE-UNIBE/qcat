@@ -47,6 +47,13 @@
     {% compress css %}
         <link rel="stylesheet" href="{% static 'css/app.css' %}" />
     {% endcompress %}
+    {% if request.LANGUAGE_CODE in WORD_WRAP_LANGUAGES %}
+      <style type="text/css">
+        body {
+          word-wrap: break-word;
+        }
+      </style>
+    {% endif %}
 
     {% compress js %}
       <!-- todo: measure if cdns are benefitial for rural areas -->
@@ -117,7 +124,12 @@
         <section class="top-bar-section">
           <ul class="right">
             {% if user.is_authenticated %}
-              <li class="has-dropdown">
+              <li>
+                <a href="{% url 'notification_list' %}?is_unread" class="notification-indicator" title ="{% trans "See your messages." %}">
+                  <svg class="icon"><use xlink:href="#icon-mail" xmlns:xlink="http://www.w3.org/1999/xlink"/></svg>
+                </a>
+              </li>
+              <li class="has-dropdown user-menu">
                 <a href="#">{{ user }}</a>
                 <ul class="dropdown">
                   <li><a href="{% url 'account_questionnaires' %}">{% trans "My SLM practices" %}</a></li>
@@ -148,7 +160,9 @@
                   <input name="next" type="hidden" value="{{ request.path|clean_url }}" />
                   <input id="language_field" name="language" type="hidden" />
                   {% for lang in LANGUAGES %}
-                    <li {% if lang.0 == LANGUAGE_CODE %} class="active"{% endif %}><a href="{% change_lang lang.0 %}" data-language="{{ lang.0 }}">{{ lang.1 }}</a></li>
+                    <li {% if lang.0 == LANGUAGE_CODE %} class="active"{% endif %}>
+                      <a href="{% change_lang lang.0 %}" data-language="{{ lang.0 }}">{% language lang.0 %}{{ lang.1 }}{% endlanguage %}</a>
+                    </li>
                   {% endfor %}
                 </form>
                 <li class="lang-switcher-info"><a href="https://www.wocat.net/en/about-wocat/contact.html" target="_blank" data-tooltip="" title="{% trans "Would you like to help us translate the SLM Database? Please contact the WOCAT Secretariat for more information." %}"><svg class="icon-lines is-inline"><use xlink:href="#icon-info"></use></svg></a></li>
@@ -159,7 +173,7 @@
           <ul class="left">
             <li{% if request.resolver_match.view_name == 'wocat:home' %} class="active"{% endif %}><a href="{% url 'wocat:home' %}">{% trans "Home" %}</a></li>
             <li{% if request.resolver_match.view_name == 'wocat:questionnaire_list' %} class="active"{% endif %}><a href="{% url 'wocat:questionnaire_list' %}">{% trans "Search SLM Data" %}</a></li>
-            <li{% if request.resolver_match.view_name == 'wocat:add' or request.resolver_match.view_name == 'wocat:add_practice' or request.resolver_match.view_name == 'wocat:add_module' or request.resolver_match.view_name == 'technologies:questionnaire_new' or request.resolver_match.view_name == 'approaches:questionnaire_new' %} class="active"{% endif %}><a href="{% url 'wocat:add' %}">{% trans "Add SLM data" %}</a></li>
+            <li{% if request.resolver_match.view_name == 'wocat:add' or request.resolver_match.view_name == 'wocat:add_practice' or request.resolver_match.view_name == 'technologies:add_module' or request.resolver_match.view_name == 'technologies:questionnaire_new' or request.resolver_match.view_name == 'approaches:questionnaire_new' %} class="active"{% endif %}><a href="{% url 'wocat:add' %}">{% trans "Add SLM data" %}</a></li>
             <li{% if request.resolver_match.view_name == 'account_questionnaires' %} class="active"{% endif %}><a href="{% if user.is_authenticated %}{% url 'account_questionnaires' %}{% else %}{% url 'login' %}{% endif %}">{% trans "My SLM Data" %}</a></li>
           </ul>
 
@@ -197,18 +211,45 @@
       <script src="{% static 'js/foundation.min.js' %}"></script>
       <script src="{% static 'js/jquery.nstSlider.min.js' %}"></script>
       <script src="{% static 'js/main.min.js' %}"></script>
+      <script>
+      $(function() {
+        // load indicator for new pending tasks - if any (not zero) are available.
+        var notificationIndicator = $('.notification-indicator');
+        if (notificationIndicator.length !== 0) {
+          $.ajax({
+            url: '{% url 'notification_new_count' %}',
+            method: 'GET'
+          }).done(function(data) {
+            if (data != 0) {
+              notificationIndicator.prepend('<strong>' + data + '</strong>');
+              notificationIndicator.addClass('has-unread-messages')
+            }
+          });
+        }
+      });
+      </script>
     {% endcompress %}
     <!-- Block for js within specific templates. Add compress in the template.  -->
     {% render_block "js" %}
 
     {% block footer %}
+      {% if maintenance_warn_overlay %}
+        <div class="reveal-modal" id="deploy-modal" data-reveal aria-labelledby="deploy-title" aria-hidden="true" role="dialog">
+          <h2 id="deploy-title">{% trans "Maintenance announcement" %}</h2>
+          {{ maintenance_warn_overlay|safe }}
+          <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+        </div>
+        <script>
+          $(document).ready(function(){$('#deploy-modal').foundation('reveal', 'open')});
+        </script>
+      {% endif %}
       <footer class="row page-footer large-collapse" role="contentinfo">
         <nav class="sub-nav-footer medium-4 columns">
           <a href="https://www.wocat.net/en/news-events/global-news/newsdetail/article/launch-of-the-new-wocat-global-database-on-slm.html" target="_blank" class="link">{% trans "About" %}</a> | <a href="https://www.wocat.net/en/about-wocat/contact.html" target="_blank" class="link">{% trans "Contact" %}</a>
         </nav>
         <div class="medium-4 columns text-center">
             <a href="https://www.wocat.net/en/news-events/global-news/newsdetail/article/unccd-identifies-wocat-as-primary-recommended-database-for-best-practices-on-slm-technologies.html" target="_blank" class="link">{% trans "Primary recommended database" %}</a><br>
-            <a href="https://www.wocat.net/en/news-events/global-news/newsdetail/article/unccd-identifies-wocat-as-primary-recommended-database-for-best-practices-on-slm-technologies.html" target="_blank"><img src="{% static 'assets/img/unccd_footer_logo.png' %}" alt="{% trans "UNCCD" %}"></a>
+            <a href="https://www.wocat.net/en/news-events/global-news/newsdetail/article/unccd-identifies-wocat-as-primary-recommended-database-for-best-practices-on-slm-technologies.html" target="_blank"><img src="{% static 'assets/img/unccd_logo.svg' %}" alt="{% trans "UNCCD" %}" class="logo-unccd-footer"></a>
         </div>
         <div class="page-footer-copy medium-4 columns">
           &copy; {% now "Y" %} - <a href="http://www.wocat.net/" target="_blank" class="link">{% trans "WOCAT" %}</a>

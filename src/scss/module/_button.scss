@@ -88,13 +88,13 @@ button,
   .button:hover {
     z-index: 3;
   }
-  input[type="radio"]{
+  input[type="radio"], input[type="checkbox"] {
     display: none;
   }
   &.measure input[type="radio"]+.button {
     background: $color-beige-dark;
   }
-  input[type="radio"]:checked+.button{
+  input[type="radio"]:checked+.button, input[type="checkbox"]:checked+.button {
     background: $color-brown-dark;
     color: white;
     &:focus,

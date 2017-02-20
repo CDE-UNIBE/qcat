@@ -1,0 +1,43 @@
+{% load i18n %}
+{% load static %}
+
+<div class="row">
+  <div class="medium-9 columns">
+    <h2>
+      <span class="is-wocat">{% trans "Hello" %} {{ user.firstname }}.</span>
+      {% trans "Welcome to the Watershed data entry form." %}
+    </h2>
+    <p>{% trans "You are about to add data from the Questionnaire on Watershed." %}</p>
+    <p>
+      {% url 'wocat:help_questionnaire_introduction' as intro_url %}
+      {% blocktrans with start_tour_link="<a class='link' href='#' onclick='return startIntro();'>" end_link="</a>" %}If this is the first time you are using the data entry form {{ start_tour_link }}please visit the help tour{{ end_link }} and <a href="{{ intro_url }}" class="link">read the introduction to the questionnaire{{ end_link }}.{% endblocktrans %}
+    </p>
+    <p>
+      {% blocktrans with start_link='<a href="https://www.wocat.net/en/methods/modules/watershed-management.html" target="_blank" class="link">' endlink='</a>' %}A PDF version of the paper questionnaire can be {{ start_link }}downloaded here{{ end_link }}.{% endblocktrans %}
+    </p>
+    {% comment %}
+      Deactivated list of questionnaires with status draft from current user during unccd testing, as requested by
+      Isabelle.
+    {% endcomment %}
+    {#              {% include 'details/section/list_in_progress.html' with questionnaires_in_progress=questionnaires_in_progress %}#}
+    <p>
+      <a class="button" id="show_help" class="link" onclick="return startIntro();">{% trans "Take a tour" %}</a>
+      <a class="button success" href="{{ review_config.first_section_url }}" class="link">{% trans "Start data entry" %}</a>
+    </p>
+  </div>
+  <div class="medium-3 columns">
+    {% get_current_language as LANGUAGE_CODE %}
+    {% with small_url='assets/img/infographics/review_process_'|add:LANGUAGE_CODE|add:'_small.png' large_url='assets/img/infographics/review_process_'|add:LANGUAGE_CODE|add:'.png' %}
+      <a href="#" class="th" role="button" aria-label="{% trans "Review process" %}" data-reveal-id="review_process_modal">
+        <img data-interchange="[{% static small_url %}, (default)], [{% static large_url %}, (large)]">
+      </a>
+      <div id="review_process_modal" class="reveal-modal text-center" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
+        <a href="{% static large_url %}">
+          <img data-interchange="[{% static small_url %}, (default)], [{% static large_url %}, (large)]">
+        </a>
+        <p><a href="{% static large_url %}" class="link">{% trans "Click the image for a larger version of it." %}</a></p>
+        <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+      </div>
+    {% endwith %}
+  </div>
+</div>

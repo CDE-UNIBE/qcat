@@ -46,6 +46,7 @@
                   </div>
                 {% endwith %}
               {% endfor %}
+              {% for field in qg_form.hidden_fields %}{% formfield field %}{% endfor %}
             </div>
           {% endfor %}
         </div>

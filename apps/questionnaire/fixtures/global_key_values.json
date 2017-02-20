@@ -17,6 +17,16 @@
           "label": {
             "en": "Title of best practice"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Name"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Name of the watershed"
+          }
         }
       }
     },
@@ -43,6 +53,16 @@
           }
         },
         "unccd": {
+          "label": {
+            "en": "Country"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Country"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Country"
           }
@@ -100,6 +120,11 @@
           "label": {
             "en": "Comments"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Comments"
+          }
         }
       }
     },
@@ -116,6 +141,11 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "Region/ State/ Province"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Region/ State/ Province"
           }
@@ -144,6 +174,14 @@
           "label_view": {
             "en": "Further specification of location"
           }
+        },
+        "watershed": {
+          "label": {
+            "en": "Further specification of location (e.g. municipality, town, etc.), if relevant"
+          },
+          "label_view": {
+            "en": "Further specification of location"
+          }
         }
       }
     },
@@ -163,6 +201,11 @@
           "label": {
             "en": "Image"
           }
+        },
+        "watershed": {
+          "label": {
+            "en": "Image"
+          }
         }
       }
     },
@@ -176,11 +219,25 @@
         "technologies": {
           "label": {
             "en": "Caption, explanation of photo"
+          },
+          "helptext": {
+            "en": "Write one sentence."
           }
         },
         "approaches": {
           "label": {
             "en": "Caption, explanation of photo"
+          },
+          "helptext": {
+            "en": "Write one sentence."
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Caption, explanation of photo"
+          },
+          "helptext": {
+            "en": "Write one sentence."
           }
         }
       }
@@ -201,6 +258,11 @@
           "label": {
             "en": "Date"
           }
+        },
+        "watershed": {
+          "label": {
+            "en": "Date"
+          }
         }
       }
     },
@@ -217,6 +279,11 @@
           }
         },
         "approaches": {
+          "label": {
+            "en": "Name of photographer"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Name of photographer"
           }
@@ -297,6 +364,16 @@
           "label": {
             "en": "User ID"
           }
+        },
+        "watershed": {
+          "label": {
+            "en": "User ID"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "User ID"
+          }
         }
       }
     },
@@ -313,6 +390,11 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "Location"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Location"
           }
@@ -335,6 +417,16 @@
           "label": {
             "en": "Lastname / surname"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Lastname"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Lastname / surname"
+          }
         }
       }
     },
@@ -351,6 +443,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "First name(s)"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "First name(s)"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "First name(s)"
           }
@@ -373,6 +475,16 @@
           "label": {
             "en": "Gender"
           }
+        },
+        "watershed": {
+          "label": {
+            "en": "Gender"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Gender"
+          }
         }
       }
     },
@@ -389,6 +501,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "Name of institution"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Name of institution"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Name of institution"
           }
@@ -487,6 +609,16 @@
           "label": {
             "en": "Phone no. 1"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Phone no. 1"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Phone no. 1"
+          }
         }
       }
     },
@@ -503,6 +635,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "Phone no. 2 (mobile)"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Phone no. 2 (mobile)"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Phone no. 2 (mobile)"
           }
@@ -525,6 +667,16 @@
           "label": {
             "en": "E-mail 1"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "E-mail 1"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "E-mail 1"
+          }
         }
       }
     },
@@ -541,6 +693,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "E-mail 2"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "E-mail 2"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "E-mail 2"
           }
@@ -582,6 +744,16 @@
           "label": {
             "en": "Other (specify)"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Other (specify)"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Other (specify)"
+          }
         }
       }
     },
@@ -607,6 +779,19 @@
           "helptext": {
             "en": "<strong>Land user</strong>: the person/ entity who implements/ maintains the Technology, including individual small/large scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc."
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Strengths/ advantages/ opportunities of the technology"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Strengths/ advantages/ opportunities in the land user’s / watershed user’s view"
+          },
+          "helptext": {
+            "en": "<p><strong>Land user</strong>: the person/ entity who implements/ maintains the Technology. The term land user may refer to individual small- or large-scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc.</p><p><strong>Watershed user</strong>: the person/ entity who implements/ maintains the watershed management activities, including individual small-  or large-scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc.</p>"
+          }
         }
       }
     },
@@ -623,6 +808,11 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "Strengths/ advantages/ opportunities in the compiler’s or other key resource person’s view"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Strengths/ advantages/ opportunities in the compiler’s or other key resource person’s view"
           }
@@ -651,6 +841,19 @@
           "helptext": {
             "en": "<strong>Land user</strong>: the person/ entity who implements/ maintains the Technology, including individual small/large scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc."
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Weaknesses/ disadvantages/ risks"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Weaknesses/ disadvantages/ risks in the land user’s / watershed user’s view"
+          },
+          "helptext": {
+            "en": "<p><strong>Land user</strong>: the person/ entity who implements/ maintains the Technology. The term land user may refer to individual small- or large-scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc.</p><p><strong>Watershed user</strong>: the person/ entity who implements/ maintains the watershed management activities, including individual small-  or large-scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc.</p>"
+          }
         }
       }
     },
@@ -670,6 +873,11 @@
           "label": {
             "en": "Weaknesses/ disadvantages/ risks in the compiler’s or other key resource person’s view"
           }
+        },
+        "watershed": {
+          "label": {
+            "en": "Weaknesses/ disadvantages/ risks in the compiler’s or other key resource person’s view"
+          }
         }
       }
     },
@@ -686,6 +894,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "How can they be overcome?"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "How can they be overcome?"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "How can they be overcome?"
           }
@@ -822,6 +1040,11 @@
           "label": {
             "en": "Which of the following methods/ sources of information were used?"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Which of the following methods/ sources of information were used?"
+          }
         }
       }
     },
@@ -857,6 +1080,11 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "other (specify)"
+          }
+        },
+        "cca": {
           "label": {
             "en": "other (specify)"
           }
@@ -898,6 +1126,11 @@
           "label": {
             "en": ""
           }
+        },
+        "cca": {
+          "label": {
+            "en": ""
+          }
         }
       }
     },
@@ -921,6 +1154,16 @@
         "unccd": {
           "label": {
             "en": "Local name"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Locally used name"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Locally used name"
           }
         }
       }
@@ -976,6 +1219,11 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "General remarks regarding photos"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "General remarks regarding photos"
           }
@@ -1036,6 +1284,16 @@
           "label": {
             "en": "Specify the key resource person"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Specify the key resource person"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Specify the key resource person"
+          }
         }
       }
     },
@@ -1048,7 +1306,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Name of project which facilitated the documentation/ evaluation of the Technology (if relevant)"
+            "en": "Name of project which facilitated the documentation/ evaluation of the Approach (if relevant)"
           },
           "helptext": {
             "en": "If your project is not listed in the dropdown, please contact the WOCAT secretariat (wocat@cde.unibe.ch)."
@@ -1057,6 +1315,22 @@
         "technologies": {
           "label": {
             "en": "Name of project which facilitated the documentation/ evaluation of the Technology (if relevant)"
+          },
+          "helptext": {
+            "en": "If your project is not listed in the dropdown, please contact the WOCAT secretariat (wocat@cde.unibe.ch)."
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Name of project which facilitated the documentation/ evaluation of the adaptation of the Technology to climate change (if relevant)"
+          },
+          "helptext": {
+            "en": "If your project is not listed in the dropdown, please contact the WOCAT secretariat (wocat@cde.unibe.ch)."
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Name of project which facilitated the documentation/ evaluation of the watershed (if relevant)"
           },
           "helptext": {
             "en": "If your project is not listed in the dropdown, please contact the WOCAT secretariat (wocat@cde.unibe.ch)."
@@ -1073,7 +1347,7 @@
       "data": {
         "approaches": {
           "label": {
-            "en": "Name of the institution(s) which facilitated the documentation/ evaluation of the Technology (if relevant)"
+            "en": "Name of the institution(s) which facilitated the documentation/ evaluation of the Approach (if relevant)"
           },
           "helptext": {
             "en": "If your institution is not listed in the dropdown, please contact the WOCAT secretariat (wocat@cde.unibe.ch)."
@@ -1082,6 +1356,22 @@
         "technologies": {
           "label": {
             "en": "Name of the institution(s) which facilitated the documentation/ evaluation of the Technology (if relevant)"
+          },
+          "helptext": {
+            "en": "If your institution is not listed in the dropdown, please contact the WOCAT secretariat (wocat@cde.unibe.ch)."
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Name of the institution(s) which facilitated the documentation/ evaluation of the adaptation of the Technology to climate change (if relevant)"
+          },
+          "helptext": {
+            "en": "If your institution is not listed in the dropdown, please contact the WOCAT secretariat (wocat@cde.unibe.ch)."
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Name of the institution(s) which facilitated the documentation/ evaluation of the watershed (if relevant)"
           },
           "helptext": {
             "en": "If your institution is not listed in the dropdown, please contact the WOCAT secretariat (wocat@cde.unibe.ch)."
@@ -1124,6 +1414,11 @@
           "label": {
             "en": "Specify (e.g. number of informants)"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Specify (e.g. number of informants)"
+          }
         }
       }
     },
@@ -1140,6 +1435,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "Title, author, year, ISBN"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Title, author, year, ISBN"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Title, author, year, ISBN"
           }
@@ -1162,6 +1467,16 @@
           "label": {
             "en": "Available from where? Costs?"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "Available from where? Costs?"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Available from where? Costs?"
+          }
         }
       }
     },
@@ -1178,6 +1493,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "Title/ description"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Title/ description"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Title/ description"
           }
@@ -1200,6 +1525,16 @@
           "label": {
             "en": "URL"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "URL"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "URL"
+          }
         }
       }
     },
@@ -1216,6 +1551,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "When were the data compiled (in the field)?"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "When were the data compiled (in the field)?"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "When were the data compiled (in the field)?"
           }
@@ -1244,6 +1589,22 @@
           "helptext": {
             "en": "<strong>Note</strong>: If you do not accept the conditions regarding the use of data documented through WOCAT your data will not be accepted by the WOCAT secretariat and it will not be published."
           }
+        },
+        "cca": {
+          "label": {
+            "en": "The compiler and key resource person(s) accept the conditions regarding the use of data documented through WOCAT"
+          },
+          "helptext": {
+            "en": "<strong>Note</strong>: If you do not accept the conditions regarding the use of data documented through WOCAT your data will not be accepted by the WOCAT secretariat and it will not be published."
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "The compiler and key resource person(s) accept the conditions regarding the use of data documented through WOCAT"
+          },
+          "helptext": {
+            "en": "<strong>Note</strong>: If you do not accept the conditions regarding the use of data documented through WOCAT your data will not be accepted by the WOCAT secretariat and it will not be published."
+          }
         }
       }
     },
@@ -1260,6 +1621,16 @@
           }
         },
         "technologies": {
+          "label": {
+            "en": "Address"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "Address"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "Address"
           }
@@ -1281,6 +1652,11 @@
         "technologies": {
           "label": {
             "en": "Map"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Center of the watershed"
           }
         }
       }
@@ -1312,6 +1688,30 @@
     },
     "model": "configuration.translation",
     "pk": 5065
+  },
+  {
+    "fields": {
+      "translation_type": "key",
+      "data": {
+        "approaches": {
+          "label": {
+            "en": "Further comments"
+          }
+        },
+        "technologies": {
+          "label": {
+            "en": "Further comments"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "Further comments"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5066
   },
   {
     "fields": {
@@ -4995,6 +5395,16 @@
           "label": {
             "en": "female"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "female"
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "female"
+          }
         }
       }
     },
@@ -5011,6 +5421,16 @@
           }
         },
         "approaches": {
+          "label": {
+            "en": "male"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "male"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "male"
           }
@@ -5115,6 +5535,11 @@
           "label": {
             "en": "field visits, field surveys"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "field visits, field surveys"
+          }
         }
       }
     },
@@ -5131,6 +5556,11 @@
           }
         },
         "approaches": {
+          "label": {
+            "en": "interviews with land users"
+          }
+        },
+        "cca": {
           "label": {
             "en": "interviews with land users"
           }
@@ -5153,6 +5583,11 @@
           "label": {
             "en": "interviews with SLM specialists/ experts"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "interviews with SLM specialists/ experts"
+          }
         }
       }
     },
@@ -5172,6 +5607,11 @@
           "label": {
             "en": "compilation from reports and other existing documentation"
           }
+        },
+        "cca": {
+          "label": {
+            "en": "compilation from reports and other existing documentation"
+          }
         }
       }
     },
@@ -5188,6 +5628,16 @@
           }
         },
         "approaches": {
+          "label": {
+            "en": "SLM specialist"
+          }
+        },
+        "cca": {
+          "label": {
+            "en": "SLM specialist"
+          }
+        },
+        "watershed": {
           "label": {
             "en": "SLM specialist"
           }
@@ -5216,6 +5666,19 @@
           "helptext": {
             "en": "the person/ entity who implements/ maintains the Technology/ Technologies associated with this Approach. The term land user may refer to individual small- or large-scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc."
           }
+        },
+        "cca": {
+          "label": {
+            "en": "land user"
+          },
+          "helptext": {
+            "en": "the person/ entity who implements/ maintains the Technology. The term land user may refer to individual small- or large-scale farmers, groups (gender, age, status, interest), cooperatives, industrial companies (e.g. mining), government institutions (e.g. state forest), etc."
+          }
+        },
+        "watershed": {
+          "label": {
+            "en": "land user"
+          }
         }
       }
     },
@@ -5235,6 +5698,16 @@
           "helptext": {
             "en": "<p><strong>Conditions regarding the use of data documented through WOCAT</strong></p><ul><li>Data captured through WOCAT questionnaires will be entered, edited, and stored in the WOCAT online database by the compiler or a data entry person assigned by the compiler. Overall responsibility for compilation and data quality lies with the compiler. The compiler, resource persons, and data entry person will be recorded and given credit for the data in the database as well as in any compilation or publication of the documented technology.</li><li>Data stored in the WOCAT database are open access.</li><li>Data are made available for users under the <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</a></li></ul><p>You are free to:</p><ul><li><strong>Share</strong> — copy and redistribute the material in any medium or format</li><li><strong>Adapt</strong> — remix, transform, and build upon the material</li></ul><p>The licensor cannot revoke these freedoms as long as you follow the following license terms:</p><ul><li><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li><li><strong>NonCommercial</strong> — You may not use the material for commercial purposes.</li><li><strong>ShareAlike</strong> — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.</li><li><strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.</li></ul><p><strong>Full license terms</strong>: <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</a></p>"
           }
+        },
+        "cca": {
+          "helptext": {
+            "en": "<p><strong>Conditions regarding the use of data documented through WOCAT</strong></p><ul><li>Data captured through WOCAT questionnaires will be entered, edited, and stored in the WOCAT online database by the compiler or a data entry person assigned by the compiler. Overall responsibility for compilation and data quality lies with the compiler. The compiler, resource persons, and data entry person will be recorded and given credit for the data in the database as well as in any compilation or publication of the documented Technology.</li><li>Data stored in the WOCAT database are open access.</li><li>Data are made available for users under the <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</a></li></ul><p>You are free to:</p><ul><li><strong>Share</strong> — copy and redistribute the material in any medium or format</li><li><strong>Adapt</strong> — remix, transform, and build upon the material</li></ul><p>The licensor cannot revoke these freedoms as long as you follow the following license terms:</p><ul><li><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li><li><strong>Non-Commercial</strong> — You may not use the material for commercial purposes.</li><li><strong>ShareAlike</strong> — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.</li><li><strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.</li></ul><p><strong>Full license terms</strong>: <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</a></p>"
+          }
+        },
+        "watershed": {
+          "helptext": {
+            "en": "<p><strong>Conditions regarding the use of data documented through WOCAT</strong></p><ul><li>Data captured through WOCAT questionnaires will be entered, edited, and stored in the WOCAT online database by the compiler or a data entry person assigned by the compiler. Overall responsibility for compilation and data quality lies with the compiler. The compiler, resource persons, and data entry person will be recorded and given credit for the data in the database as well as in any compilation or publication of the documented technology.</li><li>Data stored in the WOCAT database are open access.</li><li>Data are made available for users under the <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</a></li></ul><p>You are free to:</p><ul><li><strong>Share</strong> — copy and redistribute the material in any medium or format</li><li><strong>Adapt</strong> — remix, transform, and build upon the material</li></ul><p>The licensor cannot revoke these freedoms as long as you follow the following license terms:</p><ul><li><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li><li><strong>NonCommercial</strong> — You may not use the material for commercial purposes.</li><li><strong>ShareAlike</strong> — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.</li><li><strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.</li></ul><p><strong>Full license terms</strong>: <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</a></p>"
+          }
         }
       }
     },
@@ -5249,11 +5722,40 @@
           "helptext": {
             "en": "Specify the centre of the area in which the Approach has been applied."
           }
+        },
+        "watershed": {
+          "helptext": {
+            "en": "Specify the centre of the watershed."
+          }
         }
       }
     },
     "model": "configuration.translation",
     "pk": 5902
+  },
+  {
+    "fields": {
+      "translation_type": "questiongroup",
+      "data": {
+        "approaches": {
+          "helptext": {
+            "en": "<p><strong>Conditions regarding the use of data documented through WOCAT</strong></p><ul><li>Data captured through WOCAT questionnaires will be entered, edited, and stored in the WOCAT online database by the compiler or a data entry person assigned by the compiler. Overall responsibility for compilation and data quality lies with the compiler. The compiler, resource persons, and data entry person will be recorded and given credit for the data in the database as well as in any compilation or publication of the documented data.</li><li>Data stored in the WOCAT database are open access.</li><li>Data are made available for users under the <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</a></li></ul><p>You are free to:</p><ul><li><strong>Share</strong> — copy and redistribute the material in any medium or format</li><li><strong>Adapt</strong> — remix, transform, and build upon the material</li></ul><p>The licensor cannot revoke these freedoms as long as you follow the following license terms:</p><ul><li><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li><li><strong>NonCommercial</strong> — You may not use the material for commercial purposes.</li><li><strong>ShareAlike</strong> — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.</li><li><strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.</li></ul><p><strong>Full license terms</strong>: <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</a></p>"
+          }
+        },
+        "technologies": {
+          "helptext": {
+            "en": "<p><strong>Conditions regarding the use of data documented through WOCAT</strong></p><ul><li>Data captured through WOCAT questionnaires will be entered, edited, and stored in the WOCAT online database by the compiler or a data entry person assigned by the compiler. Overall responsibility for compilation and data quality lies with the compiler. The compiler, resource persons, and data entry person will be recorded and given credit for the data in the database as well as in any compilation or publication of the documented data.</li><li>Data stored in the WOCAT database are open access.</li><li>Data are made available for users under the <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</a></li></ul><p>You are free to:</p><ul><li><strong>Share</strong> — copy and redistribute the material in any medium or format</li><li><strong>Adapt</strong> — remix, transform, and build upon the material</li></ul><p>The licensor cannot revoke these freedoms as long as you follow the following license terms:</p><ul><li><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li><li><strong>NonCommercial</strong> — You may not use the material for commercial purposes.</li><li><strong>ShareAlike</strong> — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.</li><li><strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.</li></ul><p><strong>Full license terms</strong>: <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</a></p>"
+          }
+        },
+        "watershed": {
+          "helptext": {
+            "en": "<p><strong>Conditions regarding the use of data documented through WOCAT</strong></p><ul><li>Data captured through WOCAT questionnaires will be entered, edited, and stored in the WOCAT online database by the compiler or a data entry person assigned by the compiler. Overall responsibility for compilation and data quality lies with the compiler. The compiler, resource persons, and data entry person will be recorded and given credit for the data in the database as well as in any compilation or publication of the documented data.</li><li>Data stored in the WOCAT database are open access.</li><li>Data are made available for users under the <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported License.</a></li></ul><p>You are free to:</p><ul><li><strong>Share</strong> — copy and redistribute the material in any medium or format</li><li><strong>Adapt</strong> — remix, transform, and build upon the material</li></ul><p>The licensor cannot revoke these freedoms as long as you follow the following license terms:</p><ul><li><strong>Attribution</strong> — You must give appropriate credit, provide a link to the license, and indicate if changes were made.</li><li><strong>NonCommercial</strong> — You may not use the material for commercial purposes.</li><li><strong>ShareAlike</strong> — If you remix, transform, or build upon the material, you must distribute your contributions under the same license as the original.</li><li><strong>No additional restrictions</strong> — You may not apply legal terms or technological measures that legally restrict others from doing anything the license permits.</li></ul><p><strong>Full license terms</strong>: <a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode</a></p>"
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 5903
   },
   {
     "fields": {
@@ -5327,7 +5829,13 @@
       "keyword": "name",
       "translation": 5001,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "title_name"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5338,7 +5846,13 @@
       "keyword": "country",
       "translation": 5002,
       "configuration": {
-        "type": "select_type"
+        "type": "select_type",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "country"
+          }
+        }
       },
       "values": [
         1,
@@ -5603,6 +6117,12 @@
         "type": "char",
         "form_options": {
           "helptext_position": "tooltip"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "title_name_local"
+          }
         }
       }
     },
@@ -5614,7 +6134,13 @@
       "keyword": "state_province",
       "translation": 5005,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "location_state_province"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5625,7 +6151,13 @@
       "keyword": "further_location",
       "translation": 5006,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "location_further"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5647,7 +6179,16 @@
       "keyword": "image",
       "translation": 5007,
       "configuration": {
-        "type": "image"
+        "type": "image",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": {
+              "qg_photos.image": "images_image",
+              "qg_image.image": "header_image_image"
+            }
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5658,7 +6199,19 @@
       "keyword": "image_caption",
       "translation": 5008,
       "configuration": {
-        "type": "text"
+        "type": "char",
+        "form_options": {
+          "helptext_position": "tooltip"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": {
+              "qg_photos.image_caption": "images_caption",
+              "qg_image.image_caption": "header_image_caption"
+            }
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5680,7 +6233,16 @@
       "keyword": "image_photographer",
       "translation": 5010,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": {
+              "qg_photos.image_photographer": "images_photographer",
+              "qg_image.image_photographer": "header_image_photographer"
+            }
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5702,7 +6264,13 @@
       "keyword": "image_remarks",
       "translation": 5049,
       "configuration": {
-        "type": "text"
+        "type": "text",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "header_image_remarks"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5717,6 +6285,12 @@
         "form_options": {
           "model": "Project",
           "display_field": "funding_project_display"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "project_institution_project"
+          }
         }
       }
     },
@@ -5742,7 +6316,13 @@
       "keyword": "user_id",
       "translation": 5014,
       "configuration": {
-        "type": "user_id"
+        "type": "user_id",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_resourceperson_user_id"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5764,7 +6344,13 @@
       "keyword": "person_lastname",
       "translation": 5016,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_resourceperson_lastname"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5775,7 +6361,13 @@
       "keyword": "person_firstname",
       "translation": 5017,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_person_firstname"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -5900,7 +6492,13 @@
       "keyword": "user_resourceperson_type",
       "translation": 5052,
       "configuration": {
-        "type": "radio"
+        "type": "radio",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_resourceperson_type"
+          }
+        }
       },
       "values": [
         264,
@@ -5929,6 +6527,12 @@
         "type": "text",
         "view_options": {
           "template": "value_only"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "strengths_landuser"
+          }
         }
       }
     },
@@ -5943,6 +6547,12 @@
         "type": "text",
         "view_options": {
           "template": "value_only"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "strengths_compiler"
+          }
         }
       }
     },
@@ -5957,6 +6567,12 @@
         "type": "text",
         "view_options": {
           "template": "value_only"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "weaknesses_landuser"
+          }
         }
       }
     },
@@ -5971,6 +6587,12 @@
         "type": "text",
         "view_options": {
           "template": "value_only"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "weaknesses_compiler"
+          }
         }
       }
     },
@@ -5985,6 +6607,15 @@
         "type": "text",
         "view_options": {
           "template": "value_only"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": {
+              "qg_weaknesses_landusers.weaknesses_overcome": "weaknesses_landuser_overcome",
+              "qg_weaknesses_compiler.weaknesses_overcome": "weaknesses_compiler_overcome"
+            }
+          }
         }
       }
     },
@@ -6164,6 +6795,12 @@
         "form_options": {
           "model": "Institution",
           "display_field": "funding_institution_display"
+        },
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "project_institution_institution"
+          }
         }
       }
     },
@@ -6205,7 +6842,13 @@
       "keyword": "references_title",
       "translation": 5057,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_title"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -6216,7 +6859,13 @@
       "keyword": "references_source",
       "translation": 5058,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_source"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -6260,7 +6909,16 @@
       "keyword": "location_map",
       "translation": 5064,
       "configuration": {
-        "type": "map"
+        "type": "map",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "location_map_data",
+            "get_value": {
+              "name": "get_map_values"
+            }
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -6272,6 +6930,12 @@
       "translation": 5065,
       "configuration": {
         "type": "int",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_vimeo_id"
+          }
+        },
         "view_options": {
           "template": "vimeo_video"
         }
@@ -6279,6 +6943,17 @@
     },
     "model": "configuration.key",
     "pk": 58
+  },
+  {
+    "fields": {
+      "keyword": "image_comments",
+      "translation": 5066,
+      "configuration": {
+        "type": "text"
+      }
+    },
+    "model": "configuration.key",
+    "pk": 59
   },
   {
     "fields": {
@@ -8510,7 +9185,12 @@
     "fields": {
       "keyword": "qg_funding_project",
       "translation": null,
-      "configuration": {}
+      "configuration": {
+        "form_options": {
+          "min_num": 1,
+          "max_num": 5
+        }
+      }
     },
     "model": "configuration.questiongroup",
     "pk": 5
@@ -8518,7 +9198,7 @@
   {
     "fields": {
       "keyword": "qg_accept_conditions",
-      "translation": 5901,
+      "translation": 5903,
       "configuration": {}
     },
     "model": "configuration.questiongroup",
@@ -8540,7 +9220,7 @@
       "configuration": {
         "form_options": {
           "min_num": 1,
-          "max_num": 4,
+          "max_num": 5,
           "template": "table",
           "numbered": "display"
         },
@@ -8560,7 +9240,7 @@
       "configuration": {
         "form_options": {
           "min_num": 1,
-          "max_num": 4,
+          "max_num": 5,
           "template": "table",
           "numbered": "display"
         },
@@ -8580,7 +9260,7 @@
       "configuration": {
         "form_options": {
           "min_num": 1,
-          "max_num": 4,
+          "max_num": 5,
           "template": "table",
           "column_widths": ["60%", "40%"],
           "numbered": "display"
@@ -8602,7 +9282,7 @@
       "configuration": {
         "form_options": {
           "min_num": 1,
-          "max_num": 4,
+          "max_num": 5,
           "template": "table",
           "column_widths": ["60%", "40%"],
           "numbered": "display"
@@ -8693,7 +9373,12 @@
     "fields": {
       "keyword": "qg_funding_institution",
       "translation": null,
-      "configuration": {}
+      "configuration": {
+        "form_options": {
+          "min_num": 1,
+          "max_num": 5
+        }
+      }
     },
     "model": "configuration.questiongroup",
     "pk": 20
@@ -8705,7 +9390,7 @@
       "configuration": {
         "form_options": {
           "template": "columns_e6_e6",
-          "max_num": 10
+          "max_num": 20
         }
       }
     },

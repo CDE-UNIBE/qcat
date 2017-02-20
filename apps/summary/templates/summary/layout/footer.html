@@ -1,0 +1,65 @@
+{% load i18n %}
+{% load static %}
+{% comment %}
+  The page numbers are sometimes not correct when passed in the views
+  cmd_options. This js-solution is ugly, but seems stable.
+
+  Also, when including the full css, the footer is not rendered properly, so
+  the relevant styles are defined again.
+{% endcomment %}
+<!DOCTYPE html>
+<html>
+  <head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <style>
+      @import url("https://fonts.googleapis.com/css?family=Open+Sans:300,400,600");
+      body {
+        font: small sans-serif;
+        font-style: normal;
+        font-weight: 300;
+        color: #999;
+      }
+      .container {
+        width: 100%;
+        padding: 5px 0 15px 4px;
+      }
+      .column {
+        display: inline-block;
+        white-space: nowrap;
+        overflow: hidden;
+        text-overflow: ellipsis;
+      }
+      .left {
+        width: 25%;
+        text-align: left;
+      }
+      .center {
+        width: 49%;
+        text-align: center;
+      }
+      .right {
+        width: 24%;
+        text-align: right;
+      }
+    </style>
+  </head>
+  <body>
+    <div class="container">
+      <div class="column left">{% trans "Wocat SLM" %} {{ footer_config }}</div>
+      <div class="column center">{{ footer_name }}</div>
+      <div class="column right"><span id="page"></span>/<span id="topage"></span></div>
+    </div>
+    <script>
+      var vars={};
+      var x=window.location.search.substring(1).split('&');
+      for (var i in x) {
+        var z=x[i].split('=',2);
+        vars[z[0]] = decodeURI(z[1]);
+      }
+      document.getElementById('page').innerHTML = vars.page;
+      document.getElementById('topage').innerHTML = vars.topage;
+    </script>
+  </body>
+</html>

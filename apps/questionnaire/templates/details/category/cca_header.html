@@ -1,0 +1,155 @@
+{% load i18n %}
+
+  <header class="tech-output-header row">
+
+    <div class="tech-type is-cca">
+      <span>{% trans "CCA" %}</span>
+    </div>
+
+    {% for flag in metadata.flags %}
+      <span class="tech-status label is-{{ flag.flag }}">{{ flag.name }}</span>
+    {% endfor %}
+    {% if metadata.status.0 and metadata.status.0 != 'public' %}
+      <span class="tech-status label is-{{ metadata.status.0 }}">{% trans metadata.status.1 %}</span>
+    {% endif %}
+
+    <h1 class="tech-output-title">{% trans "Climate Change Adaptation Module" %}</h1>
+    <span class="is-light">{% trans "Technology: " %}{{ raw_data.name|default:'-' }}{% if raw_data.name_local %} ({{ raw_data.name_local }}){% endif %}</span>
+
+    <ul class="tech-infos">
+      <li>
+        <span class="is-muted">{% trans "Creation:" %}</span>
+        {% now "SHORT_DATETIME_FORMAT" as now %}
+        <time datetime="{{ metadata.created|date:"c" }}">{{ metadata.created|date:"SHORT_DATETIME_FORMAT"|default:now }}</time>
+      </li>
+      <li>
+        <span class="is-muted">{% trans "Update:" %}</span>
+        <time datetime="{{ metadata.updated|date:"c" }}">{{ metadata.updated|date:"SHORT_DATETIME_FORMAT"|default:'&ndash;' }}</time>
+      </li>
+      <li>
+        <span class="is-muted">{% if metadata.compilers|length > 1 %}{% trans "Compilers:" %}{% else %}{% trans "Compiler:" %}{% endif %}</span>
+        {% for compiler in metadata.compilers %}
+          <a rel="author" href="{% url 'user_details' compiler.id %}" class="link">{{ compiler.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% empty %}
+          <a rel="author" href="{% url 'user_details' user.id %}" class="link">{{ user }}</a>
+        {% endfor %}
+      </li>
+      <li>
+        <span class="is-muted">{% if metadata.editors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
+        {% for editor in metadata.editors %}
+          <a rel="author" href="#" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
+        {% empty %}
+          &ndash;
+        {% endfor %}
+      </li>
+    </ul>
+
+    <p class="tech-output-header-info clearfix"><span class="is-muted left">{% if metadata.code %}{{ metadata.code }}{% endif %}{% if metadata.code and additional_data.country.0.0 %} - {% endif %}{{ additional_data.country.0.0|default:"" }}</span></p>
+
+    <div class="tech-item-footer tech-item-footer-details">
+
+      {# Translations #}
+      {% if metadata.translations %}
+        <ul class="left tech-lang-list sub-nav-square">
+          {% for translation in metadata.translations %}
+            <li>
+              {% language translation %}
+                <a href="{% url 'cca:questionnaire_details' metadata.code %}" class="is-cca">{{ translation }}</a>
+              {% endlanguage %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+
+      {# Links and modules #}
+      {# TODO: Temporarily disabled as link data not easily accessible so far #}
+      {% comment %}
+      <ul class="right tech-attached sub-nav-square">
+        <li>
+          <a href="" class="is-approach"><svg class="icon"><use xlink:href="#icon-approach"></use></svg> <span class="number">1</span></a>
+        </li>
+      </ul>
+      {% endcomment %}
+    </div>
+  </header>
+
+  <div class="row tech-output-actions">
+    <svg class="icon right"><use xlink:href="#icon-climate" xmlns:xlink="http://www.w3.org/1999/xlink"/></svg>
+{#    <a href="#" class="button{% if not metadata.code %} disabled{% endif %}">#}
+    <a href="#" class="button disabled" title="{% trans "Coming soon" %}" data-tooltip="">
+      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-view"></use></svg>
+      {% trans "View full content" %}
+    </a>
+{#    <button href="#" class="button dropdown{% if not metadata.code %} disabled{% endif %}" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false">#}
+    <button href="#" class="button dropdown disabled" title="{% trans "Coming soon" %}" data-tooltip="" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false">
+      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-print"></use></svg>
+      {% trans "Print summary" %}
+    </button>
+    <ul id="tech-details-print" data-dropdown-content class="f-dropdown" aria-hidden="true">
+      <li><a href="#">Short summary</a></li>
+      <li><a href="#">Full output</a></li>
+    </ul>
+{#    <button href="#" class="button dropdown{% if not metadata.code %} disabled{% endif %}" data-dropdown="tech-details-export" aria-controls="tech-details-export" aria-expanded="false">#}
+    <button href="#" class="button dropdown disabled" title="{% trans "Coming soon" %}" data-tooltip="" data-dropdown="tech-details-export" aria-controls="tech-details-export" aria-expanded="false">
+      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-export"></use></svg>
+      {% trans "Export" %}
+    </button>
+    <ul id="tech-details-export" data-dropdown-content class="f-dropdown" aria-hidden="true">
+      <li><a href="#">PDF</a></li>
+    </ul>
+  </div>
+
+  {% if review_config %}
+    {% trans "Climate Change Adaptation Module" as questionnaire_type %}
+    {% include 'details/review_panel.html' with review_config=review_config questionnaire_type=questionnaire_type %}
+  {% endif %}
+
+  <div class="row tech-section-group">
+    <h2 class="tech-section-group-title left">{% trans "View sections" %}</h2>
+    <a href="#" class="link right js-expand-all-sections" data-is-collapsed="true" data-selector=".tech-section-content">
+      <span class="js-is-expanded">{% trans "Expand all" %}</span>
+      <span class="js-is-collapsed hide">{% trans "Collapse all" %}</span>
+    </a>
+  </div>
+
+  <div class="row tech-overall-progress">
+    <span class="steps">{% trans "Completeness:" %} {{ completeness_percentage }}%</span>
+    <span class="meter" style="width:{{ completeness_percentage }}%"></span>
+  </div>
+
+  {% if subcategories or 'edit_questionnaire' in permissions and 'edit' in view_mode %}
+    <section id="{{ keyword }}" class="row tech-section" data-magellan-destination="{{ keyword }}">
+      <a name="{{ keyword }}"></a>
+
+      <div class="tech-section-header">
+        {% if 'edit_questionnaire' in permissions and view_mode == 'edit' %}
+        <div class="medium-9 columns tech-section-title" data-toggle="{{ keyword }}-content">
+          <h2>{{ numbering|default:'' }} {{ label }}</h2>
+        </div>
+        <div class="medium-3 columns tech-section-action">
+          <div class="tech-section-progress">
+            <span class="steps">{{ complete }}/{{ total }}</span>
+            <span class="meter" style="width:{{ progress }}%"></span>
+          </div>
+          <a class="button right" href="{% url edit_step_route questionnaire_identifier keyword %}">
+            {% trans "Edit this section" %} <strong>{% if has_changes %}<span class="button-has-changes">*</span>{% endif %}</strong>
+          </a>
+        </div>
+        {% elif subcategories %}
+        <div class="medium-12 columns tech-section-title" data-toggle="{{ keyword }}-content">
+          <h2>{{ numbering|default:'' }} {{ label }}</h2>
+        </div>
+        {% endif %}
+      </div>
+
+      <div class="output hide tech-section-content" id="{{ keyword }}-content">
+        {% for subcategory, subcategory_config in subcategories %}
+          {% if subcategory_config.keyword != 'tech__0__1' and subcategory_config.keyword != 'tech__1__1' %}
+            {{ subcategory }}
+          {% endif %}
+        {% empty %}
+          <p>{% trans "Empty section" %}</p>
+        {% endfor %}
+      </div>
+    </section>
+  {% endif %}

@@ -1,3 +1,4 @@
+// notifications from the django message framework.
 .notification-group {
   position: fixed;
   bottom: rem-calc(6);
@@ -28,5 +29,110 @@
   100% {
     opacity: 0;
     transform: translate3d(0, 100%, 0);
+  }
+}
+
+// notifications on 'my slm data'
+#latest-notification-updates {
+  margin-top: rem-calc(5);
+}
+
+.notification-list {
+
+  margin: 0 !important;
+  background-color: #fff;
+  border-bottom: 1px solid $color-beige-light;
+
+  &.header {
+    background: #fff;
+    font-weight: 300;
+    color: $color-beige-dark;
+    border-bottom: 2px solid $color-beige;
+
+    svg.icon {
+      display: inline !important;
+      height: 1em !important;
+    }
+    .chosen-select, .chosen-container {
+      padding: 0;
+    }
+    .hide-filter {
+      padding: 0;
+      display: none;
+
+      label {
+        margin: rem-calc(3) 0;
+      }
+    }
+    .is-active-filter {
+      background-color: $color-blue;
+      color: #fff !important;
+      padding: rem-calc(3) rem-calc(5) rem-calc(3) rem-calc(3);
+    }
+    .has-tip {
+      color: $color-blue;
+      cursor: pointer;
+    }
+
+    #status-dropdown {
+      width: rem-calc(200);
+
+      li {
+        padding-left: rem-calc(3);
+      }
+    }
+  }
+  div {
+    padding: rem-calc(15) 0;
+  }
+  > :first-child {
+    padding-left: rem-calc(5);
+  }
+  svg.icon {
+    float: none;
+    display: block;
+    margin: auto;
+    height: 1.5em;
+    width: 1.5em;
+
+    &.alert {
+      color: $color-orange-light;
+      cursor: pointer;
+    }
+  }
+  .read-toggle {
+    background-color: rgba($color-beige, 0.3);
+    input {
+      width: 1.5em;
+      height: 1.5em;
+    }
+  }
+  &.is-read {
+    opacity: 0.4;
+  }
+}
+#notifications-list {
+  .pagination-centered {
+    padding-top: rem-calc(5);
+
+    a:hover {
+      background-color: $color-orange;
+      color: #fff;
+    }
+  }
+}
+#notification-settings {
+  left: inherit !important;
+}
+
+.notification-indicator {
+  &.has-unread-messages {
+    color: $color-orange;
+  }
+
+  & svg {
+    height: 1.5em;
+    width: 1.5em;
+    margin-bottom: -5px;
   }
 }

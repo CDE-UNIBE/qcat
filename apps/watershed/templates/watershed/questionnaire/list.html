@@ -1,0 +1,24 @@
+{% extends 'watershed/base.html' %}
+
+{% load i18n %}
+
+{% block bodyclass %}layout-watershed{% endblock %}
+
+{% block content %}
+
+  <main class="row large-collapse" role="main">
+    {% include 'search/help_text.html' %}
+    <section class="tech-list small-12 columns">
+      <div class="tech-group">
+        <h2 class="is-group">{% trans "Watershed" %} (<span id="questionnaire-count">{{ count }}</span>)</h2>
+        <div id="questionnaire-list">
+          {% include "watershed/questionnaire/partial/list.html" %}
+        </div>
+      </div>
+      <div id="pagination" class="is-rhythmed-2">
+        {% include "pagination.html" %}
+      </div>
+    </section>
+  </main>
+
+{% endblock %}

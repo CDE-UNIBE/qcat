@@ -1,0 +1,11 @@
+{% load i18n %}
+
+<a data-reveal-id="show-message-{{ log.id }}" class="right tip-bottom" data-tooltip aria-haspopup="true"
+   data-options="disable_for_touch:true;" title="{% trans "Click to display message from" %} {{ log.catalyst.get_display_name }}">
+  <svg class="icon is-inline right"><use xlink:href="#icon-comment" xmlns:xlink="http://www.w3.org/1999/xlink"/></svg>
+</a>
+<div id="show-message-{{ log.id }}" class="reveal-modal" data-reveal aria-labelledby="title-{{ log.id }}" aria-hidden="true" role="dialog">
+  <h2 id="title-{{ log.id }}">{{ log.catalyst.get_display_name }} {% trans "wrote" context "Jay wrote you a message" %}</h2>
+  <p>{{ message }}</p>
+  <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+</div>

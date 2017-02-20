@@ -12,16 +12,40 @@
     border-bottom: 2px solid $color-beige;
     padding-bottom: rem-calc(6);
     margin-bottom: rem-calc(6);
+
+    &.top-margin {
+      margin-top: rem-calc(24) !important;
+    }
+
+    &.top-margin-big {
+      margin-top: rem-calc(36) !important;
+    }
+
+    + h5.top-margin {
+      margin-top: rem-calc(16) !important;
+    }
+
+    + h5.top-margin-big {
+      margin-top: rem-calc(24) !important;
+    }
+  }
+
+  h5.top-margin {
+    margin-top: rem-calc(24) !important;
+  }
+
+  h5.top-margin-big {
+    margin-top: rem-calc(36) !important;
   }
 }
 
 .output-has-images {
   overflow: hidden;
-  @include rhythm;
-
-  & > img {
-    background: $color-beige-light;
-    border: 1px solid $color-beige-light;
+/*  @include rhythm;
+*/
+  margin-top: 0.2rem;
+  & > div img {
+    border: 1px solid #e5eae0;
   }
 }
 

@@ -25,8 +25,11 @@
   {% endcompress %}
 {% endaddtoblock %}
 
-<select name="{{ name }}" data-placeholder=""{% if searchable %} class="chosen-select"{% endif %} {% include "floppyforms/attrs.html" %}
-    {% if options.question_conditions %} data-question-conditions="{{ options.question_conditions }}"{% endif %}>
+<select name="{{ name }}" data-placeholder=""{% if searchable %} class="chosen-select"{% endif %}{% if options_order %} data-options-order="{{ options_order|join:"," }}"{% endif %} {% include "floppyforms/attrs.html" %}
+    {% if options.question_conditions %} data-question-conditions="{{ options.question_conditions }}"{% endif %}
+    {% if options.custom_to_options %} data-custom-to-options="{{ options.custom_to_options|safe }}"{% endif %}
+    {% if options.field_options.keyword %} data-key-keyword="{{ options.field_options.keyword }}"{% endif %}
+    {% if options.field_options.readonly == 'readonly' %}disabled{% endif %}>
   {% for group_name, choices in optgroups %}
     {% for choice in choices %}
       <option value="{{ choice.0 }}"{% if choice.0 in value %}selected="selected"{% endif %}>{{ choice.1 }}</option>

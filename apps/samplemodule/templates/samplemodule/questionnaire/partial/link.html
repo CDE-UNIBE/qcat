@@ -1,0 +1,16 @@
+{% comment %}
+
+  This partial template can be included to display a link to Samplemodule
+  questionnaires.
+
+  Required attributes:
+
+  - name (name of the questionnaire)
+  - link_route (name of route to details of questionnaire)
+  - questionnaire_identifier (identifier of the questionnaire)
+
+{% endcomment %}
+
+{% load i18n %}
+
+<strong>[SAMPLEMODULE]</strong> <a href="{% url link_route questionnaire_identifier %}">{{ name }}</a>

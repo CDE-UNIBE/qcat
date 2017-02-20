@@ -9,12 +9,24 @@
 {% block navclass %}is-wocat{% endblock %}
 
 {% block content %}
-    <main class="row" role="main">
-      <div class="small-12 columns">
-        <h1 class="is-title">{% trans "My SLM data" %}
-          <a href="{% url 'wocat:add' %}" class="button large right">{% trans "Add SLM data" %}</a>
-        </h1>
-      </div>
+  <main class="row" role="main">
+    <div class="small-12 columns">
+      <h1 class="is-title">{% trans "My SLM data" %}
+        <a href="{% url 'wocat:add' %}" class="button large right">{% trans "Add SLM data" %}</a>
+      </h1>
+    </div>
+    <div class="small-12 columns">
+      <section class="tech-list small-12 columns">
+        <div class="tech-group">
+          <h2 class="is-group">
+            {% trans "Latest notifications" %} |
+            <a href="{% url 'notification_list' %}">{% trans "All notifications" %}</a>
+          </h2>
+          <div id="latest-notification-updates"></div>
+        </div>
+      </section>
+    </div>
+    <div class="small-12 columns">
       {% for status, name in statuses.items %}
         <section class="tech-list small-12 columns">
           <div class="tech-group">
@@ -31,44 +43,66 @@
         </div>
         </section>
       {% endfor %}
-    </main>
-    {% addtoblock 'js' %}
-      {% compress js %}
-        <script>
-          $(document).ready(function() {
+    </div>
+  </main>
+  {% addtoblock 'js' %}
+    {% compress js %}
+      <script src="{% static 'notifications/js/ajaxCsrf.js' %}"></script>
+      <script src="{% static 'notifications/js/notificationActions.js' %}"></script>
+      <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+      <script>
+        $(document).ready(function() {
 
-            // helper to execute the ajax call and replace the container with the response.
-            var loadQuestionnaires = function(status, page) {
-              $.ajax({
-                url: '{% url 'questionnaires_status_list' %}?status=' + status + '&page=' + page,
-                method: 'GET'
-              }).done(function(data) {
-                $('#status-' + status).html(data);
+          var spinner = '<img src="{% static 'assets/img/ajax-loader.gif' %}">';
+          var latestUpdatesContainer = $('#latest-notification-updates');
 
-                // Initialize foundation elements (again), eg. tooltips
-                $(document).foundation();
-              });
-            };
-
-            // load data when initializing the dom. display a spinner, as this may require loading the configuration
-            // thus may take some time.
-            const spinner = '<img src="{% static 'assets/img/ajax-loader.gif' %}">';
-            $('[data-status]').each(function() {
-              var status = $(this).data('status');
-              $('#status-' + status).html(spinner);
-              loadQuestionnaires(status, 1);
-            });
-
-            // load data on click on paginator
-            $('.questionnaire-status-list').on('click', 'ul.pagination li a', function() {
-              var page = $(this).data('page');
-              if (page.length !== 0) {
-                loadQuestionnaires($(this).data('status'), page)
-              }
-              return false;
-            });
+          // initialize isRead plugin.
+          latestUpdatesContainer.bindNotificationActions({
+            csrfToken: '{{ csrf_token }}',
+            readUrl: '{% url 'notification_read' %}',
+            notificationsUrl: '{% url 'notification_partial_list' %}',
+            initialParams: '?is_teaser',
+            isTeaser: true,
+            questionnairesUrl: '{% url 'notification_questionnaire_logs' %}',
+            user: '{{ request.user.id }}',
+            spinner: spinner
           });
-        </script>
-      {% endcompress %}
-    {% endaddtoblock %}
+
+          // helper to execute the ajax call and replace the container with the response.
+          var loadQuestionnaires = function(status, page) {
+            $.ajax({
+              url: '{% url 'questionnaires_status_list' %}?status=' + status + '&page=' + page,
+              method: 'GET'
+            }).done(function(data) {
+              $('#status-' + status).html(data);
+              // Initialize foundation elements (again), eg. tooltips
+              $(document).foundation();
+            });
+          };
+
+          // load data when initializing the dom. display a spinner, as this may require loading the configuration
+          // thus may take some time.
+          $('[data-status]').each(function() {
+            var status = $(this).data('status');
+            $('#status-' + status).html(spinner);
+            loadQuestionnaires(status, 1);
+          });
+
+          // load data on click on paginator
+          $('.questionnaire-status-list').on('click', 'ul.pagination li a', function() {
+            var page = $(this).data('page');
+            if (page.length !== 0) {
+              loadQuestionnaires($(this).data('status'), page)
+            }
+            return false;
+          });
+        });
+      </script>
+    {% endcompress %}
+  {% endaddtoblock %}
+  {% addtoblock 'css' %}
+    {% compress css %}
+      <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet">
+    {% endcompress %}
+  {% endaddtoblock %}
 {% endblock %}

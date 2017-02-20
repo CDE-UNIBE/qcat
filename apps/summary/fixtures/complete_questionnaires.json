@@ -1,0 +1,89 @@
+[
+  {
+      "model": "questionnaire.questionnaire",
+      "pk": 1,
+      "fields": {
+          "uuid": "001eacdb-00a8-4e51-8db3-4b75dcdc6d1c",
+          "data": {
+              "tech_qg_9": [{"tech_landuse": ["tech_lu_cropland"]}],
+              "tech_qg_76": [{"tech_impacts_cropproduction": 5}],
+              "tech_qg_36": [{
+                  "tech_input_est_unit": {"en": "ha"},
+                  "tech_input_est_costs": 2500.0,
+                  "tech_input_est_specify": {"en": "labour"},
+                  "tech_input_est_quantity": 1.0,
+                  "tech_input_est_total_costs_pi": 2500.0,
+                  "tech_input_est_percentage_costs": 100.0
+              }],
+              "tech_qg_169": [{
+                  "tech_exposure_season": "season_summer",
+                  "tech_exposure_incrdecr": "increase"
+              }],
+              "tech_qg_170": [{"tech_exposure_incrdecr": "decrease"}]
+          },
+          "code": "tech",
+          "status": 4,
+          "version": 1,
+          "created": "2017-02-10T16:07:20.847Z",
+          "updated": "2017-02-10T16:07:20.847Z"
+      }
+  },
+  {
+      "model": "questionnaire.questionnaire",
+      "pk": 2,
+      "fields": {
+          "uuid": "001eacdb-00a8-4e51-8db3-4b75dcdc6d1c",
+          "data": {
+              "app_qg_15": [{
+                  "app_condition_enabling": ["app_condition_enabling"],
+                  "app_condition_enabling_specify": {
+                      "en": "Enabling"
+                  },
+                  "app_condition_hindering": ["app_condition_hindering"],
+                  "app_condition_hindering_specify": {
+                      "en": "Hindering"
+                  }
+              }],
+              "app_qg_27": [{
+                "app_subsidies_inputs": [
+                    "app_subsidies_inputs_labour",
+                    "app_subsidies_inputs_equipment",
+                    "app_subsidies_inputs_agricultural",
+                    "app_subsidies_inputs_construction"
+                ]
+              }],
+              "app_qg_28": [{
+                "app_subsidies_extent": "app_subsidies_extent_fully"
+              }],
+              "app_qg_29": [{
+                  "app_subs_eq_machinery": ["app_subs_eq_machinery"],
+                  "app_subs_eq_machinery_extent": "app_subsidies_extent_fully",
+                  "app_subs_eq_machinery_specify": {"en": "The project incurs"},
+                  "app_subs_eq_tools": ["app_subs_eq_tools"],
+                  "app_subs_eq_tools_extent": "app_subsidies_extent_fully"
+              }],
+              "app_qg_18": [{"app_training": 1}],
+              "app_qg_22": [{"app_institutions": "app_institutions_moderate"}],
+              "app_qg_39": [{"app_impacts_empower_local_specify": {"en": "Yes"}}],
+              "app_qg_40": [{"app_impacts_decisionmaking": 4, "app_impacts_decisionmaking_specify": {"en": "Water"}}],
+              "app_qg_70": [{"app_motivation": ["app_motivation_disasters"]}],
+              "app_qg_113": [{"app_involvement_who": {"en": "Organization staff"}, "app_involvement_type": "involvement_type_interactive"}],
+              "app_qg_100": [{
+                  "app_stakeholders_comments": {"en": "Ministry of Agriculture"},
+                  "app_stakeholders_roles": {"en": "Umbrella organisation of project"}
+              }],
+              "app_qg_3": [{"app_stakeholders": [
+                  "stakeholder_local", "stakeholder_community", "stakeholder_specialist",
+                  "stakeholder_researchers", "stakeholder_teachers", "stakeholder_ngo",
+                  "stakeholder_private", "stakeholder_localgov", "stakeholder_natgov",
+                  "stakeholder_intorganization"
+              ]}]
+          },
+          "code": "approach",
+          "status": 4,
+          "version": 1,
+          "created": "2017-02-10T16:07:20.847Z",
+          "updated": "2017-02-10T16:07:20.847Z"
+      }
+  }
+]

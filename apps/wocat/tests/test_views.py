@@ -9,7 +9,6 @@ from wocat.views import (
     HomeView)
 
 
-route_questionnaire_details = 'wocat:questionnaire_details'
 route_home = 'wocat:home'
 route_questionnaire_list = 'wocat:questionnaire_list'
 route_questionnaire_list_partial = 'wocat:questionnaire_list_partial'
@@ -38,16 +37,6 @@ class WocatHomeTest(TestCase):
         view.args = args
         view.kwargs = kwargs
         return view
-
-    @patch('wocat.views.generic_questionnaire_list')
-    def test_calls_generic_questionnaire_list(
-            self, mock_questionnaire_list):
-        request = self.factory.get(self.url)
-        view = self.setup_view(HomeView(), request)
-        view.get_context_data()
-        mock_questionnaire_list.assert_called_once_with(
-            request, 'wocat', template=None,
-        )
 
     @patch.object(HomeView, 'get_context_data')
     def test_renders_correct_template(self, mock_ctx_data):

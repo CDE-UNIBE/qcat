@@ -14,7 +14,7 @@
     {% form form using sub_config.form_template with config=sub_config formsets=sub_formsets %}
   {% endfor %}
 {% else %}
-  <fieldset id="{{ config.keyword }}" class="row{% if config.has_changes %} has-changes{% endif %}">
+  <fieldset id="{{ config.keyword }}" class="row{% if config.fieldset_class %} {{ config.fieldset_class }}{% endif %}{% if config.has_changes %} has-changes{% endif %}">
     <legend>{{ config.numbering|default:'' }} {{ config.label }}</legend>
 
     {% include "form/helptext.html" with helptext=config.helptext helptext_length=config.helptext_length %}

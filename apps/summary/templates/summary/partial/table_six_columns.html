@@ -1,0 +1,33 @@
+<h5>{{ list_items.title }}</h5>
+<table width="100%" {% if class %}class="{{ class }}"{% endif %}>
+  <tr>
+    <td width="40%"><b>{{ list_items.head.0 }}</b></td>
+    <td width="10%"><b>{{ list_items.head.1 }}</b></td>
+    <td width="10%" class="text-right"><b>{{ list_items.head.2 }}</b></td>
+    <td width="10%" class="text-right"><b>{{ list_items.head.3 }}</b></td>
+    <td width="10%" class="text-right"><b>{{ list_items.head.4 }}</b></td>
+    <td width="10%" class="text-right"><b>{{ list_items.head.5 }}</b></td>
+  </tr>
+	{% for table in list_items.partials %}
+    <tr>
+      <td width="100%" colspan="6" class="td_category_title">
+      <b>{{ table.head }}</b>
+      </td>
+    </tr>
+	  {% for table_item in table.items %}
+      <tr>
+        <td width="40%" class="indent_table">{{ table_item.0 }}</td>
+        <td width="10%">{{ table_item.1 }}</td>
+        <td width="10%" class="text-right">{{ table_item.2 }}</td>
+        <td width="10%" class="text-right">{{ table_item.3 }}</td>
+        <td width="10%" class="text-right">{{ table_item.4 }}</td>
+        <td width="10%" class="text-right">{{ table_item.5 }}</td>
+      </tr>
+	  {% endfor %}
+	{% endfor %}
+	<tr class="total_row">
+		<td width="40%" class="text-right" colspan="4"><b>{{ list_items.total.label }}</b></td>
+		<td width="10%" class="text-right"><b>{{ list_items.total.value }}</b></td>
+		<td width="10%" class="text-right"><b></b></td>
+	</tr>
+</table>

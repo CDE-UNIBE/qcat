@@ -55,9 +55,88 @@
       {% for section in sections %}
         {{ section }}
       {% endfor %}
+
+      <div class="row tech-section-group">
+        <h2 class="tech-section-group-title left">{% trans "Links and modules" %}</h2>
+        <a href="#" class="link right js-expand-all-sections" data-is-collapsed="true" data-selector=".tech-links-content">
+          <span class="js-is-expanded">{% trans "Expand all" %}</span>
+          <span class="js-is-collapsed hide">{% trans "Collapse all" %}</span>
+        </a>
+      </div>
+
+      <section id="links" class="row tech-section">
+        <div class="tech-section-header">
+          <div class="medium-12 columns tech-section-title" data-toggle="links-content">
+            <h2>{% trans "Links" %}</h2>
+          </div>
+        </div>
+        <div class="output hide tech-links-content" id="links-content">
+          {% for configuration, list_values in links.items %}
+            {% for list_entry in list_values %}
+              {% with configuration=configuration|stringformat:"s"|add:"/questionnaire/partial/list_item.html" %}
+                {% include configuration with item=list_entry %}
+              {% endwith %}
+            {% endfor %}
+          {% empty %}
+            <p>{% trans "No links" %}</p>
+          {% endfor %}
+        </div>
+      </section>
+      <section id="modules" class="row tech-section">
+        <div class="tech-section-header">
+          <div class="medium-12 columns tech-section-title" data-toggle="modules-content">
+            <h2>{% trans "Modules" %}</h2>
+          </div>
+        </div>
+        <div class="output hide tech-links-content" id="modules-content">
+          {% for configuration, list_values in modules.items %}
+            {% for list_entry in list_values %}
+              {% with configuration=configuration|stringformat:"s"|add:"/questionnaire/partial/list_item.html" %}
+                {% include configuration with item=list_entry %}
+              {% endwith %}
+            {% endfor %}
+          {% empty %}
+            <p>{% trans "No modules" %}</p>
+          {% endfor %}
+
+          {% if module_form_config and IS_ACTIVE_FEATURE_MODULE %}
+            {# Embedded form to add a new module #}
+            <form action="{% url 'technologies:add_module_action' %}" method="POST" id="module-form-embedded" class="module-form-embedded">
+              {% csrf_token %}
+              <p>
+                <a href="#" class="js-show-embedded-modules-form button">{% trans "Add a new module" %}</a>
+              </p>
+              <div class="module-form-embedded-container hide">
+                <input type="hidden" name="link_id" id="input_questionnaire_id" value="{{ module_form_config.questionnaire_id }}">
+                <input type="hidden" name="configuration" value="{{ module_form_config.questionnaire_configuration }}">
+                  <h3>{% trans "1. Select a Technology" %}</h3>
+                  &#10003;
+                <div class="hide" id="modules-select-module">
+                  <h3>
+                    {% trans "2. Select a module" %}
+                  </h3>
+                  <p>
+                    {% trans "Select a module which you would like to add to the Technology." %}
+                  </p>
+                  <div id="modules-available">
+                    <img class="module-loading" src="{% static 'assets/img/ajax-loader.gif' %}">
+                  </div>
+                </div>
+                <div class="hide" id="modules-create">
+                  <h3>
+                    {% trans "3. Create the module" %}
+                  </h3>
+                  <input type="submit" value="{% trans "Create" %}" class="button">
+                </div>
+              </div>
+            </form>
+          {% endif %}
+        </div>
+      </section>
     </main>
   </article>
 
+  {% comment %}Tracking for questionnaire detail view{% endcomment %}
   {% if view_mode != 'edit' %}
     {% addtoblock 'js' %}
       {% compress js %}
@@ -71,7 +150,121 @@
       {% endcompress %}
     {% endaddtoblock %}
   {% endif %}
+  {% addtoblock 'js' %}
+      {% compress js %}
+        <script src="{% static 'notifications/js/ajaxCsrf.js' %}"></script>
+        <script>
+          if ($('html').hasClass('ie')) {
+            // fix http://caniuse.com/#search=Form%20features
+            // create a pseudo submit-button and click it for ie 10 & 11.
+            $('button[type="submit"]').on('click tap', function() {
+              var form = $('#' + $(this).attr('form'));
+              var submitBtn = $('<input>', {
+                  type: 'submit',
+                  name: $(this).attr('name'),
+                  value: $(this).attr('value')
+              });
+              submitBtn.appendTo(form);
+              submitBtn.click();
+            });
+          }
 
+          // modal to inform the compiler sends an async. request to create
+          // the message
+          var modalContainer = $('#finish-editing');
+          $('#inform-compiler').on('click', function() {
+            $.ajax('{% url 'notification_inform_compiler' %}', {
+              method: 'post',
+              data: {
+                'message': $('textarea[name="compiler_info_message"]').val(),
+                'identifier': '{{ questionnaire_identifier }}'
+              },
+              beforeSend: function(xhr, settings) {
+                  // the token is not always set on document.cookie.
+                  if (!csrfSafeMethod(settings.type) && !this.crossDomain) {
+                      xhr.setRequestHeader("X-CSRFToken", '{{ review_config.csrf_token_value }}');
+                  }
+              }
+            }).success(function(data) {
+              displayAndHide(data);
+            }).fail(function() {
+              displayAndHide('error');
+            });
+            return false;
+          });
+
+          // if a questionnaire is rejected, a reason is required
+          $('button[name="reject"]').on('click', function() {
+            var textArea = $('textarea[name="reject-message"]');
+            if($.trim(textArea.val()).length == 0) {
+              textArea.prop('required', 'required');
+            }
+          });
+
+          function displayAndHide(text) {
+            modalContainer.html(text);
+              setTimeout(function() {
+                modalContainer.foundation('reveal', 'close');
+              }, 2000);
+          }
+        
+          $('.js-wms-preview').each(function() {
+            var wmsUrl = $(this).data('wms-url'),
+                wmsLayer = $(this).data('wms-layer'),
+                img = this;
+
+            // Query the GetCapabilities of Geoserver
+            $.ajax({
+              url: wmsUrl,
+              data: {
+                'service': 'WMS',
+                'request': 'GetCapabilities'
+              },
+              dataType: 'xml'
+            }).done(function(data) {
+              // Determine bbox
+              var layerNode = $(data).find('Layer>Name:contains("' + wmsLayer + '")').parent(),
+                  bbox = layerNode.find('BoundingBox[CRS="EPSG:4326"]'),
+                  bboxList = [
+                    bbox.attr('minx'),
+                    bbox.attr('miny'),
+                    bbox.attr('maxx'),
+                    bbox.attr('maxy')
+                  ],
+                  // Create URL of map image
+                  urlParams = {
+                    'service': 'WMS',
+                    'request': 'GetMap',
+                    'layers': wmsLayer,
+                    'format': 'image/png',
+                    'srs': 'EPSG:4326',
+                    'bbox': bboxList.join(),
+                    'width': 500,
+                    'height': 500
+                  };
+              img.src = wmsUrl + '?' + $.param(urlParams);
+              img.alt = 'Layer preview';
+            });
+          });
+
+        </script>
+      {% endcompress %}
+    {% endaddtoblock %}
+
+    {% if module_form_config %}
+      {% addtoblock 'js' %}
+        {% compress js %}
+          <script src="{% static 'questionnaire/js/moduleActions.js' %}"></script>
+          <script>
+            $('#module-form-embedded').bindModuleActions({
+              checkUrl: '{{ module_form_config.check_url }}',
+              csrfToken: '{{ csrf_token }}',
+              questionnaireConfiguration: '{{ module_form_config.questionnaire_configuration }}'
+            });
+          </script>
+        {% endcompress %}
+      {% endaddtoblock %}
+    {% endif %}
 {% endblock %}
 
 {% block help_tour %}

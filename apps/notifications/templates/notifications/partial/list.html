@@ -1,0 +1,98 @@
+{% load i18n %}
+{% load humanize %}
+{% load static %}
+
+<!-- header -->
+<div class="notification-list header row">
+  <div class="small-2 medium-1 columns"><span>{% trans "Date" %}</span></div>
+  <!-- status filter -->
+  <div class="small-1 columns text-center">
+    <a data-dropdown="status-dropdown" aria-controls="status-dropdown" aria-expanded="false"
+       class="has-tip tip-right is-status-dropdown{% if 'statuses' in request.GET.keys and request.GET.statuses != '' %} is-active-filter{% endif %}"
+       data-tooltip aria-haspopup="true" data-options="disable_for_touch:true;"
+       title="{% trans "Show entries for selected statuses only." %}">
+      <svg class="icon is-inline"><use xlink:href="#icon-filter" xmlns:xlink="http://www.w3.org/1999/xlink"/></svg>
+      {% trans "Status" %}
+    </a>
+    <ul id="status-dropdown" class="f-dropdown text-left" data-dropdown-content aria-hidden="true" tabindex="-1">
+      {% for action, verbose_name in statuses.items %}
+        <li class="selected">
+          <input type="checkbox" value="{{ action }}" id="checkbox-{{ action }}"
+             {% if not request.GET.statuses or action|stringformat:"i" in request.GET.statuses %}checked="checked"{% endif %}
+          >
+          <label for="checkbox-{{ action }}">{{ verbose_name }}</label>
+        </li>
+        {% endfor %}
+        <li id="status-filter-submit" class="button small">{% trans "Submit" %}</li>
+    </ul>
+  </div>
+  <!-- questionnaire filter -->
+  <div class="small-6 medium-7 columns">
+    <a id="questionnaire-filter-toggler"
+       class="has-tip tip-right{% if 'questionnaire' in request.GET.keys and request.GET.questionnaire != '' %} is-active-filter{% endif %}"
+       data-tooltip aria-haspopup="true" data-options="disable_for_touch:true;"
+       title="{% trans "Show entries for one questionnaire only." %}">
+      <svg class="icon is-inline"><use xlink:href="#icon-filter" xmlns:xlink="http://www.w3.org/1999/xlink"/></svg>
+      {% trans "Questionnaires" %}
+    </a>
+    <div id="questionnaire-filter" class="hide is-filter">
+      <select data-placeholder="" class="chosen-select" tabindex="2">
+        <option value="">{% trans "All questionnaires" %}</option>
+        {% if 'questionnaire' in request.GET.keys %}
+          <option value="{{ request.GET.questionnaire }}" selected="selected">{{ request.GET.questionnaire }}</option>
+        {% endif %}
+      </select>
+    </div>
+  </div>
+  <!-- action required / pending filter -->
+  <div class="small-2 columns text-center">
+    <a id="is-pending" class="has-tip tip-right{% if 'is_pending' in request.GET.keys %} is-active-filter{% endif %}"
+       data-tooltip aria-haspopup="true" data-options="disable_for_touch:true;"
+       title="{% trans "Click to display only notifications for questionnaires that can be approved by you." %}">
+      <svg class="icon is-inline"><use xlink:href="#icon-filter" xmlns:xlink="http://www.w3.org/1999/xlink"/></svg>
+      {% trans "My tasks" %}
+    </a>
+  </div>
+<!-- read filter -->
+  <div class="small-1 columns text-center">
+    <a id="is-unread" class="has-tip tip-right{% if 'is_unread' in request.GET.keys %} is-active-filter{% endif %}"
+       data-tooltip aria-haspopup="true" data-options="disable_for_touch:true;"
+       title="{% trans "Click to show unread notifications only." %}">
+      <svg class="icon is-inline"><use xlink:href="#icon-filter" xmlns:xlink="http://www.w3.org/1999/xlink"/></svg>
+      {% trans "Unread" %}
+    </a>
+  </div>
+</div>
+<!-- end header -->
+
+{% for log in logs %}
+  <div class="notification-list row{% if log.is_read %} is-read{% endif %}" data-equalizer>
+    <div class="small-2 medium-1 columns is-light is-muted">
+      <span title="{{ log.created|naturaltime }}">{{ log.created|date:"SHORT_DATE_FORMAT" }}</span>
+    </div>
+    <div class="small-1 columns action-icon" title="{{ log.subject }}">
+       <svg class="icon is-inline"><use xlink:href="#{{ log.action_icon }}" xmlns:xlink="http://www.w3.org/1999/xlink"/></svg>
+    </div>
+    <div class="small-6 medium-7 columns" data-equalizer-watch>
+      {{ log.text|safe }}
+      {% if log.next_status_text %} {% trans "Please manage its" %} {{ log.next_status_text }}.{% endif %}
+    </div>
+    <div class="small-2 columns">
+      {% if log.is_todo %}
+          <svg class="icon alert is-inline has-tip"
+               data-tooltip aria-haspopup="true" data-options="disable_for_touch:true;"
+               title="{% trans "You may continue with the next step on the publication workflow." %}">
+            <use xlink:href="#icon-alert" xmlns:xlink="http://www.w3.org/1999/xlink"/>
+          </svg>
+      {% endif %}
+    </div>
+    <div class="small-1 columns text-center read-toggle" data-equalizer-watch>
+      <input type="checkbox" value="{{ log.id }}" class="mark-done" {% if log.is_read %}checked="checked"{% endif %}>
+    </div>
+  </div>
+{% empty %}
+  <div>{% trans "No notifications." %}</div>
+{% endfor %}
+{% if logs %}
+  {% include 'pagination.html' %}
+{% endif %}

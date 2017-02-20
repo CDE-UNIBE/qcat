@@ -57,9 +57,13 @@ function hasContent(element) {
 function watchFormProgress() {
     var completed = 0;
     $('fieldset.row').each(function () {
-        var content = hasContent(this);
-        if (content) {
-            completed++;
+        // Check the content only for the parent fieldset.
+        var hasParentFieldset = $(this).parent().closest('fieldset.row');
+        if (!hasParentFieldset.length) {
+            var content = hasContent(this);
+            if (content) {
+                completed++;
+            }
         }
     });
     var stepsElement = $('.progress-completed');
@@ -284,10 +288,18 @@ function checkConditionalQuestiongroups(element) {
             currentConditionsFulfilled = currentConditionsFulfilled || conditionsFulfilled;
         });
 
-        var questiongroupContainer = $('#' + questiongroup);
+        var questiongroupContainer = $('#' + questiongroup),
+            previousCondition = questiongroupContainer.data('conditions-fulfilled');
         questiongroupContainer.toggle(currentConditionsFulfilled);
-        if (!currentConditionsFulfilled) {
+        if (!currentConditionsFulfilled && previousCondition === true) {
+            // Only clear questiongroup if it was previously visible as this is
+            // an expensive function.
             clearQuestiongroup(questiongroupContainer);
+        }
+        // Store if the condition is now fulfilled, only if there were changes
+        if (currentConditionsFulfilled != previousCondition) {
+            questiongroupContainer.data(
+                'conditions-fulfilled', currentConditionsFulfilled);
         }
     }
 }
@@ -306,7 +318,7 @@ function removeLinkedQuestionnaire(el) {
     qg.find('[name$=link_id]').val('');
 
     // Empty the preview container
-    qg.find('.link-preview').empty();
+    qg.find('.link-preview').empty().trigger('change');
 
     // Show the search field again
     qg.find('.link-search').show();
@@ -360,6 +372,7 @@ function clearQuestiongroup(questiongroup) {
     questiongroup.find('input:text, textarea').val('').change();
     questiongroup.find('input:radio').prop('checked', false).change();
     questiongroup.find('input:checkbox').prop('checked', false).change();
+    questiongroup.find('select').prop('selectedIndex', 0).change();
     questiongroup.find('input:hidden.is-cleared').val('').change();
     questiongroup.find('.chosen-select').val('').trigger('chosen:updated');
 }
@@ -409,15 +422,16 @@ $(function () {
             otherItems.find('[data-remove-this]').show();
 
             var lastItem = container.prev('.list-item');
+            var doNumberingUpdate = false;
 
             // If the item to clone is a table row, we need to find it inside
             // the table
             var isTableRow = typeof $(this).data('add-table-row') !== 'undefined';
             if (isTableRow) {
                 lastItem = container.prev('.outer-list-item').find('.list-item:first-child');
+                doNumberingUpdate = true;
             }
 
-            var doNumberingUpdate = false;
             if (!lastItem.length) {
                 // The element might be numbered, in which case it needs to be
                 // accessed differently
@@ -427,6 +441,13 @@ $(function () {
                 }
             }
             if (!lastItem.length) return;
+
+            // Destroy chosen selects before cloning the elements. Recreate the
+            // chosen selects afterwards.
+            var lastItemChosen = lastItem.find('.chosen-select');
+            if (lastItemChosen.length) {
+                lastItemChosen.chosen('destroy');
+            }
 
             var newElement = lastItem.clone();
 
@@ -629,6 +650,118 @@ $(function () {
                 'div#' + $(this).data('checkbox-toggle')).slideToggle();
         })
 
+        // Form progress upon input
+        .on('change', 'fieldset.row div.row.single-item', function() {
+            watchFormProgress();
+        })
+
+        .on('change', '[data-custom-to-options]', function() {
+            var $t = $(this);
+            var customToOption = $t.data('custom-to-options').replace(/'/g, '"');
+            var keyKeyword = $t.data('key-keyword');
+            var keyId = this.id;
+            var currentValue = $t.val();
+
+            try {
+                var options = JSON.parse(customToOption);
+            } catch(e) { return; }
+
+            if (!options) return;
+            
+            var triggeredKeys = options['default'];
+            if (options.hasOwnProperty(currentValue)) {
+                triggeredKeys = options[currentValue];
+            }
+
+            Object.keys(triggeredKeys).forEach(function(key) {
+                var val = triggeredKeys[key],
+                    triggeredKeyEl = $('#' + keyId.replace(keyKeyword, key));
+
+                if (!triggeredKeyEl.length) return;
+
+                if (!Array.isArray(val) || val.length == 0) val = [""];
+
+                if (val.length > 1) {
+
+                    // If a previously selected value (eg. if page was newly
+                    // loaded) is available, use this value if it is one of the
+                    // available options. Else use the first available option.
+                    var selectedValue = triggeredKeyEl.val();
+                    if (!selectedValue || val.indexOf(selectedValue) == -1) {
+                        selectedValue = val[0];
+                    }
+                    triggeredKeyEl.val(selectedValue);
+                    triggeredKeyEl.prop('disabled', false);
+                    
+                    triggeredKeyEl.find('option').each(function() {
+                        $(this).prop('disabled', val.indexOf(this.value) == -1)
+                    });
+
+                } else {
+                    triggeredKeyEl.val(val[0]);
+                    triggeredKeyEl.prop('disabled', true);
+                }
+
+                triggeredKeyEl.trigger('chosen:updated');
+            });
+        })
+
+        .on('change', '[data-questiongroup-to-options]', function() {
+            var $t = $(this),
+                qg_to_options = $t.data('questiongroup-to-options').split(','),
+                label = $t.data('questiongroup-to-options-label'),
+                keyword = $t.data('questiongroup-to-options-keyword'),
+                isOption = $t.data('questiongroup-to-options-is-option'),
+                qgHasContent = hasContent(this);
+
+            if (isOption && qgHasContent) return; // Values only changed
+
+            qg_to_options.forEach(function(qg) {
+                var qg_parts = qg.split('|');
+                if (qg_parts.length != 2) return;
+
+                var questiongroup = qg_parts[0],
+                    question = qg_parts[1];
+
+                var i = 0;
+                do {
+                    var id = '#id_' + questiongroup + '-' + i + '-' + question;
+                    var select = $(id);
+
+                    if (!select.length) break;
+
+                    if (qgHasContent) {
+                        select.append($('<option>', {
+                            value: keyword,
+                            text: label
+                        }));
+                        
+                        // Temporarily store the selected value of the select
+                        var selectedValue = select.val();
+
+                        // Reorder the options
+                        var optionsOrder = select.data('options-order').split(','),
+                            firstOption = select.find('option:first'),
+                            otherOptions = select.find('option:not(:first)');
+                        otherOptions.sort(function(a,b){
+                            var compA = $.inArray(a.value, optionsOrder),
+                                compB = $.inArray(b.value, optionsOrder);
+                            return (compA < compB) ? -1 : (compA > compB) ? 1 : 0;
+                          });
+                        select.html(otherOptions).prepend(firstOption);
+                        select.val(selectedValue);
+
+                    } else {
+                        select.find('option[value="' + keyword + '"]').remove();
+                    }
+                    select.trigger('chosen:updated');
+                    i++;
+                }
+                while ($(id).length);
+            });
+            $t.data('questiongroup-to-options-is-option', qgHasContent);
+        })
+
         .on('click', '.cb-toggle-questiongroup', function () {
             var container = $(this).data('container');
             if ($(this).prop('checked')) {
@@ -656,6 +789,11 @@ $(function () {
     // Trigger initial change for conditional questiongroups
     $('[data-questiongroup-condition]').trigger('change');
 
+    // Trigger initial change for custom options (only if they have values)
+    $('[data-custom-to-options]').each(function() {
+        if (this.value) $(this).trigger('change');
+    });
+
     // Initial button bar selected toggle
     $('.button-bar').each(toggleButtonBarSelected);
 
@@ -663,11 +801,6 @@ $(function () {
     checkCheckboxQuestiongroups();
 
     checkAdditionalQuestiongroups();
-
-    // Form progress upon input
-    $('fieldset.row div.row.single-item').on('change', function () {
-        watchFormProgress();
-    });
 
     // Select inputs with chosen
     function updateChosen() {
@@ -794,7 +927,7 @@ $(function () {
                 var qg = $(this).closest('.list-item');
 
                 // Add ID of link
-                qg.find('[name$=link_id]').val(ui.item.value);
+                qg.find('[name$=link_id]').val(ui.item.value).trigger('change');
 
                 // Set the name
                 qg.find('.link-name').data('link-name', ui.item.name);
@@ -964,13 +1097,7 @@ $(function () {
                 $('[data-magellan-step="next"]').attr('href', '#' + next);
             }
         }
-    })
-    //  TODO - focus on current step (when location hash is changing)
-    // // Bind the event.
-    // $(window).on('hashchange', function() {
-    //   // Alerts every time the hash changes!
-    //   console.log( location.hash );
-    // })
+    });
 
     updateDropzones();
 });
@@ -1239,6 +1366,11 @@ function showUploadErrorMessage(message) {
 function toggleButtonBarSelected() {
     var selectedValue = $(this).find('input[type="radio"]:checked').val();
     var item = $(this).closest('.list-item');
+    if (item.is('tr')) {
+        // Do not add class "is-selected" to <tr> elements as this will break
+        // the layout of the table.
+        return;
+    }
     if (selectedValue && selectedValue != 'none' && selectedValue != '') {
         item.addClass('is-selected');
     } else {
@@ -1306,9 +1438,6 @@ function updateFieldsetElement(element, prefix, index, reset) {
             $(this).attr('for', newFor);
         }
     });
-
-    // Remove all selects created by chosen, they will be newly created.
-    element.find('.chosen-container').remove();
 
     if (reset) {
         clearQuestiongroup(element);

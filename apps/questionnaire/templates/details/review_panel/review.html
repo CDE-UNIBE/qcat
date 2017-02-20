@@ -3,7 +3,11 @@
 <div class="row">
   <div class="medium-12 columns">
     <h3>{% trans "Pending review" %}</h3>
-    <p>{% trans "This questionnaire is currently waiting for review before it can be published." %}</p>
+    <p>
+      {% blocktrans with questionnaire_type=questionnaire_type %}
+        This {{ questionnaire_type }} is currently waiting for review before it can be published.
+      {% endblocktrans %}
+    </p>
   </div>
 </div>
 
@@ -16,7 +20,10 @@
         </p>
       </div>
       <div class="medium-10 columns">
-        <p>{% trans 'As a reviewer you can edit the SLM Technology / Approach. If the SLM Technology / Approach is not complete you have to “reject” it and the compiler / editor(s) have to revise it.' %}</p>
+        <p>
+          {% blocktrans with questionnaire_type=questionnaire_type %}
+            As a reviewer you can edit the {{ questionnaire_type }}. If the {{ questionnaire_type }} is not complete you have to "reject" it and the compiler / editor(s) have to revise it.
+          {% endblocktrans %}
       </div>
     </div>
   {% elif review_config.mode == 'edit' %}
@@ -27,7 +34,11 @@
         </p>
       </div>
       <div class="medium-10 columns">
-        <p>{% trans 'View this SLM Technology / Approach.' %}</p>
+        <p>
+          {% blocktrans with questionnaire_type=questionnaire_type %}
+            View this {{ questionnaire_type }}.
+          {% endblocktrans %}
+        </p>
       </div>
     </div>
   {% endif %}
@@ -39,12 +50,22 @@
       </p>
     </div>
     <div class="medium-10 columns">
-      <p>{% trans 'As a reviewer you can approve the SLM Technology / Approach once the data is complete. The publisher will be notified.' %}</p>
+      <p>
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          As a reviewer you can approve the {{ questionnaire_type }} once the data is complete. The publisher will be notified.
+        {% endblocktrans %}
+      </p>
     </div>
     <!-- The modal for approval -->
     <div id="confirm-review" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2>{% trans "Please confirm approval." %}</h2>
-      <p>{% trans "If you approve this SLM Technology / Approach the publisher will be notified. After final approval by the publisher the SLM Technology / Approach will be published and available to public users." %}</p>
+      <p>
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          If you approve this {{ questionnaire_type }} the publisher will be notified. After final approval by the publisher the {{ questionnaire_type }} will be published and available to public users.
+        {% endblocktrans %}
+      </p>
+      <p>{% trans "An optional message for the publisher(s) may be added here:" %}</p>
+        <textarea name="message" form="review_form"></textarea>
       <button name='review' value='true' class="button success" type="submit" form="review_form">{% trans "Approve" %}</button>
       <a class="close-reveal-modal" aria-label="Close">&#215;</a>
     </div>
@@ -58,12 +79,24 @@
       </p>
     </div>
     <div class="medium-10 columns">
-      <p>{% trans 'As a reviewer you can reject the SLM Technology / Approach if the data is not complete and the compiler / editor(s) will be notified that they have to revise it.' %}</p>
+      <p>
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          As a reviewer you can reject the {{ questionnaire_type }} if the data is not complete and the compiler / editor(s) will be notified that they have to revise it.
+        {% endblocktrans %}
+      </p>
     </div>
     <!-- the modal for rejection -->
     <div id="confirm-reject" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2>{% trans "Please confirm rejection." %}</h2>
-      <p>{% trans "If you reject this SLM Technology / Approach the compiler and the editor(s) will be notified that they have to revise the SLM Technology / Approach before re-submitting it." %}</p>
+      <p>
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          If you reject this {{ questionnaire_type }} the compiler and the editor(s) will be notified that they have to revise the {{ questionnaire_type }} before re-submitting it.
+        {% endblocktrans %}
+      </p>
+      <p>
+        {% trans "A message for the compiler must be added here:" %}
+        <textarea name="reject-message" form="review_form"></textarea>
+      </p>
       <button name='reject' value='true' class="button alert" type="submit" form="review_form">{% trans "Reject" %}</button>
       <a class="close-reveal-modal" aria-label="Close">&#215;</a>
     </div>
@@ -71,13 +104,16 @@
   </div>
 {% endif %}
 
+{% if 'delete_questionnaire' in review_config.permissions %}
+  {% include 'details/review_panel/_delete.html' %}
+{% endif %}
+
 {% if 'assign_questionnaire' in review_config.permissions %}
   {% trans "Assign reviewer" as assign_header %}
-  {% trans 'Reviewers can be assigned to this SLM Technology / Approach. They will have the permission to review (approve or reject) the SLM Technology / Approach. An SLM Technology / Approach can have more than one reviewer and all reviewers can approve / reject an SLM Technology / Approach for publication.' as assign_description %}
   {% trans "Assigned reviewers:" as assign_assigned %}
   {% trans "There are no reviewers assigned to this questionnaire." as assign_empty %}
   {% trans "Edit assigned reviewers. Click the button to update the assigned reviewers." as assign_edit %}
   {% trans "Update reviewers" as assign_button %}
   {% trans "Please note that currently, invited users are not notified automatically. This feature is in development and will be added soon. For the time being, it is recommended to notify invited users via e-mail." as assign_notice %}
-  {% include 'details/review_panel/_assign_user.html' with users=review_config.reviewers %}
+  {% include 'details/review_panel/_assign_user.html' with users=review_config.reviewers questionnaire_type=questionnaire_type review_status=review_config.review_status %}
 {% endif %}

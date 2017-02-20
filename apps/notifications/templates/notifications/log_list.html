@@ -1,0 +1,87 @@
+{% extends 'base.html' %}
+
+{% load compress %}
+{% load i18n %}
+{% load sekizai_tags %}
+{% load static %}
+
+
+{% block bodyclass %}layout-wocat{% endblock %}
+{% block navclass %}is-wocat{% endblock %}
+
+{% block content %}
+  <main class="row" role="main">
+    <div class="small-12 columns">
+      <h1 class="is-title">
+        {% trans "Your notifications" %}
+        <div class="is-inline right">
+          <button class="button no-radius secondary light" data-toggle="notification-settings">
+            <svg class="icon is-inline">
+              <use xlink:href="#icon-settings" xmlns:xlink="http://www.w3.org/1999/xlink"></use>
+            </svg>
+          </button>
+          <ul id="notification-settings" class="f-dropdown" data-toggler=".text-left open f-open-dropdown left">
+            <li><a data-reveal-id="confirm-mark-all-read">{% trans "Mark all as read" %}</a></li>
+{#            <li><a>{% trans "Notifications per page:" %}</a></li>#}
+          </ul>
+        </div>
+      </h1>
+      <div id="notifications-list"></div>
+    </div>
+    <div id="confirm-mark-all-read" class="reveal-modal" data-reveal aria-labelledby="read-all-modal-title" aria-hidden="true" role="dialog">
+      <h2 id="read-all-modal-title">{% trans "Confirmation" %}</h2>
+      <p>{% trans "Please confirm to mark all unread messages as read" %}</p>
+      <a class="button mark-all-read">{% trans "OK" %}</a>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
+  </main>
+  {% addtoblock 'js' %}
+    {% compress js %}
+      <script src="{% static 'notifications/js/ajaxCsrf.js' %}"></script>
+      <script src="{% static 'notifications/js/notificationActions.js' %}"></script>
+      <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+      <script src="{% static 'js/jquery-ui.min.js' %}"></script>
+      <script>
+        $(function() {
+          var notificationList = $('#notifications-list');
+          var spinner = '<img src="{% static 'assets/img/ajax-loader.gif' %}">';
+          var readAll = $('.mark-all-read');
+          var readAllConfirmationModal = $('#confirm-mark-all-read');
+          var loadNotifications = function() {
+            notificationList.bindNotificationActions({
+              csrfToken: '{{ csrf_token }}',
+              readUrl: '{% url 'notification_read' %}',
+              notificationsUrl: '{% url 'notification_partial_list' %}',
+              initialParams: {% if request.META.QUERY_STRING %}'?{{ request.META.QUERY_STRING }}'{% else %}''{% endif %},
+              questionnaire: {% if 'questionnaire' in request.GET.keys %}'{{ request.GET.questionnaire }}'{% else %}''{% endif %},
+              questionnairesUrl: '{% url 'notification_questionnaire_logs' %}',
+              user: '{{ request.user.id }}',
+              spinner: spinner
+            });
+          };
+
+          // initialize content
+          notificationList.html(spinner);
+          loadNotifications();
+
+          // post data to mark all logs as read.
+          readAll.on('click', function() {
+            $.post('{% url 'notification_all_read' %}', {
+                csrfmiddlewaretoken: '{{ csrf_token }}'
+            }).done(function() {
+              loadNotifications();
+              readAllConfirmationModal.foundation('reveal', 'close');
+            }).fail(function() {
+              readAllConfirmationModal.html('{% trans "Could not update notifications." %}');
+            });
+          });
+        });
+      </script>
+    {% endcompress %}
+  {% endaddtoblock %}
+  {% addtoblock 'css' %}
+    {% compress css %}
+      <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet">
+    {% endcompress %}
+  {% endaddtoblock %}
+{% endblock %}

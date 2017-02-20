@@ -3,7 +3,11 @@
 <div class="row">
   <div class="medium-12 columns">
     <h3>{% trans "Edit version" %}</h3>
-    <p>{% trans "If you want to make changes to a published SLM Technology / Approach you can create a new release of this SLM Technology / Approach. The current version of the questionnaire remains public until the new version is published. The previous / old version will be archived and remains available to public users." %}</p>
+    <p>
+      {% blocktrans with questionnaire_type=questionnaire_type %}
+        If you want to make changes to a published {{ questionnaire_type }} you can create a new release of this {{ questionnaire_type }}. The current version of the questionnaire remains public until the new version is published. The previous / old version will be archived and remains available to public users.
+      {% endblocktrans %}
+    </p>
   </div>
 </div>
 
@@ -15,15 +19,27 @@
       </p>
     </div>
     <div class="medium-10 columns">
-      <p>{% trans 'Create a new SLM Technology / Approach draft based on the published questionnaire. The publication workflow will start again.' %}</p>
+      <p>
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          Create a new {{ questionnaire_type }} draft based on the published questionnaire. The publication workflow will start again.
+        {% endblocktrans %}
+      </p>
     </div>
     <div id="confirm-edit" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2>{% trans "Please confirm submission." %}</h2>
-      <p>{% trans 'If you submit a new version of this SLM Technology / Approach, a new version (status: "draft") will be created. It can be edited by you and all editors.' %}</p>
+      <p>
+        {% blocktrans with questionnaire_type=questionnaire_type %}
+          If you submit a new version of this {{ questionnaire_type }}, a new version (status: "draft") will be created. It can be edited by you and all editors.
+        {% endblocktrans %}
+      </p>
       <a class="button success" type="submit" href="{{ review_config.url }}">{% trans "Edit" %}</a>
       <a class="close-reveal-modal" aria-label="Close">&#215;</a>
     </div>
   </div>
+{% endif %}
+
+{% if 'delete_questionnaire' in review_config.permissions %}
+  {% include 'details/review_panel/_delete.html' %}
 {% endif %}
 
 {% if 'flag_unccd_questionnaire' in review_config.permissions %}
@@ -34,11 +50,11 @@
       </p>
     </div>
     <div class="medium-10 columns">
-      <p>{% trans 'Flag this questionnaire as a UNCCD best practice.' %}</p>
+      <p>{% trans 'Flag this questionnaire as a UNCCD best practice for this country.' %}</p>
     </div>
     <div id="confirm-flag-unccd" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2>{% trans "Please confirm flagging as a UNCCD best practice." %}</h2>
-      <p>{% trans "By submitting, this questionnaire will be flagged as a UNCCD focal point. This will create a new version of the quetsionnaire which will go through the review process before it is publicly visible." %}</p>
+      <p>{% trans "By submitting, this questionnaire will be flagged as a UNCCD best practice for this country. Please note that due to the review process, it will take a few days before this is publicly visible." %}</p>
       <button name='flag-unccd' value='true' class="button success" type="submit" form="review_form">{% trans "Confirm" %}</button>
       <a class="close-reveal-modal" aria-label="Close">&#215;</a>
     </div>
@@ -53,11 +69,11 @@
       </p>
     </div>
     <div class="medium-10 columns">
-      <p>{% trans 'This questionnaire is flagged as a UNCCD best practice. As a UNCCD focal point, you can remove this flag.' %}</p>
+      <p>{% trans 'This questionnaire is flagged as a UNCCD best practice for this country. As the UNCCD national focal point, you can remove this flag.' %}</p>
     </div>
     <div id="confirm-unflag-unccd" class="reveal-modal" data-reveal aria-labelledby="modalTitle" aria-hidden="true" role="dialog">
       <h2>{% trans "Please confirm unflagging as a UNCCD best practice." %}</h2>
-      <p>{% trans "By submitting, this questionnaire will be unflagged as UNCCD focal point. This will create a new version of the questionnaire which will go through the review process before it is publicly visible." %}</p>
+      <p>{% trans "By submitting, this questionnaire will be unflagged as UNCCD best practice for this country. Please note that due to the review process, it will take a few days before this is publicly visible." %}</p>
       <button name='unflag-unccd' value='true' class="button success" type="submit" form="review_form">{% trans "Confirm" %}</button>
       <a class="close-reveal-modal" aria-label="Close">&#215;</a>
     </div>

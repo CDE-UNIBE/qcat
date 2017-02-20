@@ -1,0 +1,34 @@
+@import 'app';
+
+// The $base-font-size is 100% while $base-line-height is 150%
+$base-line-height: 1.1rem;
+
+// We use these to control header font styles
+// $header-font-family: $body-font-family;
+$header-font-weight: 400;
+// $header-font-style: normal;
+$header-font-color: $body-font-color;
+$header-line-height: 1.5;
+$header-top-margin: 0;
+$header-bottom-margin: 0;
+// $header-text-rendering: optimizeLegibility;
+
+// We use these to control header font sizes
+$h1-font-size: rem-calc(22);
+$h2-font-size: rem-calc(16);
+$h3-font-size: rem-calc(16);
+$h4-font-size: rem-calc(14);
+$h5-font-size: rem-calc(12);
+$h6-font-size: rem-calc(12);
+
+// We use these to control header size reduction on small screens
+$h1-font-reduction: 0.0875;
+$h2-font-reduction: 0.0875;
+$h3-font-reduction: 0.0875;
+
+$paragraph-font-weight: 400;
+$paragraph-font-size: inherit;
+$paragraph-line-height: 1rem;
+$paragraph-margin-bottom: 0;
+
+@import 'base/summary';

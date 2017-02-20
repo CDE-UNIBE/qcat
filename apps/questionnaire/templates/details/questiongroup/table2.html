@@ -1,0 +1,36 @@
+{% load i18n %}
+{% load date_format %}
+
+{% comment %}
+  Render the questiongroup as table. The labels of the keys are used as table
+  headers, each questiongroup takes up one row of the table.
+
+  Important: The questiongroup must have the view_option "with_keys": true set.
+  Also, the questions should be rendered with view_option
+  "template": "value_only".
+{% endcomment %}
+
+{% if config.label and config.layout == 'label' %}
+  <h5>{{ config.label }}</h5>
+{% endif %}
+<table class="full-width">
+  {% for width in config.column_widths %}
+    <col width="{{ width }}">
+  {% endfor %}
+  <thead>
+    <td>{{ keys.0 }}</td>
+    <td>{% trans "From" %}</td>
+    <td>{% trans "To" %}</td>
+    <td>{{ keys.5 }}</td>
+  </thead>
+  <tbody>
+    {% for questiongroup in questiongroups %}
+      <tr>
+        <td>{{ questiongroup.0|striptags }}</td>
+        <td>{{ questiongroup.2|month_name:'F' }} {{ questiongroup.1 }}</td>
+        <td>{{ questiongroup.4|month_name:'F' }} {{ questiongroup.3 }}</td>
+        <td>{{ questiongroup.5 }}</td>
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

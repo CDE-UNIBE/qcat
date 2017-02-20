@@ -1,15 +1,15 @@
 import contextlib
+import time
 import urllib.request
 from os.path import join, dirname
 
 import envdir
 import configurations
-from fabric.context_managers import lcd
+
 from fabric.contrib.files import exists
-from fabric.api import local, run, sudo, env
+from fabric.api import run, sudo, env
 from fabric.colors import green, yellow
-from fabric.decorators import task, runs_once
-from fabric.operations import require
+from fabric.decorators import task
 from fabric.contrib import django
 from django.conf import settings
 
@@ -25,15 +25,20 @@ ENVIRONMENTS = {
         'branch': 'develop',
         'label': 'dev',
         'host_string': settings.HOST_STRING_DEV,
-        'opbeat_url': settings.OPBEAT_URL_DEV,
-        'opbeat_bearer': settings.OPBEAT_BEARER_DEV,
+        'touch_file': settings.TOUCH_FILE_DEV,
+    },
+    'demo': {
+        'branch': 'master',
+        'label': 'live',
+        'host_string': settings.HOST_STRING_DEMO,
+        'touch_file': settings.TOUCH_FILE_DEMO,
+        'url': 'https://qcat-demo.wocat.net/{}/wocat/list/?type=all',
     },
     'master': {
         'branch': 'master',
         'label': 'live',
         'host_string': settings.HOST_STRING_LIVE,
-        'opbeat_url': settings.OPBEAT_URL_LIVE,
-        'opbeat_bearer': settings.OPBEAT_BEARER_LIVE,
+        'touch_file': settings.TOUCH_FILE_LIVE,
         'url': 'https://qcat.wocat.net/{}/wocat/list/?type=all',
     },
     'common': {
@@ -41,6 +46,12 @@ ENVIRONMENTS = {
         'repo_url': 'https://github.com/CDE-UNIBE/qcat.git',
         'base_path': '/srv/webapps',
     }
+}
+
+# Mapping of branches and the hosts on which these branches are checked out
+BRANCH_HOSTINGS = {
+    'develop': ['develop'],
+    'master': ['master', 'demo'],
 }
 
 
@@ -69,42 +80,32 @@ def set_environment(environment_name):
 
 
 @task
-def develop():
-    """
-    Set develop as current environment
-    """
-    set_environment('develop')
-
-
-@task
-def master():
-    """
-    Set maste as current environment
-    """
-    set_environment('master')
-
-
-@task
-def deploy():
+def deploy(branch):
     """
     Deploy the project.
-    Execute with "fab <branch> deploy".
+    Execute with "fab deploy:<branch>".
     """
-    require('environment', provided_by=(develop, master))
-    _set_maintenance_mode(True, env.source_folder)
-    _get_latest_source(env.source_folder)
-    _update_virtualenv(env.source_folder)
-    _clean_static_folder(env.source_folder)
-    _update_static_files(env.source_folder)
-    _update_database(env.source_folder)
-    _set_maintenance_mode(False, env.source_folder)
-    _rebuild_configuration_cache()
-    print(green("Everything OK"))
-    _access_project()
+    if branch not in BRANCH_HOSTINGS.keys():
+        raise BaseException('{} is not a valid branch'.format(branch))
 
+    for environment in BRANCH_HOSTINGS[branch]:
+        set_environment(environment)
+        _set_maintenance_warning(env.source_folder)
+        _set_maintenance_mode(True, env.source_folder)
+        _get_latest_source(env.source_folder)
+        _update_virtualenv(env.source_folder)
+        _clean_static_folder(env.source_folder)
+        _update_static_files(env.source_folder)
+        _update_database(env.source_folder)
+        _set_maintenance_mode(False, env.source_folder)
+        _rebuild_configuration_cache()
+        print(green("Everything OK"))
+        _access_project()
+        _clean_sessions(env.source_folder)
 
 @task
-def provision():
+def provision(environment):
+    set_environment(environment)
     _install_prerequirements()
     _create_directory_structure(env.site_folder)
     _get_latest_source(env.source_folder)
@@ -113,16 +114,17 @@ def provision():
 
 
 @task
-def load_qcat_data():
+def load_qcat_data(environment):
+    set_environment(environment)
     run('cd {} && python manage.py load_qcat_data'.format(env.source_folder))
 
 
 @task
-def show_logs(file='django.log', n=100):
+def show_logs(environment, file='django.log', n=100):
     """
     Arguments can be passed like fab develop show_logs:file=myfile.log,n=1
     """
-    require('environment', provided_by=(develop, master))
+    set_environment(environment)
     run('tail -n {n} {folder}/logs/{file}'.format(n=n, folder=env.source_folder, file=file))
 
 
@@ -164,7 +166,7 @@ def _clean_static_folder(source_folder):
 
 
 def _update_static_files(source_folder):
-    run('cd %s && npm install' % source_folder)
+    run('cd %s && npm install &>/dev/null' % source_folder)
     run('cd %s && bower install | xargs echo' % source_folder)
     run('cd %s && grunt build:deploy --force' % source_folder)
     run('cd %s && ../virtualenv/bin/python3 manage.py collectstatic --noinput'
@@ -186,8 +188,7 @@ def _reload_apache(site_folder):
 
 def _reload_uwsgi():
     """Touch the uwsgi-conf to restart the server"""
-    run('touch {}/serverconfig/uwsgi_{}.ini'.format(
-        env.source_folder, env.label))
+    run('touch {}'.format(env.touch_file))
 
 
 def _set_maintenance_mode(value, source_folder):
@@ -218,23 +219,23 @@ def _access_project():
                 print('Read response from: {}'.format(request.url))
 
 
-@task
-@runs_once
-def register_deployment():
+def _set_maintenance_warning(source_folder):
     """
-    Call register_deployment with a local path that contains a .git directory
-    after a release has been deployed.
+    Activate the maintenance warning and wait until the deploy timeout is over,
+    giving people the chance to save their work.
+    This is a brute method, but deploying without a maintenance is not an option
+    at this time, as some tasks (configuration and cache rebuilding) are not
+    always required and are built on human interaction. They also are relatively
+    expensive and don't need to be executed on each deploy.
     """
-    require('environment', provided_by=(develop, master))
-    local_project_folder = dirname(dirname(__file__))
-    with(lcd(local_project_folder)):
-        revision = local('git log -n 1 --pretty="format:%H"', capture=True)
-        branch = local('git rev-parse --abbrev-ref HEAD', capture=True)
-        local('curl https://intake.opbeat.com/api/v1/organizations/{}'
-              ' -H "Authorization: Bearer {}"'
-              ' -d rev="{}"'
-              ' -d branch="{}"'
-              ' -d status=completed'.format(env.opbeat_url,
-                                            env.opbeat_bearer,
-                                            revision,
-                                            branch))
+    run('cd %s && ../virtualenv/bin/python3 manage.py '
+        'set_next_maintenance' % source_folder)
+    time.sleep(settings.DEPLOY_TIMEOUT)
+
+
+def _clean_sessions(source_folder):
+    """
+    This should be in a crontab.
+    """
+    run('cd %s && ../virtualenv/bin/python3 manage.py '
+        'clearsessions' % source_folder)

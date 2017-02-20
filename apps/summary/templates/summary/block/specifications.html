@@ -1,0 +1,12 @@
+<div class="row">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+      <h5>{{ content.title }}</h5>
+    	<div>
+    		{% for url_items in content.urls %}
+    	   	<img src="{{url_items}}" class="img_in_text">
+        {% endfor %}
+    		{{ content.text }}
+    	</div>
+  </div>
+</div>

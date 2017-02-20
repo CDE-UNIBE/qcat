@@ -213,41 +213,64 @@ class ModerationTest(FunctionalTest):
     def test_user_questionnaires(self, mock_questionnaire_list):
 
         user_alice = User.objects.get(pk=101)
-        user_moderator = User.objects.get(pk=2365)
+        user_moderator = User.objects.get(pk=103)
+        user_secretariat = User.objects.get(pk=107)
 
         mock_questionnaire_list.return_value = {}
         # Alice logs in
         self.doLogin(user=user_alice)
 
-        # She tries to access the moderation view but permission is denied
-        # self.browser.get(self.live_server_url + reverse(
-        #     accounts_route_moderation))
-        # self.checkOnPage('403 Forbidden')
-
         # She logs in as moderator and sees that she can access the view
         self.doLogin(user=user_moderator)
-
         self.browser.get(self.live_server_url + reverse(
             accounts_route_questionnaires))
         self.wait_for(
             'xpath', '//img[@src="/static/assets/img/ajax-loader.gif"]',
             visibility=False)
 
-        # She sees all the Questionnaires which are submitted.
+        # She sees all the Questionnaires which are submitted plus the one where
+        # he is compiler
         list_entries = self.findManyBy(
             'xpath', '//article[contains(@class, "tech-item")]')
-        self.assertEqual(len(list_entries), 4)
+        self.assertEqual(len(list_entries), 3)
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[1]//a['
-            'contains(text(), "Foo 2")]')
+                     'contains(text(), "Foo 6")]')
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[2]//a['
-            'contains(text(), "Foo 8")]')
-
-        # She also sees all Questionnaires which are reviewed
+            'contains(text(), "Foo 2")]')
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[3]//a['
-                     'contains(text(), "Foo 7")]')
+            'contains(text(), "Foo 8")]')
+
+        # He logs in as WOCAT secretariat
+        self.doLogin(user=user_secretariat)
+        self.browser.get(self.live_server_url + reverse(
+            accounts_route_questionnaires))
+        self.wait_for(
+            'xpath', '//img[@src="/static/assets/img/ajax-loader.gif"]',
+            visibility=False)
+
+        # She sees all the Questionnaires (2 drafts, 2 submitted, 2 reviewed and
+        # 1 rejected)
+        list_entries = self.findManyBy(
+            'xpath', '//article[contains(@class, "tech-item")]')
+        self.assertEqual(len(list_entries), 6)
+        self.findBy(
+            'xpath', '(//article[contains(@class, "tech-item")])[1]//a['
+                     'contains(text(), "Foo 1")]')
+        self.findBy(
+            'xpath', '(//article[contains(@class, "tech-item")])[2]//a['
+                     'contains(text(), "Foo 6")]')
+        self.findBy(
+            'xpath', '(//article[contains(@class, "tech-item")])[3]//a['
+                     'contains(text(), "Foo 2")]')
         self.findBy(
             'xpath', '(//article[contains(@class, "tech-item")])[4]//a['
+                     'contains(text(), "Foo 8")]')
+        self.findBy(
+            'xpath', '(//article[contains(@class, "tech-item")])[5]//a['
+                     'contains(text(), "Foo 7")]')
+        self.findBy(
+            'xpath', '(//article[contains(@class, "tech-item")])[6]//a['
                      'contains(text(), "Foo 9")]')

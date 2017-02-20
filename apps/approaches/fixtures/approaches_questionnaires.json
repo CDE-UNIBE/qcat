@@ -41,7 +41,6 @@
       "code": "app_1",
       "status": 4,
       "version": 1,
-      "blocked": null,
       "created": "2015-03-10T16:07:20.847Z",
       "updated": "2015-03-10T16:07:20.847Z"
     }
@@ -105,7 +104,6 @@
       "code": "app_2",
       "status": 4,
       "version": 1,
-      "blocked": null,
       "created": "2015-03-10T16:08:20.904Z",
       "updated": "2015-03-10T16:08:20.904Z"
     }

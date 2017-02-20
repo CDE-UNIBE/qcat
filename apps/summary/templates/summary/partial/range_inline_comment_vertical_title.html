@@ -1,0 +1,31 @@
+{% for range_item in list_items %}
+  {% comment %}list_items is a generator, so it may be consumed only once{% endcomment %}
+  {% if forloop.first %}
+    <div class="row avoidbreak">
+      <div class="small-10 columns"></div>
+      <div class="small-2 columns">
+        <div class="rotate-container">
+          <div class="rotate no-line-wrap" style="margin-left: -5px">
+          {% for element in range_item.scale %}
+            <div style="margin-bottom: 0rem">{{ element }}</div>
+          {% endfor %}
+          </div>
+        </div>
+      </div>
+    </div>
+  {% endif %}
+  <div class="row range" >
+    <div class="small-10 columns">
+      {{ range_item.label }}
+      <p class="comment">{{ range_item.text }}</p>
+    </div>
+    <div class="small-2 columns">
+      <div>
+        {% for i in range_item.range %}
+          <div {% if i == range_item.selected %} class="range_true" {% endif %} class="range_square"></div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  <hr class="small">
+{% endfor %}

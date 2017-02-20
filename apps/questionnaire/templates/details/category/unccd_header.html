@@ -52,6 +52,22 @@
     {% if raw_data.unccd_property_rights_description %}
       <p><strong>{% trans "Comments" %}:</strong> {{ raw_data.unccd_property_rights_description }}</p>
     {% endif %}
+
+    <div class="tech-item-footer tech-item-footer-details">
+      {# Translations #}
+      {% if metadata.translations %}
+        <ul class="left tech-lang-list sub-nav-square">
+          {% for translation in metadata.translations %}
+            <li>
+              {% language translation %}
+                <a href="{% url 'unccd:questionnaire_details' metadata.code %}" class="is-unccd">{{ translation }}</a>
+              {% endlanguage %}
+            </li>
+          {% endfor %}
+        </ul>
+      {% endif %}
+    </div>
+
   </header>
 
   <div class="row tech-output-actions">
@@ -77,14 +93,30 @@
     <ul id="tech-details-export" data-dropdown-content class="f-dropdown" aria-hidden="true">
       <li><a href="#">PDF</a></li>
     </ul>
+    {% if notifications_href %}
+      <a href="{{ notifications_href }}" class="button">
+        <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-info"></use></svg>
+        {% trans "See history" %}
+      </a>
+    {% endif %}
   </div>
+
+  {% if review_config %}
+    {% trans "UNCCD Prais data" as questionnaire_type %}
+    {% include 'details/review_panel.html' with review_config=review_config questionnaire_type=questionnaire_type %}
+  {% endif %}
 
   <div class="row tech-section-group">
     <h2 class="tech-section-group-title left">{% trans "View sections" %}</h2>
-    <a href="#" class="link right js-expand-all-sections" data-is-collapsed="true">
+    <a href="#" class="link right js-expand-all-sections" data-is-collapsed="true" data-selector=".tech-section-content">
       <span class="js-is-expanded">{% trans "Expand all" %}</span>
       <span class="js-is-collapsed hide">{% trans "Collapse all" %}</span>
     </a>
+  </div>
+
+  <div class="row tech-overall-progress">
+    <span class="steps">{% trans "Completeness:" %} {{ completeness_percentage }}%</span>
+    <span class="meter" style="width:{{ completeness_percentage }}%"></span>
   </div>
 
   {% if subcategories or 'edit_questionnaire' in permissions and 'edit' in view_mode %}

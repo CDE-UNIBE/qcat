@@ -6,7 +6,7 @@
     <a name="{{ keyword }}"></a>
 
     <div class="tech-section-header">
-      {% if 'edit_questionnaire' in permissions and edit_step_route %}
+      {% if 'edit_questionnaire' in permissions and edit_step_route and view_mode == 'edit' %}
         <div class="medium-9 columns tech-section-title" data-toggle="{{ keyword }}-content">
           <h2>{{ numbering|default:'' }} {{ label }}</h2>
         </div>

@@ -1,0 +1,15 @@
+<div class="row compact">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+  </div>
+</div>
+<div class="row compact">
+  <div class="small-6 columns">
+    <h5>{{ content.pro.label }}</h5>
+    {% include 'summary/partial/unordered_list.html' with list_items=content.pro.items class="bullets" %}
+  </div>
+  <div class="small-6 columns overcome">
+    <h5>{{ content.contra.label }} <span class="subtext">{{ content.contra.subtext }}</span></h5>
+    {% include 'summary/partial/unordered_list.html' with list_items=content.contra.items class="bullets" %}
+  </div>
+</div>

@@ -1,0 +1,60 @@
+{% comment %}
+  This subcategory assumes that the first questiongroup contains a image
+  checkbox question where each conditionally opens a new questiongroup.
+  The questiongroups not appearing part of the conditions are rendered normally.
+
+  For this reason, the following configurations in "form_options" need to be
+  set:
+
+  - questiongroup_conditions: Must correspond to the list of
+    "questiongroup_conditions" set in the "form_options" of the first key of the
+    first questiongroup.
+
+{% endcomment %}
+
+{% load floppyforms %}
+{% load list_to_columns %}
+
+{% if config.next_level == 'subcategories' %}
+  <p>{{ config.label }}</p>
+  {% for sub_config, sub_formsets in formsets %}
+    {% form form using sub_config.form_template with config=sub_config formsets=sub_formsets %}
+  {% endfor %}
+{% else %}
+  <fieldset id="{{ config.keyword }}" class="row{% if config.has_changes %} has-changes{% endif %}">
+    <legend>{{ config.numbering|default:'' }} {{ config.label }}</legend>
+
+    {% include "form/helptext.html" with helptext=config.helptext helptext_length=config.helptext_length %}
+
+    {% for questiongroup_config, questiongroup_formset in formsets %}
+      {% if forloop.counter == 1 %}
+        {% form form using questiongroup_config.template with config=questiongroup_config formset=questiongroup_formset %}
+      {% elif forloop.counter == 2 %}
+        <div{% if questiongroup_config.questiongroup_condition %} id="{{ questiongroup_config.questiongroup_condition }}"{% endif %} class="questiongroup{% if questiongroup_config.numbered %} questiongroup-numbered-{{ questiongroup_config.numbered }}{% endif %}{% if questiongroup_config.numbered == 'prefix' %} sortable{% endif %}">
+          {% if questiongroup_config.label %}
+            <{{ questiongroup_config.label_tag|default:"h4" }} class="{% if questiongroup_config.label_class %}{{ questiongroup_config.label_class }}{% endif %}">{{ questiongroup_config.label }}</{{ questiongroup_config.label_tag|default:"h4" }}>
+          {% endif %}
+
+          {% if questiongroup_config.helptext_position|default:"default" == 'default' %}
+            {% include "form/helptext.html" with helptext=questiongroup_config.helptext helptext_length=questiongroup_config.helptext_length %}
+          {% endif %}
+          {{ questiongroup_formset.management_form }}
+          {% for qg_form in questiongroup_formset.forms %}
+            <div class="list-item row{% if formset.max_num > formset.min_num %} is-removable" data-questiongroup-keyword="{{ config.keyword }}{% endif %}">
+              {% for field in qg_form.visible_fields %}
+                <div class="small-12 columns">
+                  <ul class="list-gallery small-block-grid-1">
+                    {% formfield field using "form/field/image_checkbox_with_questiongroup_other.html" with options=questiongroup_config.options|get_by_keyword:field.name additional_qg=formsets questiongroup_conditions=config.questiongroup_conditions|join:',' %}
+                  </ul>
+                </div>
+              {% endfor %}
+            </div>
+          {% endfor %}
+        </div>
+      {% elif forloop.counter0|add:"-1" > config.questiongroup_conditions|length %}
+        {% form form using questiongroup_config.template with config=questiongroup_config formset=questiongroup_formset %}
+      {% endif %}
+    {% endfor %}
+  </fieldset>
+{% endif %}
+

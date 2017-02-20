@@ -19,7 +19,9 @@
     <h5 class="help-subtitle-small">{% trans "Editor" %}</h5>
   {% endif %}
   <p>
-    {% trans "Editors can edit the SLM Technology / Approach, but they cannot submit it for review or invite other editors." %}
+    {% blocktrans with questionnaire_type=questionnaire_type %}
+      Editors can edit the {{ questionnaire_type }}, but they cannot submit it for review or invite other editors.
+    {% endblocktrans %}
   </p>
 {% endif %}
 
@@ -28,7 +30,9 @@
     <h5 class="help-subtitle-small">{% trans "Reviewer" %}</h5>
   {% endif %}
   <p>
-    {% trans "The reviewer can approve or reject the SLM Technology / Approach and can edit it." %}
+    {% blocktrans with questionnaire_type=questionnaire_type %}
+      The reviewer can approve or reject the {{ questionnaire_type }} and can edit it.
+    {% endblocktrans %}
   </p>
 {% endif %}
 
@@ -37,7 +41,9 @@
     <h5 class="help-subtitle-small">{% trans "Publisher" %}</h5>
   {% endif %}
   <p>
-    {% trans "The publisher can approve or reject the SLM Technology / Approach and can edit it." %}
+    {% blocktrans with questionnaire_type=questionnaire_type %}
+      The publisher can approve or reject the {{ questionnaire_type }} and can edit it.
+    {% endblocktrans %}
   </p>
 {% endif %}
 
@@ -46,6 +52,8 @@
     <h5 class="help-subtitle-small">{% trans "WOCAT Secretariat" %}</h5>
   {% endif %}
   <p>
-    {% trans "The WOCAT Secretariat can review and publish the SLM Technology / Approach. The secretariat can also assign reviewers and publishers." %}
+    {% blocktrans with questionnaire_type=questionnaire_type %}
+      The WOCAT Secretariat can review and publish the {{ questionnaire_type }}. The secretariat can also assign reviewers and publishers.
+    {% endblocktrans %}
   </p>
 {% endif %}

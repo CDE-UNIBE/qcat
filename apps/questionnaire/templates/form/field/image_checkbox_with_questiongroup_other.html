@@ -1,0 +1,49 @@
+{% comment %}
+
+  This renders a question with image checkboxes where for each checkbox
+  (4 columns), an additional questiongroup is rendered next to it
+  (8 columns). The additional questiongroup corresponds to the list
+  position of the image checkbox list.
+
+{% endcomment %}
+
+{% load staticfiles %}
+{% load floppyforms %}
+{% load list_to_columns %}
+
+{% for group_name, choices in optgroups %}
+  {% for choice in choices %}
+    <div class="row">
+      <div class="small-4 columns">
+        <div class="list-gallery-item without-label">
+          {% if options.helptext_choices %}
+            {% with ttip=options.helptext_choices|get_by_index:forloop.counter0 %}
+              {% if ttip %}
+                <label for="{{ attrs.id }}_{{ forloop.counter }}" class="input-multiline-image">
+                  <input {% if choice.0 in value %}checked="checked" {% endif %}type="checkbox" id="{{ attrs.id }}_{{ forloop.counter }}" name="{{ name }}" value="{{ choice.0 }}" data-toggle="{{ attrs.id }}_{{ forloop.counter }}_sub"{% if questiongroup_conditions %} data-questiongroup-condition="{{ questiongroup_conditions }}"{% endif %} {% include "floppyforms/attrs.html" %}>
+                  <span class="has-tip" title="{{ ttip }}" data-tooltip="">{{ choice.1 }}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg></span>
+              {% else %}
+                <label for="{{ attrs.id }}_{{ forloop.counter }}" class="input-multiline-image">
+                  <input {% if choice.0 in value %}checked="checked" {% endif %}type="checkbox" id="{{ attrs.id }}_{{ forloop.counter }}" name="{{ name }}" value="{{ choice.0 }}" data-toggle="{{ attrs.id }}_{{ forloop.counter }}_sub"{% if questiongroup_conditions %} data-questiongroup-condition="{{ questiongroup_conditions }}"{% endif %} {% include "floppyforms/attrs.html" %}>
+                  <span>{{ choice.1 }}</span>
+              {% endif %}
+            {% endwith %}
+          {% else %}
+            <label for="{{ attrs.id }}_{{ forloop.counter }}">{{ choice.1 }}
+          {% endif %}
+            <figure class="list-gallery-icon">
+              <img src="{% static images|get_by_index:forloop.counter0 %}" alt="{{ choice.1 }}">
+            </figure>
+          </label>
+        </div>
+      </div>
+      {% with new_index=forloop.counter|add:"1" %}
+      <div class="small-8 columns image-cb-has-condition">
+        {% with subformset=additional_qg|get_by_index:new_index value=None %}
+          {% form form using subformset.0.template with config=subformset.0 formset=subformset.1 %}
+        {% endwith %}
+      </div>
+      {% endwith %}
+    </div>
+  {% endfor %}
+{% endfor %}

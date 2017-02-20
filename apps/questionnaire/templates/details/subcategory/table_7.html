@@ -1,0 +1,73 @@
+{% load list_to_columns %}
+
+{% comment %}
+  Table where each questiongroup occupies one row. The first column is filled with the label of the questiongroup.
+
+  Further questions are rendered either before the table (questiongroup_config.layout == 'before_table') or after the table.
+{% endcomment %}
+
+<{{ label_tag|default:"h5" }}{% if label_class %} class="{{ label_class }}"{% endif %}>{{ numbering|default:'' }}</{{ label_tag|default:"h5" }}>
+{% if subcategories %}
+  {% for subcategory in subcategories %}
+    {{ subcategory }}
+  {% endfor %}
+{% else %}
+  {% for qg_config, qg_rendered in questiongroups %}
+    {% if qg_config.layout == 'before_table' %}
+      {{ qg_rendered }}
+    {% endif %}
+  {% endfor %}
+  {% if raw_questiongroups %}
+    <table class="small-12 output-table">
+      <thead>
+        <tr>
+          {% if layout != 'no_label_row' %}
+            <th style="width: 65%"></th>
+          {% endif %}
+          {% for header in table_headers %}
+            {% if forloop.counter == 1 %}
+              <th style="width: 65%">{{ header }}</th>
+            {% else %}
+              <th>{{ header }}</th>
+            {% endif %}
+          {% endfor %}
+        </tr>
+      </thead>
+      <tbody>
+        {% for questiongroup in raw_questiongroups %}
+          {% if questiongroup.qg_keyword in table_grouping.0 %}
+            {% for qg in questiongroup.data_labelled %}
+              <tr>
+                {% if questiongroup.layout != 'no_label_row' %}
+                  <td>{{ questiongroup.label }}</td>
+                {% endif %}
+                {% for k, values in qg %}
+                  {% if forloop.counter == 2 and qg|length == 2 %}
+                    <td>
+                      {% include 'details/field/year_bar.html' with selected_months=questiongroup.data|get_by_index:forloop.parentloop.counter0|get_by_index:forloop.counter0|get_by_index:1 %}
+                    </td>
+                  {% elif forloop.counter == 3 and qg|length == 3 %}
+                    <td>
+                      {% include 'details/field/year_bar.html' with selected_months=questiongroup.data|get_by_index:forloop.parentloop.counter0|get_by_index:forloop.counter0|get_by_index:1 %}
+                    </td>
+                  {% else %}
+                    <td>
+                      {% for v in values %}
+                        {{ v }}
+                      {% endfor %}
+                    </td>
+                  {% endif %}
+                {% endfor %}
+              </tr>
+            {% endfor %}
+          {% endif %}
+        {% endfor %}
+      </tbody>
+    </table>
+  {% endif %}
+  {% for qg_config, qg_rendered in questiongroups %}
+    {% if qg_config.layout != 'before_table' %}
+      {{ qg_rendered }}
+    {% endif %}
+  {% endfor %}
+{% endif %}

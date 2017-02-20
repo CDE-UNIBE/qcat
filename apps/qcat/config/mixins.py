@@ -9,6 +9,15 @@ class DevMixin:
     THUMBNAIL_DEBUG = True
 
 
+class TestMixin:
+    """
+    Provide random content generator for the jsonbfield used for unit tests.
+    """
+    MOMMY_CUSTOM_FIELDS_GEN = {
+        'django_pgjson.fields.JsonBField': lambda : {'very': 'random'}
+    }
+
+
 class DebugToolbarMixin:
     """
     Not used by default, as it slows down request massively. Use this when
@@ -31,6 +40,9 @@ class ProdMixin:
         'gif': '/usr/bin/optipng {filename}',
         'jpeg': '/usr/bin/jpegoptim {filename}'
     }
+
+    # This is the default, stated here to be explicit.
+    EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
 
 
 class LogMixin:
@@ -87,29 +99,24 @@ class CompressMixin:
     # maybe: use different (faster) filters for css and js.
 
 
-class OpBeatMixin:
+class SentryMixin:
     """
-    Configure the settings required for opbeat.
+    Config for sentry.
     """
     @property
     def INSTALLED_APPS(self):
         return super().INSTALLED_APPS + (
-            'opbeat.contrib.django',
+            'raven.contrib.django.raven_compat',
         )
 
     @property
-    def OPBEAT(self):
+    def RAVEN_CONFIG(self):
+        import raven
+
         return {
-            'ORGANIZATION_ID': super().OPBEAT_ORGANIZATION_ID,
-            'APP_ID': super().OPBEAT_APP_ID,
-            'SECRET_TOKEN': super().OPBEAT_SECRET_TOKEN,
+            'dsn': str(super().SENTRY_DSN),
+            'release': raven.fetch_git_sha(super().BASE_DIR)
         }
-
-    @property
-    def MIDDLEWARE_CLASSES(self):
-        return super().MIDDLEWARE_CLASSES + (
-            'opbeat.contrib.django.middleware.OpbeatAPMMiddleware',
-        )
 
 
 class AuthenticationFeatureSwitch:

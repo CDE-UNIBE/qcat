@@ -35,6 +35,7 @@ class QuestionnaireConf(AppConf):
         'translations',
         'status',
         'flags',
+        'original_locale',
     ]
 
     # Mapping for consistent field names on the API. See
@@ -44,3 +45,5 @@ class QuestionnaireConf(AppConf):
         'tech_definition': 'definition',
         'unccd_description': 'definition',
     }
+
+    LOCK_TIME = 10  # Number of minutes that questionnaires are locked.

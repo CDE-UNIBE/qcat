@@ -4,9 +4,7 @@
   Further questions are rendered either before the table (questiongroup_config.layout == 'before_table') or after the table.
 {% endcomment %}
 
-{% if header == 'small' %}
-  <h5>{{ numbering|default:'' }} {{ label }}</h5>
-{% else %}
+{% if label_position != 'none' %}
   <h3>{{ numbering|default:'' }} {{ label }}</h3>
 {% endif %}
 {% if subcategories %}

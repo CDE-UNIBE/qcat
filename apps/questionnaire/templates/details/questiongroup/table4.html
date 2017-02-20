@@ -1,0 +1,55 @@
+{% comment %}
+  Render the questiongroup as table. The labels of the keys are used as table
+  headers, each questiongroup takes up one row of the table.
+
+  Important: The questiongroup must have the view_option "with_keys": true set.
+  Also, the questions should be rendered with view_option
+  "template": "value_only".
+{% endcomment %}
+
+{% if config.label %}
+  <h5>{{ config.label }}</h5>
+{% endif %}
+<table class="full-width">
+  {% for width in config.column_widths %}
+    <col width="{{ width }}">
+  {% endfor %}
+  <thead>
+    {% for key in keys %}
+      {% if forloop.counter != 3 and forloop.counter != 5 %}
+        <th>{{ key }}</th>
+      {% endif %}
+    {% endfor %}
+  </thead>
+  <tbody>
+    {% for questiongroup in questiongroups %}
+      <tr>
+        {% for question in questiongroup %}
+          {% if forloop.counter == 1 %}
+            <td>{{ question }}</td>
+          {% elif forloop.counter == 2 %}
+            <td>{{ question }}</td>
+          {% elif forloop.counter == 3 %}
+            <td>
+              <div class="row">
+                <div class="small-3 columns chart-measure-col-left">
+                  <span class="chart-measure-label-left">
+                    {{ question }}
+                  </span>
+                </div>
+          {% elif forloop.counter == 4 %}
+                <div class="small-9 columns chart-measure-col-content">
+                  {{ question }}
+          {% elif forloop.counter == 5 %}
+                  <span class="chart-measure-label-right">
+                    {{ question }}
+                  </span>
+                </div>
+              </div>
+            </td>
+          {% endif %}
+        {% endfor %}
+      </tr>
+    {% endfor %}
+  </tbody>
+</table>

@@ -1,3 +1,5 @@
+import warnings
+
 from django import template
 from easy_thumbnails.files import get_thumbnailer
 
@@ -110,3 +112,31 @@ def link_display(configuration_code, name, identifier):
 @register.filter
 def keyvalue(dict, key):
     return dict.get(key)
+
+
+@register.filter(name='iternum')
+def iternum(num):
+    warnings.warn('Move this to the backend', DeprecationWarning, stacklevel=2)
+    return range(int(num))
+
+
+@register.filter(name='strtoint')
+def strtoint(num):
+    warnings.warn('Move this to the backend', DeprecationWarning, stacklevel=2)
+    return int(num)
+
+
+@register.filter
+def is_editor(roles: list) -> bool:
+    """
+    From the 'roles' list with tuples, check if 'editor' is one of the roles.
+    """
+    return any([role[0] == 'editor' for role in roles])
+
+
+@register.filter
+def get_flat_roles(roles: list) -> list:
+    """
+    Return a flat list of role keywords present in the current roles.
+    """
+    return [role[0] for role in roles]

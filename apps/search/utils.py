@@ -93,3 +93,17 @@ def force_strings(serialized):
         else:
             serialized[key] = str(nested)
     return serialized
+
+
+def check_aliases(aliases):
+    """
+    Check if a list of strings contains only valid aliases.
+
+    Args:
+        aliases: A list of aliases to check.
+
+    Returns:
+        bool.
+    """
+    from search.search import get_indices_alias
+    return set(aliases) <= set(get_indices_alias())

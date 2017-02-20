@@ -28,6 +28,7 @@
                   {% formrow field using "form/question/no_label.html" %}
                 </td>
               {% endfor %}
+              {% for field in f.hidden_fields %}{% formfield field %}{% endfor %}
             {% endfor %}
         {% elif questiongroup_config.keyword in config.table_grouping.1 %}
             <td colspan="42" class="form-table-contains-inline">
@@ -39,6 +40,7 @@
                       {% formrow field using "form/question/no_label.html" %}
                     </td>
                   {% endfor %}
+                  {% for field in f.hidden_fields %}{% formfield field %}{% endfor %}
                   </tr>
                 {% endfor %}
               </table>

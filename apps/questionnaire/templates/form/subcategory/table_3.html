@@ -45,6 +45,7 @@
                     {% endwith %}
                   </td>
                 {% endfor %}
+                {% for field in f.hidden_fields %}{% formfield field %}{% endfor %}
               </tr>
             {% endfor %}
           {% endif %}

@@ -30,6 +30,8 @@
 
   {{ formset.management_form }}
 
+  {% include "form/errors.html" with errors=formset.non_form_errors %}
+
   {% for qg_form in formset.forms %}
 
     {% if config.numbered == 'prefix' %}
@@ -65,6 +67,7 @@
           {% endif %}
 
         {% endfor %}
+        {% for field in qg_form.hidden_fields %}{% formfield field %}{% endfor %}
       </div>
       <div class="columns right">
         <a class="right list-item-action link is-{{ configuration_name }}" data-remove-this="" {% if forloop.counter <= formset.min_num and formset|length <= formset.min_num %}

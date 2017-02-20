@@ -1,0 +1,40 @@
+<div class="row compact">
+  <div class="small-12 columns">
+    {% include 'summary/partial/title_bar.html' with title=title %}
+</div>
+      <div class="small-12 columns">
+        <h5>{{ content.economic.title }}</h5>
+        {% include 'summary/partial/range_inline_comment.html' with class="highlights_list" list_items=content.economic.items %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <h5>{{ content.cultural.title }}</h5>
+        {% include 'summary/partial/range_inline_comment.html' with class="highlights_list" list_items=content.cultural.items %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <h5>{{ content.ecological.title }}</h5>
+        {% include 'summary/partial/range_inline_comment.html' with class="highlights_list" list_items=content.ecological.items %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <h5>{{ content.off_site.title }}</h5>
+        {% include 'summary/partial/range_inline_comment.html' with class="highlights_list" list_items=content.off_site.items %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+          <h5>{{ content.benefits_establishment.title }}</h5>
+          {% include 'summary/partial/range_inline_comment.html' with class="highlights_list" list_items=content.benefits_establishment.items %}
+      </div>
+    </div>
+    <div class="row">
+      <div class="small-12 columns">
+        <h5>{{ content.benefits_maintenance.title }}</h5>
+        {% include 'summary/partial/range_inline_comment.html' with class="highlights_list" list_items=content.benefits_maintenance.items %}
+      </div>
+    </div>
+  </div>

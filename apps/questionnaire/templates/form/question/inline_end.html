@@ -1,0 +1,19 @@
+{% comment %}
+  field: The field.
+  options: The field options.
+{% endcomment %}
+
+{% load floppyforms %}
+
+{% with classes=field.css_classes label=label|default:field.label help_text=help_text|default:field.help_text %}
+  {% block errors %}
+    {% include "form/errors.html" with errors=field.errors %}
+  {% endblock %}
+    <div class="small-3 columns">
+      {% if options.helptext and options.helptext_position|default:'default' == 'default' %}
+        {% include "form/helptext.html" with helptext=options.helptext helptext_length=options.helptext_length %}
+      {% endif %}
+      {% widget field %}
+    </div>
+  </div>
+{% endwith %}

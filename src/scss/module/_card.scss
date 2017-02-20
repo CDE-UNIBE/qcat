@@ -41,6 +41,9 @@
   &.is-map {
     background-color: rgba($color-map, 0.8);
   }
+  &.is-watershed {
+    background-color: rgba($color-watershed, 0.8);
+  }
   & > .icon {
     width: rem-calc(48);
     height: rem-calc(48);

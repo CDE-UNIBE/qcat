@@ -8,15 +8,9 @@
 {% block header %}
     <div id="header">
         <div class="swagger-ui-wrap">
-            <a id="logo" href="{% url 'django.swagger.base.view' %}">{% trans "Wocat API Docs" %}</a>
-            <form id="api_selector">
-                <div class="input"><input placeholder="http://example.com/api" id="input_baseUrl" name="baseUrl" type="text"/></div>
-                <div class="input"><a id="explore" href="#">{% trans "Explore" %}</a></div>
-            </form>
+            <a id="logo" href="{% url 'api-docs' %}">{% trans "Wocat API Docs" %}</a>
         </div>
     </div>
-{% endblock %}
-{% block django_rest_swagger %}
     <div class="swagger-ui-wrap">
         <h1>{% trans "Introduction" %}</h1>
         {% spaceless %}{% blocktrans %}
@@ -26,7 +20,7 @@
                 The API is built on top of the <a href="http://www.django-rest-framework.org/" target="_blank">django REST framework</a>.
             </p>
             <p>
-                The current version of the API is: 1.0. Docs for the older versions will be listed here as well.
+                The current version of the API is: 2.0. Docs for the older versions will be listed here as well.
             </p>
             <h2>Authentication</h2>
             <p>
@@ -54,4 +48,19 @@
 
         {% endblocktrans %}{% endspaceless %}
     </div>
+{% endblock %}
+
+{% block extra_scripts %}
+  <div class="swagger-ui-wrap">
+    <h1>Changelog</h1>
+    <ul>
+      <li>2016-10-20: version 2</li>
+      <li>
+        <ul>
+          <li>- Full details for questionnaires</li>
+          <li>- Summary</li>
+        </ul>
+      </li>
+    </ul>
+  </div>
 {% endblock %}

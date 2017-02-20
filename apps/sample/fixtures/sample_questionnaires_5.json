@@ -184,7 +184,6 @@
       "code": "sample_1",
       "status": 4,
       "version": 1,
-      "blocked": null,
       "created": "2011-02-10T16:07:20.847Z",
       "updated": "2011-02-10T16:07:20.847Z"
     }
@@ -260,7 +259,6 @@
       "code": "sample_2",
       "status": 4,
       "version": 1,
-      "blocked": null,
       "created": "2012-02-11T16:08:20.904Z",
       "updated": "2012-02-11T16:08:20.904Z"
     }
@@ -342,7 +340,6 @@
       "code": "sample_3",
       "status": 4,
       "version": 1,
-      "blocked": null,
       "created": "2013-02-12T16:08:20.904Z",
       "updated": "2013-02-12T16:08:20.904Z"
     }
@@ -431,7 +428,6 @@
       ],
       "status": 4,
       "version": 1,
-      "blocked": null,
       "created": "2014-02-13T16:08:20.904Z",
       "updated": "2014-02-13T16:08:20.904Z"
     }
@@ -500,7 +496,6 @@
       "code": "unccd_1",
       "status": 4,
       "version": 1,
-      "blocked": null,
       "created": "2015-02-14T16:08:20.904Z",
       "updated": "2015-03-14T16:08:20.904Z"
     }

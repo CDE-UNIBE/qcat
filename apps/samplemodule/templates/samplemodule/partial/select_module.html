@@ -1,0 +1,21 @@
+{% load static %}
+{% load i18n %}
+
+{% comment %}
+  Partially rendering the radio selection of this module.
+{% endcomment %}
+
+<div class="module-gallery-item">
+  <label class="module-gallery-label">
+    <img class="module-gallery-icon{% if existing %} is-unavailable{% endif %}" src="{% static 'assets/img/landuse_01.png' %}" alt="SAMPLEMODULE">
+    {% if existing %}
+      <svg class="icon-lines module-gallery-unavailable" data-tooltip="" title="{% trans 'This module exists already.' %}"><use xlink:href="#icon-information"></use></svg>
+    {% else %}
+      <input type="radio" id="module_samplemodule" name="module" value="samplemodule">
+    {% endif %}
+  </label>
+  <div class="module-gallery-description">
+    <span class="module-gallery-title">SAMPLEMODULE</span>
+    <p>Description of the SampleModule. Description of the SampleModule. Description of the SampleModule. Description of the SampleModule. Description of the SampleModule. Description of the SampleModule. </p>
+  </div>
+</div>

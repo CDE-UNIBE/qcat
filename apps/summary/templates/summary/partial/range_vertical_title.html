@@ -1,0 +1,36 @@
+{% load questionnaire_tags %}
+
+{% if list_items.items2 %}
+  <div class="row rotate-container avoidbreak">
+    <div class="small-3 columns">
+    </div>
+    <div class="small-9 columns">
+      <div class="rotate">
+        {% for label_item in list_items.labels %}
+          <div style="margin-bottom: 0rem">
+            <div>
+              {{ label_item }}
+            </div>
+          </div>
+        {% endfor %}
+      </div>
+    </div>
+  </div>
+  {% for range_item in list_items.items2 %}
+    <div class="row range">
+      <div class="small-3 columns">
+        {{ range_item.label }}
+      </div>
+      <div class="small-3 columns">
+        <div>
+          {% for i in range_item.range %}
+            <div {% if i == range_item.selected %}class="range_true" {% endif %} class="range_square"></div>
+          {% endfor %}
+        </div>
+      </div>
+      <div class="small-6 columns">
+        {% if range_item.text %}<div class="padding-bottom">{{ range_item.text }}</div>{% endif %}
+      </div>
+    </div>
+  {% endfor %}
+{% endif %}
