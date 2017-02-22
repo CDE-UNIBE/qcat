@@ -13,4 +13,14 @@ class TestDefaultSite(TestMixin, DevDefaultSite):
 
 class ProdDefaultSite(ProdMixin, CompressMixin, SecurityMixin, SentryMixin,
                       LogMixin, BaseSettings):
+    """
+    Settings for live and demo hosting.
+    """
+    pass
+
+
+class ProdDevDefaultSite(AuthenticationFeatureSwitch, ProdDefaultSite):
+    """
+    Settings for qcat-dev hosting.
+    """
     pass
