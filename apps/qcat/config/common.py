@@ -100,6 +100,7 @@ class BaseSettings(Configuration):
         ('es', _('Spanish')),
         ('ru', _('Russian')),
         ('km', _('Khmer')),
+        ('lo', _('Lao')),
         ('ar', _('Arabic')),
         ('bs', _('Bosnian')),
         ('pt', _('Portuguese')),
@@ -107,7 +108,8 @@ class BaseSettings(Configuration):
     # languages with extraordinarily long words that need 'forced' line breaks
     # to remain consistent in the box-layout.
     WORD_WRAP_LANGUAGES = [
-        'km'
+        'km',
+        'lo',
     ]
 
     TIME_ZONE = 'Europe/Zurich'

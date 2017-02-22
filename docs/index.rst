@@ -70,6 +70,16 @@ Development
     development/django
     development/grunt
 
+
+Contributions
+-------------
+
+.. toctree::
+    :maxdepth: 2
+
+    contributions/translations
+
+
 QCAT is currently under heavy development. If you are interested in the
 progress of the development, have a look at the issues on the `Redmine`_
 page of the project. Or see the `List of ToDo's`_ for open issues.

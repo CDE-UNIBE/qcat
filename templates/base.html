@@ -54,6 +54,14 @@
         }
       </style>
     {% endif %}
+    {% if request.LANGUAGE_CODE == 'lo' %}
+      <style type="text/css">
+        @font-face {
+          font-family: "Phetsarath_OT";
+          src: url("{% static 'assets/fonts/phetsarath_ot.ttf' %}");
+        }
+      </style>
+    {% endif %}
 
     {% compress js %}
       <!-- todo: measure if cdns are benefitial for rural areas -->

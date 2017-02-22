@@ -11,9 +11,9 @@ msgid ""
 msgstr ""
 "Project-Id-Version: qcat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-02-11 14:50+0100\n"
-"PO-Revision-Date: 2017-02-08 02:03+0000\n"
-"Last-Translator: Sophea Tim <stim3993@gmail.com>\n"
+"POT-Creation-Date: 2017-02-21 13:15+0100\n"
+"PO-Revision-Date: 2017-02-21 12:12+0000\n"
+"Last-Translator: Lukas Vonlanthen <lukas.vonlanthen@cde.unibe.ch>\n"
 "Language-Team: Khmer (http://www.transifex.com/university-of-bern-cde/qcat/"
 "language/km/)\n"
 "Language: km\n"
@@ -39,7 +39,7 @@ msgstr "លេខសំងាត់"
 msgid "Updated {} users"
 msgstr "បានធ្វើបច្ចុប្បន្នភាព​ {} អ្នកប្រើប្រាស់"
 
-#: apps/accounts/templates/details.html:14 templates/base.html:137
+#: apps/accounts/templates/details.html:14 templates/base.html:145
 msgid "User Details"
 msgstr "ព័ត៌មានលម្អិតអំពីអ្នកប្រើប្រាស់"
 
@@ -66,7 +66,7 @@ msgstr "ជនបង្គោលថ្នាក់ជាតិ​របស់អ
 #: apps/accounts/templates/details.html:41
 #: apps/questionnaire/templates/details/category/unccd_header.html:6
 #: apps/unccd/templates/unccd/base.html:6 apps/unccd/views.py:63
-#: templates/base.html:254
+#: templates/base.html:262
 msgid "UNCCD"
 msgstr "អនុសញ្ញាសហប្រជាជាតិប្រយុទ្ធប្រឆាំងនឹងរហោស្ថានកម្ម"
 
@@ -82,7 +82,7 @@ msgstr "កម្រងបញ្ជីសំណួរសាធារណៈ"
 #: apps/questionnaire/tests/test_utils.py:1067
 #: apps/questionnaire/tests/test_utils.py:1075
 #: apps/search/tests/test_utils.py:101 apps/search/tests/test_utils.py:106
-#: templates/base.html:153
+#: templates/base.html:161
 msgid "Login"
 msgstr "ចុចចូល"
 
@@ -99,8 +99,8 @@ msgid "If you do not yet have a login, please visit "
 msgstr "ប្រសិនបើអ្នកមិនទាន់បានចុចចូលទេ​​ សូមចូលមើល"
 
 #: apps/accounts/templates/login.html:36 apps/accounts/templates/login.html:41
-#: apps/wocat/templates/wocat/base.html:6 templates/base.html:112
-#: templates/base.html.py:113 templates/base.html:257
+#: apps/wocat/templates/wocat/base.html:6 templates/base.html:120
+#: templates/base.html.py:121 templates/base.html:265
 msgid "WOCAT"
 msgstr "​ វ៉ូខេត "
 
@@ -126,7 +126,7 @@ msgstr "ទិនន្ន័យ​ SLM របស់ខ្ញុំ"
 
 #: apps/accounts/templates/questionnaires.html:15
 #: apps/wocat/templates/wocat/add.html:9
-#: apps/wocat/templates/wocat/home.html:73 templates/base.html:177
+#: apps/wocat/templates/wocat/home.html:73 templates/base.html:185
 msgid "Add SLM data"
 msgstr "បន្ថែមទិនន្ន័យ SLM"
 
@@ -279,7 +279,7 @@ msgstr "បាទ/ចា៎"
 msgid "No"
 msgstr "ទេ"
 
-#: apps/configuration/configuration.py:2472
+#: apps/configuration/configuration.py:2557
 #: apps/questionnaire/templates/details/category/unccd_header.html:16
 msgid "Unknown name"
 msgstr "មិនស្គាល់ឈ្មោះ"
@@ -17664,14 +17664,18 @@ msgid "Khmer"
 msgstr "ភាសាខ្មែរ"
 
 #: apps/qcat/config/common.py:102
+msgid "Lao"
+msgstr ""
+
+#: apps/qcat/config/common.py:103
 msgid "Arabic"
 msgstr "ភាសាអារ៉ាប់"
 
-#: apps/qcat/config/common.py:103
+#: apps/qcat/config/common.py:104
 msgid "Bosnian"
 msgstr "ប៉ូសនៀន"
 
-#: apps/qcat/config/common.py:104
+#: apps/qcat/config/common.py:105
 msgid "Portuguese"
 msgstr "ភាសាព័រទុយហ្គាល់"
 
@@ -17717,7 +17721,7 @@ msgstr "បដិសេធន៍"
 msgid "Inactive"
 msgstr "អសកម្ម"
 
-#: apps/questionnaire/models.py:59 apps/summary/renderers.py:229
+#: apps/questionnaire/models.py:59 apps/summary/renderers.py:235
 #: apps/wocat/templates/wocat/help/questionnaire_roles.html:10
 msgid "Compiler"
 msgstr "អ្នកចងក្រង"
@@ -17941,24 +17945,32 @@ msgstr "ពង្រីកមើលទាំងអស់"
 msgid "Collapse all"
 msgstr "បង្រួមទាំងអស់"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:143
-#: apps/questionnaire/templates/details/category/cca_header.html:131
+#: apps/questionnaire/templates/details/category/approaches_header.html:129
+#: apps/questionnaire/templates/details/category/cca_header.html:117
+#: apps/questionnaire/templates/details/category/technologies_header.html:129
+#: apps/questionnaire/templates/details/category/unccd_header.html:118
+#: apps/questionnaire/templates/details/category/watershed_header.html:127
+msgid "Completeness:"
+msgstr ""
+
+#: apps/questionnaire/templates/details/category/approaches_header.html:148
+#: apps/questionnaire/templates/details/category/cca_header.html:136
 #: apps/questionnaire/templates/details/category/default.html:19
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:138
-#: apps/questionnaire/templates/details/category/technologies_header.html:143
-#: apps/questionnaire/templates/details/category/unccd_header.html:132
-#: apps/questionnaire/templates/details/category/watershed_header.html:141
+#: apps/questionnaire/templates/details/category/technologies_header.html:148
+#: apps/questionnaire/templates/details/category/unccd_header.html:137
+#: apps/questionnaire/templates/details/category/watershed_header.html:146
 #: apps/questionnaire/templates/details/category/with_metadata.html:139
 msgid "Edit this section"
 msgstr "កែសម្រួលផ្នែកនេះ"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:159
-#: apps/questionnaire/templates/details/category/cca_header.html:147
+#: apps/questionnaire/templates/details/category/approaches_header.html:164
+#: apps/questionnaire/templates/details/category/cca_header.html:152
 #: apps/questionnaire/templates/details/category/default.html:32
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:152
-#: apps/questionnaire/templates/details/category/technologies_header.html:159
-#: apps/questionnaire/templates/details/category/unccd_header.html:148
-#: apps/questionnaire/templates/details/category/watershed_header.html:157
+#: apps/questionnaire/templates/details/category/technologies_header.html:164
+#: apps/questionnaire/templates/details/category/unccd_header.html:153
+#: apps/questionnaire/templates/details/category/watershed_header.html:162
 #: apps/questionnaire/templates/details/category/with_metadata.html:153
 msgid "Empty section"
 msgstr "លុបផ្នែកនេះ"
@@ -18035,18 +18047,14 @@ msgstr "ពង្រីកទៅដល់ចំណុចទាំងអស់ន
 #: apps/questionnaire/templates/details/modal_map.html:36
 #: apps/questionnaire/templates/form/questiongroup/map.html:69
 #: apps/questionnaire/templates/form/questiongroup/map.html:91
-#, fuzzy
-#| msgid "Zoom to all points on the map"
 msgid "List of all points on the map:"
-msgstr "ពង្រីកទៅដល់ចំណុចទាំងអស់នៅលើផែនទី"
+msgstr ""
 
 #: apps/questionnaire/templates/details/modal_map.html:37
 #: apps/questionnaire/templates/form/questiongroup/map.html:70
 #: apps/questionnaire/templates/form/questiongroup/map.html:92
-#, fuzzy
-#| msgid "Number of points on the map"
 msgid "No points on the map."
-msgstr "ចំនួនចំណុចនៅលើផែនទី"
+msgstr ""
 
 #: apps/questionnaire/templates/details/questiongroup/table2.html:22
 msgid "From"
@@ -19078,18 +19086,12 @@ msgid "Search and zoom to a location on the map"
 msgstr "ស្វែងរក និងពង្រីកទៅតំបន់ណាមួយនៅលើផែនទី"
 
 #: apps/questionnaire/templates/form/questiongroup/map.html:77
-#, fuzzy
-#| msgid ""
-#| "Please enter the coordinates in the field below. The coordinates must be "
-#| "of format \"Latitude, Longitude\", eg. \"46.9526, 7.4352\"."
 msgid ""
 "Please enter the coordinates in the field below. The coordinates must be in "
 "decimal degrees of format \"Latitude, Longitude\", eg. 46.9526, 7.4352. Use "
 "the link below to convert from degrees, minutes and seconds to decimal "
 "degrees."
 msgstr ""
-"សូមធ្វើការបញ្ចូលនិយាមការទៅក្នុងប្រអប់ខាងក្រោម។ និយាមការត្រូវបញ្ចូលតាមទម្រង់\"រយៈទទឹង, រយៈបណ្តោយ"
-"\" ឧ. \"46.9526, 7.4352\"។"
 
 #: apps/questionnaire/templates/form/questiongroup/map.html:83
 msgid "Coordinates:"
@@ -19342,11 +19344,11 @@ msgstr "កម្រងសំណួរត្រូវបានដកចេញដ
 msgid "Data successfully saved."
 msgstr "កាលបរិច្ឆេទត្រូវបានរក្សាទុកដោយជោគជ័យ"
 
-#: apps/questionnaire/views.py:1072
+#: apps/questionnaire/views.py:1077
 msgid "QCAT Form"
 msgstr "ទម្រង់ QCAT"
 
-#: apps/questionnaire/views.py:1296
+#: apps/questionnaire/views.py:1301
 msgid "No or multiple files provided."
 msgstr "មិនមានឯកសារ ឬមានឯកសារច្រើនសម្រាប់ផ្តល់ឱ្យ។"
 
@@ -19383,7 +19385,7 @@ msgstr "សូមជ្រើសរើស ឬឈ្មោះគម្រោង"
 #: apps/sample/templates/sample/questionnaire/list.html:65
 #: apps/wocat/templates/wocat/partial/search.html:11
 #: apps/wocat/templates/wocat/questionnaire/list.html:65
-#: templates/base.html:176
+#: templates/base.html:184
 msgid "Search SLM Data"
 msgstr "ស្វែងរកទិន្នន័យ SLM"
 
@@ -19451,11 +19453,11 @@ msgstr "ការផ្ទេរទិន្នន័យពីប្រព័ន
 msgid "Only data declared as public are visible."
 msgstr "មានតែទិន្នន័យដែលបានប្រកាសជាសាធារណៈ ទើបអាចមើលឃើញ។"
 
-#: apps/summary/parsers.py:467
+#: apps/summary/parsers.py:470
 msgid " Answer: {}"
 msgstr ""
 
-#: apps/summary/parsers.py:616
+#: apps/summary/parsers.py:622
 msgid "Financial/ material support"
 msgstr ""
 
@@ -19463,545 +19465,545 @@ msgstr ""
 msgid "Description"
 msgstr "ការពណ៌នា"
 
-#: apps/summary/renderers.py:210
+#: apps/summary/renderers.py:216
 msgid "Conclusions and lessons learnt"
 msgstr "សេដ្ឋក្តីសន្និដ្ឋាន និងចំណេះដឹងបានទទួល"
 
-#: apps/summary/renderers.py:213
+#: apps/summary/renderers.py:219
 msgid "Strengths"
 msgstr "ភាពខ្លាំង"
 
-#: apps/summary/renderers.py:217
+#: apps/summary/renderers.py:223
 msgid "Weaknesses/ disadvantages/ risks"
 msgstr ""
 
-#: apps/summary/renderers.py:218
+#: apps/summary/renderers.py:224
 msgid "how to overcome"
 msgstr ""
 
-#: apps/summary/renderers.py:226
+#: apps/summary/renderers.py:232
 msgid "References"
 msgstr "ឯកសារយោង "
 
-#: apps/summary/renderers.py:234
+#: apps/summary/renderers.py:240
 msgid "Resource persons"
 msgstr "បុគ្គលសំខាន់ៗ"
 
-#: apps/summary/renderers.py:239
+#: apps/summary/renderers.py:245
 msgid "More about this case study"
 msgstr ""
 
-#: apps/summary/renderers.py:244
+#: apps/summary/renderers.py:250
 msgid "Linked SLM data"
 msgstr ""
 
-#: apps/summary/renderers.py:249
+#: apps/summary/renderers.py:255
 msgid "Key references"
 msgstr "ឯកសារយោងសំខាន់ៗ"
 
-#: apps/summary/renderers.py:301
+#: apps/summary/renderers.py:307
 #, python-brace-format
 msgid ""
 "This data in the WOCAT database: <a href=\"{base_url}{url}\">{base_url}{url}"
 "</a>"
 msgstr ""
 
-#: apps/summary/renderers.py:317
+#: apps/summary/renderers.py:323
 #, python-brace-format
 msgid "Video: <a href=\"{vimeo_url}\">{vimeo_url}</a>"
 msgstr ""
 
-#: apps/summary/renderers.py:370
+#: apps/summary/renderers.py:376
 msgid "Documentation was faciliated by"
 msgstr ""
 
-#: apps/summary/renderers.py:422
+#: apps/summary/renderers.py:428
 msgid ""
 "This technology is problematic with regard to land degradation, so it cannot "
 "be declared a sustainable land management technology"
 msgstr ""
 
-#: apps/summary/renderers.py:433 apps/summary/renderers.py:443
-#: apps/summary/renderers.py:847 apps/summary/renderers.py:857
+#: apps/summary/renderers.py:439 apps/summary/renderers.py:449
+#: apps/summary/renderers.py:853 apps/summary/renderers.py:863
 msgid "Location"
 msgstr "ទីតាំង"
 
-#: apps/summary/renderers.py:454
+#: apps/summary/renderers.py:460
 msgid "Spread of the Technology"
 msgstr "ការសាយភាយនៃបច្ចេកទេស"
 
-#: apps/summary/renderers.py:458
+#: apps/summary/renderers.py:464
 msgid "Date of implementation"
 msgstr "កាលបរិច្ឆេទនៃការអនុវត្តន៍"
 
-#: apps/summary/renderers.py:462
+#: apps/summary/renderers.py:468
 msgid "Type of introduction"
 msgstr "ប្រភេទនៃការណែនាំ"
 
-#: apps/summary/renderers.py:480
+#: apps/summary/renderers.py:486
 msgid "Classification of the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:483
+#: apps/summary/renderers.py:489
 msgid "Main purpose"
 msgstr "គោលបំណងចម្បងៗ"
 
-#: apps/summary/renderers.py:487
+#: apps/summary/renderers.py:493
 msgid "Land use"
 msgstr ""
 
-#: apps/summary/renderers.py:491
+#: apps/summary/renderers.py:497
 msgid "Water supply"
 msgstr ""
 
-#: apps/summary/renderers.py:496
+#: apps/summary/renderers.py:502
 msgid "Number of growing seasons per year"
 msgstr ""
 
-#: apps/summary/renderers.py:500
+#: apps/summary/renderers.py:506
 msgid "Land use before implementation of the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:504
+#: apps/summary/renderers.py:510
 msgid "Livestock density"
 msgstr ""
 
-#: apps/summary/renderers.py:511
+#: apps/summary/renderers.py:517
 msgid "Purpose related to land degradation"
 msgstr ""
 
-#: apps/summary/renderers.py:515
+#: apps/summary/renderers.py:521
 msgid "Degradation addressed"
 msgstr ""
 
-#: apps/summary/renderers.py:519
+#: apps/summary/renderers.py:525
 msgid "SLM group"
 msgstr ""
 
-#: apps/summary/renderers.py:523
+#: apps/summary/renderers.py:529
 msgid "SLM measures"
 msgstr ""
 
-#: apps/summary/renderers.py:531
+#: apps/summary/renderers.py:537
 msgid "Technical drawing"
 msgstr "គំនូរបច្ចេកទេស"
 
-#: apps/summary/renderers.py:533
+#: apps/summary/renderers.py:539
 msgid "Technical specifications"
 msgstr "លក្ខណៈបច្ចេកទេស"
 
-#: apps/summary/renderers.py:555 apps/summary/renderers.py:556
+#: apps/summary/renderers.py:561 apps/summary/renderers.py:562
 msgid "n.a"
 msgstr "n.a"
 
-#: apps/summary/renderers.py:559
+#: apps/summary/renderers.py:565
 msgid "Establishment and maintenance: activities, inputs and costs"
 msgstr "ការបង្កើតនិងការថែទាំ៖​ សកម្មភាព ធាតុចូល និងថ្លៃដើម"
 
-#: apps/summary/renderers.py:562
+#: apps/summary/renderers.py:568
 msgid "Calculation of inputs and costs"
 msgstr "ការគណនាធាតុចូល​ និងថ្លៃដើម"
 
-#: apps/summary/renderers.py:564
+#: apps/summary/renderers.py:570
 msgid "Costs are calculated: {}"
 msgstr "ថ្លៃដើមត្រូវបានគណនា៖ {}"
 
-#: apps/summary/renderers.py:565
+#: apps/summary/renderers.py:571
 msgid "Currency used for cost calculation: {}"
 msgstr "រូបិយប័ណ្ណប្រើសម្រាប់គណនាថ្លៃដើម៖ {}"
 
-#: apps/summary/renderers.py:566
+#: apps/summary/renderers.py:572
 msgid "Exchange rate (to USD): {}."
 msgstr "អត្រាប្តូរប្រាក់ (ទៅជាដុល្លាអាមេរិក)៖​ {}។"
 
-#: apps/summary/renderers.py:567
+#: apps/summary/renderers.py:573
 msgid "Average wage cost of hired labour: {}."
 msgstr "ថ្លៃឈ្នួលកម្លាំងពលកម្មជាមធ្យម៖ {}។"
 
-#: apps/summary/renderers.py:570
+#: apps/summary/renderers.py:576
 msgid "Most important factors affecting the costs"
 msgstr "កត្តាសំខាន់បំផុតដែលមានឥទ្ធិពលលើថ្លៃដើម"
 
-#: apps/summary/renderers.py:573
+#: apps/summary/renderers.py:579
 msgid "Establishment activities"
 msgstr "សកម្មភាពបង្កើតបច្ចេកទេស"
 
-#: apps/summary/renderers.py:577
+#: apps/summary/renderers.py:583
 msgid "Establishment inputs and costs per ha"
 msgstr "ធាតុចូល និងថ្លៃដើមក្នុងការបង្កើតបច្ចេកទេសក្នុង១ហិចតា"
 
-#: apps/summary/renderers.py:582
+#: apps/summary/renderers.py:588
 msgid "Maintenance activities"
 msgstr "សកម្មភាពថែទាំ"
 
-#: apps/summary/renderers.py:624
+#: apps/summary/renderers.py:630
 msgid "Natural environment"
 msgstr "បរិស្ថានធម្មជាតិ"
 
-#: apps/summary/renderers.py:627
+#: apps/summary/renderers.py:633
 msgid "Average annual rainfall"
 msgstr "ទឹកភ្លៀងជាមធ្យមប្រចាំឆ្នាំ"
 
-#: apps/summary/renderers.py:631
+#: apps/summary/renderers.py:637
 msgid "Agro-climatic zone"
 msgstr "តំបន់កសិអាកាសធាតុ"
 
-#: apps/summary/renderers.py:635
+#: apps/summary/renderers.py:641
 msgid "Specifications on climate"
 msgstr "លក្ខណៈសម្គាល់នៃអាកាសធាតុ"
 
-#: apps/summary/renderers.py:639
+#: apps/summary/renderers.py:645
 msgid "Slope"
 msgstr "ជម្រាល"
 
-#: apps/summary/renderers.py:643
+#: apps/summary/renderers.py:649
 msgid "Landforms"
 msgstr "ទម្រង់ដី"
 
-#: apps/summary/renderers.py:647
+#: apps/summary/renderers.py:653
 msgid "Altitude"
 msgstr "កម្ពស់នីវ៉ូ"
 
-#: apps/summary/renderers.py:651
+#: apps/summary/renderers.py:657
 msgid "Technology is applied in"
 msgstr "បច្ចេកទេសត្រូវបានអនុវត្តនៅក្នុង"
 
-#: apps/summary/renderers.py:655
+#: apps/summary/renderers.py:661
 msgid "Soil depth"
 msgstr "ជម្រៅដី"
 
-#: apps/summary/renderers.py:659
+#: apps/summary/renderers.py:665
 msgid "Soil texture (topsoil)"
 msgstr "វាយនៈភាពដី (ដីស្រទាប់ខាងលើ)"
 
-#: apps/summary/renderers.py:663
+#: apps/summary/renderers.py:669
 msgid "Soil texture (> 20 cm below surface)"
 msgstr "វាយនៈភាពដី  (>​ 20 សម ក្រោមស្រទាប់លើ)"
 
-#: apps/summary/renderers.py:667
+#: apps/summary/renderers.py:673
 msgid "Topsoil organic matter content"
 msgstr "កម្រិតសារធាតុសរីរាង្គក្នុងដីស្រទាប់លើ"
 
-#: apps/summary/renderers.py:671
+#: apps/summary/renderers.py:677
 msgid "Groundwater table"
 msgstr "ដង្ហើមទឹកក្នុងដី"
 
-#: apps/summary/renderers.py:675
+#: apps/summary/renderers.py:681
 msgid "Availability of surface water"
 msgstr "ភាពអាចរកបាននៃទឹកលើដី"
 
-#: apps/summary/renderers.py:679
+#: apps/summary/renderers.py:685
 msgid "Water quality (untreated)"
 msgstr "គុណភាពទឹក (មិនបានធ្វើពិពិត្តកម្ម)"
 
-#: apps/summary/renderers.py:683
+#: apps/summary/renderers.py:689
 msgid "Occurrence of flooding"
 msgstr "ការកើតឡើងនៃទឹកជំនន់"
 
-#: apps/summary/renderers.py:687
+#: apps/summary/renderers.py:693
 msgid "Is salinity a problem?"
 msgstr "តើមានបញ្ហាទឹកប្រៃហូរចូលមកទេ?"
 
-#: apps/summary/renderers.py:691
+#: apps/summary/renderers.py:697
 msgid "Species diversity"
 msgstr "ភាពសំបូរបែបនៃប្រភេទ"
 
-#: apps/summary/renderers.py:695
+#: apps/summary/renderers.py:701
 msgid "Habitat diversity"
 msgstr "ភាពសំបូរបែបនៃជម្រកធម្មជាតិ"
 
-#: apps/summary/renderers.py:703
+#: apps/summary/renderers.py:709
 msgid "Characteristics of land users applying the Technology"
 msgstr "ចរិតលក្ខណៈរបស់អ្នកប្រើប្រាស់ដីដែលប្រើបច្ចេកទេស SLM"
 
-#: apps/summary/renderers.py:706
+#: apps/summary/renderers.py:712
 msgid "Market orientation"
 msgstr "ទីផ្សារ"
 
-#: apps/summary/renderers.py:710
+#: apps/summary/renderers.py:716
 msgid "Off-farm income"
 msgstr "ចំណូលក្រៅកសិដ្ឋាន"
 
-#: apps/summary/renderers.py:714
+#: apps/summary/renderers.py:720
 msgid "Relative level of wealth"
 msgstr "កម្រិតទ្រព្យសម្បត្តិ"
 
-#: apps/summary/renderers.py:718
+#: apps/summary/renderers.py:724
 msgid "Level of mechanization"
 msgstr "កម្រិតនៃការប្រើគ្រឿងយន្ត"
 
-#: apps/summary/renderers.py:722
+#: apps/summary/renderers.py:728
 msgid "Sedentary or nomadic"
 msgstr "លក្ខណៈនៅហ្នឹងកន្លែង ឬពនេចរ"
 
-#: apps/summary/renderers.py:726
+#: apps/summary/renderers.py:732
 msgid "Individuals or groups"
 msgstr "បុគ្គល ឬក្រុម"
 
-#: apps/summary/renderers.py:730
+#: apps/summary/renderers.py:736
 msgid "Gender"
 msgstr "យេនឌឺ"
 
-#: apps/summary/renderers.py:734
+#: apps/summary/renderers.py:740
 msgid "Age"
 msgstr "អាយុ"
 
-#: apps/summary/renderers.py:738
+#: apps/summary/renderers.py:744
 msgid "Area used per household"
 msgstr "ផ្ទៃដីប្រើប្រាស់ក្នុងមួយគ្រួសារ"
 
-#: apps/summary/renderers.py:742
+#: apps/summary/renderers.py:748
 msgid "Scale"
 msgstr "មាត្រដ្ឋាន"
 
-#: apps/summary/renderers.py:746
+#: apps/summary/renderers.py:752
 msgid "Land ownership"
 msgstr "ភាពជាម្ចាស់ដីធ្លី"
 
-#: apps/summary/renderers.py:750
+#: apps/summary/renderers.py:756
 msgid "Land use rights"
 msgstr "សិទ្ធិប្រើប្រាស់ដី"
 
-#: apps/summary/renderers.py:754
+#: apps/summary/renderers.py:760
 msgid "Water use rights"
 msgstr "សិទ្ធិប្រើប្រាស់ទឹក"
 
-#: apps/summary/renderers.py:758
+#: apps/summary/renderers.py:764
 msgid "Access to services and infrastructure"
 msgstr "ប្រើប្រាស់សេវាកម្ម និងហេដ្ឋារចនាសម្ព័ន្ធ"
 
-#: apps/summary/renderers.py:766
+#: apps/summary/renderers.py:772
 msgid "Impacts - Benefits and disadvantages"
 msgstr ""
 
-#: apps/summary/renderers.py:769
+#: apps/summary/renderers.py:775
 msgid "Socio-economic impacts"
 msgstr "ផលប៉ះពាល់សេដ្ឋកិច្ចសង្គម"
 
-#: apps/summary/renderers.py:773
+#: apps/summary/renderers.py:779
 msgid "Socio-cultural impacts"
 msgstr "ផលប៉ះពាល់វប្បធម៌សង្គម"
 
-#: apps/summary/renderers.py:777
+#: apps/summary/renderers.py:783
 msgid "Ecological impacts"
 msgstr "ផលប៉ះពាល់អេកូឡូស៊ី"
 
-#: apps/summary/renderers.py:781
+#: apps/summary/renderers.py:787
 msgid "Off-site impacts"
 msgstr "ផលប៉ះពាល់ក្នុងបរិវេណ"
 
-#: apps/summary/renderers.py:785
+#: apps/summary/renderers.py:791
 msgid "Benefits compared with establishment costs"
 msgstr "អត្ថប្រយោជន៍បើប្រៀបធៀបនឹងថ្លៃដើមក្នុងការបង្កើតបច្ចេកទេស"
 
-#: apps/summary/renderers.py:789
+#: apps/summary/renderers.py:795
 msgid "Benefits compared with maintenance costs"
 msgstr "អត្ថប្រយោជន៍បើប្រៀបធៀបនឹងថ្លៃដើមក្នុងការថែទាំបច្ចេកទេស"
 
-#: apps/summary/renderers.py:797
+#: apps/summary/renderers.py:803
 msgid "Climate change"
 msgstr "ការប្រែប្រួលអាកាសធាតុ"
 
-#: apps/summary/renderers.py:798
+#: apps/summary/renderers.py:804
 msgid ""
 "Exposure and sensitivity of the Technology to gradual climate change and "
 "climate-related extremes (disasters)."
 msgstr ""
 
-#: apps/summary/renderers.py:808
+#: apps/summary/renderers.py:814
 msgid "Adoption and adaptation"
 msgstr "ការទទួលយក និងការបន្សាុំ"
 
-#: apps/summary/renderers.py:811
+#: apps/summary/renderers.py:817
 msgid "Percentage of land users in the area who have adopted the Technology"
 msgstr "ភាគរយនៃអ្នកប្រើប្រាស់ដីនៅតំបន់ដែលបានទទួលយកបច្ចេកទេស"
 
-#: apps/summary/renderers.py:815
+#: apps/summary/renderers.py:821
 msgid ""
 "Of all those who have adopted the Technology, how many have did so without "
 "receiving material incentives?"
 msgstr ""
 
-#: apps/summary/renderers.py:819
+#: apps/summary/renderers.py:825
 msgid "Adaptation"
 msgstr "ការបន្សាុំ"
 
-#: apps/summary/renderers.py:820
+#: apps/summary/renderers.py:826
 msgid ""
 "Has the Technology been modified recently to adapt to changing conditions?"
 msgstr ""
 
-#: apps/summary/renderers.py:824
+#: apps/summary/renderers.py:830
 msgid "To which changing conditions?"
 msgstr ""
 
-#: apps/summary/renderers.py:868
+#: apps/summary/renderers.py:874
 msgid "Initiation date"
 msgstr "កាលបរិច្ឆេទចាប់ផ្តើម"
 
-#: apps/summary/renderers.py:870
+#: apps/summary/renderers.py:876
 msgid "unknown"
 msgstr "មិនស្គាល់"
 
-#: apps/summary/renderers.py:873
+#: apps/summary/renderers.py:879
 msgid "Year of termination"
 msgstr "ឆ្នាំបញ្ចប់"
 
-#: apps/summary/renderers.py:878
+#: apps/summary/renderers.py:884
 msgid "Type of Approach"
 msgstr "ប្រភេទនៃវិធីសាស្ត្រផ្សព្វផ្សាយ"
 
-#: apps/summary/renderers.py:887
+#: apps/summary/renderers.py:893
 msgid "Approach aims and enabling environment"
 msgstr ""
 
-#: apps/summary/renderers.py:890
+#: apps/summary/renderers.py:896
 msgid "Main aims / objectives of the approach"
 msgstr ""
 
-#: apps/summary/renderers.py:895
+#: apps/summary/renderers.py:901
 msgid ""
 "Conditions enabling the implementation of the Technology/ ies applied under "
 "the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:899
+#: apps/summary/renderers.py:905
 msgid ""
 "Conditions hindering the implementation of the Technology/ ies applied under "
 "the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:909
+#: apps/summary/renderers.py:915
 msgid "Participation and roles of stakeholders involved"
 msgstr ""
 
-#: apps/summary/renderers.py:912
+#: apps/summary/renderers.py:918
 msgid "Stakeholders involved in the Approach and their roles"
 msgstr ""
 
-#: apps/summary/renderers.py:914
+#: apps/summary/renderers.py:920
 msgid "Lead agency: {}"
 msgstr ""
 
-#: apps/summary/renderers.py:917 apps/summary/renderers.py:921
+#: apps/summary/renderers.py:923 apps/summary/renderers.py:927
 msgid ""
 "Involvement of local land users/ local communities in the different phases "
 "of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:929
+#: apps/summary/renderers.py:935
 msgid "Flow chart"
 msgstr ""
 
-#: apps/summary/renderers.py:933
+#: apps/summary/renderers.py:939
 msgid "Decision-making on the selection of SLM Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:936
+#: apps/summary/renderers.py:942
 msgid "Decisions were taken by"
 msgstr ""
 
-#: apps/summary/renderers.py:940
+#: apps/summary/renderers.py:946
 msgid "Decisions were made based on:"
 msgstr ""
 
-#: apps/summary/renderers.py:955
+#: apps/summary/renderers.py:961
 msgid "Technical support, capacity building, and knowledge management"
 msgstr ""
 
-#: apps/summary/renderers.py:971
+#: apps/summary/renderers.py:977
 msgid "Training was provided to the following stakeholders"
 msgstr ""
 
-#: apps/summary/renderers.py:975
+#: apps/summary/renderers.py:981
 msgid "Form of training"
 msgstr ""
 
-#: apps/summary/renderers.py:980
+#: apps/summary/renderers.py:986
 msgid "Subjects covered"
 msgstr ""
 
-#: apps/summary/renderers.py:985
+#: apps/summary/renderers.py:991
 msgid "Advisory service"
 msgstr ""
 
-#: apps/summary/renderers.py:988
+#: apps/summary/renderers.py:994
 msgid "Advisory service was provided"
 msgstr ""
 
-#: apps/summary/renderers.py:995
+#: apps/summary/renderers.py:1001
 msgid "Institution strengthening"
 msgstr ""
 
-#: apps/summary/renderers.py:997
+#: apps/summary/renderers.py:1003
 msgid "Institutions have been strengthened / established"
 msgstr ""
 
-#: apps/summary/renderers.py:1002
+#: apps/summary/renderers.py:1008
 msgid "at the following level"
 msgstr ""
 
-#: apps/summary/renderers.py:1007
+#: apps/summary/renderers.py:1013
 msgid "Type of support"
 msgstr ""
 
-#: apps/summary/renderers.py:1014
+#: apps/summary/renderers.py:1020
 msgid "Monitoring and evaluation"
 msgstr ""
 
-#: apps/summary/renderers.py:1018
+#: apps/summary/renderers.py:1024
 msgid "Research"
 msgstr ""
 
-#: apps/summary/renderers.py:1019
+#: apps/summary/renderers.py:1025
 msgid "Research treated the following topics"
 msgstr ""
 
-#: apps/summary/renderers.py:1028
+#: apps/summary/renderers.py:1034
 msgid "Financing and external material support"
 msgstr ""
 
-#: apps/summary/renderers.py:1031
+#: apps/summary/renderers.py:1037
 msgid "Annual budget for the SLM component of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:1034
+#: apps/summary/renderers.py:1040
 msgid "Precise annual budget: {}"
 msgstr ""
 
-#: apps/summary/renderers.py:1037
+#: apps/summary/renderers.py:1043
 msgid "The following services of incentives have been provided to land users"
 msgstr ""
 
-#: apps/summary/renderers.py:1048
+#: apps/summary/renderers.py:1054
 msgid "Labour by land users was"
 msgstr ""
 
-#: apps/summary/renderers.py:1066
+#: apps/summary/renderers.py:1072
 msgid "Other incentives or instruments"
 msgstr ""
 
-#: apps/summary/renderers.py:1075
+#: apps/summary/renderers.py:1081
 msgid "Impact analysis and concluding statements"
 msgstr ""
 
-#: apps/summary/renderers.py:1078
+#: apps/summary/renderers.py:1084
 msgid "Impacts of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:1079
+#: apps/summary/renderers.py:1085
 msgid "Did the approach..."
 msgstr ""
 
-#: apps/summary/renderers.py:1083
+#: apps/summary/renderers.py:1089
 msgid "Main motivation of land users to implement SLM"
 msgstr ""
 
-#: apps/summary/renderers.py:1087
+#: apps/summary/renderers.py:1093
 msgid "Sustainability of Approach activities"
 msgstr ""
 
-#: apps/summary/renderers.py:1088
+#: apps/summary/renderers.py:1094
 msgid ""
 "Can the land users sustain what hat been implemented through the Approach "
 "(without external support)?"
@@ -20588,36 +20590,36 @@ msgstr ""
 msgid "WOCAT SLM practices"
 msgstr "ការអនុវត្ត SLM របស់ វ៉ូខេត"
 
-#: templates/404.html:20 templates/base.html:175
+#: templates/404.html:20 templates/base.html:183
 msgid "Home"
 msgstr "ទំព័រដើម"
 
-#: templates/base.html:96
+#: templates/base.html:104
 #, python-format
 msgid "Optimized for %(chrome)s and %(firefox)s."
 msgstr "អាចប្រើប្រាស់%(chrome)s និង %(firefox)sបាន។"
 
-#: templates/base.html:123
+#: templates/base.html:131
 msgid "Menu"
 msgstr "បញ្ជី"
 
-#: templates/base.html:129
+#: templates/base.html:137
 msgid "See your messages."
 msgstr "ឃើញសាររបស់អ្នក"
 
-#: templates/base.html:136
+#: templates/base.html:144
 msgid "My SLM practices"
 msgstr "ការអនុវត្ត SLM របស់ខ្ញុំ"
 
-#: templates/base.html:140
+#: templates/base.html:148
 msgid "Administration"
 msgstr "រដ្ឋបាល"
 
-#: templates/base.html:148
+#: templates/base.html:156
 msgid "Logout"
 msgstr "ចាកចេញ"
 
-#: templates/base.html:169
+#: templates/base.html:177
 msgid ""
 "Would you like to help us translate the SLM Database? Please contact the "
 "WOCAT Secretariat for more information."
@@ -20625,23 +20627,23 @@ msgstr ""
 "តើអ្នកជួយយើងបកប្រែទិន្នន័យមូលដ្ឋាន SLM បានទេ? សូមទំនាក់ទំនងលេខាធិការដ្ឋានរបស់ វ៉ូខេត "
 "សម្រាប់ព័ត៌មានបន្ថែម។"
 
-#: templates/base.html:178
+#: templates/base.html:186
 msgid "My SLM Data"
 msgstr "ទិន្នន័យ SLM របស់ខ្ញុំ"
 
-#: templates/base.html:240
+#: templates/base.html:248
 msgid "Maintenance announcement"
 msgstr "ការប្រកាស់អំពីការជួសជុល"
 
-#: templates/base.html:250
+#: templates/base.html:258
 msgid "About"
 msgstr "ស្តីអំពី"
 
-#: templates/base.html:250
+#: templates/base.html:258
 msgid "Contact"
 msgstr "ទំនាក់ទំនង"
 
-#: templates/base.html:253
+#: templates/base.html:261
 msgid "Primary recommended database"
 msgstr "ប្រព័ន្ធគ្រប់គ្រងទិន្នន័យដែលណែនាំឱ្យប្រើ"
 
@@ -20776,12 +20778,3 @@ msgstr ""
 "<pre style=\"white-space:pre-line;\">curl -X GET -H 'Accept:text/csv' "
 "https://qcat.wocat.net/en/api/v1/questionnaires/303/</pre>\n"
 "</p>"
-
-#~ msgid "Show and change the map layer"
-#~ msgstr "បង្ហាញ និងផ្លាស់ប្តូរស្រទាប់នៃផែនទី"
-
-#~ msgid "Select a layer from the list below."
-#~ msgstr "ជ្រើសរើសស្រទាប់ពីបញ្ជីខាងក្រោមនេះ។"
-
-#~ msgid "Change the size of the map"
-#~ msgstr "ផ្លាស់ប្តូរទំហំនៃផែនទី"
