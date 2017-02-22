@@ -251,7 +251,7 @@ class Typo3Client:
 
 class WocatWebsiteUserClient:
     """
-    Client with resources of the wocat website (relaunch oct. 2016).
+    Client with endpoints of the relaunched wocat website.
     """
 
     def _get(self, url: str) -> requests.Response:
