@@ -1,10 +1,12 @@
 # -*- coding: utf-8 -*-
+import json
 import logging
 import requests
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
+from django.http import JsonResponse
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
@@ -265,6 +267,7 @@ class WocatWebsiteUserClient:
             headers={
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
+                'Authorization': 'Token {}'.format(settings.AUTH_API_TOKEN)
             }
         )
 
@@ -281,7 +284,21 @@ class WocatWebsiteUserClient:
         """
         wait for api on wocat
         """
-        pass
+        response = self._get('users/?name={}'.format(name))
+        if not response.ok or not response.json():
+            return {'success': True, 'message': '', 'users': [], 'count': 0}
+
+        return {
+            'success': True,
+            'message': '',
+            'users': [{
+                'uid': user['pk'],
+                'username': user['email'],
+                'first_name': user['first_name'],
+                'last_name': user['last_name'],
+            } for user in response.json()],
+            'count': len(response.json())
+        }
 
     def get_logout_url(self, redirect):
         raise NotImplementedError('Deprecated method')
@@ -296,6 +313,9 @@ class WocatWebsiteUserClient:
         return None
 
     def update_user(self, user: User, user_information: dict):
+        """
+        discuss: user-ids on wocat-website don't match qcat user ids.
+        """
         if user_information:
             user.update(
                 email=user_information.get('email')

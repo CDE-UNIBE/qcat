@@ -273,6 +273,7 @@ class BaseSettings(Configuration):
 
     # The key used for API login
     AUTH_API_KEY = values.Value(environ_prefix='')
+    AUTH_API_TOKEN = values.Value(environ_prefix='')
 
     # The URL of the WOCAT authentication form. Used to handle both login
     # and logout
