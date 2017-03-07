@@ -61,11 +61,19 @@ class NotificationsConf(AppConf):
     # All actions that should be listed on 'my slm data' -> notifications.
     # Some actions are depending on the role (i.e. compilers see all edits).
     USER_PROFILE_ACTIONS = [
-        CREATE, DELETE, CHANGE_STATUS, ADD_MEMBER, REMOVE_MEMBER
+        CREATE, DELETE, CHANGE_STATUS, ADD_MEMBER, REMOVE_MEMBER, FINISH_EDITING
     ]
 
     # All actions that should trigger an email
-    EMAIL_ACTIONS = [CHANGE_STATUS]
+    EMAIL_PREFERENCES = [
+        CREATE, CHANGE_STATUS, ADD_MEMBER, REMOVE_MEMBER, FINISH_EDITING
+    ]
+    # email subscriptions
+    EMAIL_SUBSCRIPTIONS = (
+        ('none', _('No emails at all')),
+        ('todo', _('Only emails that I need to work on')),
+        ('all', _('All emails')),
+    )
 
     TEASER_PAGINATE_BY = 5
     LIST_PAGINATE_BY = 10

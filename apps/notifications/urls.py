@@ -2,7 +2,7 @@ from django.conf.urls import patterns, url
 
 from .views import LogListTemplateView, LogListView, ReadLogUpdateView, \
     LogCountView, LogQuestionnairesListView, LogInformationUpdateCreateView, \
-    LogAllReadView
+    LogAllReadView, LogSubscriptionPreferencesView
 
 urlpatterns = patterns(
     '',
@@ -32,5 +32,8 @@ urlpatterns = patterns(
         ),
     url(r'^questionnaire-logs/$',
         LogQuestionnairesListView.as_view(),
-        name='notification_questionnaire_logs')
+        name='notification_questionnaire_logs'),
+    url(r'^preferences/$',
+        LogSubscriptionPreferencesView.as_view(),
+        name='notification_preferences')
 )

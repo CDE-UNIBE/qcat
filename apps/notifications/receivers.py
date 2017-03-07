@@ -1,3 +1,5 @@
+from django.contrib.auth import get_user_model
+from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
 
@@ -5,6 +7,7 @@ from accounts.models import User
 from questionnaire.models import Questionnaire
 from questionnaire import signals
 
+from .models import MailPreferences
 from .utils import ContentLog, MemberLog, StatusLog
 
 
@@ -51,3 +54,9 @@ def delete_questionnaire(sender: int, questionnaire: Questionnaire, user: User, 
 @receiver(signals.change_questionnaire_data)
 def change_questionnaire_data(sender: int, questionnaire: Questionnaire, user: User, **kwargs):
     ContentLog(action=sender, sender=user, questionnaire=questionnaire, **kwargs).create()
+
+
+@receiver(signal=post_save, sender=get_user_model())
+def create_notification_preferences(sender, instance, created, **kwargs):
+    if created:
+        MailPreferences(user=instance).set_defaults()

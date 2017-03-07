@@ -22,7 +22,7 @@
           </button>
           <ul id="notification-settings" class="f-dropdown" data-toggler=".text-left open f-open-dropdown left">
             <li><a data-reveal-id="confirm-mark-all-read">{% trans "Mark all as read" %}</a></li>
-{#            <li><a>{% trans "Notifications per page:" %}</a></li>#}
+            <li><a href="{% url "notification_preferences" %}">{% trans "Mail preferences" %}</a></li>
           </ul>
         </div>
       </h1>

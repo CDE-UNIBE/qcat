@@ -2,24 +2,29 @@ import contextlib
 import logging
 
 from django.conf import settings
+from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.core.urlresolvers import reverse_lazy
 from django.db import IntegrityError
 from django.http import Http404
 from django.http import HttpResponse
 from django.http import JsonResponse
+from django.shortcuts import get_object_or_404
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext_lazy as _
 from django.views.generic import ListView, TemplateView, View
 
 from braces.views import LoginRequiredMixin
+from django.views.generic import UpdateView
 
 from accounts.models import User
 from questionnaire.models import Questionnaire
 from questionnaire.utils import query_questionnaire
 from questionnaire.view_utils import get_pagination_parameters
 
+from .forms import MailPreferencesUpdateForm
 from .utils import InformationLog
-from .models import Log, ReadLog
+from .models import Log, ReadLog, MailPreferences
 
 logger = logging.getLogger(__name__)
 
@@ -297,3 +302,31 @@ class LogAllReadView(LoginRequiredMixin, View):
     def post(self, request, *args, **kwargs):
         Log.actions.mark_all_read(user=request.user)
         return HttpResponse(status=200)
+
+
+class LogSubscriptionPreferencesView(LoginRequiredMixin, UpdateView):
+    """
+    Display and update the users preferences for receiving emails of
+    notifications.
+    """
+    model = MailPreferences
+    form_class = MailPreferencesUpdateForm
+    template_name = 'notifications/preferences.html'
+    success_url = reverse_lazy('notification_preferences')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, user=self.request.user)
+
+    def get_initial(self):
+        initial = super().get_initial()
+        initial['wanted_actions'] = self.object.wanted_actions.split(',')
+        return initial
+
+    def form_valid(self, form):
+        response = super().form_valid(form)
+        messages.add_message(
+            request=self.request,
+            level=messages.SUCCESS,
+            message=_('Successfully saved changes.')
+        )
+        return response

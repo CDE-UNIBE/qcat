@@ -1,4 +1,3 @@
-# -*- coding: utf-8 -*-
 import contextlib
 import functools
 import operator
@@ -16,6 +15,7 @@ from questionnaire.models import Questionnaire, STATUSES, \
     QuestionnaireMembership
 
 from .conf import settings
+from .validators import clean_wanted_actions
 
 
 class ActionContextQuerySet(models.QuerySet):
@@ -401,7 +401,7 @@ class ReadLog(models.Model):
     Store the 'is_done' state for each user. This is more or less equivalent to
     the 'read' state in any email program. This can't be handled in the
     'through' model of the subscriber, as the status must also be stored for
-        the catalyst.
+    the catalyst.
     """
     log = models.ForeignKey(Log, on_delete=models.PROTECT)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
@@ -410,3 +410,27 @@ class ReadLog(models.Model):
     class Meta:
         # only one read status per user and log, preventing a race condition.
         unique_together = ['log', 'user']
+
+
+class MailPreferences(models.Model):
+    """
+    User preferences for receiving email notifications.
+    """
+    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    subscription = models.CharField(
+        max_length=10, choices=settings.NOTIFICATIONS_EMAIL_SUBSCRIPTIONS, default='all'
+    )
+    wanted_actions = models.CharField(
+        max_length=255,  blank=True, validators=[clean_wanted_actions]
+    )
+    language = models.CharField(
+        max_length=2, choices=settings.LANGUAGES, default=settings.LANGUAGES[0][0]
+    )
+
+    def get_defaults(self) -> tuple:
+        subscription = 'todo' if self.user.groups.exists() or self.user.is_staff else 'all'
+        return subscription, ','.join([str(pref) for pref in settings.NOTIFICATIONS_EMAIL_PREFERENCES])
+
+    def set_defaults(self):
+        self.subscription, self.wanted_actions = self.get_defaults()
+        self.save()

@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+
+{% load compress %}
+{% load i18n %}
+{% load sekizai_tags %}
+{% load static %}
+
+
+{% block bodyclass %}layout-wocat{% endblock %}
+{% block navclass %}is-wocat{% endblock %}
+
+{% block content %}
+  <main class="row" role="main">
+    <div class="small-12 columns">
+      <h1 class="is-title">
+        {% trans "Your email preferences" %}
+      </h1>
+      <form action="#" method="post">
+        {% csrf_token %}
+        {{ form.as_p }}
+        <input type="submit" value="{% trans "Save preferences" %}" class="button">
+      </form>
+    </div>
+  </main>
+{% endblock %}
