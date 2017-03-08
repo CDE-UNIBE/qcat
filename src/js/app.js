@@ -69,17 +69,6 @@ function updateNumbering() {
 
 $(function () {
 
-    // Language switcher
-    $('.top-bar-lang .dropdown a').click(function () {
-        // e.preventDefault();
-        var lang = $(this).data('language');
-        var form = $(this).closest('form');
-        if (form && lang) {
-            form.find('#language_field').val(lang);
-            form.submit();
-        }
-    });
-
     $('#submit-search').click(function(e) {
         // For the search on the landing page, do not submit the search
         // parameter (q) if it is empty.
