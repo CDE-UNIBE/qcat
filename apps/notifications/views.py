@@ -324,6 +324,10 @@ class LogSubscriptionPreferencesView(LoginRequiredMixin, UpdateView):
 
     def form_valid(self, form):
         response = super().form_valid(form)
+        if 'language' in form.changed_data and not self.object.has_changed_language:
+            self.object.has_changed_language = True
+            self.object.save()
+
         messages.add_message(
             request=self.request,
             level=messages.SUCCESS,

@@ -1,11 +1,14 @@
 import contextlib
 import functools
+import logging
 import operator
 
+from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import F, Q
 from django.template.loader import render_to_string
+from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
 
@@ -16,6 +19,8 @@ from questionnaire.models import Questionnaire, STATUSES, \
 
 from .conf import settings
 from .validators import clean_wanted_actions
+
+logger = logging.getLogger(__name__)
 
 
 class ActionContextQuerySet(models.QuerySet):
@@ -267,6 +272,7 @@ class Log(models.Model):
     )
     questionnaire = models.ForeignKey(Questionnaire)
     action = models.PositiveIntegerField(choices=settings.NOTIFICATIONS_ACTIONS)
+    was_sent = models.BooleanField(default=False)
 
     objects = models.Manager()
     actions = ActionContextQuerySet.as_manager()
@@ -275,8 +281,11 @@ class Log(models.Model):
         ordering = ['-created']
 
     def __str__(self):
+        return self.title()
+
+    def title(self, locale=''):
         return '{questionnaire}: {action}'.format(
-            questionnaire=self.questionnaire.code,
+            questionnaire=self.questionnaire.get_name(locale=locale),
             action=self.get_action_display()
         )
 
@@ -340,6 +349,24 @@ class Log(models.Model):
         else:
             key = self.action
         return settings.NOTIFICATIONS_ACTION_ICON.get(key)
+
+    def send_mail(self):
+        # collect recipients
+        for recipient in self.recipients:
+            if recipient.mailpreferences.wants_action(self.action):
+                message = EmailMultiAlternatives(
+                    subject=self.title(locale=recipient.mailpreferences.language),
+                    body='text content',
+                    from_email=settings.DEFAULT_FROM_EMAIL,
+                    to=[recipient.email]
+                )
+                message.attach_alternative('html', 'text/html')
+                logger.info(
+                    '{date}: sent mail to user {user} for log {log}'.format(
+                        date=now(), user=recipient.id, log=self.id
+                    ))
+                if settings.DO_SEND_EMAILS:
+                    message.send()
 
 
 class StatusUpdate(models.Model):
@@ -421,15 +448,23 @@ class MailPreferences(models.Model):
         max_length=10, choices=settings.NOTIFICATIONS_EMAIL_SUBSCRIPTIONS, default='all'
     )
     wanted_actions = models.CharField(
-        max_length=255,  blank=True, validators=[clean_wanted_actions]
+        max_length=255,  blank=True, validators=[clean_wanted_actions],
+        verbose_name=_('Subscribed for following changes in the review status')
     )
     language = models.CharField(
         max_length=2, choices=settings.LANGUAGES, default=settings.LANGUAGES[0][0]
     )
+    has_changed_language = models.BooleanField(default=False)
 
     def get_defaults(self) -> tuple:
         subscription = 'todo' if self.user.groups.exists() or self.user.is_staff else 'all'
         return subscription, ','.join([str(pref) for pref in settings.NOTIFICATIONS_EMAIL_PREFERENCES])
+
+    def subscribe_log(self, log) -> bool:
+        if self.subscription:
+            pass
+        if log.action in self.wanted_actions:
+            return True
 
     def set_defaults(self):
         self.subscription, self.wanted_actions = self.get_defaults()

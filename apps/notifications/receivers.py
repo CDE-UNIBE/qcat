@@ -1,4 +1,5 @@
 from django.contrib.auth import get_user_model
+from django.contrib.auth import user_logged_in
 from django.db.models.signals import post_save
 from django.utils.translation import ugettext_lazy as _
 from django.dispatch import receiver
@@ -60,3 +61,10 @@ def change_questionnaire_data(sender: int, questionnaire: Questionnaire, user: U
 def create_notification_preferences(sender, instance, created, **kwargs):
     if created:
         MailPreferences(user=instance).set_defaults()
+
+
+@receiver(signal=user_logged_in)
+def update_language(sender, request, user, **kwargs):
+    if not user.mailpreferences.has_changed_language:
+        user.mailpreferences.language = request.LANGUAGE_CODE
+        user.mailpreferences.save()
