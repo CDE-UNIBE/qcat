@@ -70,7 +70,9 @@ class ActionContextQuerySet(models.QuerySet):
             [Q(subscribers=user), Q(catalyst=user)]
         )
 
-        return self.filter(
+        return self.not_deleted_logs(
+            user=user
+        ).filter(
             Q(action__in=settings.NOTIFICATIONS_USER_PROFILE_ACTIONS) |
             Q(action=settings.NOTIFICATIONS_EDIT_CONTENT,
               questionnaire__questionnairemembership__user=user,
@@ -104,7 +106,9 @@ class ActionContextQuerySet(models.QuerySet):
         if not status_filters:
             return self.none()
 
-        logs = self.filter(
+        logs = self.not_deleted_logs(
+            user=user
+        ).filter(
             action=settings.NOTIFICATIONS_CHANGE_STATUS,
             statusupdate__status=F('questionnaire__status')
         ).filter(
@@ -141,7 +145,7 @@ class ActionContextQuerySet(models.QuerySet):
                     questionnaire__status=read_log.log.statusupdate.status
                     )
 
-    def _unique_questionnaire(sel, logs):
+    def _unique_questionnaire(self, logs):
         """
         Pseudo 'unique' for questionnaire_id for given logs. Required to get
         the first (regarding time) log for each questionnaire.
@@ -162,11 +166,20 @@ class ActionContextQuerySet(models.QuerySet):
             'id'
         ).count()
 
+    def not_deleted_logs(self, user: User):
+        return self.exclude(
+            readlog__log_id=F('id'),
+            readlog__user=user,
+            readlog__is_deleted=True
+        )
+
     def only_unread_logs(self, user: User):
         """
         Filter out read logs.
         """
-        return self.exclude(
+        return self.not_deleted_logs(
+            user=user
+        ).exclude(
             Q(readlog__is_read=True, readlog__user=user)
         )
 
@@ -232,7 +245,7 @@ class ActionContextQuerySet(models.QuerySet):
 
     @staticmethod
     def delete_all_read_logs(user: User):
-        ReadLog.objects.filter(user=user).delete()
+        ReadLog.objects.filter(user=user, is_deleted=False).delete()
 
 
 class Log(models.Model):
@@ -428,6 +441,7 @@ class ReadLog(models.Model):
     log = models.ForeignKey(Log, on_delete=models.PROTECT)
     user = models.ForeignKey(settings.AUTH_USER_MODEL, on_delete=models.PROTECT)
     is_read = models.BooleanField(default=False)
+    is_deleted = models.BooleanField(default=False)
 
     class Meta:
         # only one read status per user and log, preventing a race condition.

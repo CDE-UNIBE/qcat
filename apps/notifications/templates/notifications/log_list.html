@@ -22,6 +22,7 @@
           </button>
           <ul id="notification-settings" class="f-dropdown" data-toggler=".text-left open f-open-dropdown left">
             <li><a data-reveal-id="confirm-mark-all-read">{% trans "Mark all as read" %}</a></li>
+            <li><a data-reveal-id="confirm-delete-all-read">{% trans "Delete all read" %}</a></li>
             <li><a href="{% url "notification_preferences" %}">{% trans "Mail preferences" %}</a></li>
           </ul>
         </div>
@@ -32,6 +33,12 @@
       <h2 id="read-all-modal-title">{% trans "Confirmation" %}</h2>
       <p>{% trans "Please confirm to mark all unread messages as read" %}</p>
       <a class="button mark-all-read">{% trans "OK" %}</a>
+      <a class="close-reveal-modal" aria-label="Close">&#215;</a>
+    </div>
+    <div id="confirm-delete-all-read" class="reveal-modal" data-reveal aria-labelledby="read-all-modal-title" aria-hidden="true" role="dialog">
+      <h2 id="delete-all-modal-title">{% trans "Confirmation" %}</h2>
+      <p>{% trans "Please confirm that you want to delete all notifications. This cannot be undone!" %}</p>
+      <a class="button delete-all-read">{% trans "Delete all read notifications" %}</a>
       <a class="close-reveal-modal" aria-label="Close">&#215;</a>
     </div>
   </main>
@@ -46,7 +53,9 @@
           var notificationList = $('#notifications-list');
           var spinner = '<img src="{% static 'assets/img/ajax-loader.gif' %}">';
           var readAll = $('.mark-all-read');
+          var deleteAll = $('.delete-all-read');
           var readAllConfirmationModal = $('#confirm-mark-all-read');
+          var deleteAllConfirmationModal = $('#confirm-delete-all-read');
           var loadNotifications = function() {
             notificationList.bindNotificationActions({
               csrfToken: '{{ csrf_token }}',
@@ -66,7 +75,14 @@
 
           // post data to mark all logs as read.
           readAll.on('click', function() {
-            $.post('{% url 'notification_all_read' %}', {
+            updateNotifications('{% url 'notification_all_read' %}');
+          });
+          deleteAll.on('click', function() {
+            updateNotifications('{% url 'notification_all_read' %}?delete=true');
+          });
+
+          function updateNotifications(url) {
+            $.post(url, {
                 csrfmiddlewaretoken: '{{ csrf_token }}'
             }).done(function() {
               loadNotifications();
@@ -74,7 +90,7 @@
             }).fail(function() {
               readAllConfirmationModal.html('{% trans "Could not update notifications." %}');
             });
-          });
+          }
         });
       </script>
     {% endcompress %}

@@ -299,8 +299,18 @@ class LogAllReadView(LoginRequiredMixin, View):
     Set all logs as read for given user.
     """
 
+    def delete_all_read_logs(self):
+        ReadLog.objects.filter(
+            user=self.request.user, is_read=True
+        ).update(
+            is_deleted=True
+        )
+
     def post(self, request, *args, **kwargs):
-        Log.actions.mark_all_read(user=request.user)
+        if self.request.GET.get('delete', '') == 'true':
+            self.delete_all_read_logs()
+        else:
+            Log.actions.mark_all_read(user=request.user)
         return HttpResponse(status=200)
 
 
