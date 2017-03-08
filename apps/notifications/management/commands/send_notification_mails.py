@@ -1,16 +1,19 @@
 from django.core.management.base import NoArgsCommand
+from django.db import transaction
+
+from notifications.models import Log
 
 
 class Command(NoArgsCommand):
     """
-    Purge stale locks.
+    Send notification mails.
     """
     def handle_noargs(self, **options):
-        # check unsent logs.
 
-        # collect subscribers
+        with transaction.atomic():
+            logs = Log.objects.select_for_update().filter(was_sent=False)
 
-        # filter according to preferences
-
-        # send
-        pass
+            for log in logs:
+                log.send_mails()
+                log.was_sent = True
+                log.save()

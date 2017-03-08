@@ -8,6 +8,7 @@ from django.core.urlresolvers import reverse
 from django.db import models
 from django.db.models import F, Q
 from django.template.loader import render_to_string
+from django.utils.html import strip_tags
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 from django.utils.functional import cached_property
@@ -151,12 +152,6 @@ class ActionContextQuerySet(models.QuerySet):
                 questionnaire_ids.append(log.questionnaire_id)
                 yield log
 
-    def email(self):
-        """
-        stub.
-        """
-        return self.filter(action__in=settings.NOTIFICATIONS_EMAIL_ACTIONS)
-
     def user_log_count(self, user: User) -> int:
         """
         Count all unread logs that the user has to work on.
@@ -281,11 +276,8 @@ class Log(models.Model):
         ordering = ['-created']
 
     def __str__(self):
-        return self.title()
-
-    def title(self, locale=''):
         return '{questionnaire}: {action}'.format(
-            questionnaire=self.questionnaire.get_name(locale=locale),
+            questionnaire=self.questionnaire.get_name(),
             action=self.get_action_display()
         )
 
@@ -350,23 +342,26 @@ class Log(models.Model):
             key = self.action
         return settings.NOTIFICATIONS_ACTION_ICON.get(key)
 
-    def send_mail(self):
-        # collect recipients
-        for recipient in self.recipients:
-            if recipient.mailpreferences.wants_action(self.action):
+    def send_mails(self):
+        """
+        Send mails to all recipients, but not compiler and mark log as sent.
+        """
+        for recipient in self.subscribers.all():
+            if recipient.mailpreferences.do_send_mail(self):
+                html_body = self.get_linked_subject(recipient)
                 message = EmailMultiAlternatives(
-                    subject=self.title(locale=recipient.mailpreferences.language),
-                    body='text content',
+                    subject='QCAT: {}'.format(self.subject),
+                    body=strip_tags(html_body),
                     from_email=settings.DEFAULT_FROM_EMAIL,
                     to=[recipient.email]
                 )
-                message.attach_alternative('html', 'text/html')
+                message.attach_alternative(html_body, 'text/html')
                 logger.info(
                     '{date}: sent mail to user {user} for log {log}'.format(
                         date=now(), user=recipient.id, log=self.id
                     ))
-                if settings.DO_SEND_EMAILS:
-                    message.send()
+
+                message.send()
 
 
 class StatusUpdate(models.Model):
@@ -457,15 +452,40 @@ class MailPreferences(models.Model):
     has_changed_language = models.BooleanField(default=False)
 
     def get_defaults(self) -> tuple:
-        subscription = 'todo' if self.user.groups.exists() or self.user.is_staff else 'all'
-        return subscription, ','.join([str(pref) for pref in settings.NOTIFICATIONS_EMAIL_PREFERENCES])
+        """
+        Staff users requested a more restrictive set of defaults to reduce
+        amount of mails received.
+        """
+        is_special_user = self.user.groups.exists() or self.user.is_staff
+        if is_special_user:
+            subscription = settings.NOTIFICATIONS_TODO_MAILS
+            wanted_actions = str(settings.NOTIFICATIONS_CHANGE_STATUS)
+        else:
+            subscription = settings.NOTIFICATIONS_TODO_MAILS
+            wanted_actions = ','.join([str(pref) for pref in settings.NOTIFICATIONS_EMAIL_PREFERENCES])
 
-    def subscribe_log(self, log) -> bool:
-        if self.subscription:
-            pass
-        if log.action in self.wanted_actions:
-            return True
+        return subscription, wanted_actions
+
+    def do_send_mail(self, log: Log) -> bool:
+        return True
+        # return all([
+        #     self.is_allowed_send_mails,
+        #     self.is_wanted_action(log.action),
+        #     self.is_todo_log(log)
+        # ])
 
     def set_defaults(self):
         self.subscription, self.wanted_actions = self.get_defaults()
         self.save()
+
+    @property
+    def is_allowed_send_mails(self):
+        return settings.DO_SEND_EMAILS and \
+               self.subscription != settings.NOTIFICATIONS_NO_MAILS
+
+    def is_wanted_action(self, action: int) -> bool:
+        return str(action) in self.wanted_actions
+
+    def is_todo_log(self, log):
+        return self.subscription == settings.NOTIFICATIONS_TODO_MAILS and \
+               log in Log.actions.user_pending_list(user=self.user)

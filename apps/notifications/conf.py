@@ -69,10 +69,14 @@ class NotificationsConf(AppConf):
         CREATE, CHANGE_STATUS, ADD_MEMBER, REMOVE_MEMBER, FINISH_EDITING
     ]
     # email subscriptions
+    NO_MAILS = 'none'
+    TODO_MAILS = 'todo'
+    ALL_MAILS = 'all'
+
     EMAIL_SUBSCRIPTIONS = (
-        ('none', _('No emails at all')),
-        ('todo', _('Only emails that I need to work on')),
-        ('all', _('All emails')),
+        (NO_MAILS, _('No emails at all')),
+        (TODO_MAILS, _('Only emails that I need to work on')),
+        (ALL_MAILS, _('All emails')),
     )
 
     TEASER_PAGINATE_BY = 5

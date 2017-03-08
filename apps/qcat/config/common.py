@@ -170,6 +170,8 @@ class BaseSettings(Configuration):
         }
     }
 
+    DEFAULT_FROM_EMAIL = 'info@wocat.net'
+
     SUMMARY_PDF_PATH = join(MEDIA_ROOT, 'summary-pdf')
 
     TEMPLATE_DIRS = (
@@ -331,7 +333,7 @@ class BaseSettings(Configuration):
     GOOGLE_MAPS_JAVASCRIPT_API_KEY = values.Value(environ_prefix='')
 
     # Global switch to prevent sending mails.
-    SEND_MAILS = values.BooleanValue(default=False)
+    DO_SEND_EMAILS = values.BooleanValue(default=False)
 
     WOCAT_IMPORT_DATABASE_URL = values.Value(environ_prefix='')
 
