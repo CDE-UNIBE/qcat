@@ -2,9 +2,10 @@ import contextlib
 import functools
 import logging
 import operator
+from django.core import signing
 
 from django.core.mail import EmailMultiAlternatives
-from django.core.urlresolvers import reverse
+from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import models
 from django.db.models import F, Q
 from django.template.loader import render_to_string
@@ -503,3 +504,8 @@ class MailPreferences(models.Model):
     def is_todo_log(self, log):
         return self.subscription == settings.NOTIFICATIONS_TODO_MAILS and \
                log in Log.actions.user_pending_list(user=self.user)
+
+    def get_signed_url(self):
+        return reverse_lazy('signed_notification_preferences', kwargs={
+            'token': signing.Signer(salt=settings.NOTIFICATIONS_SALT).sign(self.id)
+        })

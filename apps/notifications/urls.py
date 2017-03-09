@@ -1,39 +1,40 @@
 from django.conf.urls import patterns, url
 
-from .views import LogListTemplateView, LogListView, ReadLogUpdateView, \
-    LogCountView, LogQuestionnairesListView, LogInformationUpdateCreateView, \
-    LogAllReadView, LogSubscriptionPreferencesView
+from . import views
 
 urlpatterns = patterns(
     '',
     url(r'^$',
-        LogListTemplateView.as_view(),
+        views.LogListTemplateView.as_view(),
         name='notification_list'
         ),
     url(r'^partial/$',
-        LogListView.as_view(),
+        views.LogListView.as_view(),
         name='notification_partial_list'
         ),
     url(r'^read/$',
-        ReadLogUpdateView.as_view(),
+        views.ReadLogUpdateView.as_view(),
         name='notification_read'
         ),
     url(r'^read/all/$',
-        LogAllReadView.as_view(),
+        views.LogAllReadView.as_view(),
         name='notification_all_read'
         ),
     url(r'^inform-compiler/$',
-        LogInformationUpdateCreateView.as_view(),
+        views.LogInformationUpdateCreateView.as_view(),
         name='notification_inform_compiler'
     ),
     url(r'^new-notifications/$',
-        LogCountView.as_view(),
+        views.LogCountView.as_view(),
         name='notification_new_count'
         ),
     url(r'^questionnaire-logs/$',
-        LogQuestionnairesListView.as_view(),
+        views.LogQuestionnairesListView.as_view(),
         name='notification_questionnaire_logs'),
+    url(r'^preferences/(?P<token>\d+:[\w_-]+)/$',
+        views.SignedLogSubscriptionPreferencesView.as_view(),
+        name='signed_notification_preferences'),
     url(r'^preferences/$',
-        LogSubscriptionPreferencesView.as_view(),
-        name='notification_preferences')
+        views.LogSubscriptionPreferencesView.as_view(),
+        name='notification_preferences'),
 )

@@ -4,6 +4,7 @@ import logging
 from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
+from django.core import signing
 from django.core.urlresolvers import reverse_lazy
 from django.db import IntegrityError
 from django.http import Http404
@@ -314,7 +315,7 @@ class LogAllReadView(LoginRequiredMixin, View):
         return HttpResponse(status=200)
 
 
-class LogSubscriptionPreferencesView(LoginRequiredMixin, UpdateView):
+class LogSubscriptionPreferencesMixin(UpdateView):
     """
     Display and update the users preferences for receiving emails of
     notifications.
@@ -322,10 +323,9 @@ class LogSubscriptionPreferencesView(LoginRequiredMixin, UpdateView):
     model = MailPreferences
     form_class = MailPreferencesUpdateForm
     template_name = 'notifications/preferences.html'
-    success_url = reverse_lazy('notification_preferences')
 
     def get_object(self, queryset=None):
-        return get_object_or_404(self.model, user=self.request.user)
+        raise NotImplementedError
 
     def get_initial(self):
         initial = super().get_initial()
@@ -344,3 +344,32 @@ class LogSubscriptionPreferencesView(LoginRequiredMixin, UpdateView):
             message=_('Successfully saved changes.')
         )
         return response
+
+
+class LogSubscriptionPreferencesView(LoginRequiredMixin, LogSubscriptionPreferencesMixin):
+    """
+    Get object from authenticated user.
+    """
+    success_url = reverse_lazy('notification_preferences')
+
+    def get_object(self, queryset=None):
+        return get_object_or_404(self.model, user=self.request.user)
+
+
+class SignedLogSubscriptionPreferencesView(LogSubscriptionPreferencesMixin):
+    """
+    Get object from signed url
+    """
+
+    def get_success_url(self):
+        return self.object.get_signed_url()
+
+    def get_object(self, queryset=None):
+        try:
+            signed_id = signing.Signer(
+                salt=settings.NOTIFICATIONS_SALT
+            ).unsign(self.kwargs['token'])
+        except signing.BadSignature:
+            raise Http404
+
+        return get_object_or_404(self.model, id=signed_id)
