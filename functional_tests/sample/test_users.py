@@ -250,7 +250,7 @@ class UserTest(FunctionalTest):
 
         self.assertEqual(len(results), 2)
         self.assertEqual(
-            results[0].text, 'Foo 1 (Draft)\nCompiler: Foo Bar Country:'
+            results[0].text, 'Foo 1 (Draft)\nCompiler: Foo Bar | Country:'
         )
         # clicking on the element takes alice to the detail page.
         results[0].click()
@@ -271,7 +271,7 @@ class UserTest(FunctionalTest):
         results[1].click()
         self.assertEqual(
             self.browser.current_url,
-            '{base_url}{search_results_view}?term='.format(
+            '{base_url}{search_results_view}?term=terra'.format(
                 base_url=self.live_server_url,
                 search_results_view=reverse('staff_questionnaires_search')
             )

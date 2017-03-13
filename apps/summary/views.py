@@ -61,6 +61,7 @@ class SummaryPDFCreateView(PDFTemplateView):
     footer_template = '{}layout/footer.html'.format(base_template_path)
     # see: http://wkhtmltopdf.org/usage/wkhtmltopdf.txt
     cmd_options = {
+        'dpi': '96',
         'margin-top': '1cm',
         'margin-bottom': '1cm',
     }

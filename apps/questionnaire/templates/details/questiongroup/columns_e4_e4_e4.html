@@ -4,7 +4,7 @@
 
 {% for questiongroup in questiongroups %}
   <div class="row tech-output-columns top-margin">
-    {% if config.label %}
+    {% if config.label and config.label_position != 'none' %}
       <h5>{{ config.label }}</h5>
     {% endif %}
     {% for question in questiongroup %}

@@ -6,7 +6,6 @@ from accounts.tests.test_models import create_new_user
 from qcat.tests import TestCase
 from samplemulti.views import (
     home,
-    questionnaire_link_search,
     questionnaire_list,
     questionnaire_list_partial,
 )
@@ -98,15 +97,6 @@ class SampleMultiHomeTest(TestCase):
         res = self.client.get(self.url)
         self.assertTemplateUsed(res, 'samplemulti/home.html')
         self.assertEqual(res.status_code, 200)
-
-
-class QuestionnaireLinkSearchTest(TestCase):
-
-    @patch('samplemulti.views.generic_questionnaire_link_search')
-    def test_calls_generic_function(self, mock_generic_function):
-        request = Mock()
-        questionnaire_link_search(request)
-        mock_generic_function.assert_called_once_with(request, 'samplemulti')
 
 
 class QuestionnaireNewTest(TestCase):

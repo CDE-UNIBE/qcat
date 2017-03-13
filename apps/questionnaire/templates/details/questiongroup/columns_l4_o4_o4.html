@@ -1,0 +1,16 @@
+{% comment %}
+  Three columns (4 / 4 / 4). The first column contains the label of the questiongroup, the other columns contain the questions.
+{% endcomment %}
+
+{% for questiongroup in questiongroups %}
+  <div class="row tech-output-columns top-margin">
+    <div class="columns medium-4">
+      <h5>{{ config.label }}</h5>
+    </div>
+    {% for question in questiongroup %}
+      <div class="columns medium-4">
+        {{ question }}
+      </div>
+    {% endfor %}
+  </div>
+{% endfor %}

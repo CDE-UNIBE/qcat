@@ -1,0 +1,42 @@
+{% load i18n %}
+
+
+<ul class="home-keynumbers-list">
+  <hr>
+  <li class="home-keynumbers-list-item">
+    <span class="keynumber">{{ questionnaires }}</span>
+    <span class="keynumber-text">{% trans "SLM Practices published:" %}</span>
+    <ul>
+      <li>{{ technologies }} {% trans "SLM Technologies" %}</li>
+      <li>{{ approaches }} {% trans "SLM Approaches" %}</li>
+    </ul>
+  </li>
+  <li class="home-keynumbers-list-item">
+    <span class="keynumber">{{ created }}</span>
+    <span class="keynumber-text">new practices drafted in the past {{ days }} days.</span>
+  </li>
+  <hr>
+
+  <li class="home-keynumbers-list-item">
+    {% blocktrans %}
+      <span class="keynumber-text">Active visitors from</span>
+      <span class="keynumber">{{ countries }}</span>
+      <span class="keynumber-text">different countries in the past {{ days }} days.</span>
+    {% endblocktrans %}
+  </li>
+  <hr>
+
+  <li class="home-keynumbers-list-item">
+    {% blocktrans %}
+      <span class="keynumber">{{ users }}</span>
+      <span class="keynumber-text">registered users.</span>
+    {% endblocktrans %}
+  </li>
+  <li class="home-keynumbers-list-item">
+    {% blocktrans %}
+      <span class="keynumber">{{ compilers }}</span>
+      <span class="keynumber-text">people created a public SLM practice.</span>
+    {% endblocktrans %}
+  </li>
+
+</ul>

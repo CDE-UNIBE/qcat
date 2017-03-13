@@ -31,7 +31,6 @@ from questionnaire.utils import (
     is_valid_questionnaire_format,
     query_questionnaire,
     query_questionnaires,
-    query_questionnaires_for_link,
     prepare_list_values)
 from questionnaire.tests.test_models import get_valid_metadata, \
     get_valid_questionnaire
@@ -864,88 +863,6 @@ class QueryQuestionnairesTest(TestCase):
         ret = query_questionnaires(request, 'sample', offset=1)
         self.assertEqual(len(ret), 1)
         self.assertEqual(ret[0].id, 6)
-
-
-class QueryQuestionnairesForLinkTest(TestCase):
-
-    fixtures = [
-        'sample_global_key_values.json', 'sample.json',
-        'sample_questionnaires.json']
-
-    def setUp(self):
-        req = Mock()
-        req.user.is_authenticated.return_value = False
-        self.request = req
-
-    def test_calls_get_name_keywords(self):
-        configuration = Mock()
-        configuration.get_name_keywords.return_value = None, None
-        query_questionnaires_for_link(self.request, configuration, '')
-        configuration.get_name_keywords.assert_called_once_with()
-
-    def test_returns_empty_if_no_name(self):
-        configuration = Mock()
-        configuration.get_name_keywords.return_value = None, None
-        total, data = query_questionnaires_for_link(
-            self.request, configuration, '')
-        self.assertEqual(total, 0)
-        self.assertEqual(data, [])
-
-    def test_returns_by_q(self):
-        configuration = QuestionnaireConfiguration('sample')
-        q = 'key'
-        total, data = query_questionnaires_for_link(
-            self.request, configuration, q)
-        self.assertEqual(total, 2)
-        self.assertTrue(len(data), 2)
-        self.assertEqual(data[0].id, 1)
-        self.assertEqual(data[1].id, 2)
-
-    def test_returns_by_q_case_insensitive(self):
-        configuration = QuestionnaireConfiguration('sample')
-        q = 'KEY'
-        total, data = query_questionnaires_for_link(
-            self.request, configuration, q)
-        self.assertEqual(total, 2)
-        self.assertTrue(len(data), 2)
-        self.assertEqual(data[0].id, 1)
-        self.assertEqual(data[1].id, 2)
-
-    def test_returns_single_result(self):
-        configuration = QuestionnaireConfiguration('sample')
-        q = 'key 1b'
-        total, data = query_questionnaires_for_link(
-            self.request, configuration, q)
-        self.assertEqual(total, 1)
-        self.assertTrue(len(data), 1)
-        self.assertEqual(data[0].id, 2)
-
-    def test_applies_limit(self):
-        configuration = QuestionnaireConfiguration('sample')
-        q = 'key'
-        total, data = query_questionnaires_for_link(
-            self.request, configuration, q, limit=1)
-        self.assertEqual(total, 2)
-        self.assertTrue(len(data), 1)
-        self.assertEqual(data[0].id, 1)
-
-    def test_finds_by_code(self):
-        configuration = QuestionnaireConfiguration('sample')
-        q = 'sample_1'
-        total, data = query_questionnaires_for_link(
-            self.request, configuration, q)
-        self.assertEqual(total, 1)
-        self.assertTrue(len(data), 1)
-        self.assertEqual(data[0].id, 1)
-
-    def test_find_by_other_langauge(self):
-        configuration = QuestionnaireConfiguration('sample')
-        q = 'clave'
-        total, data = query_questionnaires_for_link(
-            self.request, configuration, q)
-        self.assertEqual(total, 1)
-        self.assertTrue(len(data), 1)
-        self.assertEqual(data[0].id, 2)
 
 
 @override_settings(USE_CACHING=False)

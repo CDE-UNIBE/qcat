@@ -15,11 +15,10 @@ from qcat.tests import TestCase
 from questionnaire.models import File, Questionnaire
 from questionnaire.views import (
     generic_file_upload,
-    generic_questionnaire_link_search,
     generic_questionnaire_list,
     QuestionnaireEditView,
     QuestionnaireStepView,
-    QuestionnaireView)
+    QuestionnaireView, QuestionnaireLinkSearchView)
 from questionnaire.tests.test_view_utils import get_valid_pagination_parameters
 from sample.tests.test_views import (
     get_valid_details_values,
@@ -33,72 +32,6 @@ file_upload_route = 'file_upload'
 file_display_route = 'file_serve'
 valid_file = 'static/assets/img/img01.jpg'
 invalid_file = 'bower.json'  # Needs to exist but not valid file type
-
-
-class GenericQuestionnaireLinkSearchTest(TestCase):
-
-    fixtures = [
-        'sample_global_key_values.json', 'sample.json',
-        'sample_questionnaires.json']
-
-    @patch('questionnaire.views.get_configuration')
-    def test_calls_get_configuration(self, mock_get_configuration):
-        mock = Mock()
-        mock.get_name_keywords.return_value = None, None
-        mock_get_configuration.return_value = mock
-        generic_questionnaire_link_search(Mock(), 'sample')
-        mock_get_configuration.assert_called_once_with('sample')
-
-    @patch('questionnaire.views.get_configuration')
-    @patch('questionnaire.views.query_questionnaires_for_link')
-    def test_calls_query_questionnaires_for_link(
-            self, mock_query, mock_get_configuration):
-        mock_get_configuration.get_list_data.return_value = []
-        mock_query.return_value = 0, []
-        mock_request = Mock()
-        generic_questionnaire_link_search(mock_request, 'sample')
-        mock_query.assert_called_once_with(
-            mock_request, mock_get_configuration(), mock_request.GET.get())
-
-    def test_returns_empty_if_no_q(self):
-        req = RequestFactory().get(reverse(route_questionnaire_link_search))
-        ret = generic_questionnaire_link_search(req, 'sample')
-        j = json.loads(ret.content.decode('utf-8'))
-        self.assertEqual(j, {})
-
-    def test_returns_empty_if_no_results(self):
-        req = RequestFactory().get(reverse(route_questionnaire_link_search))
-        req.GET = {'q': 'foo'}
-        user = Mock()
-        user.is_authenticated.return_value = False
-        req.user = user
-        ret = generic_questionnaire_link_search(req, 'sample')
-        j = json.loads(ret.content.decode('utf-8'))
-        self.assertEqual(j, {"total": 0, "data": []})
-
-    def test_returns_results(self):
-        req = RequestFactory().get(reverse(route_questionnaire_link_search))
-        req.GET = {'q': 'key'}
-        user = Mock()
-        user.is_authenticated.return_value = False
-        req.user = user
-        ret = generic_questionnaire_link_search(req, 'sample')
-        j = json.loads(ret.content.decode('utf-8'))
-        self.assertEqual(j.get('total'), 2)
-        data = j.get('data')
-        self.assertEqual(len(data), 2)
-        self.assertEqual(len(data[0]), 5)
-        self.assertEqual(data[0].get('code'), 'sample_1')
-        self.assertIn('display', data[0])
-        self.assertEqual(data[0].get('id'), 1)
-        self.assertEqual(data[0].get('name'), 'Sample Key 1a')
-        self.assertEqual(data[0].get('value'), 1)
-        self.assertEqual(len(data[1]), 5)
-        self.assertEqual(data[1].get('code'), 'sample_2')
-        self.assertIn('display', data[1])
-        self.assertEqual(data[1].get('id'), 2)
-        self.assertEqual(data[1].get('name'), 'Sample Key 1b')
-        self.assertEqual(data[1].get('value'), 2)
 
 
 @patch('configuration.utils.check_aliases')
@@ -331,6 +264,56 @@ class GenericFileServeTest(TestCase):
         mock_retrieve_file.return_value = ('file', 'filename')
         res = self.client.get(url)
         self.assertEqual(res.status_code, 200)
+
+
+class QuestionnaireLinkSearchViewTest(TestCase):
+
+    fixtures = ['global_key_values', 'technologies', 'approaches']
+
+    def setUp(self):
+        view = QuestionnaireLinkSearchView(configuration_code='approaches')
+        self.request = RequestFactory().get(
+            reverse('approaches:questionnaire_link_search'),
+            HTTP_X_REQUESTED_WITH='XMLHttpRequest')
+        user1 = create_new_user()
+        user2 = create_new_user(id=2, email='foo@bar.com')
+        self.request.user = user1
+        self.view = self.setup_view(view, self.request)
+        self.q1 = Questionnaire.create_new(
+            configuration_code='technologies',
+            data={'qg_name': [{'name': {'en': 'Tech 1'}}]}, user=user1)
+        self.q2 = Questionnaire.create_new(
+            configuration_code='approaches',
+            data={'qg_name': [{'name': {'en': 'App 2'}}]}, user=user1)
+        self.q3 = Questionnaire.create_new(
+            configuration_code='approaches',
+            data={'qg_name': [{'name': {'en': 'App 3'}}]}, user=user1, status=4)
+        self.q4 = Questionnaire.create_new(
+            configuration_code='approaches',
+            data={'qg_name': [{'name': {'en': 'App 4'}}]}, user=user2, status=4)
+        self.q5 = Questionnaire.create_new(
+            configuration_code='approaches',
+            data={'qg_name': [{'name': {'en': 'App 5'}}]}, user=user2)
+
+    def test_returns_all(self):
+        response = self.view.get(self.request)
+        json_response = json.loads(response.content)
+        self.assertEqual(len(json_response), 3)
+        for q in json_response:
+            self.assertIn(q['name'], ['App 2', 'App 3', 'App 4'])
+
+    def test_returns_search(self):
+        self.request.GET = {'term': 'app 3'}
+        response = self.view.get(self.request)
+        json_response = json.loads(response.content)
+        self.assertEqual(len(json_response), 1)
+        self.assertEqual(json_response[0]['name'], 'App 3')
+
+    def test_returns_empty(self):
+        self.request.GET = {'term': 'nonexisting'}
+        response = self.view.get(self.request)
+        json_response = json.loads(response.content)
+        self.assertEqual(len(json_response), 0)
 
 
 class QuestionnaireViewTest(TestCase):

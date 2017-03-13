@@ -28,6 +28,7 @@ def template_settings(request):
         'IS_ACTIVE_FEATURE_MODULE',
         'IS_ACTIVE_FEATURE_WATERSHED',
         'PIWIK_URL',
+        'IS_ACTIVE_FEATURE_FACTSHEET',
         'PIWIK_SITE_ID',
         'WARN_HEADER',
         'WORD_WRAP_LANGUAGES'

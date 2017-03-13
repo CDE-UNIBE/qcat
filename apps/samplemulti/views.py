@@ -6,7 +6,6 @@ from django.template.loader import render_to_string
 
 from accounts.decorators import force_login_check
 from questionnaire.views import (
-    generic_questionnaire_link_search,
     generic_questionnaire_list,
     generic_questionnaire_view_step,
 )
@@ -22,29 +21,6 @@ def home(request):
         'filter_configuration': list_template_values.get(
             'filter_configuration', {}),
     })
-
-
-def questionnaire_link_search(request):
-    """
-    Return the results of the search used for adding linked
-    questionnaires. Returns the found Questionnaires in JSON format.
-
-    The search happens in the database as users need to see their own
-    pending changes.
-
-    .. seealso::
-        The actual rendering of the results is handled by the generic
-        questionnaire function
-        :func:`questionnaire.views.generic_questionnaire_link_search`
-
-    Args:
-        ``request`` (django.http.HttpResponse): The request object. The
-        search term is passed as GET parameter ``q`` of the request.
-
-    Returns:
-        ``JsonResponse``. A rendered JSON Response.
-    """
-    return generic_questionnaire_link_search(request, 'samplemulti')
 
 
 @login_required

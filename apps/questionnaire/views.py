@@ -30,6 +30,7 @@ from django.views.generic.base import TemplateResponseMixin
 from braces.views import LoginRequiredMixin
 
 from accounts.decorators import force_login_check
+from accounts.views import QuestionnaireSearchView
 from configuration.cache import get_configuration
 from configuration.utils import get_filter_configuration
 from configuration.utils import (
@@ -56,7 +57,6 @@ from .utils import (
     get_questionnaire_data_in_single_language,
     get_questionnaire_data_for_translation_form,
     handle_review_actions,
-    query_questionnaires_for_link,
     query_questionnaire,
     query_questionnaires)
 from .view_utils import (
@@ -71,78 +71,31 @@ from .conf import settings
 logger = logging.getLogger(__name__)
 
 
-def generic_questionnaire_link_search(request, configuration_code):
+class QuestionnaireLinkSearchView(QuestionnaireSearchView, LoginRequiredMixin):
     """
-    A generic view to return search for questionnaires to be used in the
-    linked form. Returns the found Questionnaires in JSON format.
-
-    The search happens in the database as users need to see their own
-    pending changes.
-
-    A generic view to add or remove linked questionnaires. By default,
-    the forms are shown. If the form was submitted, the submitted
-    questionnaires are validated and stored in the session, followed by
-    a redirect to the overview.
-
-    Args:
-        ``request`` (django.http.HttpResponse): The request object. The
-        search term is passed as GET parameter ``q`` of the request.
-
-        ``configuration_code`` (str): The code of the questionnaire
-        configuration.
-
-    Returns:
-        ``JsonResponse``. A rendered JSON Response. If successful, the
-        response contains the following keys:
-
-            ``total`` (int): An integer indicating the total amount of
-            results found.
-
-            ``data`` (list): A list of the results returned. This can
-            contain fewer items than the total count indicates as there
-            is a limit applied to the results.
+    Search for a questionnaire to add as a link. Used in the questionnaire form
+    as an ajax search. Searches by "term" in name and returns only
+    questionnaires of the given configuration and visible to the current user
+    (own drafts etc.)
     """
-    q = request.GET.get('q', None)
-    if q is None:
-        return JsonResponse({})
+    configuration_code = None
 
-    configuration = get_configuration(configuration_code)
+    def dispatch(self, request, *args, **kwargs):
+        # QuestionnaireSearchView's dispatch method checks for is_staff.
+        return super(LoginRequiredMixin, self).dispatch(request, *args, **kwargs)
 
-    total, questionnaires = query_questionnaires_for_link(
-        request, configuration, q)
+    def get_paginate_by(self, queryset):
+        return 11
 
-    link_template = '{}/questionnaire/partial/link.html'.format(
-        configuration_code)
-    link_route = '{}:questionnaire_details'.format(configuration_code)
-
-    link_data = configuration.get_list_data([d.data for d in questionnaires])
-    data = []
-    for i, d in enumerate(questionnaires):
-        display = render_to_string(link_template, {
-            'link_data': link_data[i],
-            'link_route': link_route,
-            'questionnaire_identifier': d.code,
-        })
-
-        name = configuration.get_questionnaire_name(d.data)
-        try:
-            original_lang = d.questionnairetranslation_set.first().language
-        except AttributeError:
-            original_lang = None
-
-        data.append({
-            'name': name.get(get_language(), name.get(original_lang, '')),
-            'id': d.id,
-            'value': d.id,
-            'code': d.code,
-            'display': display,
-        })
-
-    ret = {
-        'total': total,
-        'data': data,
-    }
-    return JsonResponse(ret)
+    def get_queryset(self):
+        term = self.request.GET.get('term', '')
+        return Questionnaire.with_status.not_deleted().filter(
+            get_query_status_filter(self.request)
+        ).filter(
+            configurations__code=self.configuration_code
+        ).filter(
+            Q(data__qs_name=term)
+        ).distinct()
 
 
 def generic_questionnaire_view_step(

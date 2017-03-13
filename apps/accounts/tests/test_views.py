@@ -377,6 +377,6 @@ class QuestionnaireSearchViewTest(TestCase):
         mock_get_queryset.return_value = [MagicMock()]
         json = list(self.view.get_json_data())
         self.assertListEqual(
-            ['name', 'url', 'compilers', 'country', 'status'],
+            ['name', 'url', 'compilers', 'country', 'status', 'id'],
             list(json[0].keys())
         )

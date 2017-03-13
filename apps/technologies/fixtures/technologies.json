@@ -28246,7 +28246,10 @@
                             }
                           },
                           {
-                            "keyword": "tech_input_exchange_rate"
+                            "keyword": "tech_input_exchange_rate",
+                            "form_options": {
+                              "template": "default_no_label_suffix"
+                            }
                           },
                           {
                             "keyword": "tech_input_average_wage",
@@ -28341,8 +28344,8 @@
                       {
                         "keyword": "tech_qg_36",
                         "form_options": {
-                          "min_num": 2,
-                          "max_num": 2
+                          "min_num": 4,
+                          "max_num": 4
                         },
                         "questions": [
                           {
@@ -28368,8 +28371,8 @@
                       {
                         "keyword": "tech_qg_37",
                         "form_options": {
-                          "min_num": 4,
-                          "max_num": 4
+                          "min_num": 8,
+                          "max_num": 8
                         },
                         "questions": [
                           {
@@ -28395,8 +28398,8 @@
                       {
                         "keyword": "tech_qg_38",
                         "form_options": {
-                          "min_num": 4,
-                          "max_num": 4
+                          "min_num": 8,
+                          "max_num": 8
                         },
                         "questions": [
                           {
@@ -28422,8 +28425,8 @@
                       {
                         "keyword": "tech_qg_218",
                         "form_options": {
-                          "min_num": 4,
-                          "max_num": 4
+                          "min_num": 8,
+                          "max_num": 8
                         },
                         "questions": [
                           {
@@ -28449,8 +28452,8 @@
                       {
                         "keyword": "tech_qg_39",
                         "form_options": {
-                          "min_num": 4,
-                          "max_num": 4
+                          "min_num": 8,
+                          "max_num": 8
                         },
                         "questions": [
                           {
@@ -28476,8 +28479,8 @@
                       {
                         "keyword": "tech_qg_40",
                         "form_options": {
-                          "min_num": 3,
-                          "max_num": 3
+                          "min_num": 6,
+                          "max_num": 6
                         },
                         "questions": [
                           {
@@ -28604,8 +28607,8 @@
                       {
                         "keyword": "tech_qg_45",
                         "form_options": {
-                          "min_num": 2,
-                          "max_num": 2
+                          "min_num": 4,
+                          "max_num": 4
                         },
                         "questions": [
                           {
@@ -28631,8 +28634,8 @@
                       {
                         "keyword": "tech_qg_46",
                         "form_options": {
-                          "min_num": 4,
-                          "max_num": 4
+                          "min_num": 8,
+                          "max_num": 8
                         },
                         "questions": [
                           {
@@ -28658,8 +28661,8 @@
                       {
                         "keyword": "tech_qg_47",
                         "form_options": {
-                          "min_num": 4,
-                          "max_num": 4
+                          "min_num": 8,
+                          "max_num": 8
                         },
                         "questions": [
                           {
@@ -28685,8 +28688,8 @@
                       {
                         "keyword": "tech_qg_219",
                         "form_options": {
-                          "min_num": 4,
-                          "max_num": 4
+                          "min_num": 8,
+                          "max_num": 8
                         },
                         "questions": [
                           {
@@ -28712,8 +28715,8 @@
                       {
                         "keyword": "tech_qg_48",
                         "form_options": {
-                          "min_num": 4,
-                          "max_num": 4
+                          "min_num": 8,
+                          "max_num": 8
                         },
                         "questions": [
                           {
@@ -28739,8 +28742,8 @@
                       {
                         "keyword": "tech_qg_49",
                         "form_options": {
-                          "min_num": 3,
-                          "max_num": 3
+                          "min_num": 6,
+                          "max_num": 6
                         },
                         "questions": [
                           {

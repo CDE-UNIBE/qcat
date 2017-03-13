@@ -107,3 +107,16 @@ class BaseTemplateTest(FunctionalTest):
     def remove_maintenance_file():
         if os.path.isfile('envs/TEST_NEXT_MAINTENANCE'):
             os.remove('envs/TEST_NEXT_MAINTENANCE')
+
+    def test_factsheet(self, mock_questionnaire_list):
+        # jay opens the start page
+        self.browser.get(self.live_server_url)
+
+        # the home-keynumbers-list is shown after a while, and shows 7
+        # entries.
+        self.wait_for('class_name', 'home-keynumbers-list')
+        keynumbers_list = self.findBy('class_name', 'home-keynumbers-list')
+        self.assertEqual(
+            len(keynumbers_list.find_elements_by_tag_name('li')),
+            7
+        )

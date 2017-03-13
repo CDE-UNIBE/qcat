@@ -54,6 +54,13 @@
               "es": "Esto es la clave 1"
             }
           }
+        ],
+        "qg_name": [
+          {
+            "name": {
+              "en": "This is the first key."
+            }
+          }
         ]
       },
       "status": 4,
@@ -105,6 +112,13 @@
               "en": "Foo"
             }
           }
+        ],
+        "qg_name": [
+          {
+            "name": {
+              "en": "Foo"
+            }
+          }
         ]
       },
       "status": 4,
@@ -133,6 +147,13 @@
             "mkey_01": {
               "en": "This is key 1a",
               "es": "Esto es clave 1a"
+            }
+          }
+        ],
+        "qg_name": [
+          {
+            "name": {
+              "en": "This is key 1a"
             }
           }
         ]
@@ -170,6 +191,13 @@
         "mqg_01": [
           {
             "mkey_01": {
+              "en": "This is key 1b"
+            }
+          }
+        ],
+        "qg_name": [
+          {
+            "name": {
               "en": "This is key 1b"
             }
           }

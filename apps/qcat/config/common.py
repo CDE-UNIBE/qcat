@@ -152,7 +152,7 @@ class BaseSettings(Configuration):
     THUMBNAIL_ALIASES = {
         'summary': {
             'header_image': {
-                'size': (2512, 800),
+                'size': (0, 920),
                 'crop': 'smart',
                 'upscale': True
             },
@@ -301,6 +301,9 @@ class BaseSettings(Configuration):
         environ_prefix='', default=False
     )
     IS_ACTIVE_FEATURE_WATERSHED = values.BooleanValue(
+        environ_prefix='', default=False
+    )
+    IS_ACTIVE_FEATURE_FACTSHEET = values.BooleanValue(
         environ_prefix='', default=False
     )
 
