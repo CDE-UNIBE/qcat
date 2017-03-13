@@ -310,8 +310,8 @@ class LogTest(TestCase):
         self.assertFalse(self.status_log.is_content_update)
 
     @patch('notifications.models.render_to_string')
-    def test_get_linked_subject(self, render_to_string):
-        self.status_log.get_linked_subject(self.catalyst)
+    def test_get_html(self, render_to_string):
+        self.status_log.get_html(self.catalyst)
         render_to_string.assert_called_with(
             template_name='notifications/subject/{}.html'.format(
                 settings.NOTIFICATIONS_CHANGE_STATUS

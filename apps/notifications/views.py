@@ -73,7 +73,7 @@ class LogListView(LoginRequiredMixin, ListView):
                 'id': log.id,
                 'created': log.created,
                 'subject': log.subject,
-                'text': log.get_linked_subject(user=self.request.user),
+                'text': log.get_html(user=self.request.user),
                 'action_icon': log.action_icon(),
                 'is_read': is_read,
                 'is_todo': is_todo,

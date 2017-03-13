@@ -335,9 +335,9 @@ class Log(models.Model):
     def is_content_update(self) -> bool:
         return self.action is settings.NOTIFICATIONS_EDIT_CONTENT
 
-    def get_linked_subject(self, user: User) -> str:
+    def get_html(self, user: User) -> str:
         """
-        The subject with links to questionnaire and catalyst, according to the
+        The text with links to questionnaire and catalyst, according to the
         type of the action. Use the integer as template name, as this value is
         fixed (opposed to the verbose name).
         """
@@ -375,21 +375,20 @@ class Log(models.Model):
                 log.save(update_fields=['was_sent'])
 
     def compile_message_to(self, recipient):
-        html_body = self.get_linked_subject(recipient)
         message = EmailMultiAlternatives(
             subject='QCAT: {}'.format(self.subject),
-            body=strip_tags(html_body),
+            body='',
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[recipient.email]
         )
-        message.attach_alternative(html_body, 'text/html')
+        message.attach_alternative(
+            self.get_html(recipient), 'text/html'
+        )
         logger.info(
             '{date}: sent mail to user {user} for log {log}'.format(
                 date=now(), user=recipient.id, log=self.id
             ))
         return message
-
-
 
 
 class StatusUpdate(models.Model):
