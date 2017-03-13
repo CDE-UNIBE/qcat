@@ -30244,7 +30244,7 @@
                                 "form_options": {
                                   "template": "checkbox_toggle_other",
                                   "min_num": 1,
-                                  "max_num": 3
+                                  "max_num": 10
                                 },
                                 "view_options": {
                                   "template": "impacts_other"
@@ -30603,7 +30603,7 @@
                                 "form_options": {
                                   "template": "checkbox_toggle_other",
                                   "min_num": 1,
-                                  "max_num": 3
+                                  "max_num": 10
                                 },
                                 "view_options": {
                                   "template": "impacts_other"
@@ -31705,7 +31705,7 @@
                                 "form_options": {
                                   "template": "checkbox_toggle_other",
                                   "min_num": 1,
-                                  "max_num": 3
+                                  "max_num": 10
                                 },
                                 "view_options": {
                                   "template": "impacts_other"
@@ -32051,7 +32051,7 @@
                         "form_options": {
                           "template": "checkbox_toggle_other",
                           "min_num": 1,
-                          "max_num": 3
+                          "max_num": 10
                         },
                         "view_options": {
                           "template": "impacts_other"

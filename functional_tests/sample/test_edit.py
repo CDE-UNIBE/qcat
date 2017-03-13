@@ -409,8 +409,6 @@ class EditTest(FunctionalTest):
         self.toggle_all_sections()
         self.checkOnPage('asdf')
 
-    from nose.plugins.attrib import attr
-    @attr('foobar')
     def test_edit_questionnaire(self, mock_get_user_id):
 
         user = create_new_user(id=6, email='mod@bar.com')

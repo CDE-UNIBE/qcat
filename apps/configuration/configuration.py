@@ -1717,6 +1717,10 @@ class QuestionnaireSubcategory(BaseConfigurationObject):
             media_data = self.parent_object.parent_object.parent_object.get_image_data(data)
             media_content = media_data.get('content', [])
             media_additional = media_data.get('additional', {})
+            if media_content:
+                # If there is at least one image (even though it might be the
+                # header image), that's enough to show the current subcategory.
+                has_content = True
             template_values.update({
                 'media_content': media_content,
                 'media_additional': media_additional,

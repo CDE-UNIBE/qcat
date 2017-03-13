@@ -293,10 +293,15 @@ class QuestionnaireSearchView(LoginRequiredMixin, ListView):
 
     def get_queryset(self):
         term = self.request.GET.get('term', '')
+        data_lookup_params = {
+            'questiongroup': 'qg_name',
+            'lookup_by': 'string',
+            'value': term,
+        }
         return Questionnaire.with_status.not_deleted().filter(
             Q(questionnairemembership__user__firstname__icontains=term) |
             Q(questionnairemembership__user__lastname__icontains=term) |
-            Q(data__qs_name=term)
+            Q(data__qs_data=data_lookup_params),
         ).distinct()
 
     def get_json_data(self):

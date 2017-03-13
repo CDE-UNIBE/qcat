@@ -89,12 +89,17 @@ class QuestionnaireLinkSearchView(QuestionnaireSearchView, LoginRequiredMixin):
 
     def get_queryset(self):
         term = self.request.GET.get('term', '')
+        data_lookup_params = {
+            'questiongroup': 'qg_name',
+            'lookup_by': 'string',
+            'value': term,
+        }
         return Questionnaire.with_status.not_deleted().filter(
             get_query_status_filter(self.request)
         ).filter(
             configurations__code=self.configuration_code
         ).filter(
-            Q(data__qs_name=term)
+            Q(data__qs_data=data_lookup_params),
         ).distinct()
 
 

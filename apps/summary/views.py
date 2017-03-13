@@ -83,9 +83,10 @@ class SummaryPDFCreateView(PDFTemplateView):
         The filename is specific enough to be used as 'pseudo cache-key' in the
         CachedPDFTemplateResponse.
         """
-        return 'wocat-{identifier}-{summary_type}-summary-{update}.pdf'.format(
+        return 'wocat-{identifier}-{language}-{summary_type}-summary-{update}.pdf'.format(
             summary_type=self.summary_type,
             identifier=self.questionnaire.id,
+            language=get_language(),
             update=self.questionnaire.updated.strftime('%Y-%m-%d-%H:%m')
         )
 

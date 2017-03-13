@@ -203,6 +203,8 @@ def _access_project():
     Call the homepage of the project for given branch if an url is set. This is a cheap way to fill the lru cache.
     """
     if hasattr(env, 'url'):
+        # wait for uwsgi-restart after touch.
+        time.sleep(10)
         for lang in settings.LANGUAGES:
             url = urllib.request.urlopen(env.url.format(lang[0]))
             with contextlib.closing(url) as request:
