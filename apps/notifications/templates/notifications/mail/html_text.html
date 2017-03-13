@@ -1,0 +1,45 @@
+{% load i18n %}
+<!DOCTYPE html>
+<html style="font-weight: 300">
+<head style="font-weight: 300">
+  <meta http-equiv="Content-Type" content="text/html; charset=utf-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1" style="font-weight: 300">
+  <style type="text/css" style="font-weight: 300">
+    @import url(https://fonts.googleapis.com/css?family=Open+Sans:300,400,600);
+  </style>
+</head>
+<body class="" style="font-size: 16px; color: #2f2936; background: #f5f4ef; padding: 0; font-family: &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, helvetica, sans-serif; -webkit-font-smoothing: antialiased; width: 100%; font-weight: 300; margin: 0;">
+<table class="" style="border-radius: 4px; font-size: 16px; color: #2f2936; max-width: 700px; font-family: &quot;Lato&quot;, &quot;Helvetica Neue&quot;, helvetica, sans-serif; padding: 0; -webkit-font-smoothing: antialiased; width: 100%; font-weight: 300; margin: 15px auto; background-color: #fff;">
+  <tr>
+    <td style="margin-bottom: 10px;">
+      <h1 style="font-size: 26px; font-weight: 600; color: #dc7d35;">{{ title }}</h1>
+    </td>
+  </tr>
+  <tr>
+    <td>{% trans "Dear" %} {{ name }}</td>
+  </tr>
+  <tr style="font-weight: 300;">
+    <td>{{ content }}</td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr style="font-weight: 300;">
+    <td><a href="{{ questionnaire_url }}">{% trans "See questionnaire in full" %}</a></td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr><td>{% trans "This is an automated message, please don't reply. If you have any questions, please contact the WOCAT secretariat." %}</td></tr>
+  <tr style="font-weight: 300; color: #98a0a4; border-top: 1px solid #98a0a4;">
+    <td style="border-top: 1px solid #98a0a4;">{% trans "You're getting this message because your account on qcat.wocat.net is linked to this address." %}</td>
+  </tr>
+  <tr style="font-weight: 300; color: #98a0a4;">
+    <td><a href="{{ subscription_url }}">{% trans "Change subscription settings" %}</a></td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr>
+    <td style="background-color: #5f594f;">
+      <a href="https://qcat.wocat.net" style="color: #fff; text-decoration: none;">
+        <img src="http://localhost:8000/static/assets/img/wocat_logo.svg">
+        {% trans "WOCAT SLM Database" %}
+      </a>
+    </td>
+  </tr>
+</table>

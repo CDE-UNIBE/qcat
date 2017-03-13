@@ -357,7 +357,7 @@ class Log(models.Model):
             key = self.action
         return settings.NOTIFICATIONS_ACTION_ICON.get(key)
 
-    def send_mails(self):
+    def send_mails(self) -> None:
         """
         Send mails to all recipients, but not compiler and mark log as sent.
         The log is fetched from the db again, as select_for_update must be in
@@ -369,26 +369,45 @@ class Log(models.Model):
             if not log.was_sent:
                 for recipient in self.subscribers.all():
                     if recipient.mailpreferences.do_send_mail(self):
+                        # activate language
                         message = self.compile_message_to(recipient=recipient)
                         message.send()
                 log.was_sent = True
                 log.save(update_fields=['was_sent'])
 
-    def compile_message_to(self, recipient):
+    def compile_message_to(self, recipient: User) -> EmailMultiAlternatives:
         message = EmailMultiAlternatives(
-            subject='QCAT: {}'.format(self.subject),
-            body='',
+            subject='[WOCAT] {}'.format(self.subject),
+            body=self.get_rendered_template('plain_text.txt', recipient=recipient),
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[recipient.email]
         )
         message.attach_alternative(
-            self.get_html(recipient), 'text/html'
+            content=self.get_rendered_template('html_text.html', recipient=recipient),
+            mimetype='text/html'
         )
         logger.info(
             '{date}: sent mail to user {user} for log {log}'.format(
                 date=now(), user=recipient.id, log=self.id
             ))
         return message
+
+    def get_rendered_template(self, template_name: str, recipient: User) -> str:
+        return render_to_string(
+            'notifications/mail/{}'.format(template_name),
+            context=self.get_mail_context(recipient)
+        )
+
+    def get_mail_context(self, recipient: User) -> dict:
+        return {
+            'title': '«{questionnaire}» was updated'.format(
+                questionnaire=self.questionnaire.get_name()
+            ),
+            'name': recipient.get_display_name(),
+            'content': self.get_html(recipient),
+            'subscription_url': recipient.mailpreferences.get_signed_url(),
+            'questionnaire_url': self.questionnaire.get_absolute_url()
+        }
 
 
 class StatusUpdate(models.Model):
