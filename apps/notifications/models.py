@@ -2,23 +2,20 @@ import contextlib
 import functools
 import logging
 import operator
-from django.core import signing
 
+from django.core import signing
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse, reverse_lazy
-from django.db import models
-from django.db import transaction
+from django.db import models, transaction
 from django.db.models import F, Q
 from django.template.loader import render_to_string
-from django.utils.html import strip_tags
 from django.utils.timezone import now
-from django.utils.translation import ugettext_lazy as _
+from django.utils.translation import ugettext_lazy as _, get_language, activate
 from django.utils.functional import cached_property
 
 from django_pgjson.fields import JsonBField
 from accounts.models import User
-from questionnaire.models import Questionnaire, STATUSES, \
-    QuestionnaireMembership
+from questionnaire.models import Questionnaire, QuestionnaireMembership, STATUSES
 
 from .conf import settings
 from .validators import clean_wanted_actions
@@ -367,13 +364,15 @@ class Log(models.Model):
         with transaction.atomic():
             log = Log.objects.select_for_update(nowait=True).get(id=self.id)
             if not log.was_sent:
+                original_locale = get_language()
                 for recipient in self.subscribers.all():
                     if recipient.mailpreferences.do_send_mail(self):
-                        # activate language
+                        activate(recipient.mailpreferences.language)
                         message = self.compile_message_to(recipient=recipient)
                         message.send()
                 log.was_sent = True
                 log.save(update_fields=['was_sent'])
+                activate(original_locale)
 
     def compile_message_to(self, recipient: User) -> EmailMultiAlternatives:
         message = EmailMultiAlternatives(
