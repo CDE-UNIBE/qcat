@@ -7,6 +7,7 @@ from django.core import signing
 from django.core.mail import EmailMultiAlternatives
 from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import models
+from django.db import transaction
 from django.db.models import F, Q
 from django.template.loader import render_to_string
 from django.utils.html import strip_tags
@@ -359,23 +360,36 @@ class Log(models.Model):
     def send_mails(self):
         """
         Send mails to all recipients, but not compiler and mark log as sent.
+        The log is fetched from the db again, as select_for_update must be in
+        the same method where the sending of the mail happens to prevent double
+        execution.
         """
-        for recipient in self.subscribers.all():
-            if recipient.mailpreferences.do_send_mail(self):
-                html_body = self.get_linked_subject(recipient)
-                message = EmailMultiAlternatives(
-                    subject='QCAT: {}'.format(self.subject),
-                    body=strip_tags(html_body),
-                    from_email=settings.DEFAULT_FROM_EMAIL,
-                    to=[recipient.email]
-                )
-                message.attach_alternative(html_body, 'text/html')
-                logger.info(
-                    '{date}: sent mail to user {user} for log {log}'.format(
-                        date=now(), user=recipient.id, log=self.id
-                    ))
+        with transaction.atomic():
+            log = Log.objects.select_for_update(nowait=True).get(id=self.id)
+            if not log.was_sent:
+                for recipient in self.subscribers.all():
+                    if recipient.mailpreferences.do_send_mail(self):
+                        message = self.compile_message_to(recipient=recipient)
+                        message.send()
+                log.was_sent = True
+                log.save(update_fields=['was_sent'])
 
-                message.send()
+    def compile_message_to(self, recipient):
+        html_body = self.get_linked_subject(recipient)
+        message = EmailMultiAlternatives(
+            subject='QCAT: {}'.format(self.subject),
+            body=strip_tags(html_body),
+            from_email=settings.DEFAULT_FROM_EMAIL,
+            to=[recipient.email]
+        )
+        message.attach_alternative(html_body, 'text/html')
+        logger.info(
+            '{date}: sent mail to user {user} for log {log}'.format(
+                date=now(), user=recipient.id, log=self.id
+            ))
+        return message
+
+
 
 
 class StatusUpdate(models.Model):
