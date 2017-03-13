@@ -81,4 +81,4 @@ class NotificationsConf(AppConf):
 
     TEASER_PAGINATE_BY = 5
     LIST_PAGINATE_BY = 10
-    SALT = 'faceroolll'
+    SALT = settings.BASE_DIR
