@@ -362,6 +362,7 @@ class Log(models.Model):
         execution.
         """
         with transaction.atomic():
+            self.refresh_from_db()
             log = Log.objects.select_for_update(nowait=True).get(id=self.id)
             if not log.was_sent:
                 original_locale = get_language()
@@ -370,6 +371,7 @@ class Log(models.Model):
                         activate(recipient.mailpreferences.language)
                         message = self.compile_message_to(recipient=recipient)
                         message.send()
+
                 log.was_sent = True
                 log.save(update_fields=['was_sent'])
                 activate(original_locale)
@@ -385,10 +387,6 @@ class Log(models.Model):
             content=self.get_rendered_template('html_text.html', recipient=recipient),
             mimetype='text/html'
         )
-        logger.info(
-            '{date}: sent mail to user {user} for log {log}'.format(
-                date=now(), user=recipient.id, log=self.id
-            ))
         return message
 
     def get_rendered_template(self, template_name: str, recipient: User) -> str:

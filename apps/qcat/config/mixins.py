@@ -75,6 +75,11 @@ class LogMixin:
                     'propagate': True,
                     'level': 'WARNING',
                 },
+                'notifications': {
+                    'handlers': ['file'],
+                    'propagate': True,
+                    'level': 'INFO'
+                }
             },
         }
 
