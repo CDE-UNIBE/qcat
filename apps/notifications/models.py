@@ -362,14 +362,14 @@ class Log(models.Model):
         execution.
         """
         with transaction.atomic():
-            self.refresh_from_db()
             log = Log.objects.select_for_update(nowait=True).get(id=self.id)
             if not log.was_sent:
                 original_locale = get_language()
-                for recipient in self.subscribers.all():
-                    if recipient.mailpreferences.do_send_mail(self):
+                # also collect 'reviewers'
+                for recipient in log.subscribers.all():
+                    if recipient.mailpreferences.do_send_mail(log):
                         activate(recipient.mailpreferences.language)
-                        message = self.compile_message_to(recipient=recipient)
+                        message = log.compile_message_to(recipient=recipient)
                         message.send()
 
                 log.was_sent = True
@@ -511,12 +511,11 @@ class MailPreferences(models.Model):
         return subscription, wanted_actions
 
     def do_send_mail(self, log: Log) -> bool:
-        return True
-        # return all([
-        #     self.is_allowed_send_mails,
-        #     self.is_wanted_action(log.action),
-        #     self.is_todo_log(log)
-        # ])
+        return all([
+            self.is_allowed_send_mails,
+            self.is_wanted_action(log.action),
+            self.is_todo_log(log)
+        ])
 
     def set_defaults(self):
         self.subscription, self.wanted_actions = self.get_defaults()
@@ -528,9 +527,14 @@ class MailPreferences(models.Model):
                self.subscription != settings.NOTIFICATIONS_NO_MAILS
 
     def is_wanted_action(self, action: int) -> bool:
-        return str(action) in self.wanted_actions
+        return str(action) in self.wanted_actions.split(',')
 
-    def is_todo_log(self, log):
+    def is_todo_log(self, log: Log):
+        """
+        Implemented like this to make sure to reuse code. Could be better
+        performance-wise, but doesn't really matter as long as mails are sent
+        within a management command.
+        """
         return self.subscription == settings.NOTIFICATIONS_TODO_MAILS and \
                log in Log.actions.user_pending_list(user=self.user)
 

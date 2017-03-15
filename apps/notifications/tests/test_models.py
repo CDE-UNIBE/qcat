@@ -318,3 +318,49 @@ class LogTest(TestCase):
             ),
             context={'log': self.status_log, 'user': self.catalyst}
         )
+
+
+class ReadLogTest(TestCase):
+    pass
+
+
+class MailPreferencesTest(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+        self.obj = self.user.mailpreferences
+
+    def test_get_defaults_staff(self):
+        given = MagicMock(spec=self.model_class)
+        pass
+
+    def test_get_defaults(self):
+        pass
+
+    def test_not_allowed_send_mails_settings(self):
+        with override_settings(DO_SEND_EMAILS=False):
+            self.assertFalse(self.obj.is_allowed_send_mails)
+
+    def test_is_allowed_send_mails_settings(self):
+        self.obj.subscription = settings.NOTIFICATIONS_ALL_MAILS
+        with override_settings(DO_SEND_EMAILS=True):
+            self.assertTrue(self.obj.is_allowed_send_mails)
+
+    def test_not_allowed_send_mails_subscription(self):
+        self.obj.subscription = settings.NOTIFICATIONS_NO_MAILS
+        with override_settings(DO_SEND_EMAILS=True):
+            self.assertFalse(self.obj.is_allowed_send_mails)
+
+    def test_is_wanted_action(self):
+        self.obj.wanted_actions = 'coffee,chocolate'
+        self.assertTrue(self.obj.is_wanted_action('coffee'))
+        self.assertFalse(self.obj.is_wanted_action('bread'))
+
+    def test_is_todo_log(self):
+        pass
+
+    def test_do_send_mail(self):
+        pass
+
+    def get_signed_url(self):
+        pass

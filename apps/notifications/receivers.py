@@ -59,12 +59,14 @@ def change_questionnaire_data(sender: int, questionnaire: Questionnaire, user: U
 
 @receiver(signal=post_save, sender=get_user_model())
 def create_notification_preferences(sender, instance, created, **kwargs):
-    if created:
+    if created and not hasattr(instance, 'mailpreferences'):
         MailPreferences(user=instance).set_defaults()
 
 
 @receiver(signal=user_logged_in)
 def update_language(sender, request, user, **kwargs):
+    if not hasattr(user, 'mailpreferences'):
+        MailPreferences(user=user).set_defaults()
     if not user.mailpreferences.has_changed_language:
         user.mailpreferences.language = request.LANGUAGE_CODE
         user.mailpreferences.save()
