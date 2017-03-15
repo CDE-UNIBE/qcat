@@ -323,9 +323,10 @@ class LogSubscriptionPreferencesMixin(UpdateView):
     model = MailPreferences
     form_class = MailPreferencesUpdateForm
     template_name = 'notifications/preferences.html'
+    success_url = reverse_lazy('notification_preferences')
 
     def get_object(self, queryset=None):
-        raise NotImplementedError
+        return get_object_or_404(self.model, user=self.request.user)
 
     def get_initial(self):
         initial = super().get_initial()
@@ -350,21 +351,25 @@ class LogSubscriptionPreferencesView(LoginRequiredMixin, LogSubscriptionPreferen
     """
     Get object from authenticated user.
     """
-    success_url = reverse_lazy('notification_preferences')
-
-    def get_object(self, queryset=None):
-        return get_object_or_404(self.model, user=self.request.user)
+    pass
 
 
 class SignedLogSubscriptionPreferencesView(LogSubscriptionPreferencesMixin):
     """
-    Get object from signed url
+    Get object from signed url. If an authenticated user is available, this
+    overrides the object from the url.
     """
 
     def get_success_url(self):
+        if self.request.user.is_authenticated():
+            return self.success_url
         return self.object.get_signed_url()
 
     def get_object(self, queryset=None):
+        if self.request.user.is_authenticated():
+            # maybe: show message on varying objects? seems to be an edge case.
+            return super().get_object(queryset=None)
+
         try:
             signed_id = signing.Signer(
                 salt=settings.NOTIFICATIONS_SALT
