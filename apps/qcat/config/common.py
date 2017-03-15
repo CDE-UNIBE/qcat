@@ -336,7 +336,8 @@ class BaseSettings(Configuration):
     GOOGLE_MAPS_JAVASCRIPT_API_KEY = values.Value(environ_prefix='')
 
     # Global switch to prevent sending mails.
-    DO_SEND_EMAILS = values.BooleanValue(default=False)
+    DO_SEND_EMAILS = values.BooleanValue(environ_prefix='', default=False)
+    MAILS_ONLY_TO_DOMAINS = values.ListValue(environ_prefix='', default='*')
 
     WOCAT_IMPORT_DATABASE_URL = values.Value(environ_prefix='')
 

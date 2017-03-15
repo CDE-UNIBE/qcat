@@ -23,6 +23,14 @@ class QuestionnaireConf(AppConf):
     RESOURCEPERSON = 'resourceperson'
     FLAGGER = 'flagger'
 
+    # Mapping of authorized roles to advance questionnaire to next step.
+    PUBLICATION_ROLES = {
+        DRAFT: COMPILER,
+        SUBMITTED: REVIEWER,
+        REVIEWED: PUBLISHER
+    }
+    WORKFLOW_STEPS = [SUBMITTED, REVIEWED]
+
     FLAG_UNCCD = 'unccd_bp'
 
     METADATA_KEYS = [

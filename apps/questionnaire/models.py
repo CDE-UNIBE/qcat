@@ -686,7 +686,6 @@ class Questionnaire(models.Model):
         filename = '{}_{}.jpg'.format(self.uuid, self.version)
         image.save(os.path.join(map_folder, filename))
 
-
     def add_flag(self, flag):
         """
         Add a Flag object to the questionnaire. Add it only once.
@@ -748,6 +747,22 @@ class Questionnaire(models.Model):
             if user_role == role:
                 users.append(user)
         return users
+
+    def get_users_for_next_publish_step(self):
+        if self.status in settings.QUESTIONNAIRE_WORKFLOW_STEPS:
+            role = settings.QUESTIONNAIRE_PUBLICATION_ROLES[self.status]
+            return getattr(self, 'get_{role}s'.format(role=role))
+        return []
+
+    def get_reviewers(self):
+        return get_user_model().objects.filter(
+            groups__permissions__codename='review_questionnaire'
+        )
+
+    def get_publishers(self):
+        return get_user_model().objects.filter(
+            groups__permissions__codename='publish_questionnaire'
+        )
 
     def add_user(self, user, role):
         """

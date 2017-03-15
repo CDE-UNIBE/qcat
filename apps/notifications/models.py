@@ -1,5 +1,6 @@
 import contextlib
 import functools
+import itertools
 import logging
 import operator
 
@@ -9,7 +10,6 @@ from django.core.urlresolvers import reverse, reverse_lazy
 from django.db import models, transaction
 from django.db.models import F, Q
 from django.template.loader import render_to_string
-from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _, get_language, activate
 from django.utils.functional import cached_property
 
@@ -97,7 +97,7 @@ class ActionContextQuerySet(models.QuerySet):
         - if a questionnaire was rejected once, two logs for the same status
           exist. Return only the more current log
 
-        Only distinct questionnaires are epxected. However, this doesnt play
+        Only distinct questionnaires are expected. However, this doesnt play
         nice with order_by.
 
         """
@@ -365,8 +365,7 @@ class Log(models.Model):
             log = Log.objects.select_for_update(nowait=True).get(id=self.id)
             if not log.was_sent:
                 original_locale = get_language()
-                # also collect 'reviewers'
-                for recipient in log.subscribers.all():
+                for recipient in log.recipients:
                     if recipient.mailpreferences.do_send_mail(log):
                         activate(recipient.mailpreferences.language)
                         message = log.compile_message_to(recipient=recipient)
@@ -375,6 +374,18 @@ class Log(models.Model):
                 log.was_sent = True
                 log.save(update_fields=['was_sent'])
                 activate(original_locale)
+
+    @cached_property
+    def recipients(self):
+        return set(itertools.chain(
+            self.subscribers.all(), self.questionnaire.get_reviewers()
+        ))
+
+    def get_reviewers(self):
+        is_change_log = self.action is settings.NOTIFICATIONS_CHANGE_STATUS
+        has_no_update = self.questionnaire.status == self.statusupdate.status
+        if is_change_log and has_no_update:
+            return self.questionnaire.get_users_for_next_publish_step()
 
     def compile_message_to(self, recipient: User) -> EmailMultiAlternatives:
         message = EmailMultiAlternatives(
