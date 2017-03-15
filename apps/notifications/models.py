@@ -340,7 +340,7 @@ class Log(models.Model):
         """
         return render_to_string(
             template_name='notifications/subject/{}.html'.format(self.action),
-            context={'log': self, 'user': user}
+            context={'log': self, 'user': user, 'base_url': settings.BASE_URL}
         )
 
     def action_icon(self) -> str:
@@ -413,8 +413,14 @@ class Log(models.Model):
             ),
             'name': recipient.get_display_name(),
             'content': self.get_html(recipient),
-            'subscription_url': recipient.mailpreferences.get_signed_url(),
-            'questionnaire_url': self.questionnaire.get_absolute_url()
+            'subscription_url': '{base_url}{url}'.format(
+                base_url=settings.BASE_URL,
+                url=recipient.mailpreferences.get_signed_url()
+            ),
+            'questionnaire_url': '{base_url}{url}'.format(
+                base_url=settings.BASE_URL,
+                url=self.questionnaire.get_absolute_url()
+            )
         }
 
 

@@ -115,6 +115,7 @@ class BaseSettings(Configuration):
     USE_I18N = True
     USE_L10N = True
     USE_TZ = True
+    BASE_URL = values.Value(environ_prefix='', default='https://qcat.wocat.net')
 
     # Static files (CSS, JavaScript, Images)
     # https://docs.djangoproject.com/en/dev/howto/static-files/
@@ -169,8 +170,6 @@ class BaseSettings(Configuration):
             }
         }
     }
-
-    DEFAULT_FROM_EMAIL = 'info@wocat.net'
 
     SUMMARY_PDF_PATH = join(MEDIA_ROOT, 'summary-pdf')
 
@@ -335,9 +334,10 @@ class BaseSettings(Configuration):
     # Google Maps Javascript API key
     GOOGLE_MAPS_JAVASCRIPT_API_KEY = values.Value(environ_prefix='')
 
-    # Global switch to prevent sending mails.
+    # Mail settings (notification mails)
+    DEFAULT_FROM_EMAIL = 'info@wocat.net'
     DO_SEND_EMAILS = values.BooleanValue(environ_prefix='', default=False)
-    MAILS_ONLY_TO_DOMAINS = values.ListValue(environ_prefix='', default='*')
+    MAILS_RESTRICT_DOMAINS = values.ListValue(environ_prefix='', default='*')
 
     WOCAT_IMPORT_DATABASE_URL = values.Value(environ_prefix='')
 

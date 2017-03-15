@@ -5,7 +5,7 @@
 {% load i18n %}
 
 {% spaceless %}
-  <a href="{{ log.questionnaire.get_absolute_url }}" class="link">{{ log.questionnaire.code }}</a>
-  {% trans "was detached of" %} <a href="{% url 'user_details' log.memberupdate.affected.id %}" class="link">{{ log.memberupdate.affected.get_display_name }}</a>
-  ({% trans "role:" %} "{{ log.memberupdate.role }}"; {% trans "removed by"  %} <a href="{% url 'user_details' log.catalyst_id %}" class="link">{{ log.catalyst.get_display_name }}</a>).
+  <a href="{{ base_url }}{{ log.questionnaire.get_absolute_url }}" class="link">{{ log.questionnaire.code }}</a>
+  {% trans "was detached of" %} <a href="{{ base_url }}{% url 'user_details' log.memberupdate.affected.id %}" class="link">{{ log.memberupdate.affected.get_display_name }}</a>
+  ({% trans "role:" %} "{{ log.memberupdate.role }}"; {% trans "removed by"  %} <a href="{{ base_url }}{% url 'user_details' log.catalyst_id %}" class="link">{{ log.catalyst.get_display_name }}</a>).
 {% endspaceless %}
