@@ -222,8 +222,6 @@ class UserTest(FunctionalTest):
         #     'xpath', '//p[@class="questionnaire-list-empty" and contains('
         #     'text(), "No WOCAT and UNCCD SLM practices found.")]')
 
-    from nose.plugins.attrib import attr
-    @attr('foo')
     def test_questionnaire_search(self, mock_get_user_id):
         alice = mommy.make(
             get_user_model(),
