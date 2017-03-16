@@ -332,7 +332,7 @@ class Log(models.Model):
     def is_content_update(self) -> bool:
         return self.action is settings.NOTIFICATIONS_EDIT_CONTENT
 
-    def get_html(self, user: User) -> str:
+    def get_html(self, user: User, is_mail_context=False) -> str:
         """
         The text with links to questionnaire and catalyst, according to the
         type of the action. Use the integer as template name, as this value is
@@ -340,8 +340,12 @@ class Log(models.Model):
         """
         return render_to_string(
             template_name='notifications/subject/{}.html'.format(self.action),
-            context={'log': self, 'user': user, 'base_url': settings.BASE_URL}
-        )
+            context={
+                'log': self,
+                'user': user,
+                'base_url': settings.BASE_URL,
+                'is_mail_context': is_mail_context
+            })
 
     def action_icon(self) -> str:
         """
@@ -390,29 +394,29 @@ class Log(models.Model):
     def compile_message_to(self, recipient: User) -> EmailMultiAlternatives:
         message = EmailMultiAlternatives(
             subject='[WOCAT] {}'.format(self.subject),
-            body=self.get_rendered_template('plain_text.txt', recipient=recipient),
+            body=self.get_mail_template('plain_text.txt', recipient=recipient),
             from_email=settings.DEFAULT_FROM_EMAIL,
             to=[recipient.email]
         )
         message.attach_alternative(
-            content=self.get_rendered_template('html_text.html', recipient=recipient),
+            content=self.get_mail_template('html_text.html', recipient=recipient),
             mimetype='text/html'
         )
         return message
 
-    def get_rendered_template(self, template_name: str, recipient: User) -> str:
+    def get_mail_template(self, template_name: str, recipient: User) -> str:
         return render_to_string(
             'notifications/mail/{}'.format(template_name),
             context=self.get_mail_context(recipient)
         )
 
     def get_mail_context(self, recipient: User) -> dict:
-        return {
+        context = {
             'title': '«{questionnaire}» was updated'.format(
                 questionnaire=self.questionnaire.get_name()
             ),
             'name': recipient.get_display_name(),
-            'content': self.get_html(recipient),
+            'content': self.get_html(recipient, is_mail_context=True),
             'subscription_url': '{base_url}{url}'.format(
                 base_url=settings.BASE_URL,
                 url=recipient.mailpreferences.get_signed_url()
@@ -422,6 +426,16 @@ class Log(models.Model):
                 url=self.questionnaire.get_absolute_url()
             )
         }
+        if self.is_publish_notification:
+            context['content'] += render_to_string(
+                'notifications/mail/publish_addendum.html'
+            )
+        return context
+
+    @property
+    def is_publish_notification(self):
+        return self.action == settings.NOTIFICATIONS_CHANGE_STATUS and \
+               self.statusupdate.status == settings.QUESTIONNAIRE_PUBLIC
 
 
 class StatusUpdate(models.Model):
@@ -552,7 +566,7 @@ class MailPreferences(models.Model):
         performance-wise, but doesn't really matter as long as mails are sent
         within a management command.
         """
-        return self.subscription == settings.NOTIFICATIONS_TODO_MAILS and \
+        return self.subscription != settings.NOTIFICATIONS_TODO_MAILS or \
                log in Log.actions.user_pending_list(user=self.user)
 
     def get_signed_url(self):
