@@ -9,37 +9,69 @@
   </style>
 </head>
 <body class="" style="font-size: 16px; color: #2f2936; background: #f5f4ef; padding: 0; font-family: &quot;Open Sans&quot;, &quot;Helvetica Neue&quot;, helvetica, sans-serif; -webkit-font-smoothing: antialiased; width: 100%; font-weight: 300; margin: 0;">
-<table class="" style="border-radius: 4px; font-size: 16px; color: #2f2936; max-width: 700px; font-family: &quot;Lato&quot;, &quot;Helvetica Neue&quot;, helvetica, sans-serif; padding: 0; -webkit-font-smoothing: antialiased; width: 100%; font-weight: 300; margin: 15px auto; background-color: #fff;">
+<table class="" style="font-size: 16px; color: #2f2936; max-width: 700px; font-family: &quot;Lato&quot;, &quot;Helvetica Neue&quot;, helvetica, sans-serif; -webkit-font-smoothing: antialiased; width: 100%; font-weight: 300; margin: 15px auto; padding: 0; background-color: #fff; border: 0; border-collapse: collapse;">
   <tr>
-    <td style="margin-bottom: 10px;">
-      <h1 style="font-size: 26px; font-weight: 600; color: #dc7d35;">{{ title }}</h1>
+    <td colspan="2" style="padding: 0 5px;">
+      <h1 style="font-size: 26px; font-weight: 600; color: #dc7d35; border-bottom: 2px solid #dc7d35;">{{ title }}</h1>
     </td>
   </tr>
   <tr>
-    <td>{% trans "Dear" %} {{ name }}</td>
+    <td colspan="2" style="font-weight: 300; padding: 10px 5px;">
+      {% trans "Dear" %} {{ name }}
+    </td>
   </tr>
-  <tr style="font-weight: 300;">
-    <td>{{ content }}</td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr style="font-weight: 300;">
-    <td><a href="{{ questionnaire_url }}">{% trans "See questionnaire in full" %}</a></td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
-  <tr><td>{% trans "This is an automated message, please don't reply. If you have any questions, please contact the WOCAT secretariat." %}</td></tr>
-  <tr style="font-weight: 300; color: #98a0a4; border-top: 1px solid #98a0a4;">
-    <td style="border-top: 1px solid #98a0a4;">{% trans "You're getting this message because your account on qcat.wocat.net is linked to this address." %}</td>
-  </tr>
-  <tr style="font-weight: 300; color: #98a0a4;">
-    <td><a href="{{ subscription_url }}">{% trans "Change subscription settings" %}</a></td>
-  </tr>
-  <tr><td>&nbsp;</td></tr>
   <tr>
-    <td style="background-color: #5f594f;">
-      <a href="https://qcat.wocat.net" style="color: #fff; text-decoration: none;">
-        <img src="http://localhost:8000/static/assets/img/wocat_logo.svg">
+    <td colspan="2" style="padding: 0 5px 10px 5px; font-weight: 300;">
+      {{ content }}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding: 0 5px 10px 5px; font-weight: 300;">
+      <a href="{{ questionnaire_url }}">{% trans "See questionnaire in full" %}</a>
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding: 0 5px 20px 5px; font-weight: 300;">
+      {% trans "This is an automated message, please don't reply. If you have any questions, please contact the WOCAT secretariat." %}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding: 0 5px; font-weight: 300;">
+      {% trans "You're getting this message because your account on qcat.wocat.net is linked to this address." %}
+    </td>
+  </tr>
+  <tr>
+    <td colspan="2" style="padding: 0 5px; font-weight: 300;">
+      <a href="{{ subscription_url }}">{% trans "Change subscription settings" %}</a>
+    </td>
+  </tr>
+  <tr><td>&nbsp;</td></tr>
+  <tr style="background-color: #5f594f;">
+    <td style="padding: 5px;">
+      <a href="https://wocat.net" style="color: #dc7d35; text-decoration: none;">
+        {% trans "WOCAT Website" %}
+      </a>
+      <br>
+      <a href="https://qcat.wocat.net" style="color: #dc7d35; text-decoration: none;">
         {% trans "WOCAT SLM Database" %}
       </a>
+    </td>
+    <td>
+      <img src="http://localhost:8000/static/assets/img/wocat_logo.svg">
+    </td>
+  </tr>
+  <tr style="font-weight: 300; background-color: #5f594f; color:#ffffff;">
+    <td colspan="2" style="padding: 10px 5px 0 5px;">
+      {% trans "Contact" %}:<br>
+        WOCAT Secretariat<br>
+        University of Bern<br>
+        Centre for Development and Environment (CDE)<br>
+        Hallerstrasse 10<br>
+        CH - 3012 Berne<br>
+        Switzerland<br>
+        <br>
+        Tel.: ++41 31 631 88 22 / ++41 31 631 54 38<br>
+        E-mail address: wocat@cde.unibe.ch
     </td>
   </tr>
 </table>
