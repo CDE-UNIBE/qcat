@@ -1,8 +1,8 @@
+import functools
+import operator
+
 from django.contrib import messages
-from django.contrib.auth import (
-    logout as django_logout,
-    login as django_login,
-)
+from django.contrib.auth import logout as django_logout, login as django_login
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
 from django.db import IntegrityError
@@ -13,14 +13,13 @@ from django.shortcuts import get_object_or_404, redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.utils.http import is_safe_url
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _, get_language
+from django.utils.translation import ugettext as _
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.http import require_POST
-from django.views.generic import View, DetailView, FormView
+from django.views.generic import DetailView, FormView
 
 from braces.views import LoginRequiredMixin
-from configuration.cache import get_configuration
 from configuration.configuration import QuestionnaireConfiguration
 from django.views.generic import ListView
 from questionnaire.models import Questionnaire, STATUSES
@@ -117,7 +116,7 @@ class ProfileView(LoginRequiredMixin, DetailView):
             limit=None
         )
 
-    def get_status_list(self) -> list:
+    def get_status_list(self) -> dict:
         """
         Fetch all (distinct) statuses that at least one questionnaire of the
         current user has.
@@ -291,24 +290,30 @@ class QuestionnaireSearchView(LoginRequiredMixin, ListView):
     def get_paginate_by(self, queryset):
         return 10 if self.request.is_ajax() else 20
 
+    def get_query_filters(self):
+        search_terms = self.request.GET.get('term', '')
+        for term in search_terms.split(' '):
+            name_lookup_params = {
+                'questiongroup': 'qg_name',
+                'lookup_by': 'string',
+                'value': term,
+            }
+            country_lookup_params = {
+                'questiongroup': 'qg_location',
+                'lookup_by': 'key_value',
+                'key': 'country',
+                'value': 'country_%s' % term,
+            }
+            yield Q(
+                Q(questionnairemembership__user__firstname__icontains=term) |
+                Q(questionnairemembership__user__lastname__icontains=term) |
+                Q(data__qs_data=name_lookup_params) |
+                Q(data__qs_data=country_lookup_params)
+            )
+
     def get_queryset(self):
-        term = self.request.GET.get('term', '')
-        name_lookup_params = {
-            'questiongroup': 'qg_name',
-            'lookup_by': 'string',
-            'value': term,
-        }
-        country_lookup_params = {
-            'questiongroup': 'qg_location',
-            'lookup_by': 'key_value',
-            'key': 'country',
-            'value': 'country_%s' % term,
-        }
         return Questionnaire.with_status.not_deleted().filter(
-            Q(questionnairemembership__user__firstname__icontains=term) |
-            Q(questionnairemembership__user__lastname__icontains=term) |
-            Q(data__qs_data=name_lookup_params) |
-            Q(data__qs_data=country_lookup_params),
+            functools.reduce(operator.and_, self.get_query_filters())
         ).distinct()
 
     def get_json_data(self):
