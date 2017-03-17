@@ -388,7 +388,8 @@ class Log(models.Model):
     def get_reviewers(self):
         is_change_log = self.action is settings.NOTIFICATIONS_CHANGE_STATUS
         has_no_update = self.questionnaire.status == self.statusupdate.status
-        if is_change_log and has_no_update:
+        is_workflow_status = self.statusupdate.status in settings.QUESTIONNAIRE_WORKFLOW_STEPS
+        if is_change_log and has_no_update and is_workflow_status:
             return self.questionnaire.get_users_for_next_publish_step()
 
     def compile_message_to(self, recipient: User) -> EmailMultiAlternatives:
@@ -544,6 +545,7 @@ class MailPreferences(models.Model):
     def do_send_mail(self, log: Log) -> bool:
         return all([
             self.is_allowed_send_mails,
+            self.is_allowed_mail_domain,
             self.is_wanted_action(log.action),
             self.is_todo_log(log)
         ])
@@ -556,6 +558,11 @@ class MailPreferences(models.Model):
     def is_allowed_send_mails(self):
         return settings.DO_SEND_EMAILS and \
                self.subscription != settings.NOTIFICATIONS_NO_MAILS
+
+    @property
+    def is_allowed_mail_domain(self):
+        return settings.MAILS_RESTRICT_DOMAINS == '*' \
+               or self.user.email.endswith(settings.MAILS_RESTRICT_DOMAINS)
 
     def is_wanted_action(self, action: int) -> bool:
         return str(action) in self.wanted_actions.split(',')

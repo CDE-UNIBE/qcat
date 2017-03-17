@@ -331,11 +331,19 @@ class MailPreferencesTest(TestCase):
         self.obj = self.user.mailpreferences
 
     def test_get_defaults_staff(self):
-        given = MagicMock(spec=self.model_class)
-        pass
+        self.user.is_superuser = True
+        self.assertEqual(
+            (settings.NOTIFICATIONS_TODO_MAILS, str(settings.NOTIFICATIONS_CHANGE_STATUS)),
+            self.obj.get_defaults()
+        )
 
     def test_get_defaults(self):
-        pass
+        self.user.is_superuser = False
+        self.assertEqual(
+            (settings.NOTIFICATIONS_TODO_MAILS,
+             ','.join([str(pref) for pref in settings.NOTIFICATIONS_EMAIL_PREFERENCES])),
+            self.obj.get_defaults()
+        )
 
     def test_not_allowed_send_mails_settings(self):
         with override_settings(DO_SEND_EMAILS=False):
@@ -345,6 +353,25 @@ class MailPreferencesTest(TestCase):
         self.obj.subscription = settings.NOTIFICATIONS_ALL_MAILS
         with override_settings(DO_SEND_EMAILS=True):
             self.assertTrue(self.obj.is_allowed_send_mails)
+
+    def test_is_allowed_domain_all_settings(self):
+        with override_settings(MAILS_RESTRICT_DOMAINS='*'):
+            self.assertTrue(self.obj.is_allowed_mail_domain)
+
+    def test_is_allowed_domain_restrict_settings(self):
+        self.obj.user.email = 'foo@restriced.domain'
+        with override_settings(MAILS_RESTRICT_DOMAINS='allowed.domain'):
+            self.assertFalse(self.obj.is_allowed_mail_domain)
+
+    def test_is_allowed_domain_allowed_settings(self):
+        self.obj.user.email = 'foo@allowed.domain'
+        with override_settings(MAILS_RESTRICT_DOMAINS='allowed.domain'):
+            self.assertTrue(self.obj.is_allowed_mail_domain)
+
+    def test_is_allowed_domain_allowed_settings_tuple(self):
+        self.obj.user.email = 'foo@yo.da'
+        with override_settings(MAILS_RESTRICT_DOMAINS=('da.yo', 'yo.da')):
+            self.assertTrue(self.obj.is_allowed_mail_domain)
 
     def test_not_allowed_send_mails_subscription(self):
         self.obj.subscription = settings.NOTIFICATIONS_NO_MAILS
@@ -356,11 +383,15 @@ class MailPreferencesTest(TestCase):
         self.assertTrue(self.obj.is_wanted_action('coffee'))
         self.assertFalse(self.obj.is_wanted_action('bread'))
 
-    def test_is_todo_log(self):
-        pass
+    @patch.object(ActionContextQuerySet, 'user_pending_list')
+    def test_is_todo_log(self, mock_pending_list):
+        self.obj.subscription = settings.NOTIFICATIONS_TODO_MAILS
+        log = MagicMock()
+        mock_pending_list.return_value = [log]
+        self.assertTrue(self.obj.is_todo_log(log))
+        mock_pending_list.return_value = [MagicMock()]
+        self.assertFalse(self.obj.is_todo_log(log))
 
-    def test_do_send_mail(self):
-        pass
-
-    def get_signed_url(self):
-        pass
+    def test_is_todo_log_other_prefs(self):
+        self.obj.subscription = settings.NOTIFICATIONS_ALL_MAILS
+        self.assertTrue(self.obj.is_todo_log(MagicMock()))

@@ -337,7 +337,7 @@ class BaseSettings(Configuration):
     # Mail settings (notification mails)
     DEFAULT_FROM_EMAIL = 'info@wocat.net'
     DO_SEND_EMAILS = values.BooleanValue(environ_prefix='', default=False)
-    MAILS_RESTRICT_DOMAINS = values.ListValue(environ_prefix='', default='*')
+    MAILS_RESTRICT_DOMAINS = values.TupleValue(environ_prefix='', default='*')
 
     WOCAT_IMPORT_DATABASE_URL = values.Value(environ_prefix='')
 
