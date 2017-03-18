@@ -4,6 +4,7 @@ from unittest.mock import call
 
 from django.conf import settings
 from django.contrib.auth import get_user_model
+from django.core.signing import Signer
 from django.core.urlresolvers import reverse
 from django.http import Http404
 from django.test import RequestFactory
@@ -14,7 +15,8 @@ from model_mommy import mommy
 from notifications.models import Log, StatusUpdate, MemberUpdate, ReadLog, \
     ActionContextQuerySet
 from notifications.views import LogListView, LogCountView, ReadLogUpdateView, \
-    LogQuestionnairesListView, LogInformationUpdateCreateView
+    LogQuestionnairesListView, LogInformationUpdateCreateView, \
+    LogSubscriptionPreferencesView, SignedLogSubscriptionPreferencesView
 from qcat.tests import TestCase
 
 
@@ -366,3 +368,89 @@ class LogInformationUpdateCreateViewTest(TestCase):
                 sender='foo'
             )
 
+
+class LogSubscriptionPreferencesMixinTest(TestCase):
+
+    def setUp(self):
+        self.url = reverse('notification_preferences')
+        self.view = LogSubscriptionPreferencesView()
+        self.request = RequestFactory().get(self.url)
+        self.user = mommy.make(get_user_model())
+        self.obj = self.user.mailpreferences
+        self.request.user = self.user
+        self.request._messages = mock.MagicMock()
+        self.view = self.setup_view(view=self.view, request=self.request)
+        self.view.object = self.obj
+
+    def test_get_initial(self):
+        self.obj.wanted_actions = 'some,thing,yay'
+        self.assertEqual(
+            ['some', 'thing', 'yay'],
+            self.view.get_initial()['wanted_actions']
+        )
+
+    def test_get_form_valid_changed_language(self):
+        self.view.object = mock.MagicMock()
+        self.view.object.has_changed_language = False
+        form = mock.MagicMock()
+        form.changed_data = ['language']
+        self.view.form_valid(form)
+        self.assertTrue(self.view.object.has_changed_language)
+
+    def test_get_form_valid_message(self):
+        self.view.form_valid(mock.MagicMock())
+        self.assertTrue(self.request._messages.method_calls)
+
+
+class SignedLogSubscriptionPreferencesViewTest(TestCase):
+
+    def setUp(self):
+        self.user = mommy.make(get_user_model())
+        self.obj = self.user.mailpreferences
+        self.view = SignedLogSubscriptionPreferencesView()
+        self.request = RequestFactory().get(str(self.obj.get_signed_url()))
+        self.request._messages = mock.MagicMock()
+        self.view = self.setup_view(view=self.view, request=self.request)
+        self.view.object = self.obj
+
+    def test_get_success_url_signed(self):
+        self.request.user = mock.MagicMock
+        self.request.user.is_authenticated = lambda: False
+        self.assertEqual(
+            self.view.get_success_url(),
+            self.obj.get_signed_url()
+        )
+
+    def test_get_success_url_user(self):
+        self.request.user = self.user
+        self.request.user.is_authenticated = lambda: True
+        self.assertEqual(
+            self.view.get_success_url(),
+            reverse('notification_preferences')
+        )
+
+    def test_get_object_user(self):
+        self.request.user = self.user
+        self.request.user.is_authenticated = lambda: True
+        self.assertEqual(
+            self.view.get_object(),
+            self.obj
+        )
+
+    def test_get_signed_object(self):
+        self.request.user = mock.MagicMock()
+        self.request.user.is_authenticated = lambda: False
+        self.view.kwargs['token'] = mock.MagicMock()
+        with mock.patch.object(Signer, 'unsign') as mock_unsign:
+            mock_unsign.return_value = self.obj.id
+            self.assertEqual(
+                self.view.get_object(), self.obj
+            )
+            mock_unsign.assert_called_with(self.view.kwargs['token'])
+
+    def test_get_signed_object_404(self):
+        self.request.user = mock.MagicMock()
+        self.request.user.is_authenticated = lambda: False
+        self.view.kwargs['token'] = mock.MagicMock()
+        with self.assertRaises(Http404):
+            self.view.get_object()
