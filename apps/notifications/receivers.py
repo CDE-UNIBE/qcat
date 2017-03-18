@@ -67,6 +67,6 @@ def create_notification_preferences(sender, instance, created, **kwargs):
 def update_language(sender, request, user, **kwargs):
     if not hasattr(user, 'mailpreferences'):
         MailPreferences(user=user).set_defaults()
-    if not user.mailpreferences.has_changed_language:
+    if not user.mailpreferences.has_changed_language and hasattr(request, 'LANGUAGE_CODE'):
         user.mailpreferences.language = request.LANGUAGE_CODE
         user.mailpreferences.save()
