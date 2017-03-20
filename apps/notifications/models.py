@@ -382,7 +382,9 @@ class Log(models.Model):
     @cached_property
     def recipients(self):
         return set(itertools.chain(
-            self.subscribers.all(), self.questionnaire.get_reviewers()
+            self.subscribers.all(),
+            self.questionnaire.get_reviewers(),
+            self.get_affected()
         ))
 
     def get_reviewers(self):
@@ -391,6 +393,10 @@ class Log(models.Model):
         is_workflow_status = self.statusupdate.status in settings.QUESTIONNAIRE_WORKFLOW_STEPS
         if is_change_log and has_no_update and is_workflow_status:
             return self.questionnaire.get_users_for_next_publish_step()
+        return []
+
+    def get_affected(self):
+        return [self.memberupdate.affected] if hasattr(self, 'memberupdate') else []
 
     def compile_message_to(self, recipient: User) -> EmailMultiAlternatives:
         message = EmailMultiAlternatives(
@@ -537,7 +543,7 @@ class MailPreferences(models.Model):
             subscription = settings.NOTIFICATIONS_TODO_MAILS
             wanted_actions = str(settings.NOTIFICATIONS_CHANGE_STATUS)
         else:
-            subscription = settings.NOTIFICATIONS_TODO_MAILS
+            subscription = settings.NOTIFICATIONS_ALL_MAILS
             wanted_actions = ','.join([str(pref) for pref in settings.NOTIFICATIONS_EMAIL_PREFERENCES])
 
         return subscription, wanted_actions
@@ -561,7 +567,7 @@ class MailPreferences(models.Model):
 
     @property
     def is_allowed_mail_domain(self):
-        return settings.MAILS_RESTRICT_DOMAINS == '*' \
+        return settings.MAILS_RESTRICT_DOMAINS[0] == '*' \
                or self.user.email.endswith(settings.MAILS_RESTRICT_DOMAINS)
 
     def is_wanted_action(self, action: int) -> bool:

@@ -8,7 +8,7 @@ from model_mommy import mommy
 from qcat.tests import TestCase
 
 from notifications.models import ActionContextQuerySet, Log, StatusUpdate, \
-    ReadLog, ContentUpdate
+    ReadLog, ContentUpdate, MemberUpdate
 from questionnaire.models import Questionnaire, QuestionnaireMembership
 
 
@@ -302,6 +302,14 @@ class LogTest(TestCase):
             model=ContentUpdate,
             log=self.content_log
         )
+        self.member_log = mommy.make(
+            model=Log,
+            action=settings.NOTIFICATIONS_ADD_MEMBER
+        )
+        mommy.make(
+            MemberUpdate,
+            log=self.member_log
+        )
 
     def test_is_content_update(self):
         self.assertTrue(self.content_log.is_content_update)
@@ -323,6 +331,60 @@ class LogTest(TestCase):
                 'is_mail_context': False, 'base_url': 'foo'
             }
         )
+
+    @patch.object(Log, 'get_affected')
+    @patch.object(Questionnaire, 'get_reviewers')
+    def test_recipients_no_duplicates(self, mock_reviewers, mock_affected):
+        mock_affected.return_value = [self.catalyst]
+        mock_reviewers.return_value = [self.catalyst, mommy.make(get_user_model())]
+        self.assertListEqual(
+            mock_reviewers.return_value,
+            list(self.status_log.recipients),
+        )
+
+    def get_review_log(self):
+        """
+        Build a log with valid properties to get reviewers
+        """
+        log = mommy.make(Log, action=settings.NOTIFICATIONS_CHANGE_STATUS)
+        mommy.make(
+            model=StatusUpdate,
+            log=log,
+            status=settings.QUESTIONNAIRE_WORKFLOW_STEPS[0]
+        )
+        return log
+
+    @patch.object(Questionnaire, 'get_users_for_next_publish_step')
+    def test_get_reviewers(self, mock_get_users):
+        log = self.get_review_log()
+        log.get_reviewers()
+        mock_get_users.assert_called_once()
+
+    @patch.object(Questionnaire, 'get_users_for_next_publish_step')
+    def test_get_reviewers_change_log(self, mock_get_users):
+        log = self.get_review_log()
+        log.action = ''
+        log.get_reviewers()
+        self.assertFalse(mock_get_users.called)
+
+    @patch.object(Questionnaire, 'get_users_for_next_publish_step')
+    def test_get_reviewers_no_update(self, mock_get_users):
+        log = self.get_review_log()
+        log.questionnaire.status = ''
+        log.get_reviewers()
+        self.assertFalse(mock_get_users.called)
+
+    @patch.object(Questionnaire, 'get_users_for_next_publish_step')
+    def test_get_reviewers_workflow_status(self, mock_get_users):
+        log = self.get_review_log()
+        log.statusupdate.status = ''
+        log.get_reviewers()
+        self.assertFalse(mock_get_users.called)
+
+    def test_get_affected(self):
+        self.assertFalse(self.content_log.get_affected())
+        self.assertFalse(self.status_log.get_affected())
+        self.assertTrue(self.member_log.get_affected())
 
 
 class ReadLogTest(TestCase):

@@ -785,6 +785,29 @@ class QuestionnaireModelTest(TestCase):
             qs.get_countries()
             mock_get_translation.assert_called_once_with(keyword='label')
 
+    @override_settings(
+        QUESTIONNAIRE_WORKFLOW_STEPS=['21'],
+        QUESTIONNAIRE_PUBLICATION_ROLES={'21': 'reviewer'}
+    )
+    def test_get_users_for_next_publish_step(self):
+        qs = self.get_questionnaire_with_name()
+        qs.status = '21'
+        with patch.object(qs, 'get_reviewers') as mock_target_method:
+            self.assertEqual(
+                mock_target_method,
+                qs.get_users_for_next_publish_step()
+            )
+
+    @override_settings(
+        QUESTIONNAIRE_WORKFLOW_STEPS=['no'],
+        QUESTIONNAIRE_PUBLICATION_ROLES={'no': 'not_defined'}
+    )
+    def test_get_users_for_next_publish_step_raises(self):
+        qs = self.get_questionnaire_with_name()
+        qs.status = 'no'
+        with self.assertRaises(AttributeError):
+            qs.get_users_for_next_publish_step()
+
 
 class FileModelTest(TestCase):
 
