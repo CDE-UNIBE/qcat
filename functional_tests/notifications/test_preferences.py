@@ -22,6 +22,11 @@ class MailPreferencesTest(FunctionalTest):
         # no spam please - change the value in the subscription box
         select = Select(self.findBy('id', 'id_subscription'))
         select.select_by_value('none')
+        # the actions are disabled now.
+        action = self.findBy('id', 'id_wanted_actions_2')
+        self.assertTrue(
+            action.get_attribute('disabled')
+        )
         # submit the form
         self.findBy('xpath', '//input[@type="submit"]').click()
         # the success message is shown

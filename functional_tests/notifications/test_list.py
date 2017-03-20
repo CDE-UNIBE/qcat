@@ -76,9 +76,6 @@ class ProfileNotificationsTest(NotificationSetupMixin, FunctionalTest):
         self.browser.implicitly_wait(1)
         logs = self.findManyBy('xpath', self.notifications_xpath)
         self.assertEqual(len(logs), 1)
-        # and the pagination is available.
-        self.findBy('class_name', 'pagination-centered')
-
 
     @patch('django.contrib.auth.backends.ModelBackend.get_all_permissions')
     def test_todo_notification(self, mock_permissions):

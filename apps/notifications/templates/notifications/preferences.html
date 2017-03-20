@@ -15,11 +15,34 @@
       <h1 class="is-title">
         {% trans "Your email preferences" %}
       </h1>
-      <form action="#" method="post">
+      <form action="#" method="post" class="mail-preferences">
         {% csrf_token %}
         {{ form.as_p }}
         <input type="submit" value="{% trans "Save preferences" %}" class="button">
       </form>
     </div>
   </main>
+
+  {% addtoblock 'js' %}
+    {% compress js %}
+      <script>
+        $(function() {
+          var subscriptionSelect = $('#id_subscription');
+          var wantedActions = $('label[for="id_wanted_actions"]').parent().next('ul');
+
+          hideWantedActions(subscriptionSelect.val());
+
+          subscriptionSelect.on('change', function() {
+            hideWantedActions($(this).val());
+          });
+
+          function hideWantedActions(subscriptionValue) {
+            var state = subscriptionValue == 'none';
+            wantedActions.find('input').prop('disabled', state);
+            wantedActions.find('label').toggleClass('disabled', state)
+          }
+        });
+      </script>
+    {% endcompress %}
+  {% endaddtoblock %}
 {% endblock %}
