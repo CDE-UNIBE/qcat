@@ -4,6 +4,9 @@
 {% if PIWIK_SITE_ID %}
     <script type="text/javascript">
       var _paq = _paq || [];
+      {% if request.user.is_authenticated %}
+        _paq.push(['setUserId', '{{ request.user.email }}']);
+      {% endif %}
       _paq.push(['trackPageView']);
       _paq.push(['enableLinkTracking']);
       (function() {
