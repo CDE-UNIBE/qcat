@@ -164,7 +164,7 @@ def _update_database():
 def _has_config_update_tag():
     with cd(env.source_folder):
         git_tags = run('git tag -l --points-at HEAD')
-        return REBUILD_CONFIG_TAG in git_tags.stdout
+        return git_tags.stdout.startswith(REBUILD_CONFIG_TAG)
 
     return False
 
