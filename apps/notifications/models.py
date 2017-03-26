@@ -271,7 +271,8 @@ class Log(models.Model):
     """
     created = models.DateTimeField(auto_now_add=True)
     catalyst = models.ForeignKey(
-        settings.AUTH_USER_MODEL, related_name='catalyst', help_text='Person triggering the log'
+        settings.AUTH_USER_MODEL, related_name='catalyst',
+        help_text='Person triggering the log'
     )
     subscribers = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name='subscribers',
@@ -329,8 +330,24 @@ class Log(models.Model):
         )
 
     @cached_property
+    def mail_subject(self):
+        return '[WOCAT] {}'.format(self.subject)
+
+    @cached_property
     def is_content_update(self) -> bool:
         return self.action is settings.NOTIFICATIONS_EDIT_CONTENT
+
+    @cached_property
+    def is_change_log(self) -> bool:
+        return self.action is settings.NOTIFICATIONS_CHANGE_STATUS
+
+    @cached_property
+    def has_no_update(self) -> bool:
+        return self.questionnaire.status == self.statusupdate.status
+
+    @cached_property
+    def is_workflow_status(self) -> bool:
+        return self.statusupdate.status in settings.QUESTIONNAIRE_WORKFLOW_STEPS
 
     def get_html(self, user: User, is_mail_context=False) -> str:
         """
@@ -383,15 +400,14 @@ class Log(models.Model):
     def recipients(self):
         return set(itertools.chain(
             self.subscribers.all(),
-            self.questionnaire.get_reviewers(),
+            self.get_reviewers(),
             self.get_affected()
         ))
 
     def get_reviewers(self):
-        is_change_log = self.action is settings.NOTIFICATIONS_CHANGE_STATUS
-        has_no_update = self.questionnaire.status == self.statusupdate.status
-        is_workflow_status = self.statusupdate.status in settings.QUESTIONNAIRE_WORKFLOW_STEPS
-        if is_change_log and has_no_update and is_workflow_status:
+        check_properties = self.is_content_update and self.is_change_log \
+                           and self.has_no_update and self.is_workflow_status
+        if check_properties:
             return self.questionnaire.get_users_for_next_publish_step()
         return []
 
@@ -400,10 +416,11 @@ class Log(models.Model):
 
     def compile_message_to(self, recipient: User) -> EmailMultiAlternatives:
         message = EmailMultiAlternatives(
-            subject='[WOCAT] {}'.format(self.subject),
+            subject=self.mail_subject,
             body=self.get_mail_template('plain_text.txt', recipient=recipient),
             from_email=settings.DEFAULT_FROM_EMAIL,
-            to=[recipient.email]
+            to=[recipient.email],
+            headers={'qcat_log': self.id}
         )
         message.attach_alternative(
             content=self.get_mail_template('html_text.html', recipient=recipient),
@@ -580,7 +597,7 @@ class MailPreferences(models.Model):
         within a management command.
         """
         return self.subscription != settings.NOTIFICATIONS_TODO_MAILS or \
-               log in Log.actions.user_pending_list(user=self.user)
+               log.is_content_update and log in Log.actions.user_pending_list(user=self.user)
 
     def get_signed_url(self):
         return reverse_lazy('signed_notification_preferences', kwargs={
