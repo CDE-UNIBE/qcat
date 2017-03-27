@@ -5,9 +5,19 @@
 
 See questionnaire in full: {{ questionnaire_url }}
 
-{% trans "This is an automated message, please don't reply. If you have any questions, please contact the WOCAT secretariat." %}
+{% trans "This is an automated message, please do not reply directly to this e-mail. If you have any questions, please contact the WOCAT secretariat (wocat@cde.unibe.ch)." %}
+
+{% trans "You're getting this message because your account on qcat.wocat.net is linked to this address." %}
 
 --
-{% trans "You're getting this message because your account on qcat.wocat.net is linked to this address." %}
 Change subscription settings: {{ subscription_url }}
-Visit qcat.wocat.net: https://qcat.wocat.net/
+
+WOCAT Secretariat
+University of Bern
+Centre for Development and Environment (CDE)
+Hallerstrasse 10
+CH - 3012 Berne
+Switzerland
+
+Tel.: ++41 31 631 88 22 / ++41 31 631 54 38
+E-mail address: wocat@cde.unibe.ch
