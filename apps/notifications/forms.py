@@ -10,6 +10,14 @@ actions_dict = dict(settings.NOTIFICATIONS_ACTIONS)
 
 class MailPreferencesUpdateForm(forms.ModelForm):
 
+    def __init__(self, *args, **kwargs):
+        super().__init__(*args, **kwargs)
+        if not kwargs['instance'].user.is_staff:
+            self.fields['subscription'].choices = [
+                settings.NOTIFICATIONS_EMAIL_SUBSCRIPTIONS[0],
+                settings.NOTIFICATIONS_EMAIL_SUBSCRIPTIONS[2]
+            ]
+
     class Meta:
         model = MailPreferences
         fields = ('subscription', 'wanted_actions', 'language', )
