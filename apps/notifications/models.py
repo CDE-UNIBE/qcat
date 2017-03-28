@@ -140,9 +140,9 @@ class ActionContextQuerySet(models.QuerySet):
         """
         for read_log in read_logs:
             yield Q(created__lte=read_log.log.created,
-                    questionnaire_id=read_log.log.questionnaire_id,
-                    questionnaire__status=read_log.log.statusupdate.status
-                    )
+                questionnaire_id=read_log.log.questionnaire_id,
+                questionnaire__status=read_log.log.statusupdate.status
+            )
 
     def _unique_questionnaire(self, logs):
         """
@@ -405,8 +405,7 @@ class Log(models.Model):
         ))
 
     def get_reviewers(self):
-        check_properties = self.is_content_update and self.is_change_log \
-                           and self.has_no_update and self.is_workflow_status
+        check_properties = self.is_change_log and self.has_no_update and self.is_workflow_status
         if check_properties:
             return self.questionnaire.get_users_for_next_publish_step()
         return []
@@ -597,7 +596,7 @@ class MailPreferences(models.Model):
         within a management command.
         """
         return self.subscription != settings.NOTIFICATIONS_TODO_MAILS or \
-               log.is_content_update and log in Log.actions.user_pending_list(user=self.user)
+               log.is_change_log and log in Log.actions.user_pending_list(user=self.user)
 
     def get_signed_url(self):
         return reverse_lazy('signed_notification_preferences', kwargs={

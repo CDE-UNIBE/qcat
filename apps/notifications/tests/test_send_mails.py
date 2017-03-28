@@ -1,6 +1,7 @@
 import contextlib
+from unittest.mock import patch
 
-import collections
+import itertools
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group, User
@@ -9,11 +10,10 @@ from django.core.management import call_command
 from django.test import override_settings
 
 from model_mommy import mommy
-from unittest.mock import patch
 
 from configuration.models import Configuration
 from notifications.models import MailPreferences, Log
-from notifications.utils import StatusLog, MemberLog
+from notifications.utils import StatusLog, MemberLog, ContentLog, InformationLog
 from qcat.tests import TestCase
 from questionnaire.models import Questionnaire, QuestionnaireMembership
 
@@ -46,14 +46,18 @@ class SendMailRecipientMixin(TestCase):
         self.compilers = [self.compiler_none, self.compiler_todo, self.compiler_all]
         self.reviewers = [self.reviewer_none, self.reviewer_todo, self.reviewer_all]
         self.publishers = [self.publisher_none, self.publisher_todo, self.publisher_all]
-        self.secretariats = [self.secretariat_none, self.secretariat_todo, self.secretariat_all]
-        self.all = [self.editors + self.compilers + self.reviewers + self.publishers + self.secretariats]
+        # secretariat people are not added, they have the roles reviewer and
+        # publisher and are not specifcally checked for when handling
+        # notifications.
+        self.all = [self.editors + self.compilers + self.reviewers + self.publishers]
 
     def create_users(self):
         for preference in dict(settings.NOTIFICATIONS_EMAIL_SUBSCRIPTIONS).keys():
             for user, group_id in self.user_groups_mapping.items():
                 username = '{user}_{preference}'.format(user=user, preference=preference)
-                user_kwargs = {'firstname': username}
+                user_kwargs = {
+                    'firstname': username, 'email': '{}@example.com'.format(username)
+                }
                 if group_id:
                     user_kwargs['groups'] = [Group.objects.get(id=group_id)]
                 self._create_user(username, preference, **user_kwargs)
@@ -123,48 +127,38 @@ class PublicationWorkflowMailTest(SendMailRecipientMixin):
     """
     Tests for the typical publication workflow of a questionnaire.
     """
-    message_frame = collections.namedtuple("message_frame", "mock_send logs")
-
-    def get_status_log(self, action: int, sender: settings.AUTH_USER_MODEL) -> list:
-        status_log = StatusLog(
-            action=action, sender=sender, questionnaire=self.questionnaire
-        )
-        status_log.create(is_rejected=False, message='created')
-        return [status_log.log]
-
-    def get_member_log(self, action: int, sender: User, affected: list, role: str) -> list:
-        member_logs = []
-        for user in affected:
-            member_log = MemberLog(
-                action=action, sender=sender, questionnaire=self.questionnaire
-            )
-            member_log.create(affected=user, role=role)
-            member_logs.append(member_log.log)
-        return member_logs
-
-    def create_logs(self, method_name: str, **kwargs) -> list:
-        logs = []
-        for user in kwargs.pop('catalysts'):
-            logs.extend(getattr(self, method_name)(sender=user, **kwargs))
-        return logs
+    def create_log(self, klass, action: int, sender: User, **kwargs) -> Log:
+        log = klass(action=action, sender=sender, questionnaire=self.questionnaire)
+        log.create(**kwargs)
+        return log.log
 
     def test_questionnaire_created(self):
-        self.create_logs(
-            action=settings.NOTIFICATIONS_CREATE, method_name='get_status_log',
-            catalysts=self.compilers
-        )
+        for compiler in self.compilers:
+            self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CREATE,
+                sender=compiler,
+                is_rejected=False,
+                message='created'
+            )
+
         with self.send_notification_mails() as outbox:
             self.assertEqual(outbox, [])
         self.assert_no_unsent_logs(all_logs_count=3)
 
     def test_editor_added(self):
-        logs = self.create_logs(
-            action=settings.NOTIFICATIONS_ADD_MEMBER,
-            method_name='get_member_log',
-            catalysts=self.compilers,
-            affected=self.editors,
-            role='editor'
-        )
+        logs = []
+        for compiler in self.compilers:
+            for editor in self.editors:
+                log = self.create_log(
+                    klass=MemberLog,
+                    action=settings.NOTIFICATIONS_ADD_MEMBER,
+                    sender=compiler,
+                    affected=editor,
+                    role='editor'
+                )
+                logs.append(log)
+
         with self.send_notification_mails() as outbox:
             self.assertEqual(len(outbox), 3)
             expected = self.filter_expected_logs(self.editor_all, logs)
@@ -172,127 +166,173 @@ class PublicationWorkflowMailTest(SendMailRecipientMixin):
         self.assert_no_unsent_logs(all_logs_count=9)
 
     def test_editor_edited(self):
-        pass
+        for editor in self.editors:
+            self.create_log(
+                klass=ContentLog,
+                action=settings.NOTIFICATIONS_EDIT_CONTENT,
+                sender=editor
+            )
+
+        self.add_questionnairememberships('compiler', *self.compilers)
+        with self.send_notification_mails() as outbox:
+            self.assertEqual(outbox, [])
+        self.assert_no_unsent_logs(all_logs_count=3)
 
     def test_editor_finished(self):
-        pass
+        logs = []
+        for editor in self.editors:
+            for compiler in self.compilers:
+                information_log = InformationLog(
+                    action=settings.NOTIFICATIONS_FINISH_EDITING,
+                    sender=editor,
+                    questionnaire=self.questionnaire,
+                    receiver=compiler
+                )
+                information_log.create('finished')
+                logs.append(information_log.log)
+
+        self.add_questionnairememberships('compiler', *self.compilers)
+        with self.send_notification_mails() as outbox:
+            expected = self.filter_expected_logs(self.compiler_all, logs)
+            self.assert_only_expected(outbox, *expected)
+        self.assert_no_unsent_logs(all_logs_count=9)
 
     def test_questionnaire_submitted(self):
-        pass
+        """
+        As 'todo' checks for questionnaire-uniqueness, only one 'todo' log is
+        sent.
+        """
+        self.questionnaire.status = settings.QUESTIONNAIRE_SUBMITTED
+        self.questionnaire.save()
+        logs = []
+        for compiler in self.compilers:
+            log = self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CHANGE_STATUS,
+                sender=compiler,
+                is_rejected=False,
+                message='submit'
+            )
+            logs.append(log)
+
+        with self.send_notification_mails() as outbox:
+            self.assertEqual(len(outbox), 4)
+            expected = list(self.filter_expected_logs(self.reviewer_all, logs))
+            expected.append({
+                'log_id': str(logs[2].id),
+                'recipient': self.reviewer_todo.email,
+                'subject': str(logs[2].mail_subject)
+            })
+            self.assert_only_expected(outbox, *expected)
+        self.assert_no_unsent_logs(3)
 
     def test_questionnaire_review_rejected(self):
-        pass
+        logs = []
+        for reviewer in self.reviewers:
+            log = self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CHANGE_STATUS,
+                sender=reviewer,
+                is_rejected=True,
+                message='submit'
+            )
+            self.add_questionnairememberships('compiler', *self.compilers)
+            logs.append(log)
+
+        with self.send_notification_mails() as outbox:
+            expected = self.filter_expected_logs(self.compiler_all, logs)
+            self.assert_only_expected(outbox, *expected)
+        self.assert_no_unsent_logs(3)
 
     def test_questionnaire_review_accepted(self):
-        pass
+        self.questionnaire.status = settings.QUESTIONNAIRE_REVIEWED
+        self.questionnaire.save()
+        self.add_questionnairememberships('compiler', *self.compilers)
+        self.add_questionnairememberships('editor', *self.editors)
+        logs = []
+        for reviewer in self.reviewers:
+            log = self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CHANGE_STATUS,
+                sender=reviewer,
+                is_rejected=False,
+                message='review accepted'
+            )
+            logs.append(log)
+
+        with self.send_notification_mails() as outbox:
+            expected = itertools.chain(
+                self.filter_expected_logs(self.compiler_all, logs),
+                self.filter_expected_logs(self.editor_all, logs),
+                self.filter_expected_logs(self.publisher_all, logs),
+                [{
+                    'log_id': str(logs[2].id),
+                    'recipient': self.publisher_todo.email,
+                    'subject': str(logs[2].mail_subject)
+                }]
+            )
+            self.assertEqual(len(outbox), 10)
+            self.assert_only_expected(outbox, *expected)
+        self.assert_no_unsent_logs(3)
 
     def test_questionnaire_publication_rejected(self):
-        pass
+        self.questionnaire.status = settings.QUESTIONNAIRE_SUBMITTED
+        self.questionnaire.save()
+        self.add_questionnairememberships('compiler', *self.compilers)
+        self.add_questionnairememberships('editor', *self.editors)
+        logs = []
+        for reviewer in self.reviewers:
+            log = self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CHANGE_STATUS,
+                sender=reviewer,
+                is_rejected=True,
+                message='review rejected'
+            )
+            logs.append(log)
 
-    def test_questionnaire_publication_accepted(self):
-        pass
+        with self.send_notification_mails() as outbox:
+            expected = itertools.chain(
+                self.filter_expected_logs(self.compiler_all, logs),
+                self.filter_expected_logs(self.editor_all, logs),
+                self.filter_expected_logs(self.reviewer_all, logs),
+                [{
+                    'log_id': str(logs[2].id),
+                    'recipient': self.reviewer_todo.email,
+                    'subject': str(logs[2].mail_subject)
+                }]
+            )
+            self.assertEqual(len(outbox), 10)
+            self.assert_only_expected(outbox, *expected)
 
-    def test_questionnaire_new_version(self):
-        pass
+        self.assert_no_unsent_logs(3)
 
+    @patch('notifications.models.render_to_string')
+    def test_questionnaire_publication_accepted(self, mock_render_to_string):
+        self.questionnaire.status = settings.QUESTIONNAIRE_PUBLIC
+        self.questionnaire.save()
+        self.add_questionnairememberships('reviewer', *self.compilers)
+        self.add_questionnairememberships('compiler', *self.compilers)
+        self.add_questionnairememberships('editor', *self.editors)
+        logs = []
+        for publisher in self.publishers:
+            log = self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CHANGE_STATUS,
+                sender=publisher,
+                is_rejected=False,
+                message='review accepted'
+            )
+            logs.append(log)
 
-# class QuestionnaireCreatedMailTest(SendMailRecipientMixin):
-#     """
-#     Create logs with various combinations and make sure only the expected
-#     recipients are addressed in 'compile_message_to'. Questionnairememberships
-#     are copied between versions, so a created questionnaire can have editors
-#     and publishers.
-#
-#     """
-#
-#     def create_status_logs(self, action, sender):
-#         """
-#         - catalyst
-#         - subscribers
-#         - users from permissions
-#         - 'affected'
-#         - questionnaire memberships
-#         """
-#         StatusLog(
-#             action=action, sender=sender, questionnaire=self.questionnaire
-#         ).create(
-#             is_rejected=False, message='created'
-#         )
-#
-#     def test_questionnaire_created(self, mock_compile):
-#         for compiler in self.compilers:
-#             self.create_status_logs(
-#                 sender=compiler, action=settings.NOTIFICATIONS_CREATE,
-#             )
-#         call_command('send_notification_mails')
-#         self.assertFalse(mock_compile.called)
-#         self.assert_no_unsent_logs()
-#
-#     def test_questionnaire_created_with_editors(self, mock_compile):
-#         for compiler in self.compilers:
-#             self.create_status_logs(
-#                 sender=compiler, action=settings.NOTIFICATIONS_CREATE,
-#             )
-#         self.add_questionnairememberships('editor', *self.editors)
-#         call_command('send_notification_mails')
-#         self.assertFalse(mock_compile.called)
-#         self.assert_no_unsent_logs()
-#
-#     def test_questionnaire_deleted(self, mock_compile):
-#         for compiler in self.compilers:
-#             self.create_status_logs(
-#                 sender=compiler, action=settings.NOTIFICATIONS_DELETE
-#             )
-#         call_command('send_notification_mails')
-#         self.assertFalse(mock_compile.called)
-#         self.assert_no_unsent_logs()
-#
-#     def test_questionnaire_deleted_with_editors(self, mock_compile):
-#         for compiler in self.compilers:
-#             self.create_status_logs(
-#                 sender=compiler, action=settings.NOTIFICATIONS_DELETE
-#             )
-#         self.add_questionnairememberships('editor', *self.editors)
-#         call_command('send_notification_mails')
-#         self.assertFalse(mock_compile.called)
-#         self.assert_no_unsent_logs()
-#
-#     def test_questionnaire_edited(self, mock_compile):
-#         for editor in self.editors:
-#             self.create_status_logs(
-#                 sender=editor, action=settings.NOTIFICATIONS_EDIT_CONTENT
-#             )
-#
-#         call_command('send_notification_mails')
-#         self.assertFalse(mock_compile.called)
-#         self.assert_no_unsent_logs()
-#
-#     def test_questionnaire_finished_editing(self, mock_compile):
-#         for editor in self.editors:
-#             self.create_status_logs(
-#                 sender=editor, action=settings.NOTIFICATIONS_FINISH_EDITING,
-#             )
-#         call_command('send_notification_mails')
-#         self.assertFalse(mock_compile.called)
-#         self.assert_no_unsent_logs()
-#
-#     # def test_questionnaire_changed_status(self):
-#     #     self.create_status_logs(
-#     #         settings.NOTIFICATIONS_CHANGE_STATUS,
-#     #         self.all
-#     #     )
-#
-#     def test_invited_member(self):
-#         pass
-#
-#     def test_removed_member(self):
-#         pass
-#
-#     def test_edited_questionnaire(self):
-#         pass
-#
-#     def test_finished_editing(self):
-#         pass
-#
-#     def test_wanted_actions(self):
-#         pass
+        with self.send_notification_mails() as outbox:
+            self.assertEqual(len(outbox), 6)
+            expected = itertools.chain(
+                self.filter_expected_logs(self.compiler_all, logs),
+                self.filter_expected_logs(self.editor_all, logs),
+            )
+            self.assert_only_expected(outbox, *expected)
+            mock_render_to_string.mock_assert_any_calls(
+                'notifications/mail/publish_addendum.html'
+            )
+        self.assert_no_unsent_logs(3)

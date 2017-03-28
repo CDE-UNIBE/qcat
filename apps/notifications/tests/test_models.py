@@ -337,16 +337,24 @@ class LogTest(TestCase):
     def test_recipients_no_duplicates(self, mock_reviewers, mock_affected):
         mock_affected.return_value = [self.catalyst]
         mock_reviewers.return_value = [self.catalyst, mommy.make(get_user_model())]
+        log = self.get_review_log()
         self.assertListEqual(
-            mock_reviewers.return_value,
-            list(self.status_log.recipients),
+            [user.id for user in mock_reviewers.return_value],
+            [user.id for user in list(log.recipients)],
         )
 
     def get_review_log(self):
         """
         Build a log with valid properties to get reviewers
         """
-        log = mommy.make(Log, action=settings.NOTIFICATIONS_CHANGE_STATUS)
+        questionnaire = mommy.make(
+            Questionnaire, status=settings.QUESTIONNAIRE_WORKFLOW_STEPS[0]
+        )
+        log = mommy.make(
+            Log,
+            action=settings.NOTIFICATIONS_CHANGE_STATUS,
+            questionnaire=questionnaire
+        )
         mommy.make(
             model=StatusUpdate,
             log=log,
@@ -407,7 +415,7 @@ class MailPreferencesTest(TestCase):
     def test_get_defaults(self):
         self.user.is_superuser = False
         self.assertEqual(
-            (settings.NOTIFICATIONS_TODO_MAILS,
+            (settings.NOTIFICATIONS_ALL_MAILS,
              ','.join([str(pref) for pref in settings.NOTIFICATIONS_EMAIL_PREFERENCES])),
             self.obj.get_defaults()
         )

@@ -751,7 +751,7 @@ class Questionnaire(models.Model):
     def get_users_for_next_publish_step(self):
         if self.status in settings.QUESTIONNAIRE_WORKFLOW_STEPS:
             role = settings.QUESTIONNAIRE_PUBLICATION_ROLES[self.status]
-            return getattr(self, 'get_{role}s'.format(role=role))
+            return getattr(self, 'get_{role}s'.format(role=role))()
         return []
 
     def get_reviewers(self):
