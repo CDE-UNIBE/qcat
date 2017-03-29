@@ -426,8 +426,20 @@ class MailPreferencesTest(TestCase):
 
     def test_is_allowed_send_mails_settings(self):
         self.obj.subscription = settings.NOTIFICATIONS_ALL_MAILS
-        with override_settings(DO_SEND_EMAILS=True):
+        with override_settings(DO_SEND_EMAILS=True, DO_SEND_STAFF_ONLY=False):
             self.assertTrue(self.obj.is_allowed_send_mails)
+
+    def test_is_allowed_send_mails_staff_settings_is_no_staff(self):
+        user = mommy.make(get_user_model(), is_superuser=False)
+        user.mailpreferences.subscription = 'all'
+        with override_settings(DO_SEND_STAFF_ONLY=True, DO_SEND_EMAILS=True):
+            self.assertFalse(user.mailpreferences.is_allowed_send_mails)
+
+    def test_is_allowed_send_mails_staff_settings_is_staff(self):
+        superuser = mommy.make(get_user_model(), is_superuser=True)
+        superuser.mailpreferences.subscription = 'all'
+        with override_settings(DO_SEND_STAFF_ONLY=True, DO_SEND_EMAILS=True):
+            self.assertTrue(superuser.mailpreferences.is_allowed_send_mails)
 
     def test_is_allowed_domain_all_settings(self):
         with override_settings(MAILS_RESTRICT_DOMAINS='*'):

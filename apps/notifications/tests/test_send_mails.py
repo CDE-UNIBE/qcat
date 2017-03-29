@@ -101,7 +101,7 @@ class SendMailRecipientMixin(TestCase):
 
     @contextlib.contextmanager
     @override_settings(
-        EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend'
+        EMAIL_BACKEND='django.core.mail.backends.locmem.EmailBackend',
     )
     def send_notification_mails(self):
         """
@@ -123,6 +123,7 @@ class SendMailRecipientMixin(TestCase):
             yield outbox
 
 
+@override_settings(DO_SEND_STAFF_ONLY=False)
 class PublicationWorkflowMailTest(SendMailRecipientMixin):
     """
     Tests for the typical publication workflow of a questionnaire.

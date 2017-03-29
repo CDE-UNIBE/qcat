@@ -579,7 +579,8 @@ class MailPreferences(models.Model):
     @property
     def is_allowed_send_mails(self):
         return settings.DO_SEND_EMAILS and \
-               self.subscription != settings.NOTIFICATIONS_NO_MAILS
+               self.subscription != settings.NOTIFICATIONS_NO_MAILS and \
+               (not settings.DO_SEND_STAFF_ONLY or self.user.is_staff)
 
     @property
     def is_allowed_mail_domain(self):
