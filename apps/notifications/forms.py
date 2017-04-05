@@ -11,12 +11,17 @@ actions_dict = dict(settings.NOTIFICATIONS_ACTIONS)
 class MailPreferencesUpdateForm(forms.ModelForm):
 
     def __init__(self, *args, **kwargs):
+        """
+        Reduce available options for non staff members, as they are not easy
+        to understand.
+        """
         super().__init__(*args, **kwargs)
         if not kwargs['instance'].user.is_staff:
             self.fields['subscription'].choices = [
                 settings.NOTIFICATIONS_EMAIL_SUBSCRIPTIONS[0],
                 settings.NOTIFICATIONS_EMAIL_SUBSCRIPTIONS[2]
             ]
+            self.fields['wanted_actions'].widget = forms.HiddenInput()
 
     class Meta:
         model = MailPreferences
