@@ -98,7 +98,7 @@
 </section>
 
 <main class="home-main row large-no-gutters" role="main">
-  <div class="small-12 medium-{% if IS_ACTIVE_FEATURE_FACTSHEET %}9{% else %}12{% endif %} columns">
+  <div class="small-12 medium-9 columns">
     <ul class="tabs" data-tab role="tablist">
       <li class="tab-title active" role="presentation"><a href="#panel2-1" role="tab" tabindex="0" aria-selected="true" aria-controls="panel2-1">{% trans "Search SLM data" %}</a></li>
       <li class="tab-title" role="presentation"><a href="#panel2-2" role="tab" tabindex="0" aria-selected="false" aria-controls="panel2-2">{% trans "Add SLM data" %}</a></li>
@@ -279,30 +279,25 @@
       </section>
     </div>
   </div>
-
-  {% if IS_ACTIVE_FEATURE_FACTSHEET %}
-    <div class="small-12 medium-3 columns">
-      <div class="home-keynumbers-container">
-        <h3 class="keynumbers-heading">{% trans "Key Numbers" %}</h3>
-        <div class="home-keynumbers-content">
-          <img src="{% static 'assets/img/ajax-loader.gif' %}">
-        </div>
+  <div class="small-12 medium-3 columns">
+    <div class="home-keynumbers-container">
+      <h3 class="keynumbers-heading">{% trans "Key Numbers" %}</h3>
+      <div class="home-keynumbers-content">
+        <img src="{% static 'assets/img/ajax-loader.gif' %}">
       </div>
     </div>
-  {% endif %}
+  </div>
 </main>
 
-{% if IS_ACTIVE_FEATURE_FACTSHEET %}
-  {% addtoblock 'js' %}
-    {% compress js %}
-      <script>
-        $(function() {
-          $.get('{% url 'facts_teaser' %}', function(data) {
-            $('.home-keynumbers-content').html(data);
-          });
+{% addtoblock 'js' %}
+  {% compress js %}
+    <script>
+      $(function() {
+        $.get('{% url 'facts_teaser' %}', function(data) {
+          $('.home-keynumbers-content').html(data);
         });
-      </script>
-    {% endcompress %}
-  {% endaddtoblock %}
-{% endif %}
+      });
+    </script>
+  {% endcompress %}
+{% endaddtoblock %}
 {% endblock %}
