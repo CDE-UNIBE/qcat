@@ -1,11 +1,17 @@
 from configurations import values
+from os.path import join
 
 
 class DevMixin:
     DEBUG = values.BooleanValue(True)
     TEMPLATE_DEBUG = values.BooleanValue(True)
     CACHES = values.CacheURLValue('dummy://')
-    EMAIL_BACKEND = 'django.core.mail.backends.console.EmailBackend'
+    EMAIL_BACKEND = 'eml_email_backend.EmailBackend'
+
+    @property
+    def EMAIL_FILE_PATH(self):
+        return join(super().BASE_DIR, 'tmp')
+
     THUMBNAIL_DEBUG = True
 
 

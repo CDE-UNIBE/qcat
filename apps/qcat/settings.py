@@ -6,8 +6,7 @@ from .config.mixins import CompressMixin, DevMixin, SentryMixin, ProdMixin, \
 
 
 class DevDefaultSite(DevMixin, BaseSettings):
-    EMAIL_BACKEND = 'eml_email_backend.EmailBackend'
-    EMAIL_FILE_PATH = join(BaseSettings.BASE_DIR, 'tmp')
+    pass
 
 
 class TestDefaultSite(TestMixin, DevDefaultSite):
