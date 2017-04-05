@@ -3,11 +3,11 @@
 
 {% spaceless %}{{ content|linebreaksbr|striptags }}{% endspaceless %}
 
-See questionnaire in full: {{ questionnaire_url }}
+{% trans "See questionnaire in full" %}: {{ questionnaire_url }}
 
 {% trans "This is an automated message, please don't reply. If you have any questions, please contact the WOCAT secretariat." %}
 
 --
 {% trans "You're getting this message because your account on qcat.wocat.net is linked to this address." %}
-Change subscription settings: {{ subscription_url }}
-Visit qcat.wocat.net: https://qcat.wocat.net/
+{% trans "Change subscription settings" %}: {{ subscription_url }}
+{% trans "Visit qcat.wocat.net" %}: {{ base_url }}

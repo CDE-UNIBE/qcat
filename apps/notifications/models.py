@@ -447,7 +447,8 @@ class Log(models.Model):
             'questionnaire_url': '{base_url}{url}'.format(
                 base_url=settings.BASE_URL,
                 url=self.questionnaire.get_absolute_url()
-            )
+            ),
+            'base_url': settings.BASE_URL
         }
         if self.is_publish_notification:
             context['content'] += render_to_string(

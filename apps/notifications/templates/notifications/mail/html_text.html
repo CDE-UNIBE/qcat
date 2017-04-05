@@ -1,4 +1,5 @@
 {% load i18n %}
+{% load static %}
 <!DOCTYPE html>
 <html style="font-weight: 300">
 <head style="font-weight: 300">
@@ -52,12 +53,12 @@
         {% trans "WOCAT Website" %}
       </a>
       <br>
-      <a href="https://qcat.wocat.net" style="color: #dc7d35; text-decoration: none;">
+      <a href="{{ base_url }}" style="color: #dc7d35; text-decoration: none;">
         {% trans "WOCAT SLM Database" %}
       </a>
     </td>
     <td>
-      <img src="http://localhost:8000/static/assets/img/wocat_logo.svg">
+      <img src="{{ base_url }}{% static "assets/img/wocat_logo.svg" %}">
     </td>
   </tr>
   <tr style="font-weight: 300; background-color: #5f594f; color:#ffffff;">
