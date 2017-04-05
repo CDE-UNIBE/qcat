@@ -9,7 +9,7 @@ from django.core.exceptions import ValidationError
 from django.core.urlresolvers import reverse
 from django.test.utils import override_settings
 from django.utils.translation import activate
-from unittest.mock import patch, Mock
+from unittest.mock import patch, Mock, sentinel
 from model_mommy import mommy
 
 from accounts.models import User
@@ -794,8 +794,9 @@ class QuestionnaireModelTest(TestCase):
         qs = self.get_questionnaire_with_name()
         qs.status = '21'
         with patch.object(qs, 'get_reviewers') as mock_target_method:
+            mock_target_method.return_value = sentinel.a_function
             self.assertEqual(
-                mock_target_method,
+                sentinel.a_function,
                 qs.get_users_for_next_publish_step()
             )
 

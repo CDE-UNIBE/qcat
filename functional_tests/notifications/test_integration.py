@@ -113,6 +113,7 @@ class NotificationsIntegrationTest(FunctionalTest):
         self.findBy('class_name', 'has-unread-messages')
         self.browser.get(self.notifications_url)
         # the notification from robin is shown.
+        self.wait_for('class_name', 'notification-list')
         boxes = self.findBy(
             'id', 'notifications-list'
         ).find_elements_by_tag_name('div')

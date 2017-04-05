@@ -338,9 +338,9 @@ class LogTest(TestCase):
         mock_affected.return_value = [self.catalyst]
         mock_reviewers.return_value = [self.catalyst, mommy.make(get_user_model())]
         log = self.get_review_log()
-        self.assertListEqual(
-            [user.id for user in mock_reviewers.return_value],
-            [user.id for user in list(log.recipients)],
+        self.assertEqual(
+            set([user.id for user in mock_reviewers.return_value]),
+            set([user.id for user in list(log.recipients)]),
         )
 
     def get_review_log(self):

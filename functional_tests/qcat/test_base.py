@@ -118,5 +118,5 @@ class BaseTemplateTest(FunctionalTest):
         keynumbers_list = self.findBy('class_name', 'home-keynumbers-list')
         self.assertEqual(
             len(keynumbers_list.find_elements_by_tag_name('li')),
-            7
+            6
         )

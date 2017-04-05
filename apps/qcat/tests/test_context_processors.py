@@ -42,7 +42,7 @@ class MaintenanceAnnouncementTest(TestCase):
     @patch('qcat.context_processors.cache')
     def test_get_next_maintenance_anonymous(self, mock_cache):
         request = MagicMock()
-        request.user.is_authenticated = MagicMock(return_value=False)
+        request.user.is_authenticated.return_value = False
         announcement = MaintenanceAnnouncement(request)
         self.assertDictEqual(announcement.overlay, {})
         self.assertFalse(mock_cache.called)
@@ -57,7 +57,6 @@ class MaintenanceAnnouncementTest(TestCase):
     @patch('qcat.context_processors.cache')
     def test_flush_cache(self, mock_cache):
         mock_cache.get = MagicMock(return_value=None)
-        mock_cache.set = MagicMock(return_value=None)
         MaintenanceAnnouncement(self.request)
         mock_cache.set.assert_called_once_with(
             key='next_maintenance',
