@@ -81,7 +81,7 @@ class SendMailRecipientMixin(TestCase):
         """
         logs = Log.objects.all()
         self.assertEqual(logs.count(), all_logs_count)
-        self.assertFalse(logs.filter(was_sent=False).exists())
+        self.assertFalse(logs.filter(was_processed=False).exists())
 
     def assert_only_expected(self, outbox, *expected):
         for mail in expected:

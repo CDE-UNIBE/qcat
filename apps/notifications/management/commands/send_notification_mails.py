@@ -13,7 +13,7 @@ class Command(NoArgsCommand):
     Send notification mails.
     """
     def handle_noargs(self, **options):
-        logs = Log.objects.filter(was_sent=False)
+        logs = Log.objects.filter(was_processed=False)
         for log in self.logged_generator(logs):
             log.send_mails()
 

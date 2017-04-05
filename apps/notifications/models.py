@@ -280,7 +280,7 @@ class Log(models.Model):
     )
     questionnaire = models.ForeignKey(Questionnaire)
     action = models.PositiveIntegerField(choices=settings.NOTIFICATIONS_ACTIONS)
-    was_sent = models.BooleanField(default=False)
+    was_processed = models.BooleanField(default=False)
 
     objects = models.Manager()
     actions = ActionContextQuerySet.as_manager()
@@ -384,7 +384,7 @@ class Log(models.Model):
         """
         with transaction.atomic():
             log = Log.objects.select_for_update(nowait=True).get(id=self.id)
-            if not log.was_sent:
+            if not log.was_processed:
                 original_locale = get_language()
                 for recipient in log.recipients:
                     if recipient.mailpreferences.do_send_mail(log):
@@ -392,8 +392,8 @@ class Log(models.Model):
                         message = log.compile_message_to(recipient=recipient)
                         message.send()
 
-                log.was_sent = True
-                log.save(update_fields=['was_sent'])
+                log.was_processed = True
+                log.save(update_fields=['was_processed'])
                 activate(original_locale)
 
     @cached_property
