@@ -434,8 +434,7 @@ def user_update(request):
 
     # Update (or insert) the user details in the local database
     try:
-        user, created = User.objects.get_or_create(
-            pk=user_uid, email=user_info.get('username'))
+        user, created = User.objects.get_or_create(pk=user_uid)
     except IntegrityError:
         ret['message'] = 'Duplicate email address "{}"'.format(
             user_info.get('username'))
