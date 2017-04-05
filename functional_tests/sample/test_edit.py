@@ -1156,10 +1156,7 @@ class LockTest(FunctionalTest):
         )
         # and the edit button has no url, but a message about the locked status
         edit_button = self.findBy('link_text', 'Edit')
-        self.assertTrue(
-            edit_button.get_attribute('disabled')
-
-        )
+        self.assertTrue(edit_button.get_attribute('disabled'))
         self.findBy('xpath', '//*[text()[contains(.,"This questionnaire is '
                              'locked for editing by jay None.")]]')
 

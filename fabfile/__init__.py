@@ -1,5 +1,4 @@
 import contextlib
-from multiprocessing.pool import ThreadPool as Pool
 import os
 import time
 import urllib.request
@@ -11,8 +10,9 @@ from fabric.context_managers import cd, prefix
 from fabric.contrib.files import exists
 from fabric.api import run, env
 from fabric.colors import green
-from fabric.decorators import task
+from fabric.decorators import task, runs_once, parallel
 from fabric.contrib import django
+from fabric.tasks import execute
 from django.conf import settings
 
 # Load the django settings. This needs to read the env-variables and setup
@@ -84,16 +84,22 @@ def set_environment(environment_name):
 
 
 @task
+@runs_once
 def deploy(branch):
     """
-    Execute with "fab deploy:<branch>".
+    Execute with "fab deploy:<branch>". This will deploy the branch to the hosts
+    set in BRANCH_HOSTINGS
     """
     if branch not in BRANCH_HOSTINGS.keys():
         raise BaseException('{} is not a valid branch'.format(branch))
 
-    pool = Pool(2)
-    for environment in pool.imap_unordered(_run_deploy_steps, BRANCH_HOSTINGS[branch]):
-        print('depolying %s' % environment)
+    for environment in BRANCH_HOSTINGS[branch]:
+        print('deploying %s' % environment)
+        # use execute, so task can run in parallel.
+        execute(
+            task=deploy_host,
+            environment=environment
+        )
 
 
 @task
@@ -107,7 +113,8 @@ def show_logs(environment_name, file='django.log', n=100):
     )
 
 
-def _run_deploy_steps(environment):
+@parallel
+def deploy_host(environment):
     set_environment(environment)
     if env.use_deploy_announcement:
         _set_maintenance_warning()

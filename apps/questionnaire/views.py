@@ -847,6 +847,8 @@ class QuestionnaireView(QuestionnaireRetrieveMixin, StepsMixin, InheritedDataMix
         links_by_configuration_codes = collections.defaultdict(list)
 
         for linked in linked_questionnaires:
+            if linked.is_deleted is True:
+                continue
             configuration_code = linked.configurations.first().code
             linked_questionnaire_code = linked.code
             if linked_questionnaire_code not in links_by_configuration_codes[

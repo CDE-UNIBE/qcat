@@ -395,7 +395,8 @@ class QuestionnaireModelTest(TestCase):
         self.assertEqual(roles, [('secretariat', 'WOCAT Secretariat')])
         expected_permissions = ['assign_questionnaire', 'review_questionnaire',
                                 'delete_questionnaire', 'submit_questionnaire',
-                                'edit_questionnaire', 'publish_questionnaire']
+                                'edit_questionnaire', 'publish_questionnaire',
+                                'change_compiler']
         self.assertTrue(
             len(permissions) == len(expected_permissions) and sorted(
                 permissions) == sorted(expected_permissions))
@@ -741,7 +742,7 @@ class QuestionnaireModelTest(TestCase):
         self.assertEqual(len(links_property), 1)
 
     def test_get_name(self):
-        self.assertDictEqual(
+        self.assertEqual(
             self.get_questionnaire_with_name().get_name(),
             'bread'
         )

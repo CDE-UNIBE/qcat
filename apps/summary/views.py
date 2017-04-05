@@ -68,9 +68,12 @@ class SummaryPDFCreateView(PDFTemplateView):
 
     def get(self, request, *args, **kwargs):
         self.questionnaire = self.get_object(questionnaire_id=self.kwargs['id'])
-        self.code = self.questionnaire.configurations.filter(
-            active=True
-        ).first().code
+        try:
+            self.code = self.questionnaire.configurations.filter(
+                active=True
+            ).first().code
+        except AttributeError:
+            raise Http404
         self.config = get_configuration(configuration_code=self.code)
         return super().get(request, *args, **kwargs)
 

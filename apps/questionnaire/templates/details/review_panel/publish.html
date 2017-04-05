@@ -120,3 +120,7 @@
   {% trans "Please note that currently, invited users are not notified automatically. This feature is in development and will be added soon. For the time being, it is recommended to notify invited users via e-mail." as assign_notice %}
   {% include 'details/review_panel/_assign_user.html' with users=review_config.publishers  questionnaire_type=questionnaire_type review_status=review_config.review_status %}
 {% endif %}
+
+{% if 'change_compiler' in review_config.permissions %}
+  {% include 'details/review_panel/_change_compiler.html' %}
+{% endif %}

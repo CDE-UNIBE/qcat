@@ -114,6 +114,7 @@ class Questionnaire(models.Model):
              "Can assign questionnaire (for review/publish)"),
             ("view_questionnaire", "Can view questionnaire"),
             ("edit_questionnaire", "Can edit questionnaire"),
+            ("change_compiler", "Can change compiler of questionnaire"),
             ("flag_unccd_questionnaire", "Can flag UNCCD questionnaire"),
             ("unflag_unccd_questionnaire", "Can unflag UNCCD questionnaire"),
         )
@@ -477,7 +478,7 @@ class Questionnaire(models.Model):
             permissions.extend(
                 ['edit_questionnaire', 'delete_questionnaire',
                  'submit_questionnaire', 'review_questionnaire',
-                 'publish_questionnaire'])
+                 'publish_questionnaire', 'change_compiler'])
             if self.status in [settings.QUESTIONNAIRE_SUBMITTED,
                                settings.QUESTIONNAIRE_REVIEWED]:
                 permissions.extend(['assign_questionnaire'])
@@ -548,7 +549,7 @@ class Questionnaire(models.Model):
                 'No active configuration for questionnaire {}'.format(self.id)
             )
         config = get_configuration(active_config.code)
-        names = config.get_questionnaire_name(self.data)
+        names = config.get_questionnaire_name(self.data) or {}
         name = names.get(locale or get_language())
         if name:
             # omit additional query

@@ -20,6 +20,13 @@
 .home-main {
   margin-top: rem-calc(24);
 }
+
+.home-main {
+  .tab-title:focus, a:focus {
+    outline: none;
+  }
+}
+
 //.home-slider-img {
 //  background: url("/static/assets/img/wocat_hero.jpg") $color-brown no-repeat top center;
 //  background-size: cover;
@@ -36,14 +43,54 @@
 }
 
 .keynumber, .keynumber-text {
-  color:$color-brown;
+  color: $color-brown;
+}
+
+.home-keynumbers-content strong {
+  color: $color-orange;
 }
 
 .keynumber {
   font-size:rem-calc(24);
   line-height: rem-calc(28);
+  color: $color-orange;
 }
 
 .keynumbers-text {
   font-size:rem-calc(14);
+}
+
+.accordion .accordion-about-wocat {
+  >a, >a:hover {
+    background: white;
+    color: $color-brown-dark;
+    padding: 1rem 1.5rem;
+  }
+  >a:hover {
+    text-decoration: underline;
+  }
+  &.active>a {
+    background: white;
+    color: $color-brown-dark;
+    border-bottom: 1px solid $color-beige;
+  }
+  &:not(.active) svg.accordion-icon-opened {
+    display: none;
+  }
+  &.active svg.accordion-icon-closed {
+    display: none;
+  }
+  .content {
+    padding-bottom: 1.5rem;
+  }
+}
+
+.home-main .card-well {
+  height: 100%;
+  display: flex;
+  flex-direction: column;
+}
+
+.home-main .card-desc {
+  flex-grow: 1;
 }

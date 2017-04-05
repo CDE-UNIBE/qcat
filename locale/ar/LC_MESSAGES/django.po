@@ -8,8 +8,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: qcat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-07 14:54+0100\n"
-"PO-Revision-Date: 2017-02-25 09:24+0000\n"
+"POT-Creation-Date: 2017-04-03 09:19+0200\n"
+"PO-Revision-Date: 2017-03-23 15:27+0000\n"
 "Last-Translator: Lukas Vonlanthen <lukas.vonlanthen@cde.unibe.ch>\n"
 "Language-Team: Arabic (http://www.transifex.com/university-of-bern-cde/qcat/"
 "language/ar/)\n"
@@ -77,8 +77,8 @@ msgid "Public questionnaires"
 msgstr ""
 
 #: apps/accounts/templates/login.html:10 apps/accounts/templates/login.html:24
-#: apps/questionnaire/tests/test_utils.py:1067
-#: apps/questionnaire/tests/test_utils.py:1075
+#: apps/questionnaire/tests/test_utils.py:986
+#: apps/questionnaire/tests/test_utils.py:994
 #: apps/search/tests/test_utils.py:101 apps/search/tests/test_utils.py:106
 #: templates/base.html:161
 msgid "Login"
@@ -128,7 +128,7 @@ msgstr ""
 
 #: apps/accounts/templates/questionnaires.html:15
 #: apps/wocat/templates/wocat/add.html:9
-#: apps/wocat/templates/wocat/home.html:73 templates/base.html:185
+#: apps/wocat/templates/wocat/home.html:104 templates/base.html:185
 msgid "Add SLM data"
 msgstr ""
 
@@ -144,9 +144,9 @@ msgstr ""
 #: apps/questionnaire/templates/form/questiongroup/select_link.html:47
 #: apps/questionnaire/templates/form/questiongroup/select_user.html:79
 #: apps/sample/templates/sample/add_module.html:34
-#: apps/technologies/templates/technologies/add_module.html:38
-#: apps/wocat/templates/wocat/partial/search.html:22
-#: apps/wocat/templates/wocat/questionnaire/list.html:76
+#: apps/technologies/templates/technologies/add_module.html:35
+#: apps/wocat/templates/wocat/partial/search.html:23
+#: apps/wocat/templates/wocat/questionnaire/list.html:77
 msgid "Search"
 msgstr ""
 
@@ -162,7 +162,7 @@ msgstr ""
 msgid "See all results... "
 msgstr ""
 
-#: apps/accounts/views.py:62
+#: apps/accounts/views.py:63
 msgid "Welcome {}"
 msgstr ""
 
@@ -171,8 +171,9 @@ msgid "WOCAT SLM Approaches"
 msgstr ""
 
 #: apps/approaches/templates/approaches/questionnaire/list.html:13
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:13
 #: apps/sample/templates/sample/questionnaire/list.html:71
-#: apps/wocat/templates/wocat/home.html:117
+#: apps/wocat/templates/wocat/home.html:150
 #: apps/wocat/templates/wocat/partial/search.html:17
 #: apps/wocat/templates/wocat/questionnaire/list.html:71
 msgid "SLM Approaches"
@@ -248,7 +249,7 @@ msgstr ""
 msgid "This SLM Approach is linked to SLM Technologies"
 msgstr ""
 
-#: apps/approaches/views.py:47
+#: apps/approaches/views.py:23
 #: apps/questionnaire/templates/details/category/approaches_header.html:6
 #: apps/wocat/templates/wocat/partial/top.html:18
 msgid "Approaches"
@@ -278,7 +279,7 @@ msgid ""
 msgstr ""
 
 #: apps/cca/templates/cca/questionnaire/partial/link.html:16
-#: apps/cca/views.py:46
+#: apps/cca/views.py:23
 msgid "Climate Change Adaptation"
 msgstr ""
 
@@ -298,7 +299,7 @@ msgstr ""
 msgid "No"
 msgstr ""
 
-#: apps/configuration/configuration.py:2556
+#: apps/configuration/configuration.py:2560
 #: apps/questionnaire/templates/details/category/unccd_header.html:16
 msgid "Unknown name"
 msgstr ""
@@ -14627,22 +14628,53 @@ msgid "Arabic"
 msgstr ""
 
 #: apps/qcat/config/common.py:104
-msgid "Bosnian"
-msgstr ""
-
-#: apps/qcat/config/common.py:105
 msgid "Portuguese"
 msgstr ""
 
-#: apps/qcat/context_processors.py:144
+#: apps/qcat/context_processors.py:145
 msgid ""
 "Caution: Maintenance will start soon ({}), this page will then be "
 "unavailable for a couple of minutes.<br>If you are working on a "
 "questionnaire, please make sure to save your work!"
 msgstr ""
 
-#: apps/qcat/context_processors.py:151
+#: apps/qcat/context_processors.py:152
 msgid "Maintenance starts in {}"
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:9
+#, python-format
+msgid ""
+"%(questionnaires_count)s SLM Practices published <br>from "
+"%(countries_count)s countries<br>by %(compilers_count)s users."
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:12
+#: apps/sample/templates/sample/questionnaire/list.html:70
+#: apps/technologies/templates/technologies/questionnaire/list.html:13
+#: apps/wocat/templates/wocat/home.html:130
+#: apps/wocat/templates/wocat/partial/search.html:16
+#: apps/wocat/templates/wocat/questionnaire/list.html:70
+msgid "SLM Technologies"
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:14
+#: apps/wocat/templates/wocat/partial/search.html:18
+#: apps/wocat/templates/wocat/questionnaire/list.html:72
+msgid "UNCCD PRAIS Practices"
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:20
+#, python-format
+msgid ""
+"%(questionnaires_count)s new practices drafted in the past %(days)s days."
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:26
+#, python-format
+msgid ""
+"%(visits_count)s visits from %(countries_count)s different countries since "
+"launch in August 2016."
 msgstr ""
 
 #: apps/questionnaire/errors.py:20
@@ -14674,7 +14706,7 @@ msgstr ""
 msgid "Inactive"
 msgstr ""
 
-#: apps/questionnaire/models.py:60 apps/summary/renderers.py:236
+#: apps/questionnaire/models.py:60 apps/summary/renderers.py:244
 #: apps/wocat/templates/wocat/help/questionnaire_roles.html:10
 msgid "Compiler"
 msgstr ""
@@ -14715,11 +14747,11 @@ msgstr ""
 msgid "Submitted as SLM best practice to UNCCD by the national focal point"
 msgstr ""
 
-#: apps/questionnaire/models.py:969
+#: apps/questionnaire/models.py:970
 msgid "This questionnaire can be edited."
 msgstr ""
 
-#: apps/questionnaire/models.py:971
+#: apps/questionnaire/models.py:972
 #, python-brace-format
 msgid "This questionnaire is locked for editing by {user}."
 msgstr ""
@@ -14789,7 +14821,7 @@ msgid "Editor:"
 msgstr ""
 
 #: apps/questionnaire/templates/details/category/approaches_header.html:84
-#: apps/questionnaire/templates/details/category/approaches_header.html:96
+#: apps/questionnaire/templates/details/category/approaches_header.html:97
 #: apps/questionnaire/templates/details/category/cca_header.html:80
 #: apps/questionnaire/templates/details/category/cca_header.html:85
 #: apps/questionnaire/templates/details/category/cca_header.html:94
@@ -14797,7 +14829,7 @@ msgstr ""
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:87
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:96
 #: apps/questionnaire/templates/details/category/technologies_header.html:84
-#: apps/questionnaire/templates/details/category/technologies_header.html:96
+#: apps/questionnaire/templates/details/category/technologies_header.html:97
 #: apps/questionnaire/templates/details/category/unccd_header.html:75
 #: apps/questionnaire/templates/details/category/unccd_header.html:80
 #: apps/questionnaire/templates/details/category/unccd_header.html:89
@@ -14808,7 +14840,8 @@ msgstr ""
 #: apps/questionnaire/templates/details/category/with_metadata.html:87
 #: apps/questionnaire/templates/details/category/with_metadata.html:95
 #: apps/questionnaire/templates/form/subcategory/comingsoon.html:7
-#: apps/wocat/templates/wocat/add_maps.html:68
+#: apps/wocat/templates/wocat/home.html:206
+#: apps/wocat/templates/wocat/partial/add.html:79
 msgid "Coming soon"
 msgstr ""
 
@@ -14838,44 +14871,49 @@ msgstr ""
 msgid "Full summary as PDF"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:98
+#: apps/questionnaire/templates/details/category/approaches_header.html:94
+#: apps/questionnaire/templates/details/category/technologies_header.html:94
+msgid "Full summary as HTML"
+msgstr ""
+
+#: apps/questionnaire/templates/details/category/approaches_header.html:99
 #: apps/questionnaire/templates/details/category/cca_header.html:96
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:98
-#: apps/questionnaire/templates/details/category/technologies_header.html:98
+#: apps/questionnaire/templates/details/category/technologies_header.html:99
 #: apps/questionnaire/templates/details/category/unccd_header.html:91
 #: apps/questionnaire/templates/details/category/watershed_header.html:100
 #: apps/questionnaire/templates/details/category/with_metadata.html:97
 msgid "Export"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:106
+#: apps/questionnaire/templates/details/category/approaches_header.html:107
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:106
-#: apps/questionnaire/templates/details/category/technologies_header.html:106
+#: apps/questionnaire/templates/details/category/technologies_header.html:107
 #: apps/questionnaire/templates/details/category/unccd_header.html:99
 #: apps/questionnaire/templates/details/category/watershed_header.html:108
 #: apps/questionnaire/templates/details/category/with_metadata.html:105
 msgid "See history"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:112
-#: apps/wocat/templates/wocat/add_practice.html:52
+#: apps/questionnaire/templates/details/category/approaches_header.html:113
+#: apps/wocat/templates/wocat/partial/add.html:39
 msgid "SLM Approach"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:117
+#: apps/questionnaire/templates/details/category/approaches_header.html:118
 #: apps/questionnaire/templates/details/category/cca_header.html:109
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:116
-#: apps/questionnaire/templates/details/category/technologies_header.html:117
+#: apps/questionnaire/templates/details/category/technologies_header.html:118
 #: apps/questionnaire/templates/details/category/unccd_header.html:110
 #: apps/questionnaire/templates/details/category/watershed_header.html:119
 #: apps/questionnaire/templates/details/category/with_metadata.html:117
 msgid "View sections"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:119
+#: apps/questionnaire/templates/details/category/approaches_header.html:120
 #: apps/questionnaire/templates/details/category/cca_header.html:111
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:118
-#: apps/questionnaire/templates/details/category/technologies_header.html:119
+#: apps/questionnaire/templates/details/category/technologies_header.html:120
 #: apps/questionnaire/templates/details/category/unccd_header.html:112
 #: apps/questionnaire/templates/details/category/watershed_header.html:121
 #: apps/questionnaire/templates/details/category/with_metadata.html:119
@@ -14883,10 +14921,10 @@ msgstr ""
 msgid "Expand all"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:120
+#: apps/questionnaire/templates/details/category/approaches_header.html:121
 #: apps/questionnaire/templates/details/category/cca_header.html:112
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:119
-#: apps/questionnaire/templates/details/category/technologies_header.html:120
+#: apps/questionnaire/templates/details/category/technologies_header.html:121
 #: apps/questionnaire/templates/details/category/unccd_header.html:113
 #: apps/questionnaire/templates/details/category/watershed_header.html:122
 #: apps/questionnaire/templates/details/category/with_metadata.html:120
@@ -14894,30 +14932,30 @@ msgstr ""
 msgid "Collapse all"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:125
+#: apps/questionnaire/templates/details/category/approaches_header.html:126
 #: apps/questionnaire/templates/details/category/cca_header.html:117
-#: apps/questionnaire/templates/details/category/technologies_header.html:125
+#: apps/questionnaire/templates/details/category/technologies_header.html:126
 #: apps/questionnaire/templates/details/category/unccd_header.html:118
 #: apps/questionnaire/templates/details/category/watershed_header.html:127
 msgid "Completeness:"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:144
+#: apps/questionnaire/templates/details/category/approaches_header.html:145
 #: apps/questionnaire/templates/details/category/cca_header.html:136
 #: apps/questionnaire/templates/details/category/default.html:19
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:138
-#: apps/questionnaire/templates/details/category/technologies_header.html:144
+#: apps/questionnaire/templates/details/category/technologies_header.html:145
 #: apps/questionnaire/templates/details/category/unccd_header.html:137
 #: apps/questionnaire/templates/details/category/watershed_header.html:146
 #: apps/questionnaire/templates/details/category/with_metadata.html:139
 msgid "Edit this section"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:160
+#: apps/questionnaire/templates/details/category/approaches_header.html:161
 #: apps/questionnaire/templates/details/category/cca_header.html:152
 #: apps/questionnaire/templates/details/category/default.html:32
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:152
-#: apps/questionnaire/templates/details/category/technologies_header.html:160
+#: apps/questionnaire/templates/details/category/technologies_header.html:161
 #: apps/questionnaire/templates/details/category/unccd_header.html:153
 #: apps/questionnaire/templates/details/category/watershed_header.html:162
 #: apps/questionnaire/templates/details/category/with_metadata.html:153
@@ -14933,7 +14971,7 @@ msgid "Technology: "
 msgstr ""
 
 #: apps/questionnaire/templates/details/category/technologies_header.html:6
-#: apps/technologies/views.py:47 apps/wocat/templates/wocat/partial/top.html:14
+#: apps/technologies/views.py:23 apps/wocat/templates/wocat/partial/top.html:14
 msgid "Technologies"
 msgstr ""
 
@@ -14941,8 +14979,8 @@ msgstr ""
 msgid "New SLM Technology"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/technologies_header.html:112
-#: apps/wocat/templates/wocat/add_practice.html:33
+#: apps/questionnaire/templates/details/category/technologies_header.html:113
+#: apps/wocat/templates/wocat/partial/add.html:19
 msgid "SLM Technology"
 msgstr ""
 
@@ -15091,23 +15129,23 @@ msgstr ""
 msgid "Search user"
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/_assign_user.html:66
+#: apps/questionnaire/templates/details/review_panel/_assign_user.html:67
 #: apps/questionnaire/templates/form/questiongroup/select_link.html:48
 #: apps/questionnaire/templates/form/questiongroup/select_user.html:79
 #: apps/sample/templates/sample/add_module.html:35
-#: apps/technologies/templates/technologies/add_module.html:39
+#: apps/technologies/templates/technologies/add_module.html:36
 msgid "No results found"
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/_assign_user.html:67
+#: apps/questionnaire/templates/details/review_panel/_assign_user.html:68
 #: apps/questionnaire/templates/form/questiongroup/select_link.html:49
 #: apps/questionnaire/templates/form/questiongroup/select_user.html:79
 #: apps/sample/templates/sample/add_module.html:36
-#: apps/technologies/templates/technologies/add_module.html:40
+#: apps/technologies/templates/technologies/add_module.html:37
 msgid "Too many results found, please narrow the search"
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/_assign_user.html:70
+#: apps/questionnaire/templates/details/review_panel/_assign_user.html:71
 msgid "Update users"
 msgstr ""
 
@@ -15320,45 +15358,45 @@ msgid ""
 "        "
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:49
+#: apps/questionnaire/templates/details/review_panel/edit.html:53
 msgid "Flag as UNCCD best practice"
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:53
+#: apps/questionnaire/templates/details/review_panel/edit.html:57
 msgid "Flag this questionnaire as a UNCCD best practice for this country."
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:56
+#: apps/questionnaire/templates/details/review_panel/edit.html:60
 msgid "Please confirm flagging as a UNCCD best practice."
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:57
+#: apps/questionnaire/templates/details/review_panel/edit.html:61
 msgid ""
 "By submitting, this questionnaire will be flagged as a UNCCD best practice "
 "for this country. Please note that due to the review process, it will take a "
 "few days before this is publicly visible."
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:58
-#: apps/questionnaire/templates/details/review_panel/edit.html:77
+#: apps/questionnaire/templates/details/review_panel/edit.html:62
+#: apps/questionnaire/templates/details/review_panel/edit.html:81
 msgid "Confirm"
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:68
+#: apps/questionnaire/templates/details/review_panel/edit.html:72
 msgid "Unflag as UNCCD best practice"
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:72
+#: apps/questionnaire/templates/details/review_panel/edit.html:76
 msgid ""
 "This questionnaire is flagged as a UNCCD best practice for this country. As "
 "the UNCCD national focal point, you can remove this flag."
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:75
+#: apps/questionnaire/templates/details/review_panel/edit.html:79
 msgid "Please confirm unflagging as a UNCCD best practice."
 msgstr ""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:76
+#: apps/questionnaire/templates/details/review_panel/edit.html:80
 msgid ""
 "By submitting, this questionnaire will be unflagged as UNCCD best practice "
 "for this country. Please note that due to the review process, it will take a "
@@ -16030,7 +16068,6 @@ msgid "No links"
 msgstr ""
 
 #: apps/questionnaire/templates/questionnaire/details.html:89
-#: apps/wocat/templates/wocat/partial/add.html:65
 msgid "Modules"
 msgstr ""
 
@@ -16044,31 +16081,28 @@ msgstr ""
 
 #: apps/questionnaire/templates/questionnaire/details.html:113
 #: apps/sample/templates/sample/add_module.html:27
-#: apps/technologies/templates/technologies/add_module.html:31
+#: apps/technologies/templates/technologies/add_module.html:28
 msgid "1. Select a Technology"
 msgstr ""
 
 #: apps/questionnaire/templates/questionnaire/details.html:117
 #: apps/sample/templates/sample/add_module.html:53
-#: apps/technologies/templates/technologies/add_module.html:57
 msgid "2. Select a module"
 msgstr ""
 
 #: apps/questionnaire/templates/questionnaire/details.html:120
 #: apps/sample/templates/sample/add_module.html:56
-#: apps/technologies/templates/technologies/add_module.html:60
 msgid "Select a module which you would like to add to the Technology."
 msgstr ""
 
 #: apps/questionnaire/templates/questionnaire/details.html:128
 #: apps/sample/templates/sample/add_module.html:70
-#: apps/technologies/templates/technologies/add_module.html:74
 msgid "3. Create the module"
 msgstr ""
 
 #: apps/questionnaire/templates/questionnaire/details.html:130
 #: apps/sample/templates/sample/add_module.html:72
-#: apps/technologies/templates/technologies/add_module.html:76
+#: apps/technologies/templates/technologies/add_module.html:70
 msgid "Create"
 msgstr ""
 
@@ -16121,78 +16155,76 @@ msgstr ""
 msgid "Unknown"
 msgstr ""
 
-#: apps/questionnaire/utils.py:1310
+#: apps/questionnaire/utils.py:1201
 msgid "The questionnaire was successfully submitted."
 msgstr ""
 
-#: apps/questionnaire/utils.py:1342
+#: apps/questionnaire/utils.py:1233
 msgid "The questionnaire was successfully reviewed."
 msgstr ""
 
-#: apps/questionnaire/utils.py:1380
+#: apps/questionnaire/utils.py:1271
 msgid "New version was published"
 msgstr ""
 
-#: apps/questionnaire/utils.py:1408
+#: apps/questionnaire/utils.py:1299
 msgid "The questionnaire was successfully set public."
 msgstr ""
 
-#: apps/questionnaire/utils.py:1447
+#: apps/questionnaire/utils.py:1338
 msgid "The questionnaire was successfully rejected."
 msgstr ""
 
-#: apps/questionnaire/utils.py:1537
+#: apps/questionnaire/utils.py:1428
 msgid "Assigned users were successfully updated"
 msgstr ""
 
-#: apps/questionnaire/utils.py:1565
+#: apps/questionnaire/utils.py:1544
 msgid ""
 "The flag could not be set because a version of this questionnaire is already "
 "in the review process and needs to be published first. Please try again "
 "later."
 msgstr ""
 
-#: apps/questionnaire/utils.py:1587
+#: apps/questionnaire/utils.py:1566
 msgid "The flag was successfully set."
 msgstr ""
 
-#: apps/questionnaire/utils.py:1611
+#: apps/questionnaire/utils.py:1590
 msgid ""
 "The flag could not be removed because a version of this questionnaire is "
 "already in the review process and needs to be published first. Please try "
 "again later."
 msgstr ""
 
-#: apps/questionnaire/utils.py:1632
+#: apps/questionnaire/utils.py:1611
 msgid ""
 "The flag was successfully removed. Please note that this created a new "
 "version which needs to be reviewed. In the meantime, you are seeing the "
 "public version which still shows the flag."
 msgstr ""
 
-#: apps/questionnaire/utils.py:1639
+#: apps/questionnaire/utils.py:1618
 msgid "New version due to unccd flagging"
 msgstr ""
 
-#: apps/questionnaire/utils.py:1653
+#: apps/questionnaire/utils.py:1632
 msgid "The questionnaire was succesfully removed"
 msgstr ""
 
-#: apps/questionnaire/views.py:520
+#: apps/questionnaire/views.py:478
 msgid "Data successfully saved."
 msgstr ""
 
-#: apps/questionnaire/views.py:1077
+#: apps/questionnaire/views.py:1037
 msgid "QCAT Form"
 msgstr ""
 
-#: apps/questionnaire/views.py:1301
+#: apps/questionnaire/views.py:1261
 msgid "No or multiple files provided."
 msgstr ""
 
 #: apps/sample/templates/sample/add_module.html:15
-#: apps/technologies/templates/technologies/add_module.html:15
-#: apps/wocat/templates/wocat/add_module.html:9
 msgid "Add SLM Module"
 msgstr ""
 
@@ -16201,7 +16233,7 @@ msgid "SAMPLE: More information about the modules and stuff."
 msgstr ""
 
 #: apps/sample/templates/sample/add_module.html:30
-#: apps/technologies/templates/technologies/add_module.html:34
+#: apps/technologies/templates/technologies/add_module.html:31
 msgid "Search and select a Technology to which you would like to add a module."
 msgstr ""
 
@@ -16236,17 +16268,9 @@ msgstr ""
 msgid "All SLM Data"
 msgstr ""
 
-#: apps/sample/templates/sample/questionnaire/list.html:70
-#: apps/technologies/templates/technologies/questionnaire/list.html:13
-#: apps/wocat/templates/wocat/home.html:98
-#: apps/wocat/templates/wocat/partial/search.html:16
-#: apps/wocat/templates/wocat/questionnaire/list.html:70
-msgid "SLM Technologies"
-msgstr ""
-
 #: apps/sample/templates/sample/questionnaire/list.html:78
 #: apps/wocat/templates/wocat/partial/top.html:33
-#: apps/wocat/templates/wocat/questionnaire/list.html:79
+#: apps/wocat/templates/wocat/questionnaire/list.html:80
 msgid "Advanced filter"
 msgstr ""
 
@@ -16299,549 +16323,549 @@ msgstr ""
 msgid "Subsidies for specific inputs"
 msgstr ""
 
-#: apps/summary/renderers.py:154
+#: apps/summary/renderers.py:161
 msgid "Description"
 msgstr ""
 
-#: apps/summary/renderers.py:217
+#: apps/summary/renderers.py:225
 msgid "Conclusions and lessons learnt"
 msgstr ""
 
-#: apps/summary/renderers.py:220
+#: apps/summary/renderers.py:228
 msgid "Strengths"
 msgstr ""
 
-#: apps/summary/renderers.py:224
+#: apps/summary/renderers.py:232
 msgid "Weaknesses/ disadvantages/ risks"
 msgstr ""
 
-#: apps/summary/renderers.py:225
+#: apps/summary/renderers.py:233
 msgid "how to overcome"
 msgstr ""
 
-#: apps/summary/renderers.py:233
+#: apps/summary/renderers.py:241
 msgid "References"
 msgstr ""
 
-#: apps/summary/renderers.py:241
+#: apps/summary/renderers.py:249
 msgid "Resource persons"
 msgstr ""
 
-#: apps/summary/renderers.py:246
+#: apps/summary/renderers.py:254
 msgid "More about this case study"
 msgstr ""
 
-#: apps/summary/renderers.py:251
+#: apps/summary/renderers.py:259
 msgid "Linked SLM data"
 msgstr ""
 
-#: apps/summary/renderers.py:256
+#: apps/summary/renderers.py:264
 msgid "Key references"
 msgstr ""
 
-#: apps/summary/renderers.py:308
+#: apps/summary/renderers.py:316
 #, python-brace-format
 msgid ""
 "This data in the WOCAT database: <a href=\"{base_url}{url}\">{base_url}{url}"
 "</a>"
 msgstr ""
 
-#: apps/summary/renderers.py:324
+#: apps/summary/renderers.py:332
 #, python-brace-format
 msgid "Video: <a href=\"{vimeo_url}\">{vimeo_url}</a>"
 msgstr ""
 
-#: apps/summary/renderers.py:377
+#: apps/summary/renderers.py:383
 msgid "Documentation was faciliated by"
 msgstr ""
 
-#: apps/summary/renderers.py:435
+#: apps/summary/renderers.py:441
 msgid ""
 "This technology is problematic with regard to land degradation, so it cannot "
 "be declared a sustainable land management technology"
 msgstr ""
 
-#: apps/summary/renderers.py:443 apps/summary/renderers.py:453
-#: apps/summary/renderers.py:862 apps/summary/renderers.py:872
+#: apps/summary/renderers.py:449 apps/summary/renderers.py:459
+#: apps/summary/renderers.py:869 apps/summary/renderers.py:879
 msgid "Location"
 msgstr ""
 
-#: apps/summary/renderers.py:466
+#: apps/summary/renderers.py:472
 msgid "Spread of the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:470
+#: apps/summary/renderers.py:476
 msgid "Date of implementation"
 msgstr ""
 
-#: apps/summary/renderers.py:474
+#: apps/summary/renderers.py:480
 msgid "Type of introduction"
 msgstr ""
 
-#: apps/summary/renderers.py:492
+#: apps/summary/renderers.py:498
 msgid "Classification of the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:495
+#: apps/summary/renderers.py:501
 msgid "Main purpose"
 msgstr ""
 
-#: apps/summary/renderers.py:499
+#: apps/summary/renderers.py:505
 msgid "Land use"
 msgstr ""
 
-#: apps/summary/renderers.py:503
+#: apps/summary/renderers.py:509
 msgid "Water supply"
 msgstr ""
 
-#: apps/summary/renderers.py:508
+#: apps/summary/renderers.py:514
 msgid "Number of growing seasons per year"
 msgstr ""
 
-#: apps/summary/renderers.py:512
+#: apps/summary/renderers.py:518
 msgid "Land use before implementation of the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:516
+#: apps/summary/renderers.py:522
 msgid "Livestock density"
 msgstr ""
 
-#: apps/summary/renderers.py:523
+#: apps/summary/renderers.py:529
 msgid "Purpose related to land degradation"
 msgstr ""
 
-#: apps/summary/renderers.py:527
+#: apps/summary/renderers.py:533
 msgid "Degradation addressed"
 msgstr ""
 
-#: apps/summary/renderers.py:531
+#: apps/summary/renderers.py:537
 msgid "SLM group"
 msgstr ""
 
-#: apps/summary/renderers.py:535
+#: apps/summary/renderers.py:541
 msgid "SLM measures"
 msgstr ""
 
-#: apps/summary/renderers.py:543
+#: apps/summary/renderers.py:550
 msgid "Technical drawing"
 msgstr ""
 
-#: apps/summary/renderers.py:545
+#: apps/summary/renderers.py:552
 msgid "Technical specifications"
 msgstr ""
 
-#: apps/summary/renderers.py:567 apps/summary/renderers.py:568
+#: apps/summary/renderers.py:574 apps/summary/renderers.py:575
 msgid "n.a"
 msgstr ""
 
-#: apps/summary/renderers.py:571
+#: apps/summary/renderers.py:578
 msgid "Establishment and maintenance: activities, inputs and costs"
 msgstr ""
 
-#: apps/summary/renderers.py:574
+#: apps/summary/renderers.py:581
 msgid "Calculation of inputs and costs"
 msgstr ""
 
-#: apps/summary/renderers.py:576
+#: apps/summary/renderers.py:583
 msgid "Costs are calculated: {}"
 msgstr ""
 
-#: apps/summary/renderers.py:577
+#: apps/summary/renderers.py:584
 msgid "Currency used for cost calculation: {}"
 msgstr ""
 
-#: apps/summary/renderers.py:578
+#: apps/summary/renderers.py:585
 msgid "Exchange rate (to USD): {}."
 msgstr ""
 
-#: apps/summary/renderers.py:579
+#: apps/summary/renderers.py:586
 msgid "Average wage cost of hired labour: {}."
 msgstr ""
 
-#: apps/summary/renderers.py:582
+#: apps/summary/renderers.py:589
 msgid "Most important factors affecting the costs"
 msgstr ""
 
-#: apps/summary/renderers.py:585
+#: apps/summary/renderers.py:592
 msgid "Establishment activities"
 msgstr ""
 
-#: apps/summary/renderers.py:589
+#: apps/summary/renderers.py:596
 msgid "Establishment inputs and costs per ha"
 msgstr ""
 
-#: apps/summary/renderers.py:594
+#: apps/summary/renderers.py:601
 msgid "Maintenance activities"
 msgstr ""
 
-#: apps/summary/renderers.py:639
+#: apps/summary/renderers.py:646
 msgid "Natural environment"
 msgstr ""
 
-#: apps/summary/renderers.py:642
+#: apps/summary/renderers.py:649
 msgid "Average annual rainfall"
 msgstr ""
 
-#: apps/summary/renderers.py:646
+#: apps/summary/renderers.py:653
 msgid "Agro-climatic zone"
 msgstr ""
 
-#: apps/summary/renderers.py:650
+#: apps/summary/renderers.py:657
 msgid "Specifications on climate"
 msgstr ""
 
-#: apps/summary/renderers.py:654
+#: apps/summary/renderers.py:661
 msgid "Slope"
 msgstr ""
 
-#: apps/summary/renderers.py:658
+#: apps/summary/renderers.py:665
 msgid "Landforms"
 msgstr ""
 
-#: apps/summary/renderers.py:662
+#: apps/summary/renderers.py:669
 msgid "Altitude"
 msgstr ""
 
-#: apps/summary/renderers.py:666
+#: apps/summary/renderers.py:673
 msgid "Technology is applied in"
 msgstr ""
 
-#: apps/summary/renderers.py:670
+#: apps/summary/renderers.py:677
 msgid "Soil depth"
 msgstr ""
 
-#: apps/summary/renderers.py:674
+#: apps/summary/renderers.py:681
 msgid "Soil texture (topsoil)"
 msgstr ""
 
-#: apps/summary/renderers.py:678
+#: apps/summary/renderers.py:685
 msgid "Soil texture (> 20 cm below surface)"
 msgstr ""
 
-#: apps/summary/renderers.py:682
+#: apps/summary/renderers.py:689
 msgid "Topsoil organic matter content"
 msgstr ""
 
-#: apps/summary/renderers.py:686
+#: apps/summary/renderers.py:693
 msgid "Groundwater table"
 msgstr ""
 
-#: apps/summary/renderers.py:690
+#: apps/summary/renderers.py:697
 msgid "Availability of surface water"
 msgstr ""
 
-#: apps/summary/renderers.py:694
+#: apps/summary/renderers.py:701
 msgid "Water quality (untreated)"
 msgstr ""
 
-#: apps/summary/renderers.py:698
+#: apps/summary/renderers.py:705
 msgid "Occurrence of flooding"
 msgstr ""
 
-#: apps/summary/renderers.py:702
+#: apps/summary/renderers.py:709
 msgid "Is salinity a problem?"
 msgstr ""
 
-#: apps/summary/renderers.py:706
+#: apps/summary/renderers.py:713
 msgid "Species diversity"
 msgstr ""
 
-#: apps/summary/renderers.py:710
+#: apps/summary/renderers.py:717
 msgid "Habitat diversity"
 msgstr ""
 
-#: apps/summary/renderers.py:718
+#: apps/summary/renderers.py:725
 msgid "Characteristics of land users applying the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:721
+#: apps/summary/renderers.py:728
 msgid "Market orientation"
 msgstr ""
 
-#: apps/summary/renderers.py:725
+#: apps/summary/renderers.py:732
 msgid "Off-farm income"
 msgstr ""
 
-#: apps/summary/renderers.py:729
+#: apps/summary/renderers.py:736
 msgid "Relative level of wealth"
 msgstr ""
 
-#: apps/summary/renderers.py:733
+#: apps/summary/renderers.py:740
 msgid "Level of mechanization"
 msgstr ""
 
-#: apps/summary/renderers.py:737
+#: apps/summary/renderers.py:744
 msgid "Sedentary or nomadic"
 msgstr ""
 
-#: apps/summary/renderers.py:741
+#: apps/summary/renderers.py:748
 msgid "Individuals or groups"
 msgstr ""
 
-#: apps/summary/renderers.py:745
+#: apps/summary/renderers.py:752
 msgid "Gender"
 msgstr ""
 
-#: apps/summary/renderers.py:749
+#: apps/summary/renderers.py:756
 msgid "Age"
 msgstr ""
 
-#: apps/summary/renderers.py:753
+#: apps/summary/renderers.py:760
 msgid "Area used per household"
 msgstr ""
 
-#: apps/summary/renderers.py:757
+#: apps/summary/renderers.py:764
 msgid "Scale"
 msgstr ""
 
-#: apps/summary/renderers.py:761
+#: apps/summary/renderers.py:768
 msgid "Land ownership"
 msgstr ""
 
-#: apps/summary/renderers.py:765
+#: apps/summary/renderers.py:772
 msgid "Land use rights"
 msgstr ""
 
-#: apps/summary/renderers.py:769
+#: apps/summary/renderers.py:776
 msgid "Water use rights"
 msgstr ""
 
-#: apps/summary/renderers.py:773
+#: apps/summary/renderers.py:780
 msgid "Access to services and infrastructure"
 msgstr ""
 
-#: apps/summary/renderers.py:781
+#: apps/summary/renderers.py:788
 msgid "Impacts - Benefits and disadvantages"
 msgstr ""
 
-#: apps/summary/renderers.py:784
+#: apps/summary/renderers.py:791
 msgid "Socio-economic impacts"
 msgstr ""
 
-#: apps/summary/renderers.py:788
+#: apps/summary/renderers.py:795
 msgid "Socio-cultural impacts"
 msgstr ""
 
-#: apps/summary/renderers.py:792
+#: apps/summary/renderers.py:799
 msgid "Ecological impacts"
 msgstr ""
 
-#: apps/summary/renderers.py:796
+#: apps/summary/renderers.py:803
 msgid "Off-site impacts"
 msgstr ""
 
-#: apps/summary/renderers.py:800
+#: apps/summary/renderers.py:807
 msgid "Benefits compared with establishment costs"
 msgstr ""
 
-#: apps/summary/renderers.py:804
+#: apps/summary/renderers.py:811
 msgid "Benefits compared with maintenance costs"
 msgstr ""
 
-#: apps/summary/renderers.py:812
+#: apps/summary/renderers.py:819
 msgid "Climate change"
 msgstr ""
 
-#: apps/summary/renderers.py:813
+#: apps/summary/renderers.py:820
 msgid ""
 "Exposure and sensitivity of the Technology to gradual climate change and "
 "climate-related extremes (disasters)."
 msgstr ""
 
-#: apps/summary/renderers.py:823
+#: apps/summary/renderers.py:830
 msgid "Adoption and adaptation"
 msgstr ""
 
-#: apps/summary/renderers.py:826
+#: apps/summary/renderers.py:833
 msgid "Percentage of land users in the area who have adopted the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:830
+#: apps/summary/renderers.py:837
 msgid ""
 "Of all those who have adopted the Technology, how many have did so without "
 "receiving material incentives?"
 msgstr ""
 
-#: apps/summary/renderers.py:834
+#: apps/summary/renderers.py:841
 msgid "Adaptation"
 msgstr ""
 
-#: apps/summary/renderers.py:835
+#: apps/summary/renderers.py:842
 msgid ""
 "Has the Technology been modified recently to adapt to changing conditions?"
 msgstr ""
 
-#: apps/summary/renderers.py:839
+#: apps/summary/renderers.py:846
 msgid "To which changing conditions?"
 msgstr ""
 
-#: apps/summary/renderers.py:881
+#: apps/summary/renderers.py:888
 msgid "Initiation date"
 msgstr ""
 
-#: apps/summary/renderers.py:886
+#: apps/summary/renderers.py:893
 msgid "Year of termination"
 msgstr ""
 
-#: apps/summary/renderers.py:891
+#: apps/summary/renderers.py:898
 msgid "Type of Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:900
+#: apps/summary/renderers.py:907
 msgid "Approach aims and enabling environment"
 msgstr ""
 
-#: apps/summary/renderers.py:903
+#: apps/summary/renderers.py:910
 msgid "Main aims / objectives of the approach"
 msgstr ""
 
-#: apps/summary/renderers.py:908
+#: apps/summary/renderers.py:915
 msgid ""
 "Conditions enabling the implementation of the Technology/ ies applied under "
 "the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:912
+#: apps/summary/renderers.py:919
 msgid ""
 "Conditions hindering the implementation of the Technology/ ies applied under "
 "the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:922
+#: apps/summary/renderers.py:929
 msgid "Participation and roles of stakeholders involved"
 msgstr ""
 
-#: apps/summary/renderers.py:925
+#: apps/summary/renderers.py:932
 msgid "Stakeholders involved in the Approach and their roles"
 msgstr ""
 
-#: apps/summary/renderers.py:927
+#: apps/summary/renderers.py:934
 msgid "Lead agency: {}"
 msgstr ""
 
-#: apps/summary/renderers.py:930 apps/summary/renderers.py:934
+#: apps/summary/renderers.py:937 apps/summary/renderers.py:941
 msgid ""
 "Involvement of local land users/ local communities in the different phases "
 "of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:942
+#: apps/summary/renderers.py:949
 msgid "Flow chart"
 msgstr ""
 
-#: apps/summary/renderers.py:946
+#: apps/summary/renderers.py:953
 msgid "Decision-making on the selection of SLM Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:949
+#: apps/summary/renderers.py:956
 msgid "Decisions were taken by"
 msgstr ""
 
-#: apps/summary/renderers.py:953
+#: apps/summary/renderers.py:960
 msgid "Decisions were made based on:"
 msgstr ""
 
-#: apps/summary/renderers.py:968
+#: apps/summary/renderers.py:975
 msgid "Technical support, capacity building, and knowledge management"
 msgstr ""
 
-#: apps/summary/renderers.py:984
+#: apps/summary/renderers.py:991
 msgid "Training was provided to the following stakeholders"
 msgstr ""
 
-#: apps/summary/renderers.py:988
+#: apps/summary/renderers.py:995
 msgid "Form of training"
 msgstr ""
 
-#: apps/summary/renderers.py:993
+#: apps/summary/renderers.py:1000
 msgid "Subjects covered"
 msgstr ""
 
-#: apps/summary/renderers.py:998
+#: apps/summary/renderers.py:1005
 msgid "Advisory service"
 msgstr ""
 
-#: apps/summary/renderers.py:1001
+#: apps/summary/renderers.py:1008
 msgid "Advisory service was provided"
 msgstr ""
 
-#: apps/summary/renderers.py:1008
+#: apps/summary/renderers.py:1015
 msgid "Institution strengthening"
 msgstr ""
 
-#: apps/summary/renderers.py:1010
+#: apps/summary/renderers.py:1017
 msgid "Institutions have been strengthened / established"
 msgstr ""
 
-#: apps/summary/renderers.py:1015
+#: apps/summary/renderers.py:1022
 msgid "at the following level"
 msgstr ""
 
-#: apps/summary/renderers.py:1020
+#: apps/summary/renderers.py:1027
 msgid "Type of support"
 msgstr ""
 
-#: apps/summary/renderers.py:1027
+#: apps/summary/renderers.py:1034
 msgid "Monitoring and evaluation"
 msgstr ""
 
-#: apps/summary/renderers.py:1031
+#: apps/summary/renderers.py:1038
 msgid "Research"
 msgstr ""
 
-#: apps/summary/renderers.py:1032
+#: apps/summary/renderers.py:1039
 msgid "Research treated the following topics"
 msgstr ""
 
-#: apps/summary/renderers.py:1041
+#: apps/summary/renderers.py:1048
 msgid "Financing and external material support"
 msgstr ""
 
-#: apps/summary/renderers.py:1044
+#: apps/summary/renderers.py:1051
 msgid "Annual budget for the SLM component of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:1047
+#: apps/summary/renderers.py:1054
 msgid "Precise annual budget: {}"
 msgstr ""
 
-#: apps/summary/renderers.py:1050
+#: apps/summary/renderers.py:1057
 msgid "The following services or incentives have been provided to land users"
 msgstr ""
 
-#: apps/summary/renderers.py:1061
+#: apps/summary/renderers.py:1068
 msgid "Labour by land users was"
 msgstr ""
 
-#: apps/summary/renderers.py:1065
+#: apps/summary/renderers.py:1072
 msgid "Financial/ material support provided to land users"
 msgstr ""
 
-#: apps/summary/renderers.py:1083
+#: apps/summary/renderers.py:1090
 msgid "Other incentives or instruments"
 msgstr ""
 
-#: apps/summary/renderers.py:1092
+#: apps/summary/renderers.py:1099
 msgid "Impact analysis and concluding statements"
 msgstr ""
 
-#: apps/summary/renderers.py:1095
+#: apps/summary/renderers.py:1102
 msgid "Impacts of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:1096
+#: apps/summary/renderers.py:1103
 msgid "Did the approach..."
 msgstr ""
 
-#: apps/summary/renderers.py:1100
+#: apps/summary/renderers.py:1107
 msgid "Main motivation of land users to implement SLM"
 msgstr ""
 
-#: apps/summary/renderers.py:1104
+#: apps/summary/renderers.py:1111
 msgid "Sustainability of Approach activities"
 msgstr ""
 
-#: apps/summary/renderers.py:1105
+#: apps/summary/renderers.py:1112
 msgid ""
 "Can the land users sustain what hat been implemented through the Approach "
 "(without external support)?"
@@ -16852,22 +16876,36 @@ msgstr ""
 msgid "Geo-reference"
 msgstr ""
 
+#: apps/summary/templates/summary/layout/approaches.html:12
+#: apps/summary/templates/summary/layout/technologies.html:12
+msgid "Summary"
+msgstr ""
+
 #: apps/summary/templates/summary/layout/footer.html:50
 msgid "Wocat SLM"
 msgstr ""
 
+#: apps/technologies/templates/technologies/add_module.html:15
+msgid "Add CCA Module"
+msgstr ""
+
 #: apps/technologies/templates/technologies/add_module.html:18
 msgid ""
-"You can add a module to an existing SLM Technology. If the SLM Technology is "
-"not included in the WOCAT SLM Technology database yet, please first add it."
+"You can add a CCA Module to an existing SLM Technology. If the SLM "
+"Technology is not included in the WOCAT SLM Technology database yet, please "
+"first add it."
 msgstr ""
 
 #: apps/technologies/templates/technologies/add_module.html:19
 msgid "Add new SLM Technology."
 msgstr ""
 
-#: apps/technologies/templates/technologies/add_module.html:22
-msgid "Currently the module \"Climate Change Adaptation\" can be added."
+#: apps/technologies/templates/technologies/add_module.html:54
+msgid "2. Select CCA Module"
+msgstr ""
+
+#: apps/technologies/templates/technologies/add_module.html:68
+msgid "3. Create CCA Module"
 msgstr ""
 
 #: apps/technologies/templates/technologies/base.html:6
@@ -16927,90 +16965,6 @@ msgstr ""
 
 #: apps/watershed/templates/watershed/questionnaire/partial/list_item.html:69
 msgid "This Watershed is linked to SLM Technologies"
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_maps.html:12
-msgid "Add Land Management Maps"
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_maps.html:30
-#: apps/wocat/templates/wocat/home.html:157
-msgid "Land Degradation / Conservation"
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_maps.html:31
-#: apps/wocat/templates/wocat/home.html:158
-msgid ""
-"Mapping land management, degradation and conservation including driver, "
-"state and impacts."
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_maps.html:32
-#: apps/wocat/templates/wocat/home.html:159
-msgid ""
-"Maps are currently not yet available in the new database. Maps can be viewed "
-"or added in the old database (QM)."
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_maps.html:33
-#: apps/wocat/templates/wocat/add_maps.html:54
-#: apps/wocat/templates/wocat/add_maps.html:69
-#: apps/wocat/templates/wocat/add_practice.html:35
-#: apps/wocat/templates/wocat/add_practice.html:54
-#: apps/wocat/templates/wocat/partial/add.html:23
-#: apps/wocat/templates/wocat/partial/add.html:45
-#: apps/wocat/templates/wocat/partial/add.html:69
-#: apps/wocat/templates/wocat/partial/add.html:73
-msgid "Add"
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_maps.html:52
-#: apps/wocat/templates/wocat/add_maps.html:66
-#: apps/wocat/templates/wocat/home.html:136
-#: apps/wocat/templates/wocat/partial/search.html:18
-#: apps/wocat/templates/wocat/questionnaire/list.html:72
-msgid "Watershed and Runoff"
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_maps.html:53
-#: apps/wocat/templates/wocat/add_maps.html:67
-#: apps/wocat/templates/wocat/home.html:137
-msgid ""
-"Mapping land management and assessing runoff and outflow from a watershed."
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_module.html:12
-msgid ""
-"Currently two modules are in preparation: “Climate Change Adaptation” and "
-"“Watershed/ Technology Systems”. (Further modules are in discussion: "
-"“Climate Change Mitigation/ Carbon Benefits” and “Disaster Risk Reduction”)"
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_practice.html:12
-msgid "Add SLM Practice"
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_practice.html:15
-msgid ""
-"Technologies and approaches are usually combined to provide a comprehensive "
-"picture of an SLM practice. Ideally you would fill in both the Technology "
-"and Approach sections, and then link them. However, it is also possible to "
-"add a Technology or an Approach without its counterpart."
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_practice.html:34
-#: apps/wocat/templates/wocat/home.html:99
-msgid ""
-"An <strong>SLM Technology</strong> is a land management practice that "
-"controls land degradation and enhances productivity and/ or other ecosystem "
-"services."
-msgstr ""
-
-#: apps/wocat/templates/wocat/add_practice.html:53
-msgid ""
-"An <strong>SLM Approach</strong> defines the ways and means used to "
-"implement a SLM Technology, including the stakeholders involved and their "
-"roles."
 msgstr ""
 
 #: apps/wocat/templates/wocat/help/questionnaire_introduction.html:6
@@ -17191,77 +17145,194 @@ msgstr ""
 msgid "SLM Technology / Approach"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:27
-#: apps/wocat/templates/wocat/home.html:35
-#: apps/wocat/templates/wocat/home.html:43
-#: apps/wocat/templates/wocat/home.html:51
-#: apps/wocat/templates/wocat/home.html:59
+#: apps/wocat/templates/wocat/home.html:29
+#: apps/wocat/templates/wocat/home.html:37
+#: apps/wocat/templates/wocat/home.html:45
+#: apps/wocat/templates/wocat/home.html:53
+#: apps/wocat/templates/wocat/home.html:61
 msgid "the Global Database on Sustainable Land Management"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:28
+#: apps/wocat/templates/wocat/home.html:30
 msgid "is the primary recommended database by UNCCD"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:36
+#: apps/wocat/templates/wocat/home.html:38
 msgid "is open access and contains over 800 SLM practices"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:44
+#: apps/wocat/templates/wocat/home.html:46
 msgid "is a standardized and modular system"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:52
+#: apps/wocat/templates/wocat/home.html:54
 msgid "supports knowledge sharing and evidence-based decision-making"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:60
+#: apps/wocat/templates/wocat/home.html:62
 msgid "welcomes you to join!"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:72
+#: apps/wocat/templates/wocat/home.html:76
+msgid "About the WOCAT SLM Database"
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:80
+msgid ""
+"The Global Database on Sustainable Land Management (SLM) of WOCAT (the World "
+"Overview of Conservation Approaches and Technologies) provides free access "
+"to the documentation of field-tested SLM data including SLM practices and "
+"maps from different places in the world and offers practitioners the "
+"opportunity to share their own SLM practice or map."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:83
+msgid ""
+"SLM in the context of WOCAT is defined as the use of land resources - "
+"including soil, water, vegetation and animals - to produce goods and provide "
+"services to meet human needs, while ensuring the long-term productive "
+"potential of these resources and sustaining their environmental functions."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:86
+msgid ""
+"The objective of documenting and assessing SLM practices is to share and "
+"spread valuable knowledge in land management, support evidence-based "
+"decision-making and scale up identified good practices, thereby contributing "
+"to preventing and reducing land degradation and to restoring degraded land."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:89
+msgid ""
+"A SLM practice can be either an SLM Technology (a physical practice that "
+"controls land degradation and/or enhances productivity, consisting of one or "
+"several measures) or an SLM Approach (ways and means used to implement one "
+"or several SLM Technologies, including technical and material support, "
+"stakeholder engagement, and other)."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:92
+msgid ""
+"For further information please contact the <a href=\"https://www.wocat.net/"
+"en/about-wocat/contact.html\" target=\"_blank\" class=\"link\">WOCAT "
+"Secretariat</a>."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:103
 msgid "Search SLM data"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:100
-#: apps/wocat/templates/wocat/home.html:119
-#: apps/wocat/templates/wocat/home.html:138
-#: apps/wocat/templates/wocat/home.html:160
+#: apps/wocat/templates/wocat/home.html:131
+#: apps/wocat/templates/wocat/partial/add.html:20
+msgid ""
+"An <strong>SLM Technology</strong> is a land management practice that "
+"controls land degradation and enhances productivity and/ or other ecosystem "
+"services."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:132
+#: apps/wocat/templates/wocat/home.html:152
+#: apps/wocat/templates/wocat/home.html:168
+#: apps/wocat/templates/wocat/home.html:192
+#: apps/wocat/templates/wocat/home.html:207
+#: apps/wocat/templates/wocat/home.html:230
+#: apps/wocat/templates/wocat/home.html:253
+#: apps/wocat/templates/wocat/home.html:269
 msgid "View all"
 msgstr ""
 
-#: apps/wocat/templates/wocat/home.html:118
+#: apps/wocat/templates/wocat/home.html:151
 msgid ""
 "An <strong>SLM Approach</strong> defines the ways and means used to "
 "implement an SLM Technology, including the stakeholders involved and their "
 "roles."
 msgstr ""
 
-#: apps/wocat/templates/wocat/partial/add.html:21
-msgid "SLM Practices"
+#: apps/wocat/templates/wocat/home.html:165
+msgid "UNCCD Prais Practices"
 msgstr ""
 
-#: apps/wocat/templates/wocat/partial/add.html:22
+#: apps/wocat/templates/wocat/home.html:166
 msgid ""
-"<strong>SLM practices</strong> comprise SLM Technologies and SLM Approaches"
+"A UNCCD PRAIS Practice is a best practice in SLM, as previously shared "
+"through the UNCCD PRAIS system in the UNCCD reporting process."
 msgstr ""
 
-#: apps/wocat/templates/wocat/partial/add.html:43
-msgid "Land Management Maps"
+#: apps/wocat/templates/wocat/home.html:190
+#: apps/wocat/templates/wocat/home.html:204
+#: apps/wocat/templates/wocat/partial/add.html:63
+#: apps/wocat/templates/wocat/partial/add.html:77
+msgid "Watershed and Runoff"
 msgstr ""
 
-#: apps/wocat/templates/wocat/partial/add.html:44
-msgid "Mapping and assessing Land Management"
-msgstr ""
-
-#: apps/wocat/templates/wocat/partial/add.html:66
+#: apps/wocat/templates/wocat/home.html:191
+#: apps/wocat/templates/wocat/home.html:205
+#: apps/wocat/templates/wocat/partial/add.html:64
+#: apps/wocat/templates/wocat/partial/add.html:78
 msgid ""
-"Modules provide in-depth information on specific topics related to SLM "
-"Technologies and Approaches"
+"Mapping land management and assessing runoff and outflow from a watershed."
 msgstr ""
 
-#: apps/wocat/templates/wocat/partial/add.html:72
+#: apps/wocat/templates/wocat/home.html:227
+#: apps/wocat/templates/wocat/partial/add.html:100
+msgid "Land Degradation / Conservation"
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:228
+#: apps/wocat/templates/wocat/partial/add.html:101
+msgid ""
+"Mapping land management, degradation and conservation including driver, "
+"state and impacts."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:229
+#: apps/wocat/templates/wocat/partial/add.html:102
+msgid ""
+"Maps are currently not yet available in the new database. Maps can be viewed "
+"or added in the old database (QM)."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:250
+#: apps/wocat/templates/wocat/home.html:266
+#: apps/wocat/templates/wocat/partial/add.html:123
+#: apps/wocat/templates/wocat/partial/add.html:139
+msgid "CCA Module"
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:251
+#: apps/wocat/templates/wocat/home.html:267
+#: apps/wocat/templates/wocat/partial/add.html:124
+#: apps/wocat/templates/wocat/partial/add.html:140
+msgid ""
+"The climate change adaptation tool assesses whether a specific SLM "
+"Technology is adapted to gradual climate changes and climate-related "
+"extremes (natural disasters)."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:268
+#: apps/wocat/templates/wocat/partial/add.html:141
 msgid "Modules will be added soon to the new database."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:286
+msgid "Key Numbers"
+msgstr ""
+
+#: apps/wocat/templates/wocat/partial/add.html:21
+#: apps/wocat/templates/wocat/partial/add.html:41
+#: apps/wocat/templates/wocat/partial/add.html:65
+#: apps/wocat/templates/wocat/partial/add.html:80
+#: apps/wocat/templates/wocat/partial/add.html:103
+#: apps/wocat/templates/wocat/partial/add.html:126
+#: apps/wocat/templates/wocat/partial/add.html:142
+msgid "Add"
+msgstr ""
+
+#: apps/wocat/templates/wocat/partial/add.html:40
+msgid ""
+"An <strong>SLM Approach</strong> defines the ways and means used to "
+"implement a SLM Technology, including the stakeholders involved and their "
+"roles."
 msgstr ""
 
 #: apps/wocat/templates/wocat/partial/advanced_filter.html:12
@@ -17304,16 +17375,16 @@ msgstr ""
 msgid "Show all SLM practices"
 msgstr ""
 
-#: apps/wocat/templates/wocat/questionnaire/list.html:90
+#: apps/wocat/templates/wocat/questionnaire/list.html:91
 msgid "A revised filter is coming soon."
 msgstr ""
 
-#: apps/wocat/templates/wocat/questionnaire/list.html:109
-msgid "WOCAT and UNCCD SLM practices"
+#: apps/wocat/templates/wocat/questionnaire/list.html:110
+msgid "Your search results"
 msgstr ""
 
 #: apps/wocat/templates/wocat/questionnaire/partial/list.html:19
-msgid "No WOCAT and UNCCD SLM practices found."
+msgid "No results found."
 msgstr ""
 
 #: templates/404.html:11

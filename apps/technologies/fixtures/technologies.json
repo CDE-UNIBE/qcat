@@ -26956,7 +26956,7 @@
                         "form_options": {
                           "template": "select_link",
                           "link": "approaches",
-                          "max_num": 3
+                          "max_num": 10
                         },
                         "view_options": {
                           "template": "links"

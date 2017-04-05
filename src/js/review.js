@@ -66,17 +66,27 @@
             }
 
             var displayContainer = $('#' + $(this).data('display-container'));
+            var userInputFieldName = $(this).data('user-input-field');
+            var maxUsers = $(this).data('max-users');
+            var currentUserCount = getCurrentUserCount(displayContainer);
 
-            addUserId(displayContainer, ui.item.uid);
-            displayUser(displayContainer, ui.item.uid, ui.item.first_name,
-                ui.item.last_name);
-
+            if (maxUsers === undefined || currentUserCount < maxUsers) {
+                addUserId(displayContainer, ui.item.uid, userInputFieldName);
+                displayUser(displayContainer, ui.item.uid, ui.item.first_name,
+                    ui.item.last_name);
+            }
+            
+            if (maxUsers && currentUserCount + 1 >= maxUsers) {
+                $(this).prop('disabled', true);
+            }
+        
             $(this).val('');
             return false;
         }
     };
 
     $('#review-search-user').autocomplete(autocompleteOptions);
+    $('#review-change-compiler').autocomplete(autocompleteOptions);
 
     function displayUser(container, userId, userFirstName, userLastName) {
         container.append($('<div>').addClass('alert-box').html(userFirstName + ' ' + userLastName + '<a href="#" ' +
@@ -84,8 +94,8 @@
         '&times;</a>'));
     }
 
-    function addUserId(container, userId) {
-        var input = container.find('[name="user-id"]');
+    function addUserId(container, userId, userInputFieldName) {
+        var input = container.find('[name="' + userInputFieldName + '"]');
         var ids = input.val().split(',').filter(function(n) { return n != "" });
         ids.push(userId);
         input.val(ids.join(','));
@@ -100,9 +110,13 @@
 
 })(jQuery);
 
+function getCurrentUserCount(container) {
+    return container.find('div.alert-box').length;
+}
+
 function reviewRemoveUser(el, userId) {
     var displayField = $(el).closest('.alert-box');
-    var input = displayField.siblings('[name="user-id"]');
+    var input = displayField.siblings('input:hidden');
 
     if (!input.length) {
         return false;
@@ -111,7 +125,16 @@ function reviewRemoveUser(el, userId) {
         return n != "" && n != String(userId) });
     input.val(ids.join(','));
 
+    var displayContainer = displayField.parent('.user-display');
+    var searchField = displayContainer.siblings('input');
+    var maxUsers = searchField.data('max-users');
+    var currentUserCount = getCurrentUserCount(displayContainer);
+
     displayField.remove();
+    
+    if (maxUsers !== undefined && currentUserCount < maxUsers) {
+        searchField.prop('disabled', false);
+    }
 
     return false;
 }

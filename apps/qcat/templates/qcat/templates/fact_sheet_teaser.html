@@ -1,42 +1,29 @@
 {% load i18n %}
+{% load string_tags %}
 
 
 <ul class="home-keynumbers-list">
   <hr>
   <li class="home-keynumbers-list-item">
-    <span class="keynumber">{{ questionnaires }}</span>
-    <span class="keynumber-text">{% trans "SLM Practices published:" %}</span>
+    <span class="keynumber-text">
+      {% blocktrans with questionnaires_count='<span class="keynumber">'|addstr:questionnaires|addstr:'</span>'|safe countries_count='<strong>'|addstr:countries|addstr:'</strong>'|safe compilers_count='<strong>'|addstr:compilers|addstr:'</strong>'|safe %}{{ questionnaires_count }} SLM Practices published <br>from {{ countries_count }} countries<br>by {{ compilers_count }} users.{% endblocktrans %}
+    </span>
     <ul>
       <li>{{ technologies }} {% trans "SLM Technologies" %}</li>
       <li>{{ approaches }} {% trans "SLM Approaches" %}</li>
+      <li>{{ unccd }} {% trans "UNCCD PRAIS Practices" %}</li>
     </ul>
   </li>
+  <hr>
   <li class="home-keynumbers-list-item">
-    <span class="keynumber">{{ created }}</span>
-    <span class="keynumber-text">new practices drafted in the past {{ days }} days.</span>
+    <span class="keynumber-text">
+      {% blocktrans with questionnaires_count='<span class="keynumber">'|addstr:created|addstr:'</span>'|safe %}{{ questionnaires_count }} new practices drafted in the past {{ days }} days.{% endblocktrans %}
+    </span>
   </li>
   <hr>
-
   <li class="home-keynumbers-list-item">
-    {% blocktrans %}
-      <span class="keynumber-text">Active visitors from</span>
-      <span class="keynumber">{{ countries }}</span>
-      <span class="keynumber-text">different countries in the past {{ days }} days.</span>
-    {% endblocktrans %}
+    <span class="keynumber-text">
+      {% blocktrans with visits_count='<span class="keynumber">'|addstr:piwik_visits|addstr:'</span>'|safe countries_count='<strong>'|addstr:piwik_countries|addstr:'</strong>'|safe %}{{ visits_count }} visits from {{ countries_count }} different countries since launch in August 2016.{% endblocktrans %}
+    </span>
   </li>
-  <hr>
-
-  <li class="home-keynumbers-list-item">
-    {% blocktrans %}
-      <span class="keynumber">{{ users }}</span>
-      <span class="keynumber-text">registered users.</span>
-    {% endblocktrans %}
-  </li>
-  <li class="home-keynumbers-list-item">
-    {% blocktrans %}
-      <span class="keynumber">{{ compilers }}</span>
-      <span class="keynumber-text">people created a public SLM practice.</span>
-    {% endblocktrans %}
-  </li>
-
 </ul>

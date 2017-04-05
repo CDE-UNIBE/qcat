@@ -4,7 +4,7 @@
       <h5>{{ content.title }}</h5>
     	<div>
     		{% for url_items in content.urls %}
-    	   	<img src="{{url_items}}" class="img_in_text">
+    	   	<img src="{{ url_items }}" class="img_in_text">
         {% endfor %}
     		{{ content.text }}
     	</div>

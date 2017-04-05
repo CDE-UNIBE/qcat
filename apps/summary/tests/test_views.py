@@ -43,7 +43,7 @@ class QuestionnaireSummaryPDFCreateViewTest(TestCase):
 
     def test_get_filename(self):
         this_moment = now()
-        expected = 'wocat-id-full-summary-{}.pdf'.format(
+        expected = 'wocat-id-en-full-summary-{}.pdf'.format(
             this_moment.strftime('%Y-%m-%d-%H:%m')
         )
         self.view.questionnaire = MagicMock(

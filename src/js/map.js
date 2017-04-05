@@ -604,13 +604,13 @@
         function getDefaultVectorStyle() {
             return new ol.style.Style({
                 image: new ol.style.Circle({
-                    radius: 5,
+                    radius: 6,
                     fill: new ol.style.Fill({
-                        color: 'rgba(255, 255, 255, 0.4)'
+                        color: '#f5f900'
                     }),
                     stroke: new ol.style.Stroke({
-                        color: '#dc7d35',
-                        width: 1.25
+                        color: 'black',
+                        width: 2.25
                     })
                 })
             });

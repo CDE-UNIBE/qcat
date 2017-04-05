@@ -466,7 +466,7 @@
             "en": "Has the Technology been modified to adapt/ further adapt to gradual climate changes and climate-related extremes (disasters)?"
           },
           "helptext": {
-            "en": "<p>if it has been introduced as an adaptation measure it might have been further adapted during the course of time</p><br>If <strong>yes</strong>, fill in the table below. If <strong>no</strong>, continue with chapter 4.7"
+            "en": "If it has been introduced as an adaptation measure it might have been further adapted during the course of time."
           }
         }
       }
@@ -3965,6 +3965,34 @@
   },
   {
     "fields": {
+      "translation_type": "value",
+      "data": {
+        "cca": {
+          "label": {
+            "en": "Yes. If yes, fill in the table below."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 29236
+  },
+  {
+    "fields": {
+      "translation_type": "value",
+      "data": {
+        "cca": {
+          "label": {
+            "en": "No. If no, continue with chapter 4.7."
+          }
+        }
+      }
+    },
+    "model": "configuration.translation",
+    "pk": 29237
+  },
+  {
+    "fields": {
       "translation_type": "questiongroup",
       "data": {
         "cca": {
@@ -4484,6 +4512,9 @@
         "cca": {
           "label": {
             "en": "Table 1: Reassessment of land degradation types listed in QT Core 3.7"
+          },
+          "helptext": {
+            "en": "Please check in QT Core question number 3.7 which land degradation types have been selected and list only those in the second column."
           }
         }
       }
@@ -5352,7 +5383,7 @@
             "en": "On- and off-site impacts of the Technology under gradual climate changes and climate-related extremes (disasters)"
           },
           "helptext": {
-            "en": "<p>Below you will find the list of on- and offsite impacts from question 6.1 and 6.2 in QT Core. Fill out the list for <strong>each</strong> gradual climate change and climate-related extreme (disaster) that you have listed in question 2.2. Make as many copies of the list as the number of gradual climate changes and climate-related extremes you have listed in question 2.2 (e.g. if you have listed 3 gradual climate changes and 2 climate-related extremes, have 5 copies of the list available).</p>"
+            "en": "Please note that the data entry table below is different from the lists you have filled out in the paper questionnaire. For each entry you have to first choose the gradual climate change/ climate-related extreme and then the impact in the dropdown list. Add them one after the other by clicking on ‘Add More’."
           }
         }
       }
@@ -6630,8 +6661,12 @@
       "keyword": "technology_modified",
       "translation": 28045,
       "configuration": {
-        "type": "bool"
-      }
+        "type": "radio"
+      },
+      "values": [
+        29236,
+        29237
+      ]
     },
     "model": "configuration.key",
     "pk": 28045
@@ -9343,6 +9378,24 @@
   },
   {
     "fields": {
+      "keyword": "cca_modification_yes",
+      "translation": 29236,
+      "order_value": 1
+    },
+    "model": "configuration.value",
+    "pk": 29236
+  },
+  {
+    "fields": {
+      "keyword": "cca_modification_no",
+      "translation": 29237,
+      "order_value": 2
+    },
+    "model": "configuration.value",
+    "pk": 29237
+  },
+  {
+    "fields": {
       "keyword": "cca_qg_1",
       "translation": 27001,
       "configuration": {}
@@ -9700,7 +9753,7 @@
             "7%",
             "41%"
           ],
-          "numbered": "display"
+          "label_class": "bottom-margin"
         },
         "view_options": {
           "template": "table2",
@@ -9732,7 +9785,7 @@
             "20%",
             "30%"
           ],
-          "numbered": "display"
+          "label_class": "bottom-margin"
         },
         "view_options": {
           "template": "table",
@@ -9765,7 +9818,7 @@
             "20%",
             "30%"
           ],
-          "numbered": "display"
+          "label_class": "bottom-margin"
         },
         "view_options": {
           "template": "table",
@@ -14511,13 +14564,7 @@
                         "keyword": "cca_qg_129",
                         "questions": [
                           {
-                            "keyword": "technology_modified",
-                            "form_options": {
-                              "questiongroup_conditions": [
-                                "==1|cca_qg_130",
-                                "==1|cca_qg_136"
-                              ]
-                            }
+                            "keyword": "technology_modified"
                           }
                         ]
                       },

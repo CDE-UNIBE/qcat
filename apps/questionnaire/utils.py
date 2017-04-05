@@ -1431,6 +1431,94 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
             messages.error(request, 'At least one of the assigned users could '
                                     'not be updated.')
 
+    elif request.POST.get('change-compiler'):
+
+        if 'change_compiler' not in permissions:
+            messages.error(
+                request, 'You do not have permissions to change the compiler!')
+            return
+
+        # Check the submitted user IDs
+        user_ids_string = request.POST.get('compiler-id', '').split(',')
+
+        if len(user_ids_string) > 1:
+            messages.error(request, 'You can only choose one new compiler!')
+            return
+
+        try:
+            user_id = int(user_ids_string[0])
+        except ValueError:
+            messages.error(request, 'No valid new compiler provided!')
+            return
+
+        # Create or update the user
+        user_info = typo3_client.get_user_information(user_id)
+        if not user_info:
+            messages.error(
+                request,
+                'No user information found for user {}'.format(user_id))
+        new_compiler, created = User.objects.get_or_create(pk=user_id)
+        typo3_client.update_user(new_compiler, user_info)
+
+        role_compiler = settings.QUESTIONNAIRE_COMPILER
+
+        # Get old compiler(s) -> there should always only be 1
+        previous_compilers = questionnaire_object.get_users_by_role(
+            role_compiler)
+
+        # Do not do anything if the new compiler is already the old compiler.
+        if previous_compilers == [new_compiler]:
+            messages.info(request, 'This user is already the compiler.')
+            return
+
+        # Remove old compiler
+        for pc in previous_compilers:
+            change_member.send(
+                sender=settings.NOTIFICATIONS_REMOVE_MEMBER,
+                questionnaire=questionnaire_object,
+                user=request.user,
+                affected=pc,
+                role=role_compiler
+            )
+            questionnaire_object.remove_user(pc, role_compiler)
+
+        # Add new compiler
+        questionnaire_object.add_user(new_compiler, role_compiler)
+        change_member.send(
+            sender=settings.NOTIFICATIONS_ADD_MEMBER,
+            questionnaire=questionnaire_object,
+            user=request.user,
+            affected=new_compiler,
+            role=role_compiler
+        )
+
+        keep_as_editor = request.POST.get('change-compiler-keep-editor')
+        if keep_as_editor is not None:
+            # Keep the previous compiler as editor
+            role_editor = settings.QUESTIONNAIRE_EDITOR
+            editors = questionnaire_object.get_users_by_role(role_editor)
+            for pc in previous_compilers:
+                # Do not add again if already an editor
+                if pc in editors:
+                    continue
+                questionnaire_object.add_user(pc, role_editor)
+                change_member.send(
+                    sender=settings.NOTIFICATIONS_ADD_MEMBER,
+                    questionnaire=questionnaire_object,
+                    user=request.user,
+                    affected=pc,
+                    role=role_editor
+                )
+
+        # Re-add the questionnaire to ES if it was public
+        if questionnaire_object.status == settings.QUESTIONNAIRE_PUBLIC:
+            delete_questionnaires_from_es(
+                configuration_code, [questionnaire_object])
+            added, errors = put_questionnaire_data(
+                configuration_code, [questionnaire_object])
+
+        messages.success(request, 'Compiler was changed successfully')
+
     elif request.POST.get('flag-unccd'):
 
         if 'flag_unccd_questionnaire' not in permissions:

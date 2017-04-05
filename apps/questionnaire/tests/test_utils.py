@@ -5,7 +5,9 @@ from unittest.mock import patch, Mock, call, MagicMock
 from collections import namedtuple
 
 from django.conf import settings
+from django.contrib.auth.models import Group
 from django.http import QueryDict
+from django.test.client import RequestFactory
 from django.test.utils import override_settings
 from django.utils.translation import ugettext_lazy as _
 from model_mommy import mommy
@@ -1320,6 +1322,151 @@ class HandleReviewActionsTest(TestCase):
         self.obj.get_users_by_role.return_value = [mock_user]
         handle_review_actions(self.request, self.obj, 'sample')
         self.obj.remove_user.assert_called_once_with(mock_user, 'reviewer')
+
+    def test_change_compiler_requires_permissions(self, mock_messages):
+        self.obj.status = 2
+        self.request.POST = {'change-compiler': 'foo'}
+        handle_review_actions(self.request, self.obj, 'sample')
+        mock_messages.error.assert_called_once_with(
+            self.request,
+            'You do not have permissions to change the compiler!')
+
+    @patch('questionnaire.signals.change_member.send')
+    def test_change_compiler_handles_non_valid_ids(
+            self, mock_change_member, mock_messages):
+        self.obj.status = 2
+        self.request.POST = {
+            'change-compiler': 'foo',
+            'compiler-id': 'foo',
+        }
+        RolesPermissions = namedtuple(
+            'RolesPermissions', ['roles', 'permissions'])
+        self.obj.get_roles_permissions.return_value = RolesPermissions(
+            roles=[], permissions=['change_compiler'])
+        handle_review_actions(self.request, self.obj, 'sample')
+        mock_messages.error.assert_called_once_with(
+            self.request,
+            'No valid new compiler provided!')
+
+    def test_change_compiler_handles_empty_id(self, mock_messages):
+        self.obj.status = 2
+        self.request.POST = {
+            'change-compiler': 'foo',
+            'compiler-id': '',
+        }
+        RolesPermissions = namedtuple(
+            'RolesPermissions', ['roles', 'permissions'])
+        self.obj.get_roles_permissions.return_value = RolesPermissions(
+            roles=[], permissions=['change_compiler'])
+        handle_review_actions(self.request, self.obj, 'sample')
+        mock_messages.error.assert_called_once_with(
+            self.request,
+            'No valid new compiler provided!')
+
+    def test_change_compiler_allows_only_one_id(self, mock_messages):
+        self.obj.status = 2
+        self.request.POST = {
+            'change-compiler': 'foo',
+            'compiler-id': '1,2,3',
+        }
+        RolesPermissions = namedtuple(
+            'RolesPermissions', ['roles', 'permissions'])
+        self.obj.get_roles_permissions.return_value = RolesPermissions(
+            roles=[], permissions=['change_compiler'])
+        handle_review_actions(self.request, self.obj, 'sample')
+        mock_messages.error.assert_called_once_with(
+            self.request,
+            'You can only choose one new compiler!')
+
+    def test_change_compiler_do_nothing_if_no_new_compiler(self, mock_messages):
+        self.obj.status = 2
+        self.request.POST = {
+            'change-compiler': 'foo',
+            'compiler-id': '1',
+        }
+        user = create_new_user(id=1)
+        RolesPermissions = namedtuple(
+            'RolesPermissions', ['roles', 'permissions'])
+        self.obj.get_roles_permissions.return_value = RolesPermissions(
+            roles=[], permissions=['change_compiler'])
+        self.obj.get_users_by_role.return_value = [user]
+        handle_review_actions(self.request, self.obj, 'sample')
+        mock_messages.info.assert_called_once_with(
+            self.request,
+            'This user is already the compiler.')
+
+
+@patch('questionnaire.utils.messages')
+class HandleReviewActionsTestFixtures(TestCase):
+
+    fixtures = ['groups_permissions', 'global_key_values', 'sample']
+
+    def setUp(self):
+        self.factory = RequestFactory()
+        self.request = self.factory.get('/')
+        self.request.user = create_new_user(lastname='1')
+        self.request.user.groups = [Group.objects.get(pk=5)]
+
+    @patch('questionnaire.utils.typo3_client')
+    @patch('questionnaire.signals.change_member.send')
+    def test_change_compiler(
+            self, mock_change_member, mock_typo3_client, mock_messages):
+
+        old_compiler = create_new_user(id=2, email='2@foo.com', lastname='2')
+        questionnaire = get_valid_questionnaire(old_compiler)
+
+        new_compiler = create_new_user(id=3, email='3@foo.com', lastname='3')
+
+        self.request.POST = {
+            'change-compiler': 'foo',
+            'compiler-id': '3',
+        }
+        mock_typo3_client.get_user_information.return_value = {
+            'username': 'user'
+        }
+        self.assertEqual(
+            questionnaire.get_users_by_role(settings.QUESTIONNAIRE_COMPILER),
+            [old_compiler])
+        handle_review_actions(self.request, questionnaire, 'sample')
+        self.assertEqual(
+            questionnaire.get_users_by_role(settings.QUESTIONNAIRE_COMPILER),
+            [new_compiler])
+        mock_messages.success.assert_called_once_with(
+            self.request,
+            'Compiler was changed successfully')
+
+    @patch('questionnaire.utils.typo3_client')
+    @patch('questionnaire.signals.change_member.send')
+    def test_keep_compiler_as_editor(
+            self, mock_change_member, mock_typo3_client, mock_messages):
+        old_compiler = create_new_user(id=2, email='2@foo.com', lastname='2')
+        questionnaire = get_valid_questionnaire(old_compiler)
+
+        new_compiler = create_new_user(id=3, email='3@foo.com', lastname='3')
+
+        self.request.POST = {
+            'change-compiler': 'foo',
+            'compiler-id': '3',
+            'change-compiler-keep-editor': 'foo',
+        }
+        mock_typo3_client.get_user_information.return_value = {
+            'username': 'user'
+        }
+        self.assertEqual(
+            questionnaire.get_users_by_role(settings.QUESTIONNAIRE_COMPILER),
+            [old_compiler])
+        self.assertEqual(
+            questionnaire.get_users_by_role(settings.QUESTIONNAIRE_EDITOR), [])
+        handle_review_actions(self.request, questionnaire, 'sample')
+        self.assertEqual(
+            questionnaire.get_users_by_role(settings.QUESTIONNAIRE_COMPILER),
+            [new_compiler])
+        self.assertEqual(
+            questionnaire.get_users_by_role(settings.QUESTIONNAIRE_EDITOR),
+            [old_compiler])
+        mock_messages.success.assert_called_once_with(
+            self.request,
+            'Compiler was changed successfully')
 
 
 @patch('questionnaire.utils.messages')

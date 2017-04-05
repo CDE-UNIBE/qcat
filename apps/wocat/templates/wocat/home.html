@@ -68,6 +68,35 @@
   </div>
 </section>
 
+<section class="row large-no-gutters home-main">
+<div class="small-12 columns">
+  <ul class="accordion" data-accordion>
+    <li class="accordion-navigation accordion-about-wocat">
+      <a href="#about-wocat">
+        {% trans "About the WOCAT SLM Database" %}<svg class="accordion-icon-closed icon-chevron is-inline-right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-chevron-thin-down"></use></svg><svg class="accordion-icon-opened icon-chevron is-inline-right"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-chevron-thin-up"></use></svg>
+      </a>
+      <div id="about-wocat" class="content">
+        <p class="is-rhythmed-2">
+          {% trans "The Global Database on Sustainable Land Management (SLM) of WOCAT (the World Overview of Conservation Approaches and Technologies) provides free access to the documentation of field-tested SLM data including SLM practices and maps from different places in the world and offers practitioners the opportunity to share their own SLM practice or map." %}
+        </p>
+        <p class="is-rhythmed-2">
+          {% trans "SLM in the context of WOCAT is defined as the use of land resources - including soil, water, vegetation and animals - to produce goods and provide services to meet human needs, while ensuring the long-term productive potential of these resources and sustaining their environmental functions." %}
+        </p>
+        <p class="is-rhythmed-2">
+          {% trans "The objective of documenting and assessing SLM practices is to share and spread valuable knowledge in land management, support evidence-based decision-making and scale up identified good practices, thereby contributing to preventing and reducing land degradation and to restoring degraded land." %}
+        </p>
+        <p class="is-rhythmed-2">
+          {% trans "A SLM practice can be either an SLM Technology (a physical practice that controls land degradation and/or enhances productivity, consisting of one or several measures) or an SLM Approach (ways and means used to implement one or several SLM Technologies, including technical and material support, stakeholder engagement, and other)." %}
+        </p>
+        <p class="is-rhythmed-2">
+          {% blocktrans %}For further information please contact the <a href="https://www.wocat.net/en/about-wocat/contact.html" target="_blank" class="link">WOCAT Secretariat</a>.{% endblocktrans %}
+        </p>
+      </div>
+    </li>
+  </ul>
+</div>
+</section>
+
 <main class="home-main row large-no-gutters" role="main">
   <div class="small-12 medium-{% if IS_ACTIVE_FEATURE_FACTSHEET %}9{% else %}12{% endif %} columns">
     <ul class="tabs" data-tab role="tablist">
@@ -83,8 +112,9 @@
             </div>
           </div>
         </div>
-        <div class="row is-flex" data-equalizer>
-          <div class="small-12 medium-4 columns">
+        <div class="row is-flex">
+          {# Technologies #}
+          <div class="small-12 medium-4 columns is-flex">
             <div class="card">
               <a href="{% url 'wocat:questionnaire_list' %}?type=technologies">
                 <div class="card-image-holder">
@@ -98,12 +128,13 @@
               </a>
               <div class="card-well">
                 <h2 class="card-title">{% trans "SLM Technologies" %}</h2>
-                <p class="card-desc" data-equalizer-watch>{% trans "An <strong>SLM Technology</strong> is a land management practice that controls land degradation and enhances productivity and/ or other ecosystem services." %}</p>
+                <p class="card-desc">{% trans "An <strong>SLM Technology</strong> is a land management practice that controls land degradation and enhances productivity and/ or other ecosystem services." %}</p>
                 <a href="{% url 'wocat:questionnaire_list' %}?type=technologies" class="button large expand">{% trans "View all" %}</a>
               </div>
             </div>
           </div>
-          <div class="small-12 medium-4 columns">
+          {# Approaches #}
+          <div class="small-12 medium-4 columns is-flex">
             <div class="card">
               <a href="{% url 'wocat:questionnaire_list' %}?type=approaches">
                 <div class="card-image-holder">
@@ -117,13 +148,34 @@
               </a>
               <div class="card-well">
                 <h2 class="card-title">{% trans "SLM Approaches" %}</h2>
-                <p class="card-desc" data-equalizer-watch>{% trans "An <strong>SLM Approach</strong> defines the ways and means used to implement an SLM Technology, including the stakeholders involved and their roles." %}</p>
+                <p class="card-desc">{% trans "An <strong>SLM Approach</strong> defines the ways and means used to implement an SLM Technology, including the stakeholders involved and their roles." %}</p>
                 <a href="{% url 'wocat:questionnaire_list' %}?type=approaches" class="button large expand">{% trans "View all" %}</a>
               </div>
             </div>
           </div>
-          <div class="small-12 medium-4 columns">
+          {# UNCCD #}
+          <div class="small-12 medium-4 columns is-flex">
             <div class="card">
+              <a href="{% url 'wocat:questionnaire_list' %}?type=unccd">
+                <div class="card-image-holder">
+                  <img class="card-image" src="{% static 'assets/img/card_unccd.jpg' %}">
+                </div>
+              </a>
+              <div class="card-well">
+                <h2 class="card-title">{% trans "UNCCD Prais Practices" %}</h2>
+                <p class="card-desc">{% trans "A UNCCD PRAIS Practice is a best practice in SLM, as previously shared through the UNCCD PRAIS system in the UNCCD reporting process." %}</p>
+                <a href="{% url 'wocat:questionnaire_list' %}?type=unccd" class="button large expand">
+                  {% trans "View all" %}
+                </a>
+              </div>
+            </div>
+          </div>
+        </div>
+        <div class="row is-flex">
+          {# Watershed / Watershed and Runoff #}
+          <div class="small-12 medium-4 columns is-flex">
+            <div class="card">
+              {% if IS_ACTIVE_FEATURE_WATERSHED %}
               <a href="{% url 'wocat:questionnaire_list' %}?type=watershed">
                 <div class="card-image-holder">
                   <img class="card-image" src="{% static 'assets/img/card_watershed.jpg' %}">
@@ -136,14 +188,30 @@
               </a>
               <div class="card-well">
                 <h2 class="card-title">{% trans "Watershed and Runoff" %}</h2>
-                <p class="card-desc" data-equalizer-watch>{% trans "Mapping land management and assessing runoff and outflow from a watershed." %}</p>
+                <p class="card-desc">{% trans "Mapping land management and assessing runoff and outflow from a watershed." %}</p>
                 <a href="{% url 'wocat:questionnaire_list' %}?type=watershed" class="button large expand">{% trans "View all" %}</a>
               </div>
+              {% else %}
+              <div class="card-image-holder">
+                <img class="card-image" src="{% static 'assets/img/card_watershed.jpg' %}">
+                <span class="card-image-overlay-container">
+                  <div class="card-image-overlay is-watershed">
+                    <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-watershed"></use></svg>
+                  </div>
+                </span>
+              </div>
+              <div class="card-well">
+                <h2 class="card-title">{% trans "Watershed and Runoff" %}</h2>
+                <p class="card-desc">{% trans "Mapping land management and assessing runoff and outflow from a watershed." %}</p>
+                <a href="#" class="button large expand disabled" title="{% trans "Coming soon" %}" aria-haspopup="true" data-tooltip="">
+                  {% trans "View all" %}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg>
+                </a>
+              </div>
+              {% endif %}
             </div>
           </div>
-        </div>
-        <div class="row is-flex" data-equalizer>
-          <div class="small-12 medium-4 columns">
+          {# Maps / Land Degradation/Conservation #}
+          <div class="small-12 medium-4 columns is-flex">
             <div class="card">
               <a href="http://qm.wocat.net/" target="_blank">
                 <div class="card-image-holder">
@@ -157,57 +225,54 @@
               </a>
               <div class="card-well">
                 <h2 class="card-title">{% trans "Land Degradation / Conservation" %}</h2>
-                <p class="card-desc" data-equalizer-watch>{% trans "Mapping land management, degradation and conservation including driver, state and impacts." %}</p>
+                <p class="card-desc">{% trans "Mapping land management, degradation and conservation including driver, state and impacts." %}</p>
                 <a href="http://qm.wocat.net/" target="_blank" class="button large expand" title="{% trans "Maps are currently not yet available in the new database. Maps can be viewed or added in the old database (QM)." %}" aria-haspopup="true" data-tooltip="">
                   {% trans "View all" %}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg>
                 </a>
               </div>
             </div>
           </div>
-        </div>
-        {# As discussed with Nicole, modules are currently not visible as they do not exist yet #}
-        {% comment %}
-        <div class="row" data-equalizer>
-          <div class="small-12 medium-6 columns">
+          {# CCA #}
+          <div class="small-12 medium-4 columns is-flex">
             <div class="card">
-              <div class="card-image-holder">
-                <img class="card-image" src="{% static 'assets/img/card_climate_change_adaption.jpg' %}">
-                <span class="card-image-overlay-container">
-                  <div class="card-image-overlay is-climate">
-                    <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-climate"></use></svg>
-                  </div>
-                </span>
-              </div>
+              {% if IS_ACTIVE_FEATURE_MODULE %}
+              <a href="{% url 'wocat:questionnaire_list' %}?type=cca">
+                <div class="card-image-holder">
+                  <img class="card-image" src="{% static 'assets/img/card_modules.jpg' %}">
+                  <span class="card-image-overlay-container">
+                    <div class="card-image-overlay is-climate">
+                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-climate"></use></svg>
+                    </div>
+                  </span>
+                </div>
+              </a>
               <div class="card-well">
-                <h2 class="card-title">{% trans "Climate change adaptation" %}</h2>
-                <p class="card-desc" data-equalizer-watch>{% trans "The climate change adaptation tool assesses whether a specific SLM Technology is adapted to gradual climate changes and climate-related extremes (natural disasters)." %}</p>
-                <a href="#" class="button large expand disabled" title="{% trans "Modules will be added soon to the new database." %}" aria-haspopup="true" data-tooltip="">
-                  {% trans "View all" %}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg>
+                <h2 class="card-title">{% trans "CCA Module" %}</h2>
+                <p class="card-desc">{% trans "The climate change adaptation tool assesses whether a specific SLM Technology is adapted to gradual climate changes and climate-related extremes (natural disasters)." %}</p>
+                <a href="{% url 'wocat:questionnaire_list' %}?type=cca" class="button large expand">
+                  {% trans "View all" %}
                 </a>
               </div>
-            </div>
-          </div>
-          <div class="small-12 medium-6 columns">
-            <div class="card">
-              <div class="card-image-holder">
-                <img class="card-image" src="{% static 'assets/img/card_watershed_technology.jpg' %}">
-                <span class="card-image-overlay-container">
-                  <div class="card-image-overlay is-combination">
-                    <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-combination"></use></svg>
-                  </div>
-                </span>
-              </div>
-              <div class="card-well">
-                <h2 class="card-title">{% trans "Watershed/ Technology Systems" %}</h2>
-                <p class="card-desc" data-equalizer-watch>{% trans "The watershed/ technology systems tool assesses the spatial arrangement, interlinkage, and interdependency of different SLM Technologies and SLM Approaches in a watershed." %}</p>
-                <a href="#" class="button large expand disabled" title="{% trans "Modules will be added soon to the new database." %}" aria-haspopup="true" data-tooltip="">
-                  {% trans "View all" %}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg>
-                </a>
-              </div>
+              {% else %}
+                <div class="card-image-holder">
+                  <img class="card-image" src="{% static 'assets/img/card_modules.jpg' %}">
+                  <span class="card-image-overlay-container">
+                    <div class="card-image-overlay is-climate">
+                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-climate"></use></svg>
+                    </div>
+                  </span>
+                </div>
+                <div class="card-well">
+                  <h2 class="card-title">{% trans "CCA Module" %}</h2>
+                  <p class="card-desc">{% trans "The climate change adaptation tool assesses whether a specific SLM Technology is adapted to gradual climate changes and climate-related extremes (natural disasters)." %}</p>
+                  <a href="#" class="button large expand disabled" title="{% trans "Modules will be added soon to the new database." %}" aria-haspopup="true" data-tooltip="">
+                    {% trans "View all" %}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg>
+                  </a>
+                </div>
+              {% endif %}
             </div>
           </div>
         </div>
-        {% endcomment %}
       </section>
       <section role="tabpanel" aria-hidden="true" class="content" id="panel2-2">
         {% include 'wocat/partial/add.html' %}

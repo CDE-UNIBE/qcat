@@ -11,8 +11,8 @@ msgid ""
 msgstr ""
 "Project-Id-Version: qcat\n"
 "Report-Msgid-Bugs-To: \n"
-"POT-Creation-Date: 2017-03-07 14:54+0100\n"
-"PO-Revision-Date: 2017-02-25 09:24+0000\n"
+"POT-Creation-Date: 2017-04-03 09:19+0200\n"
+"PO-Revision-Date: 2017-03-23 15:27+0000\n"
 "Last-Translator: Lukas Vonlanthen <lukas.vonlanthen@cde.unibe.ch>\n"
 "Language-Team: Russian (http://www.transifex.com/university-of-bern-cde/qcat/"
 "language/ru/)\n"
@@ -81,8 +81,8 @@ msgid "Public questionnaires"
 msgstr "Общедоступные анкеты"
 
 #: apps/accounts/templates/login.html:10 apps/accounts/templates/login.html:24
-#: apps/questionnaire/tests/test_utils.py:1067
-#: apps/questionnaire/tests/test_utils.py:1075
+#: apps/questionnaire/tests/test_utils.py:986
+#: apps/questionnaire/tests/test_utils.py:994
 #: apps/search/tests/test_utils.py:101 apps/search/tests/test_utils.py:106
 #: templates/base.html:161
 msgid "Login"
@@ -123,10 +123,8 @@ msgid " and reset your password."
 msgstr "и смените свой пароль."
 
 #: apps/accounts/templates/questionnaire_search.html:21
-#, fuzzy
-#| msgid "Search user"
 msgid "Search results"
-msgstr "Найти пользователя"
+msgstr ""
 
 #: apps/accounts/templates/questionnaires.html:14
 msgid "My SLM data"
@@ -134,7 +132,7 @@ msgstr "Мои данные по УЗП"
 
 #: apps/accounts/templates/questionnaires.html:15
 #: apps/wocat/templates/wocat/add.html:9
-#: apps/wocat/templates/wocat/home.html:73 templates/base.html:185
+#: apps/wocat/templates/wocat/home.html:104 templates/base.html:185
 msgid "Add SLM data"
 msgstr "Добавить данные по УЗП"
 
@@ -150,9 +148,9 @@ msgstr "Все уведомления"
 #: apps/questionnaire/templates/form/questiongroup/select_link.html:47
 #: apps/questionnaire/templates/form/questiongroup/select_user.html:79
 #: apps/sample/templates/sample/add_module.html:34
-#: apps/technologies/templates/technologies/add_module.html:38
-#: apps/wocat/templates/wocat/partial/search.html:22
-#: apps/wocat/templates/wocat/questionnaire/list.html:76
+#: apps/technologies/templates/technologies/add_module.html:35
+#: apps/wocat/templates/wocat/partial/search.html:23
+#: apps/wocat/templates/wocat/questionnaire/list.html:77
 msgid "Search"
 msgstr "Поиск"
 
@@ -168,7 +166,7 @@ msgstr "Данные по УЗП не найдены."
 msgid "See all results... "
 msgstr ""
 
-#: apps/accounts/views.py:62
+#: apps/accounts/views.py:63
 msgid "Welcome {}"
 msgstr "Добро пожаловать {}"
 
@@ -177,8 +175,9 @@ msgid "WOCAT SLM Approaches"
 msgstr "Подходы по УЗП, принятые ВОКАТ"
 
 #: apps/approaches/templates/approaches/questionnaire/list.html:13
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:13
 #: apps/sample/templates/sample/questionnaire/list.html:71
-#: apps/wocat/templates/wocat/home.html:117
+#: apps/wocat/templates/wocat/home.html:150
 #: apps/wocat/templates/wocat/partial/search.html:17
 #: apps/wocat/templates/wocat/questionnaire/list.html:71
 msgid "SLM Approaches"
@@ -254,7 +253,7 @@ msgstr "Эта практика УЗП также описана в:"
 msgid "This SLM Approach is linked to SLM Technologies"
 msgstr "Этот Подход УЗП соответствует Технологиям УЗП"
 
-#: apps/approaches/views.py:47
+#: apps/approaches/views.py:23
 #: apps/questionnaire/templates/details/category/approaches_header.html:6
 #: apps/wocat/templates/wocat/partial/top.html:18
 msgid "Approaches"
@@ -286,7 +285,7 @@ msgstr ""
 "экстремальным погодным явлениям, связанным с изменением климата"
 
 #: apps/cca/templates/cca/questionnaire/partial/link.html:16
-#: apps/cca/views.py:46
+#: apps/cca/views.py:23
 msgid "Climate Change Adaptation"
 msgstr "Адаптация к изменениям климата"
 
@@ -306,7 +305,7 @@ msgstr "Да"
 msgid "No"
 msgstr "Нет"
 
-#: apps/configuration/configuration.py:2556
+#: apps/configuration/configuration.py:2560
 #: apps/questionnaire/templates/details/category/unccd_header.html:16
 msgid "Unknown name"
 msgstr "Неизвестное имя"
@@ -12841,12 +12840,9 @@ msgstr ""
 "Анкетой по Технологиям УЗП, пункт 1.1 АТ"
 
 #: apps/configuration/configuration_translations.py:21101
-#, fuzzy
-#| msgctxt "technologies label_view"
-#| msgid "Name of the SLM Technology"
 msgctxt "cca label_view"
 msgid "Name of the SLM Technology"
-msgstr "Название Технологии УЗП"
+msgstr ""
 
 #: apps/configuration/configuration_translations.py:21200
 msgctxt "cca label"
@@ -12958,12 +12954,9 @@ msgstr ""
 "изменением климата"
 
 #: apps/configuration/configuration_translations.py:23000
-#, fuzzy
-#| msgctxt "cca label"
-#| msgid "Sensitivity (Risks and Potentials)"
 msgctxt "cca label"
 msgid "Sensitivity (risks and potentials)"
-msgstr "Чувствительность (Риски и Угрозы)"
+msgstr ""
 
 #: apps/configuration/configuration_translations.py:23100
 msgctxt "cca helptext"
@@ -13036,11 +13029,9 @@ msgid "Socio-economic impacts"
 msgstr "Социально-экономическое воздействие"
 
 #: apps/configuration/configuration_translations.py:23211
-#, fuzzy
-#| msgid "Socio-economic impacts"
 msgctxt "cca label_view"
 msgid "Socio-economic impacts (on-site)"
-msgstr "Социально-экономическое воздействие"
+msgstr ""
 
 #: apps/configuration/configuration_translations.py:23212
 msgctxt "cca label"
@@ -13068,11 +13059,9 @@ msgid "Socio-cultural impacts"
 msgstr "Социальное и культурное воздействие"
 
 #: apps/configuration/configuration_translations.py:23221
-#, fuzzy
-#| msgid "Socio-cultural impacts"
 msgctxt "cca label_view"
 msgid "Socio-cultural impacts (on-site)"
-msgstr "Социальное и культурное воздействие"
+msgstr ""
 
 #: apps/configuration/configuration_translations.py:23222
 msgctxt "cca label"
@@ -13085,11 +13074,9 @@ msgid "Ecological impacts"
 msgstr "Экологическое воздействие"
 
 #: apps/configuration/configuration_translations.py:23231
-#, fuzzy
-#| msgid "Ecological impacts"
 msgctxt "cca label_view"
 msgid "Ecological impacts (on-site)"
-msgstr "Экологическое воздействие"
+msgstr ""
 
 #: apps/configuration/configuration_translations.py:23232
 msgctxt "cca label"
@@ -13522,12 +13509,9 @@ msgid "gradual change"
 msgstr "постепенное изменение"
 
 #: apps/configuration/configuration_translations.py:27045
-#, fuzzy
-#| msgctxt "cca label"
-#| msgid "Sea-level rise"
 msgctxt "cca label"
 msgid "sea-level rise"
-msgstr "Поднятие уровня моря"
+msgstr ""
 
 #: apps/configuration/configuration_translations.py:27046
 msgctxt "cca label"
@@ -13875,22 +13859,12 @@ msgid "If <strong>yes</strong>, specify below"
 msgstr "Если да, поясните ниже"
 
 #: apps/configuration/configuration_translations.py:28016
-#, fuzzy
-#| msgctxt "cca label"
-#| msgid ""
-#| "In the land user's point of view, is there a threshold (in view of "
-#| "frequency and/ or severity if the gradual climate changes or climate-"
-#| "related extremes), which leads to the failure of the Technology?"
 msgctxt "cca label"
 msgid ""
 "In the land user's point of view, is there a threshold (in view of frequency "
 "and/ or severity of the gradual climate changes or climate-related "
 "extremes), which leads to the failure of the Technology?"
 msgstr ""
-"По мнению землепользователя, есть ли пороговое значение (по отношению к "
-"частоте и/или интенсивности постепенного изменения климата или экстремальных "
-"погодных явлений, связанных с изменением климата), по достижении которого "
-"Технология перестанет работать?"
 
 #: apps/configuration/configuration_translations.py:28017
 msgctxt "cca label"
@@ -13912,19 +13886,11 @@ msgid ""
 msgstr "Если да, заполните таблицу ниже. Если нет, переходите к разделу 3"
 
 #: apps/configuration/configuration_translations.py:28020
-#, fuzzy
-#| msgctxt "cca label"
-#| msgid ""
-#| "Has the Technology been exposed to climate-related extremes (disasters) "
-#| "in the last 10 years or more"
 msgctxt "cca label"
 msgid ""
 "Has the Technology been exposed to climate-related extremes (disasters) in "
 "the last 10 years or more?"
 msgstr ""
-"Испытывала ли Технология воздействие экстремальных погодных явлений, "
-"связанных с изменением климата (стихийных бедствий) за последние 10 лет или "
-"ранее?    "
 
 #: apps/configuration/configuration_translations.py:28021
 msgctxt "cca label"
@@ -14146,12 +14112,9 @@ msgid ""
 msgstr ""
 
 #: apps/configuration/configuration_translations.py:28058
-#, fuzzy
-#| msgctxt "cca label"
-#| msgid "If SLM specialists involved, were these from:"
 msgctxt "cca label"
 msgid "If SLM specialists were involved, were these from:"
-msgstr "Если специалисты по УЗП принимали участие, то откуда именно:"
+msgstr ""
 
 #: apps/configuration/configuration_translations.py:28059
 msgctxt "cca label"
@@ -16131,14 +16094,10 @@ msgid "Arabic"
 msgstr "арабский"
 
 #: apps/qcat/config/common.py:104
-msgid "Bosnian"
-msgstr "боснийский"
-
-#: apps/qcat/config/common.py:105
 msgid "Portuguese"
 msgstr "португальский"
 
-#: apps/qcat/context_processors.py:144
+#: apps/qcat/context_processors.py:145
 msgid ""
 "Caution: Maintenance will start soon ({}), this page will then be "
 "unavailable for a couple of minutes.<br>If you are working on a "
@@ -16148,8 +16107,43 @@ msgstr ""
 "данная страница будет недоступна в течение нескольких минут. Если вы вводите "
 "данные, пожалуйста, сохраните свою работу!"
 
-#: apps/qcat/context_processors.py:151
+#: apps/qcat/context_processors.py:152
 msgid "Maintenance starts in {}"
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:9
+#, python-format
+msgid ""
+"%(questionnaires_count)s SLM Practices published <br>from "
+"%(countries_count)s countries<br>by %(compilers_count)s users."
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:12
+#: apps/sample/templates/sample/questionnaire/list.html:70
+#: apps/technologies/templates/technologies/questionnaire/list.html:13
+#: apps/wocat/templates/wocat/home.html:130
+#: apps/wocat/templates/wocat/partial/search.html:16
+#: apps/wocat/templates/wocat/questionnaire/list.html:70
+msgid "SLM Technologies"
+msgstr "Технологии УЗП"
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:14
+#: apps/wocat/templates/wocat/partial/search.html:18
+#: apps/wocat/templates/wocat/questionnaire/list.html:72
+msgid "UNCCD PRAIS Practices"
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:20
+#, python-format
+msgid ""
+"%(questionnaires_count)s new practices drafted in the past %(days)s days."
+msgstr ""
+
+#: apps/qcat/templates/qcat/templates/fact_sheet_teaser.html:26
+#, python-format
+msgid ""
+"%(visits_count)s visits from %(countries_count)s different countries since "
+"launch in August 2016."
 msgstr ""
 
 #: apps/questionnaire/errors.py:20
@@ -16181,7 +16175,7 @@ msgstr "Отклонено"
 msgid "Inactive"
 msgstr "Неактивный"
 
-#: apps/questionnaire/models.py:60 apps/summary/renderers.py:236
+#: apps/questionnaire/models.py:60 apps/summary/renderers.py:244
 #: apps/wocat/templates/wocat/help/questionnaire_roles.html:10
 msgid "Compiler"
 msgstr "Составитель"
@@ -16224,11 +16218,11 @@ msgstr ""
 "Представлен в качестве передовой практики УЗП в КБО ООН национальным "
 "координатором"
 
-#: apps/questionnaire/models.py:969
+#: apps/questionnaire/models.py:970
 msgid "This questionnaire can be edited."
 msgstr "Эта анкета доступна для редактирования"
 
-#: apps/questionnaire/models.py:971
+#: apps/questionnaire/models.py:972
 #, python-brace-format
 msgid "This questionnaire is locked for editing by {user}."
 msgstr "Эта анкета закрыта для редактирования {user}."
@@ -16298,7 +16292,7 @@ msgid "Editor:"
 msgstr "Редактор:"
 
 #: apps/questionnaire/templates/details/category/approaches_header.html:84
-#: apps/questionnaire/templates/details/category/approaches_header.html:96
+#: apps/questionnaire/templates/details/category/approaches_header.html:97
 #: apps/questionnaire/templates/details/category/cca_header.html:80
 #: apps/questionnaire/templates/details/category/cca_header.html:85
 #: apps/questionnaire/templates/details/category/cca_header.html:94
@@ -16306,7 +16300,7 @@ msgstr "Редактор:"
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:87
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:96
 #: apps/questionnaire/templates/details/category/technologies_header.html:84
-#: apps/questionnaire/templates/details/category/technologies_header.html:96
+#: apps/questionnaire/templates/details/category/technologies_header.html:97
 #: apps/questionnaire/templates/details/category/unccd_header.html:75
 #: apps/questionnaire/templates/details/category/unccd_header.html:80
 #: apps/questionnaire/templates/details/category/unccd_header.html:89
@@ -16317,7 +16311,8 @@ msgstr "Редактор:"
 #: apps/questionnaire/templates/details/category/with_metadata.html:87
 #: apps/questionnaire/templates/details/category/with_metadata.html:95
 #: apps/questionnaire/templates/form/subcategory/comingsoon.html:7
-#: apps/wocat/templates/wocat/add_maps.html:68
+#: apps/wocat/templates/wocat/home.html:206
+#: apps/wocat/templates/wocat/partial/add.html:79
 msgid "Coming soon"
 msgstr "появится в ближайшее время "
 
@@ -16347,44 +16342,49 @@ msgstr "Напечатать аннотацию"
 msgid "Full summary as PDF"
 msgstr "Полная аннотация в формате PDF"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:98
+#: apps/questionnaire/templates/details/category/approaches_header.html:94
+#: apps/questionnaire/templates/details/category/technologies_header.html:94
+msgid "Full summary as HTML"
+msgstr ""
+
+#: apps/questionnaire/templates/details/category/approaches_header.html:99
 #: apps/questionnaire/templates/details/category/cca_header.html:96
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:98
-#: apps/questionnaire/templates/details/category/technologies_header.html:98
+#: apps/questionnaire/templates/details/category/technologies_header.html:99
 #: apps/questionnaire/templates/details/category/unccd_header.html:91
 #: apps/questionnaire/templates/details/category/watershed_header.html:100
 #: apps/questionnaire/templates/details/category/with_metadata.html:97
 msgid "Export"
 msgstr "Экспортировать"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:106
+#: apps/questionnaire/templates/details/category/approaches_header.html:107
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:106
-#: apps/questionnaire/templates/details/category/technologies_header.html:106
+#: apps/questionnaire/templates/details/category/technologies_header.html:107
 #: apps/questionnaire/templates/details/category/unccd_header.html:99
 #: apps/questionnaire/templates/details/category/watershed_header.html:108
 #: apps/questionnaire/templates/details/category/with_metadata.html:105
 msgid "See history"
 msgstr "Просмотреть историю"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:112
-#: apps/wocat/templates/wocat/add_practice.html:52
+#: apps/questionnaire/templates/details/category/approaches_header.html:113
+#: apps/wocat/templates/wocat/partial/add.html:39
 msgid "SLM Approach"
 msgstr " Подход УЗП"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:117
+#: apps/questionnaire/templates/details/category/approaches_header.html:118
 #: apps/questionnaire/templates/details/category/cca_header.html:109
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:116
-#: apps/questionnaire/templates/details/category/technologies_header.html:117
+#: apps/questionnaire/templates/details/category/technologies_header.html:118
 #: apps/questionnaire/templates/details/category/unccd_header.html:110
 #: apps/questionnaire/templates/details/category/watershed_header.html:119
 #: apps/questionnaire/templates/details/category/with_metadata.html:117
 msgid "View sections"
 msgstr "Просмотреть разделы"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:119
+#: apps/questionnaire/templates/details/category/approaches_header.html:120
 #: apps/questionnaire/templates/details/category/cca_header.html:111
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:118
-#: apps/questionnaire/templates/details/category/technologies_header.html:119
+#: apps/questionnaire/templates/details/category/technologies_header.html:120
 #: apps/questionnaire/templates/details/category/unccd_header.html:112
 #: apps/questionnaire/templates/details/category/watershed_header.html:121
 #: apps/questionnaire/templates/details/category/with_metadata.html:119
@@ -16392,10 +16392,10 @@ msgstr "Просмотреть разделы"
 msgid "Expand all"
 msgstr "Развернуть все"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:120
+#: apps/questionnaire/templates/details/category/approaches_header.html:121
 #: apps/questionnaire/templates/details/category/cca_header.html:112
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:119
-#: apps/questionnaire/templates/details/category/technologies_header.html:120
+#: apps/questionnaire/templates/details/category/technologies_header.html:121
 #: apps/questionnaire/templates/details/category/unccd_header.html:113
 #: apps/questionnaire/templates/details/category/watershed_header.html:122
 #: apps/questionnaire/templates/details/category/with_metadata.html:120
@@ -16403,30 +16403,30 @@ msgstr "Развернуть все"
 msgid "Collapse all"
 msgstr "Свернуть все"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:125
+#: apps/questionnaire/templates/details/category/approaches_header.html:126
 #: apps/questionnaire/templates/details/category/cca_header.html:117
-#: apps/questionnaire/templates/details/category/technologies_header.html:125
+#: apps/questionnaire/templates/details/category/technologies_header.html:126
 #: apps/questionnaire/templates/details/category/unccd_header.html:118
 #: apps/questionnaire/templates/details/category/watershed_header.html:127
 msgid "Completeness:"
 msgstr ""
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:144
+#: apps/questionnaire/templates/details/category/approaches_header.html:145
 #: apps/questionnaire/templates/details/category/cca_header.html:136
 #: apps/questionnaire/templates/details/category/default.html:19
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:138
-#: apps/questionnaire/templates/details/category/technologies_header.html:144
+#: apps/questionnaire/templates/details/category/technologies_header.html:145
 #: apps/questionnaire/templates/details/category/unccd_header.html:137
 #: apps/questionnaire/templates/details/category/watershed_header.html:146
 #: apps/questionnaire/templates/details/category/with_metadata.html:139
 msgid "Edit this section"
 msgstr "Отредактировать данный раздел"
 
-#: apps/questionnaire/templates/details/category/approaches_header.html:160
+#: apps/questionnaire/templates/details/category/approaches_header.html:161
 #: apps/questionnaire/templates/details/category/cca_header.html:152
 #: apps/questionnaire/templates/details/category/default.html:32
 #: apps/questionnaire/templates/details/category/samplemodule_header.html:152
-#: apps/questionnaire/templates/details/category/technologies_header.html:160
+#: apps/questionnaire/templates/details/category/technologies_header.html:161
 #: apps/questionnaire/templates/details/category/unccd_header.html:153
 #: apps/questionnaire/templates/details/category/watershed_header.html:162
 #: apps/questionnaire/templates/details/category/with_metadata.html:153
@@ -16442,7 +16442,7 @@ msgid "Technology: "
 msgstr "Технология:"
 
 #: apps/questionnaire/templates/details/category/technologies_header.html:6
-#: apps/technologies/views.py:47 apps/wocat/templates/wocat/partial/top.html:14
+#: apps/technologies/views.py:23 apps/wocat/templates/wocat/partial/top.html:14
 msgid "Technologies"
 msgstr "Технологии"
 
@@ -16450,8 +16450,8 @@ msgstr "Технологии"
 msgid "New SLM Technology"
 msgstr "Новая Технология УЗП "
 
-#: apps/questionnaire/templates/details/category/technologies_header.html:112
-#: apps/wocat/templates/wocat/add_practice.html:33
+#: apps/questionnaire/templates/details/category/technologies_header.html:113
+#: apps/wocat/templates/wocat/partial/add.html:19
 msgid "SLM Technology"
 msgstr "Технология УЗП"
 
@@ -16619,23 +16619,23 @@ msgstr ""
 msgid "Search user"
 msgstr "Найти пользователя"
 
-#: apps/questionnaire/templates/details/review_panel/_assign_user.html:66
+#: apps/questionnaire/templates/details/review_panel/_assign_user.html:67
 #: apps/questionnaire/templates/form/questiongroup/select_link.html:48
 #: apps/questionnaire/templates/form/questiongroup/select_user.html:79
 #: apps/sample/templates/sample/add_module.html:35
-#: apps/technologies/templates/technologies/add_module.html:39
+#: apps/technologies/templates/technologies/add_module.html:36
 msgid "No results found"
 msgstr "Результатов не найдено"
 
-#: apps/questionnaire/templates/details/review_panel/_assign_user.html:67
+#: apps/questionnaire/templates/details/review_panel/_assign_user.html:68
 #: apps/questionnaire/templates/form/questiongroup/select_link.html:49
 #: apps/questionnaire/templates/form/questiongroup/select_user.html:79
 #: apps/sample/templates/sample/add_module.html:36
-#: apps/technologies/templates/technologies/add_module.html:40
+#: apps/technologies/templates/technologies/add_module.html:37
 msgid "Too many results found, please narrow the search"
 msgstr "Найдено слишком много результатов, пожалуйста, сузьте критерии поиска"
 
-#: apps/questionnaire/templates/details/review_panel/_assign_user.html:70
+#: apps/questionnaire/templates/details/review_panel/_assign_user.html:71
 msgid "Update users"
 msgstr "Обновить пользователей"
 
@@ -16898,21 +16898,21 @@ msgstr ""
 "создана новая версия (статус \"проект\"). Она может редактироваться вами и "
 "другими редакторами."
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:49
+#: apps/questionnaire/templates/details/review_panel/edit.html:53
 msgid "Flag as UNCCD best practice"
 msgstr "Отметить как передовую практику КБО ООН"
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:53
+#: apps/questionnaire/templates/details/review_panel/edit.html:57
 msgid "Flag this questionnaire as a UNCCD best practice for this country."
 msgstr ""
 "Отметить эту анкету как передовую практику КБО ООН для соответствующей "
 "страны."
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:56
+#: apps/questionnaire/templates/details/review_panel/edit.html:60
 msgid "Please confirm flagging as a UNCCD best practice."
 msgstr "Пожалуйста, подтвердите маркировку передовой практики КБО ООН"
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:57
+#: apps/questionnaire/templates/details/review_panel/edit.html:61
 msgid ""
 "By submitting, this questionnaire will be flagged as a UNCCD best practice "
 "for this country. Please note that due to the review process, it will take a "
@@ -16923,16 +16923,16 @@ msgstr ""
 "занять несколько дней, и только после его окончания метку смогут увидеть все "
 "пользователи базы данных.  "
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:58
-#: apps/questionnaire/templates/details/review_panel/edit.html:77
+#: apps/questionnaire/templates/details/review_panel/edit.html:62
+#: apps/questionnaire/templates/details/review_panel/edit.html:81
 msgid "Confirm"
 msgstr "Подтвердить"
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:68
+#: apps/questionnaire/templates/details/review_panel/edit.html:72
 msgid "Unflag as UNCCD best practice"
 msgstr "Отменить метку передовой практики КБО ООН"
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:72
+#: apps/questionnaire/templates/details/review_panel/edit.html:76
 msgid ""
 "This questionnaire is flagged as a UNCCD best practice for this country. As "
 "the UNCCD national focal point, you can remove this flag."
@@ -16940,11 +16940,11 @@ msgstr ""
 "Эта анкета отмечена как передовая практика КБО ООН для данной страны. Вы, "
 "как национальный координатор КБО ООН, можете удалить эту отметку. "
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:75
+#: apps/questionnaire/templates/details/review_panel/edit.html:79
 msgid "Please confirm unflagging as a UNCCD best practice."
 msgstr "Пожалуйста, подтвердите удаление метки \"Передовая практика КБО ООН\""
 
-#: apps/questionnaire/templates/details/review_panel/edit.html:76
+#: apps/questionnaire/templates/details/review_panel/edit.html:80
 msgid ""
 "By submitting, this questionnaire will be unflagged as UNCCD best practice "
 "for this country. Please note that due to the review process, it will take a "
@@ -17698,7 +17698,6 @@ msgid "No links"
 msgstr "Нет ссылок"
 
 #: apps/questionnaire/templates/questionnaire/details.html:89
-#: apps/wocat/templates/wocat/partial/add.html:65
 msgid "Modules"
 msgstr "Модули"
 
@@ -17712,31 +17711,28 @@ msgstr "Добавить новый модуль"
 
 #: apps/questionnaire/templates/questionnaire/details.html:113
 #: apps/sample/templates/sample/add_module.html:27
-#: apps/technologies/templates/technologies/add_module.html:31
+#: apps/technologies/templates/technologies/add_module.html:28
 msgid "1. Select a Technology"
 msgstr "1. Выбрать Технологию"
 
 #: apps/questionnaire/templates/questionnaire/details.html:117
 #: apps/sample/templates/sample/add_module.html:53
-#: apps/technologies/templates/technologies/add_module.html:57
 msgid "2. Select a module"
 msgstr "2. Выбрать модуль"
 
 #: apps/questionnaire/templates/questionnaire/details.html:120
 #: apps/sample/templates/sample/add_module.html:56
-#: apps/technologies/templates/technologies/add_module.html:60
 msgid "Select a module which you would like to add to the Technology."
 msgstr "Выбрать модуль, который вы хотите добавить к Технологии"
 
 #: apps/questionnaire/templates/questionnaire/details.html:128
 #: apps/sample/templates/sample/add_module.html:70
-#: apps/technologies/templates/technologies/add_module.html:74
 msgid "3. Create the module"
 msgstr "3. Создать модуль"
 
 #: apps/questionnaire/templates/questionnaire/details.html:130
 #: apps/sample/templates/sample/add_module.html:72
-#: apps/technologies/templates/technologies/add_module.html:76
+#: apps/technologies/templates/technologies/add_module.html:70
 msgid "Create"
 msgstr "Создать"
 
@@ -17798,31 +17794,31 @@ msgstr "Обновлено"
 msgid "Unknown"
 msgstr "Неизвестно"
 
-#: apps/questionnaire/utils.py:1310
+#: apps/questionnaire/utils.py:1201
 msgid "The questionnaire was successfully submitted."
 msgstr "Анкета успешно отправлена."
 
-#: apps/questionnaire/utils.py:1342
+#: apps/questionnaire/utils.py:1233
 msgid "The questionnaire was successfully reviewed."
 msgstr "Проверка анкеты успешно завершенаю"
 
-#: apps/questionnaire/utils.py:1380
+#: apps/questionnaire/utils.py:1271
 msgid "New version was published"
 msgstr "Опубликована новая версия"
 
-#: apps/questionnaire/utils.py:1408
+#: apps/questionnaire/utils.py:1299
 msgid "The questionnaire was successfully set public."
 msgstr "Статус анкеты изменен на общедоступный. "
 
-#: apps/questionnaire/utils.py:1447
+#: apps/questionnaire/utils.py:1338
 msgid "The questionnaire was successfully rejected."
 msgstr "Анкета отклонена."
 
-#: apps/questionnaire/utils.py:1537
+#: apps/questionnaire/utils.py:1428
 msgid "Assigned users were successfully updated"
 msgstr "Прикрепленные пользователи успешно обновлены"
 
-#: apps/questionnaire/utils.py:1565
+#: apps/questionnaire/utils.py:1544
 msgid ""
 "The flag could not be set because a version of this questionnaire is already "
 "in the review process and needs to be published first. Please try again "
@@ -17832,11 +17828,11 @@ msgstr ""
 "находится в процессе проверки и должна быть опубликована первой. Пожалуйста, "
 "повторите попытку позже.  "
 
-#: apps/questionnaire/utils.py:1587
+#: apps/questionnaire/utils.py:1566
 msgid "The flag was successfully set."
 msgstr "Метка успешно установлена."
 
-#: apps/questionnaire/utils.py:1611
+#: apps/questionnaire/utils.py:1590
 msgid ""
 "The flag could not be removed because a version of this questionnaire is "
 "already in the review process and needs to be published first. Please try "
@@ -17846,7 +17842,7 @@ msgstr ""
 "процессе проверки и должна быть опубликована первой. Пожалуйста, повторите "
 "попытку позже."
 
-#: apps/questionnaire/utils.py:1632
+#: apps/questionnaire/utils.py:1611
 msgid ""
 "The flag was successfully removed. Please note that this created a new "
 "version which needs to be reviewed. In the meantime, you are seeing the "
@@ -17856,29 +17852,27 @@ msgstr ""
 "новая версия, которая должна быть проверена перед публикацией. До окончания "
 "проверки вы будете видеть общедоступную версию с меткой."
 
-#: apps/questionnaire/utils.py:1639
+#: apps/questionnaire/utils.py:1618
 msgid "New version due to unccd flagging"
 msgstr "Новой версии должна быть присвоена метка КБО ООН "
 
-#: apps/questionnaire/utils.py:1653
+#: apps/questionnaire/utils.py:1632
 msgid "The questionnaire was succesfully removed"
 msgstr "Анкета успешно удалена"
 
-#: apps/questionnaire/views.py:520
+#: apps/questionnaire/views.py:478
 msgid "Data successfully saved."
 msgstr "Данные успешно сохранены."
 
-#: apps/questionnaire/views.py:1077
+#: apps/questionnaire/views.py:1037
 msgid "QCAT Form"
 msgstr "Форма QCAT"
 
-#: apps/questionnaire/views.py:1301
+#: apps/questionnaire/views.py:1261
 msgid "No or multiple files provided."
 msgstr "Файлы не найдены или их несколько"
 
 #: apps/sample/templates/sample/add_module.html:15
-#: apps/technologies/templates/technologies/add_module.html:15
-#: apps/wocat/templates/wocat/add_module.html:9
 msgid "Add SLM Module"
 msgstr "Добавить Модуль УЗП"
 
@@ -17887,7 +17881,7 @@ msgid "SAMPLE: More information about the modules and stuff."
 msgstr "Пример: Больше информации о модулях и прочем."
 
 #: apps/sample/templates/sample/add_module.html:30
-#: apps/technologies/templates/technologies/add_module.html:34
+#: apps/technologies/templates/technologies/add_module.html:31
 msgid "Search and select a Technology to which you would like to add a module."
 msgstr "Найти и отметить Технологию, к которой вы хотите добавить новый модуль"
 
@@ -17922,17 +17916,9 @@ msgstr "Поиск данных по УЗП"
 msgid "All SLM Data"
 msgstr "Все данные по УЗП"
 
-#: apps/sample/templates/sample/questionnaire/list.html:70
-#: apps/technologies/templates/technologies/questionnaire/list.html:13
-#: apps/wocat/templates/wocat/home.html:98
-#: apps/wocat/templates/wocat/partial/search.html:16
-#: apps/wocat/templates/wocat/questionnaire/list.html:70
-msgid "SLM Technologies"
-msgstr "Технологии УЗП"
-
 #: apps/sample/templates/sample/questionnaire/list.html:78
 #: apps/wocat/templates/wocat/partial/top.html:33
-#: apps/wocat/templates/wocat/questionnaire/list.html:79
+#: apps/wocat/templates/wocat/questionnaire/list.html:80
 msgid "Advanced filter"
 msgstr "Расширенный фильтр"
 
@@ -17982,563 +17968,555 @@ msgid " Answer: {}"
 msgstr ""
 
 #: apps/summary/parsers.py:626
-#, fuzzy
-#| msgctxt "approaches label"
-#| msgid "Subsidies for specific inputs (including labour)"
 msgid "Subsidies for specific inputs"
-msgstr "Субсидии на отдельные затраты (включая оплату труда)"
+msgstr ""
 
-#: apps/summary/renderers.py:154
+#: apps/summary/renderers.py:161
 msgid "Description"
 msgstr "Описание"
 
-#: apps/summary/renderers.py:217
+#: apps/summary/renderers.py:225
 msgid "Conclusions and lessons learnt"
 msgstr "Заключительные положения и извлечённые уроки"
 
-#: apps/summary/renderers.py:220
+#: apps/summary/renderers.py:228
 msgid "Strengths"
 msgstr "Сильные стороны"
 
-#: apps/summary/renderers.py:224
+#: apps/summary/renderers.py:232
 msgid "Weaknesses/ disadvantages/ risks"
 msgstr ""
 
-#: apps/summary/renderers.py:225
+#: apps/summary/renderers.py:233
 msgid "how to overcome"
 msgstr ""
 
-#: apps/summary/renderers.py:233
+#: apps/summary/renderers.py:241
 msgid "References"
 msgstr "Справочные материалы"
 
-#: apps/summary/renderers.py:241
+#: apps/summary/renderers.py:249
 msgid "Resource persons"
 msgstr "Ответственные специалисты"
 
-#: apps/summary/renderers.py:246
+#: apps/summary/renderers.py:254
 msgid "More about this case study"
 msgstr ""
 
-#: apps/summary/renderers.py:251
+#: apps/summary/renderers.py:259
 msgid "Linked SLM data"
 msgstr ""
 
-#: apps/summary/renderers.py:256
+#: apps/summary/renderers.py:264
 msgid "Key references"
 msgstr "Ключевые ссылки"
 
-#: apps/summary/renderers.py:308
+#: apps/summary/renderers.py:316
 #, python-brace-format
 msgid ""
 "This data in the WOCAT database: <a href=\"{base_url}{url}\">{base_url}{url}"
 "</a>"
 msgstr ""
 
-#: apps/summary/renderers.py:324
+#: apps/summary/renderers.py:332
 #, python-brace-format
 msgid "Video: <a href=\"{vimeo_url}\">{vimeo_url}</a>"
 msgstr ""
 
-#: apps/summary/renderers.py:377
+#: apps/summary/renderers.py:383
 msgid "Documentation was faciliated by"
 msgstr ""
 
-#: apps/summary/renderers.py:435
+#: apps/summary/renderers.py:441
 msgid ""
 "This technology is problematic with regard to land degradation, so it cannot "
 "be declared a sustainable land management technology"
 msgstr ""
 
-#: apps/summary/renderers.py:443 apps/summary/renderers.py:453
-#: apps/summary/renderers.py:862 apps/summary/renderers.py:872
+#: apps/summary/renderers.py:449 apps/summary/renderers.py:459
+#: apps/summary/renderers.py:869 apps/summary/renderers.py:879
 msgid "Location"
 msgstr "Местоположение"
 
-#: apps/summary/renderers.py:466
+#: apps/summary/renderers.py:472
 msgid "Spread of the Technology"
 msgstr "Пространственное распространение Технологии"
 
-#: apps/summary/renderers.py:470
+#: apps/summary/renderers.py:476
 msgid "Date of implementation"
 msgstr "Продолжительность применения Технологии"
 
-#: apps/summary/renderers.py:474
+#: apps/summary/renderers.py:480
 msgid "Type of introduction"
 msgstr "Тип внедрения/ применения "
 
-#: apps/summary/renderers.py:492
+#: apps/summary/renderers.py:498
 msgid "Classification of the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:495
+#: apps/summary/renderers.py:501
 msgid "Main purpose"
 msgstr "Основная цель"
 
-#: apps/summary/renderers.py:499
+#: apps/summary/renderers.py:505
 msgid "Land use"
 msgstr ""
 
-#: apps/summary/renderers.py:503
+#: apps/summary/renderers.py:509
 msgid "Water supply"
 msgstr ""
 
-#: apps/summary/renderers.py:508
+#: apps/summary/renderers.py:514
 msgid "Number of growing seasons per year"
 msgstr ""
 
-#: apps/summary/renderers.py:512
+#: apps/summary/renderers.py:518
 msgid "Land use before implementation of the Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:516
+#: apps/summary/renderers.py:522
 msgid "Livestock density"
 msgstr ""
 
-#: apps/summary/renderers.py:523
+#: apps/summary/renderers.py:529
 msgid "Purpose related to land degradation"
 msgstr ""
 
-#: apps/summary/renderers.py:527
+#: apps/summary/renderers.py:533
 msgid "Degradation addressed"
 msgstr ""
 
-#: apps/summary/renderers.py:531
+#: apps/summary/renderers.py:537
 msgid "SLM group"
 msgstr ""
 
-#: apps/summary/renderers.py:535
+#: apps/summary/renderers.py:541
 msgid "SLM measures"
 msgstr ""
 
-#: apps/summary/renderers.py:543
+#: apps/summary/renderers.py:550
 msgid "Technical drawing"
 msgstr "Технический рисунок"
 
-#: apps/summary/renderers.py:545
+#: apps/summary/renderers.py:552
 msgid "Technical specifications"
 msgstr "Технические характеристики"
 
-#: apps/summary/renderers.py:567 apps/summary/renderers.py:568
+#: apps/summary/renderers.py:574 apps/summary/renderers.py:575
 msgid "n.a"
 msgstr "недоступно"
 
-#: apps/summary/renderers.py:571
+#: apps/summary/renderers.py:578
 msgid "Establishment and maintenance: activities, inputs and costs"
 msgstr ""
 "Запуск и текущее обслуживание: мероприятия, необходимые ресурсы и затраты"
 
-#: apps/summary/renderers.py:574
+#: apps/summary/renderers.py:581
 msgid "Calculation of inputs and costs"
 msgstr "Подсчет вложений и затрат"
 
-#: apps/summary/renderers.py:576
+#: apps/summary/renderers.py:583
 msgid "Costs are calculated: {}"
 msgstr "Подсчитанные затраты: {}"
 
-#: apps/summary/renderers.py:577
+#: apps/summary/renderers.py:584
 msgid "Currency used for cost calculation: {}"
 msgstr "Денежные единицы, использованные для подсчета затрат {}"
 
-#: apps/summary/renderers.py:578
+#: apps/summary/renderers.py:585
 msgid "Exchange rate (to USD): {}."
 msgstr "Обменный курс (Доллар США): {}."
 
-#: apps/summary/renderers.py:579
+#: apps/summary/renderers.py:586
 msgid "Average wage cost of hired labour: {}."
 msgstr "Средний размер оплаты труда нанятых работников: {}."
 
-#: apps/summary/renderers.py:582
+#: apps/summary/renderers.py:589
 msgid "Most important factors affecting the costs"
 msgstr "Наиболее значимые факторы, влияющие на стоимость затрат"
 
-#: apps/summary/renderers.py:585
+#: apps/summary/renderers.py:592
 msgid "Establishment activities"
 msgstr "Мероприятия, необходимые для начала реализации"
 
-#: apps/summary/renderers.py:589
+#: apps/summary/renderers.py:596
 msgid "Establishment inputs and costs per ha"
 msgstr "Стоимость вложений и затрат по запуску на гектар"
 
-#: apps/summary/renderers.py:594
+#: apps/summary/renderers.py:601
 msgid "Maintenance activities"
 msgstr "Текущее обслуживание"
 
-#: apps/summary/renderers.py:639
+#: apps/summary/renderers.py:646
 msgid "Natural environment"
 msgstr "Природные условия"
 
-#: apps/summary/renderers.py:642
+#: apps/summary/renderers.py:649
 msgid "Average annual rainfall"
 msgstr "Среднегодовое количество осадков"
 
-#: apps/summary/renderers.py:646
+#: apps/summary/renderers.py:653
 msgid "Agro-climatic zone"
 msgstr "Агроклиматическая зона"
 
-#: apps/summary/renderers.py:650
+#: apps/summary/renderers.py:657
 msgid "Specifications on climate"
 msgstr "Дополнительные характеристики климата"
 
-#: apps/summary/renderers.py:654
+#: apps/summary/renderers.py:661
 msgid "Slope"
 msgstr "Склон"
 
-#: apps/summary/renderers.py:658
+#: apps/summary/renderers.py:665
 msgid "Landforms"
 msgstr "Формы рельефа"
 
-#: apps/summary/renderers.py:662
+#: apps/summary/renderers.py:669
 msgid "Altitude"
 msgstr "Высота над уровнем моря"
 
-#: apps/summary/renderers.py:666
+#: apps/summary/renderers.py:673
 msgid "Technology is applied in"
 msgstr "Технология применяется в"
 
-#: apps/summary/renderers.py:670
+#: apps/summary/renderers.py:677
 msgid "Soil depth"
 msgstr "Мощность почв"
 
-#: apps/summary/renderers.py:674
+#: apps/summary/renderers.py:681
 msgid "Soil texture (topsoil)"
 msgstr "Гранулометрический состав (верхнего горизонта)"
 
-#: apps/summary/renderers.py:678
+#: apps/summary/renderers.py:685
 msgid "Soil texture (> 20 cm below surface)"
 msgstr "Гранулометрический состав (на глубине более 20 см)"
 
-#: apps/summary/renderers.py:682
+#: apps/summary/renderers.py:689
 msgid "Topsoil organic matter content"
 msgstr "Содержание органического вещества в верхнем почвенном горизонте"
 
-#: apps/summary/renderers.py:686
+#: apps/summary/renderers.py:693
 msgid "Groundwater table"
 msgstr "Уровень грунтовых вод"
 
-#: apps/summary/renderers.py:690
+#: apps/summary/renderers.py:697
 msgid "Availability of surface water"
 msgstr "Доступность поверхностных вод"
 
-#: apps/summary/renderers.py:694
+#: apps/summary/renderers.py:701
 msgid "Water quality (untreated)"
 msgstr "Качество воды (без обработки)"
 
-#: apps/summary/renderers.py:698
+#: apps/summary/renderers.py:705
 msgid "Occurrence of flooding"
 msgstr "Повторяемость затопления"
 
-#: apps/summary/renderers.py:702
+#: apps/summary/renderers.py:709
 msgid "Is salinity a problem?"
 msgstr "Является ли солёность воды проблемой?"
 
-#: apps/summary/renderers.py:706
+#: apps/summary/renderers.py:713
 msgid "Species diversity"
 msgstr "Видовое разнообразие"
 
-#: apps/summary/renderers.py:710
+#: apps/summary/renderers.py:717
 msgid "Habitat diversity"
 msgstr "Разнообразие местообитаний"
 
-#: apps/summary/renderers.py:718
+#: apps/summary/renderers.py:725
 msgid "Characteristics of land users applying the Technology"
 msgstr "Характеристика землепользователей, применяющих Технологию"
 
-#: apps/summary/renderers.py:721
+#: apps/summary/renderers.py:728
 msgid "Market orientation"
 msgstr "Рыночная ориентация"
 
-#: apps/summary/renderers.py:725
+#: apps/summary/renderers.py:732
 msgid "Off-farm income"
 msgstr "Доходы из других источников"
 
-#: apps/summary/renderers.py:729
+#: apps/summary/renderers.py:736
 msgid "Relative level of wealth"
 msgstr "Относительный уровень достатка"
 
-#: apps/summary/renderers.py:733
+#: apps/summary/renderers.py:740
 msgid "Level of mechanization"
 msgstr "Уровень механизации"
 
-#: apps/summary/renderers.py:737
+#: apps/summary/renderers.py:744
 msgid "Sedentary or nomadic"
 msgstr "Осёдлый или кочевой"
 
-#: apps/summary/renderers.py:741
+#: apps/summary/renderers.py:748
 msgid "Individuals or groups"
 msgstr "Индивидуальное или коллективное хозяйство"
 
-#: apps/summary/renderers.py:745
+#: apps/summary/renderers.py:752
 msgid "Gender"
 msgstr "Пол"
 
-#: apps/summary/renderers.py:749
+#: apps/summary/renderers.py:756
 msgid "Age"
 msgstr "Возраст"
 
-#: apps/summary/renderers.py:753
+#: apps/summary/renderers.py:760
 msgid "Area used per household"
 msgstr "Площадь, используемая домохозяйством"
 
-#: apps/summary/renderers.py:757
+#: apps/summary/renderers.py:764
 msgid "Scale"
 msgstr "Масштаб"
 
-#: apps/summary/renderers.py:761
+#: apps/summary/renderers.py:768
 msgid "Land ownership"
 msgstr "Собственность на землю"
 
-#: apps/summary/renderers.py:765
+#: apps/summary/renderers.py:772
 msgid "Land use rights"
 msgstr "Права на землепользование"
 
-#: apps/summary/renderers.py:769
+#: apps/summary/renderers.py:776
 msgid "Water use rights"
 msgstr "Права на водовользование"
 
-#: apps/summary/renderers.py:773
+#: apps/summary/renderers.py:780
 msgid "Access to services and infrastructure"
 msgstr "Доступ к базовым услугам и инфраструктуре"
 
-#: apps/summary/renderers.py:781
+#: apps/summary/renderers.py:788
 msgid "Impacts - Benefits and disadvantages"
 msgstr ""
 
-#: apps/summary/renderers.py:784
+#: apps/summary/renderers.py:791
 msgid "Socio-economic impacts"
 msgstr "Социально-экономическое воздействие"
 
-#: apps/summary/renderers.py:788
+#: apps/summary/renderers.py:795
 msgid "Socio-cultural impacts"
 msgstr "Социальное и культурное воздействие"
 
-#: apps/summary/renderers.py:792
+#: apps/summary/renderers.py:799
 msgid "Ecological impacts"
 msgstr "Экологическое воздействие"
 
-#: apps/summary/renderers.py:796
+#: apps/summary/renderers.py:803
 msgid "Off-site impacts"
 msgstr "Влияние за пределами территории применения"
 
-#: apps/summary/renderers.py:800
+#: apps/summary/renderers.py:807
 msgid "Benefits compared with establishment costs"
 msgstr "Насколько получаемый результат сопоставим с первоначальными вложениями"
 
-#: apps/summary/renderers.py:804
+#: apps/summary/renderers.py:811
 msgid "Benefits compared with maintenance costs"
 msgstr ""
 "Насколько получаемый результат сопоставим с затратами на техническое "
 "обслуживание"
 
-#: apps/summary/renderers.py:812
+#: apps/summary/renderers.py:819
 msgid "Climate change"
 msgstr "Изменение климата"
 
-#: apps/summary/renderers.py:813
+#: apps/summary/renderers.py:820
 msgid ""
 "Exposure and sensitivity of the Technology to gradual climate change and "
 "climate-related extremes (disasters)."
 msgstr ""
 
-#: apps/summary/renderers.py:823
+#: apps/summary/renderers.py:830
 msgid "Adoption and adaptation"
 msgstr "Внедрение и адаптация"
 
-#: apps/summary/renderers.py:826
+#: apps/summary/renderers.py:833
 msgid "Percentage of land users in the area who have adopted the Technology"
 msgstr "Доля землепользователей (в процентах), применяющих Технологию"
 
-#: apps/summary/renderers.py:830
+#: apps/summary/renderers.py:837
 msgid ""
 "Of all those who have adopted the Technology, how many have did so without "
 "receiving material incentives?"
 msgstr ""
 
-#: apps/summary/renderers.py:834
+#: apps/summary/renderers.py:841
 msgid "Adaptation"
 msgstr "Адаптация"
 
-#: apps/summary/renderers.py:835
+#: apps/summary/renderers.py:842
 msgid ""
 "Has the Technology been modified recently to adapt to changing conditions?"
 msgstr ""
 
-#: apps/summary/renderers.py:839
+#: apps/summary/renderers.py:846
 msgid "To which changing conditions?"
 msgstr ""
 
-#: apps/summary/renderers.py:881
+#: apps/summary/renderers.py:888
 msgid "Initiation date"
 msgstr "Дата ввода в действие"
 
-#: apps/summary/renderers.py:886
+#: apps/summary/renderers.py:893
 msgid "Year of termination"
 msgstr "Дата завершения"
 
-#: apps/summary/renderers.py:891
+#: apps/summary/renderers.py:898
 msgid "Type of Approach"
 msgstr "Тип Подхода"
 
-#: apps/summary/renderers.py:900
+#: apps/summary/renderers.py:907
 msgid "Approach aims and enabling environment"
 msgstr ""
 
-#: apps/summary/renderers.py:903
+#: apps/summary/renderers.py:910
 msgid "Main aims / objectives of the approach"
 msgstr ""
 
-#: apps/summary/renderers.py:908
+#: apps/summary/renderers.py:915
 msgid ""
 "Conditions enabling the implementation of the Technology/ ies applied under "
 "the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:912
+#: apps/summary/renderers.py:919
 msgid ""
 "Conditions hindering the implementation of the Technology/ ies applied under "
 "the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:922
+#: apps/summary/renderers.py:929
 msgid "Participation and roles of stakeholders involved"
 msgstr ""
 
-#: apps/summary/renderers.py:925
+#: apps/summary/renderers.py:932
 msgid "Stakeholders involved in the Approach and their roles"
 msgstr ""
 
-#: apps/summary/renderers.py:927
+#: apps/summary/renderers.py:934
 msgid "Lead agency: {}"
 msgstr ""
 
-#: apps/summary/renderers.py:930 apps/summary/renderers.py:934
+#: apps/summary/renderers.py:937 apps/summary/renderers.py:941
 msgid ""
 "Involvement of local land users/ local communities in the different phases "
 "of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:942
+#: apps/summary/renderers.py:949
 msgid "Flow chart"
 msgstr ""
 
-#: apps/summary/renderers.py:946
+#: apps/summary/renderers.py:953
 msgid "Decision-making on the selection of SLM Technology"
 msgstr ""
 
-#: apps/summary/renderers.py:949
+#: apps/summary/renderers.py:956
 msgid "Decisions were taken by"
 msgstr ""
 
-#: apps/summary/renderers.py:953
+#: apps/summary/renderers.py:960
 msgid "Decisions were made based on:"
 msgstr ""
 
-#: apps/summary/renderers.py:968
+#: apps/summary/renderers.py:975
 msgid "Technical support, capacity building, and knowledge management"
 msgstr ""
 
-#: apps/summary/renderers.py:984
+#: apps/summary/renderers.py:991
 msgid "Training was provided to the following stakeholders"
 msgstr ""
 
-#: apps/summary/renderers.py:988
+#: apps/summary/renderers.py:995
 msgid "Form of training"
 msgstr ""
 
-#: apps/summary/renderers.py:993
+#: apps/summary/renderers.py:1000
 msgid "Subjects covered"
 msgstr ""
 
-#: apps/summary/renderers.py:998
+#: apps/summary/renderers.py:1005
 msgid "Advisory service"
 msgstr ""
 
-#: apps/summary/renderers.py:1001
+#: apps/summary/renderers.py:1008
 msgid "Advisory service was provided"
 msgstr ""
 
-#: apps/summary/renderers.py:1008
+#: apps/summary/renderers.py:1015
 msgid "Institution strengthening"
 msgstr ""
 
-#: apps/summary/renderers.py:1010
+#: apps/summary/renderers.py:1017
 msgid "Institutions have been strengthened / established"
 msgstr ""
 
-#: apps/summary/renderers.py:1015
+#: apps/summary/renderers.py:1022
 msgid "at the following level"
 msgstr ""
 
-#: apps/summary/renderers.py:1020
+#: apps/summary/renderers.py:1027
 msgid "Type of support"
 msgstr ""
 
-#: apps/summary/renderers.py:1027
+#: apps/summary/renderers.py:1034
 msgid "Monitoring and evaluation"
 msgstr ""
 
-#: apps/summary/renderers.py:1031
+#: apps/summary/renderers.py:1038
 msgid "Research"
 msgstr ""
 
-#: apps/summary/renderers.py:1032
+#: apps/summary/renderers.py:1039
 msgid "Research treated the following topics"
 msgstr ""
 
-#: apps/summary/renderers.py:1041
+#: apps/summary/renderers.py:1048
 msgid "Financing and external material support"
 msgstr ""
 
-#: apps/summary/renderers.py:1044
+#: apps/summary/renderers.py:1051
 msgid "Annual budget for the SLM component of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:1047
+#: apps/summary/renderers.py:1054
 msgid "Precise annual budget: {}"
 msgstr ""
 
-#: apps/summary/renderers.py:1050
+#: apps/summary/renderers.py:1057
 msgid "The following services or incentives have been provided to land users"
 msgstr ""
 
-#: apps/summary/renderers.py:1061
+#: apps/summary/renderers.py:1068
 msgid "Labour by land users was"
 msgstr ""
 
-#: apps/summary/renderers.py:1065
-#, fuzzy
-#| msgctxt "approaches label"
-#| msgid "Financial/ material support provided to land users"
+#: apps/summary/renderers.py:1072
 msgid "Financial/ material support provided to land users"
 msgstr ""
-"Финансирование и внешняя материальная поддержка, предоставляемая "
-"землепользователям"
 
-#: apps/summary/renderers.py:1083
+#: apps/summary/renderers.py:1090
 msgid "Other incentives or instruments"
 msgstr ""
 
-#: apps/summary/renderers.py:1092
+#: apps/summary/renderers.py:1099
 msgid "Impact analysis and concluding statements"
 msgstr ""
 
-#: apps/summary/renderers.py:1095
+#: apps/summary/renderers.py:1102
 msgid "Impacts of the Approach"
 msgstr ""
 
-#: apps/summary/renderers.py:1096
+#: apps/summary/renderers.py:1103
 msgid "Did the approach..."
 msgstr ""
 
-#: apps/summary/renderers.py:1100
+#: apps/summary/renderers.py:1107
 msgid "Main motivation of land users to implement SLM"
 msgstr ""
 
-#: apps/summary/renderers.py:1104
+#: apps/summary/renderers.py:1111
 msgid "Sustainability of Approach activities"
 msgstr ""
 
-#: apps/summary/renderers.py:1105
+#: apps/summary/renderers.py:1112
 msgid ""
 "Can the land users sustain what hat been implemented through the Approach "
 "(without external support)?"
@@ -18549,28 +18527,37 @@ msgstr ""
 msgid "Geo-reference"
 msgstr "Географическая привязка"
 
+#: apps/summary/templates/summary/layout/approaches.html:12
+#: apps/summary/templates/summary/layout/technologies.html:12
+msgid "Summary"
+msgstr ""
+
 #: apps/summary/templates/summary/layout/footer.html:50
 msgid "Wocat SLM"
 msgstr ""
 
+#: apps/technologies/templates/technologies/add_module.html:15
+msgid "Add CCA Module"
+msgstr ""
+
 #: apps/technologies/templates/technologies/add_module.html:18
 msgid ""
-"You can add a module to an existing SLM Technology. If the SLM Technology is "
-"not included in the WOCAT SLM Technology database yet, please first add it."
+"You can add a CCA Module to an existing SLM Technology. If the SLM "
+"Technology is not included in the WOCAT SLM Technology database yet, please "
+"first add it."
 msgstr ""
-"Вы можете добавить модуль к существующей Технологии УЗП. Если Технология УЗП "
-"не включена в Базу данных ВОКАТ по технологиям, пожалуйста, сначала добавьте "
-"ее. "
 
 #: apps/technologies/templates/technologies/add_module.html:19
 msgid "Add new SLM Technology."
 msgstr "Добавить новую Технологию УЗП"
 
-#: apps/technologies/templates/technologies/add_module.html:22
-msgid "Currently the module \"Climate Change Adaptation\" can be added."
+#: apps/technologies/templates/technologies/add_module.html:54
+msgid "2. Select CCA Module"
 msgstr ""
-"В настоящее время модуль \"Адаптация к изменению климата\" может быть "
-"добавлен."
+
+#: apps/technologies/templates/technologies/add_module.html:68
+msgid "3. Create CCA Module"
+msgstr ""
 
 #: apps/technologies/templates/technologies/base.html:6
 msgid "WOCAT SLM Technologies"
@@ -18633,111 +18620,6 @@ msgstr "Речной бассейн не найден"
 #: apps/watershed/templates/watershed/questionnaire/partial/list_item.html:69
 msgid "This Watershed is linked to SLM Technologies"
 msgstr "Этот Речной бассейн сопряжен с Технологиями УЗП"
-
-#: apps/wocat/templates/wocat/add_maps.html:12
-msgid "Add Land Management Maps"
-msgstr "Добавить карты по землепользованию"
-
-#: apps/wocat/templates/wocat/add_maps.html:30
-#: apps/wocat/templates/wocat/home.html:157
-msgid "Land Degradation / Conservation"
-msgstr "Деградация/ сохранение земель  "
-
-#: apps/wocat/templates/wocat/add_maps.html:31
-#: apps/wocat/templates/wocat/home.html:158
-msgid ""
-"Mapping land management, degradation and conservation including driver, "
-"state and impacts."
-msgstr ""
-"Картографирование землепользования, деградации и охраны земель включая "
-"факторы, состояние и воздействие. "
-
-#: apps/wocat/templates/wocat/add_maps.html:32
-#: apps/wocat/templates/wocat/home.html:159
-msgid ""
-"Maps are currently not yet available in the new database. Maps can be viewed "
-"or added in the old database (QM)."
-msgstr ""
-"В новой версии Базы данных карты пока недоступны. Можно просмотреть или "
-"добавить карты в старой версии Базы данных (АК)."
-
-#: apps/wocat/templates/wocat/add_maps.html:33
-#: apps/wocat/templates/wocat/add_maps.html:54
-#: apps/wocat/templates/wocat/add_maps.html:69
-#: apps/wocat/templates/wocat/add_practice.html:35
-#: apps/wocat/templates/wocat/add_practice.html:54
-#: apps/wocat/templates/wocat/partial/add.html:23
-#: apps/wocat/templates/wocat/partial/add.html:45
-#: apps/wocat/templates/wocat/partial/add.html:69
-#: apps/wocat/templates/wocat/partial/add.html:73
-msgid "Add"
-msgstr "Добавить"
-
-#: apps/wocat/templates/wocat/add_maps.html:52
-#: apps/wocat/templates/wocat/add_maps.html:66
-#: apps/wocat/templates/wocat/home.html:136
-#: apps/wocat/templates/wocat/partial/search.html:18
-#: apps/wocat/templates/wocat/questionnaire/list.html:72
-msgid "Watershed and Runoff"
-msgstr "Речной бассейн и Поверхностный сток"
-
-#: apps/wocat/templates/wocat/add_maps.html:53
-#: apps/wocat/templates/wocat/add_maps.html:67
-#: apps/wocat/templates/wocat/home.html:137
-msgid ""
-"Mapping land management and assessing runoff and outflow from a watershed."
-msgstr ""
-"Картографирование землепользования и оценка поверхностного и "
-"гидрологического стока из речного бассейна. "
-
-#: apps/wocat/templates/wocat/add_module.html:12
-msgid ""
-"Currently two modules are in preparation: “Climate Change Adaptation” and "
-"“Watershed/ Technology Systems”. (Further modules are in discussion: "
-"“Climate Change Mitigation/ Carbon Benefits” and “Disaster Risk Reduction”)"
-msgstr ""
-"В настоящее время два модуля \"Адаптация к изменению климата\" и \"Системы "
-"Речной бассейн/ Технология\" находятся в процессе подготовки. (Следующие "
-"модули находятся в процессе обсуждения: \"Смягчение последствий изменения "
-"климата/ Углеродные выгоды\" и \"Снижение риска возникновения стихийных "
-"бедствий\") "
-
-#: apps/wocat/templates/wocat/add_practice.html:12
-msgid "Add SLM Practice"
-msgstr "Добавить практику УЗП"
-
-#: apps/wocat/templates/wocat/add_practice.html:15
-msgid ""
-"Technologies and approaches are usually combined to provide a comprehensive "
-"picture of an SLM practice. Ideally you would fill in both the Technology "
-"and Approach sections, and then link them. However, it is also possible to "
-"add a Technology or an Approach without its counterpart."
-msgstr ""
-"Технологии и подходы обычно совмещаются для более всестороннего описания "
-"практики УЗП. В идеале, нужно заполнить анкеты по Технологиям и по Подходам "
-"и увязать их друг с другом. Однако добавление Технологии или Подхода также "
-"возможно поодиночке."
-
-#: apps/wocat/templates/wocat/add_practice.html:34
-#: apps/wocat/templates/wocat/home.html:99
-msgid ""
-"An <strong>SLM Technology</strong> is a land management practice that "
-"controls land degradation and enhances productivity and/ or other ecosystem "
-"services."
-msgstr ""
-" <strong>Технология УЗП</strong> – это совокупность практических действий на "
-"местах по управлению и контролю за деградацей земель, повышающих их "
-"продуктивность и/или способность оказывать экосистемные услуги. "
-
-#: apps/wocat/templates/wocat/add_practice.html:53
-msgid ""
-"An <strong>SLM Approach</strong> defines the ways and means used to "
-"implement a SLM Technology, including the stakeholders involved and their "
-"roles."
-msgstr ""
-" <strong>Подход УЗП</strong> определяет пути и способы реализации одной или "
-"нескольких Технологий УЗП. Сюда относятся материально-техническое "
-"обеспечение, вовлечение и роль различных заинтересованных сторон и т.д. "
 
 #: apps/wocat/templates/wocat/help/questionnaire_introduction.html:6
 #: apps/wocat/templates/wocat/help/questionnaire_introduction.html:14
@@ -19002,48 +18884,108 @@ msgstr "Роли"
 msgid "SLM Technology / Approach"
 msgstr "Технология/ Подход УЗП"
 
-#: apps/wocat/templates/wocat/home.html:27
-#: apps/wocat/templates/wocat/home.html:35
-#: apps/wocat/templates/wocat/home.html:43
-#: apps/wocat/templates/wocat/home.html:51
-#: apps/wocat/templates/wocat/home.html:59
+#: apps/wocat/templates/wocat/home.html:29
+#: apps/wocat/templates/wocat/home.html:37
+#: apps/wocat/templates/wocat/home.html:45
+#: apps/wocat/templates/wocat/home.html:53
+#: apps/wocat/templates/wocat/home.html:61
 msgid "the Global Database on Sustainable Land Management"
 msgstr "Всемирная База данных по устойчивому землепользованию"
 
-#: apps/wocat/templates/wocat/home.html:28
+#: apps/wocat/templates/wocat/home.html:30
 msgid "is the primary recommended database by UNCCD"
 msgstr "база данных, рекомендованная КБО ООН"
 
-#: apps/wocat/templates/wocat/home.html:36
+#: apps/wocat/templates/wocat/home.html:38
 msgid "is open access and contains over 800 SLM practices"
 msgstr "является общедоступной и содержит свыше 800 описаний практики УЗП"
 
-#: apps/wocat/templates/wocat/home.html:44
+#: apps/wocat/templates/wocat/home.html:46
 msgid "is a standardized and modular system"
 msgstr "стандартизированная система с использованием модулей"
 
-#: apps/wocat/templates/wocat/home.html:52
+#: apps/wocat/templates/wocat/home.html:54
 msgid "supports knowledge sharing and evidence-based decision-making"
 msgstr ""
 "содействует обмену знаниями и принятию решений на основе подтвержденных "
 "фактов  "
 
-#: apps/wocat/templates/wocat/home.html:60
+#: apps/wocat/templates/wocat/home.html:62
 msgid "welcomes you to join!"
 msgstr "приглашает вас присоединиться!"
 
-#: apps/wocat/templates/wocat/home.html:72
+#: apps/wocat/templates/wocat/home.html:76
+msgid "About the WOCAT SLM Database"
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:80
+msgid ""
+"The Global Database on Sustainable Land Management (SLM) of WOCAT (the World "
+"Overview of Conservation Approaches and Technologies) provides free access "
+"to the documentation of field-tested SLM data including SLM practices and "
+"maps from different places in the world and offers practitioners the "
+"opportunity to share their own SLM practice or map."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:83
+msgid ""
+"SLM in the context of WOCAT is defined as the use of land resources - "
+"including soil, water, vegetation and animals - to produce goods and provide "
+"services to meet human needs, while ensuring the long-term productive "
+"potential of these resources and sustaining their environmental functions."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:86
+msgid ""
+"The objective of documenting and assessing SLM practices is to share and "
+"spread valuable knowledge in land management, support evidence-based "
+"decision-making and scale up identified good practices, thereby contributing "
+"to preventing and reducing land degradation and to restoring degraded land."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:89
+msgid ""
+"A SLM practice can be either an SLM Technology (a physical practice that "
+"controls land degradation and/or enhances productivity, consisting of one or "
+"several measures) or an SLM Approach (ways and means used to implement one "
+"or several SLM Technologies, including technical and material support, "
+"stakeholder engagement, and other)."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:92
+msgid ""
+"For further information please contact the <a href=\"https://www.wocat.net/"
+"en/about-wocat/contact.html\" target=\"_blank\" class=\"link\">WOCAT "
+"Secretariat</a>."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:103
 msgid "Search SLM data"
 msgstr "Поиск данных по УЗП"
 
-#: apps/wocat/templates/wocat/home.html:100
-#: apps/wocat/templates/wocat/home.html:119
-#: apps/wocat/templates/wocat/home.html:138
-#: apps/wocat/templates/wocat/home.html:160
+#: apps/wocat/templates/wocat/home.html:131
+#: apps/wocat/templates/wocat/partial/add.html:20
+msgid ""
+"An <strong>SLM Technology</strong> is a land management practice that "
+"controls land degradation and enhances productivity and/ or other ecosystem "
+"services."
+msgstr ""
+" <strong>Технология УЗП</strong> – это совокупность практических действий на "
+"местах по управлению и контролю за деградацей земель, повышающих их "
+"продуктивность и/или способность оказывать экосистемные услуги. "
+
+#: apps/wocat/templates/wocat/home.html:132
+#: apps/wocat/templates/wocat/home.html:152
+#: apps/wocat/templates/wocat/home.html:168
+#: apps/wocat/templates/wocat/home.html:192
+#: apps/wocat/templates/wocat/home.html:207
+#: apps/wocat/templates/wocat/home.html:230
+#: apps/wocat/templates/wocat/home.html:253
+#: apps/wocat/templates/wocat/home.html:269
 msgid "View all"
 msgstr "Просмотреть все"
 
-#: apps/wocat/templates/wocat/home.html:118
+#: apps/wocat/templates/wocat/home.html:151
 msgid ""
 "An <strong>SLM Approach</strong> defines the ways and means used to "
 "implement an SLM Technology, including the stakeholders involved and their "
@@ -19053,34 +18995,101 @@ msgstr ""
 "нескольких Технологий УЗП, включая вовлечение и роль различных "
 "заинтересованных сторон."
 
-#: apps/wocat/templates/wocat/partial/add.html:21
-msgid "SLM Practices"
-msgstr "Практика/опыт УЗП"
-
-#: apps/wocat/templates/wocat/partial/add.html:22
-msgid ""
-"<strong>SLM practices</strong> comprise SLM Technologies and SLM Approaches"
-msgstr "<strong>Практика УЗП</strong> включает Технологии УЗП и Подходы УЗП"
-
-#: apps/wocat/templates/wocat/partial/add.html:43
-msgid "Land Management Maps"
-msgstr "Карты землепользования"
-
-#: apps/wocat/templates/wocat/partial/add.html:44
-msgid "Mapping and assessing Land Management"
-msgstr "Картографирование и оценка землепользования"
-
-#: apps/wocat/templates/wocat/partial/add.html:66
-msgid ""
-"Modules provide in-depth information on specific topics related to SLM "
-"Technologies and Approaches"
+#: apps/wocat/templates/wocat/home.html:165
+msgid "UNCCD Prais Practices"
 msgstr ""
-"Модули обеспечивают детальную информацию по отдельным темам, относящимся к "
-"Технологиям и Подходам УЗП"
 
-#: apps/wocat/templates/wocat/partial/add.html:72
+#: apps/wocat/templates/wocat/home.html:166
+msgid ""
+"A UNCCD PRAIS Practice is a best practice in SLM, as previously shared "
+"through the UNCCD PRAIS system in the UNCCD reporting process."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:190
+#: apps/wocat/templates/wocat/home.html:204
+#: apps/wocat/templates/wocat/partial/add.html:63
+#: apps/wocat/templates/wocat/partial/add.html:77
+msgid "Watershed and Runoff"
+msgstr "Речной бассейн и Поверхностный сток"
+
+#: apps/wocat/templates/wocat/home.html:191
+#: apps/wocat/templates/wocat/home.html:205
+#: apps/wocat/templates/wocat/partial/add.html:64
+#: apps/wocat/templates/wocat/partial/add.html:78
+msgid ""
+"Mapping land management and assessing runoff and outflow from a watershed."
+msgstr ""
+"Картографирование землепользования и оценка поверхностного и "
+"гидрологического стока из речного бассейна. "
+
+#: apps/wocat/templates/wocat/home.html:227
+#: apps/wocat/templates/wocat/partial/add.html:100
+msgid "Land Degradation / Conservation"
+msgstr "Деградация/ сохранение земель  "
+
+#: apps/wocat/templates/wocat/home.html:228
+#: apps/wocat/templates/wocat/partial/add.html:101
+msgid ""
+"Mapping land management, degradation and conservation including driver, "
+"state and impacts."
+msgstr ""
+"Картографирование землепользования, деградации и охраны земель включая "
+"факторы, состояние и воздействие. "
+
+#: apps/wocat/templates/wocat/home.html:229
+#: apps/wocat/templates/wocat/partial/add.html:102
+msgid ""
+"Maps are currently not yet available in the new database. Maps can be viewed "
+"or added in the old database (QM)."
+msgstr ""
+"В новой версии Базы данных карты пока недоступны. Можно просмотреть или "
+"добавить карты в старой версии Базы данных (АК)."
+
+#: apps/wocat/templates/wocat/home.html:250
+#: apps/wocat/templates/wocat/home.html:266
+#: apps/wocat/templates/wocat/partial/add.html:123
+#: apps/wocat/templates/wocat/partial/add.html:139
+msgid "CCA Module"
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:251
+#: apps/wocat/templates/wocat/home.html:267
+#: apps/wocat/templates/wocat/partial/add.html:124
+#: apps/wocat/templates/wocat/partial/add.html:140
+msgid ""
+"The climate change adaptation tool assesses whether a specific SLM "
+"Technology is adapted to gradual climate changes and climate-related "
+"extremes (natural disasters)."
+msgstr ""
+
+#: apps/wocat/templates/wocat/home.html:268
+#: apps/wocat/templates/wocat/partial/add.html:141
 msgid "Modules will be added soon to the new database."
 msgstr "Модули будут добавлены в новую базу данных в ближайшее время."
+
+#: apps/wocat/templates/wocat/home.html:286
+msgid "Key Numbers"
+msgstr ""
+
+#: apps/wocat/templates/wocat/partial/add.html:21
+#: apps/wocat/templates/wocat/partial/add.html:41
+#: apps/wocat/templates/wocat/partial/add.html:65
+#: apps/wocat/templates/wocat/partial/add.html:80
+#: apps/wocat/templates/wocat/partial/add.html:103
+#: apps/wocat/templates/wocat/partial/add.html:126
+#: apps/wocat/templates/wocat/partial/add.html:142
+msgid "Add"
+msgstr "Добавить"
+
+#: apps/wocat/templates/wocat/partial/add.html:40
+msgid ""
+"An <strong>SLM Approach</strong> defines the ways and means used to "
+"implement a SLM Technology, including the stakeholders involved and their "
+"roles."
+msgstr ""
+" <strong>Подход УЗП</strong> определяет пути и способы реализации одной или "
+"нескольких Технологий УЗП. Сюда относятся материально-техническое "
+"обеспечение, вовлечение и роль различных заинтересованных сторон и т.д. "
 
 #: apps/wocat/templates/wocat/partial/advanced_filter.html:12
 msgid "Filter for SLM Technologies"
@@ -19122,17 +19131,17 @@ msgstr "Показать все Подходы"
 msgid "Show all SLM practices"
 msgstr "Показать все практики УЗП"
 
-#: apps/wocat/templates/wocat/questionnaire/list.html:90
+#: apps/wocat/templates/wocat/questionnaire/list.html:91
 msgid "A revised filter is coming soon."
 msgstr "Фильтр будет отредактирован в ближайшее время "
 
-#: apps/wocat/templates/wocat/questionnaire/list.html:109
-msgid "WOCAT and UNCCD SLM practices"
-msgstr "Практики УЗП, принятые ВОКАТ и КБО ООН"
+#: apps/wocat/templates/wocat/questionnaire/list.html:110
+msgid "Your search results"
+msgstr ""
 
 #: apps/wocat/templates/wocat/questionnaire/partial/list.html:19
-msgid "No WOCAT and UNCCD SLM practices found."
-msgstr "Практик, принятых ВОКАТ и КБО ООН, не найдено."
+msgid "No results found."
+msgstr ""
 
 #: templates/404.html:11
 msgid "404 - Not found"
@@ -19296,2274 +19305,5 @@ msgid ""
 "        "
 msgstr ""
 
-#~ msgctxt "technologies label"
-#~ msgid "The Technology was introduced through:"
-#~ msgstr "Технология была внедрена с помощью:"
-
-#~ msgctxt "technologies label"
-#~ msgid "When?"
-#~ msgstr "Когда?"
-
-#~ msgctxt "technologies label"
-#~ msgid "Has the Technology been implemented to:"
-#~ msgstr "Применялась ли данная Технология в:"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "If using a local area unit (other than hectare) indicate conversion "
-#~ "factor to square meters or hectares"
-#~ msgstr ""
-#~ "Если используется местная единица измерения площади, укажите коэффициент "
-#~ "для перевода в квадратные метры или гектары"
-
-#~ msgctxt "technologies label"
-#~ msgid "Indicate total costs for establishment of the Technology"
-#~ msgstr "Итого по запуску Технологии"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "You can use USD or any other national currency. Indicate all costs in the "
-#~ "same currency."
-#~ msgstr ""
-#~ "Используйте доллары США или любую другую национальную валюту. Все затраты "
-#~ "должны быть выражены в одних и тех же денежных единицах."
-
-#~ msgctxt "technologies label"
-#~ msgid "Indicate currency used for cost calculations"
-#~ msgstr "Укажите денежные единицы, использованные для подсчета затрат"
-
-#~ msgctxt "technologies label"
-#~ msgid "Indicate avarage wage cost of hired labour per day"
-#~ msgstr "Укажите среднюю дневную заработную плату наемных работников"
-
-#~ msgctxt "technologies label"
-#~ msgid "Specify annual rainfall (if known), in mm"
-#~ msgstr "Укажите среднегодовое количество осадков (если известно), мм"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Other specifications/comments on rainfall seasonality (e.g. monsoon, "
-#~ "winter-/summer rains), number/length/months of rainy seasons, occurrence "
-#~ "of heavy rains, length of dry periods"
-#~ msgstr ""
-#~ "Другие  характеристики/ пояснения по годовому распределению осадков/ "
-#~ "сезонности (например, муссоны, летние/ зимние дожди), число/ "
-#~ "продолжительность/ месяцы сезона дождей, повторяемость ливневых осадков, "
-#~ "продолжительность засушливых периодов"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Landforms</strong> (modified after ISRIC 1993):"
-#~ "<ul><li><strong>Plateau/ plains</strong>: extended level land (slopes "
-#~ "less than 8 %%).</li><li><strong>Ridges</strong>: narrow elongated area "
-#~ "rising above the surrounding area, often hilltops or mountain-tops.</"
-#~ "li><li><strong>Mountain slopes (including major escarpments)</strong>: "
-#~ "extended area with altitude differences of more than 600 m per 2 km and "
-#~ "slopes greater than 15 %%.</li><li><strong>Hill slopes (including valley "
-#~ "and minor escarpment slopes)</strong>: altitude difference of less than "
-#~ "600 m per 2 km and slopes greater than 8 %%.</li><li><strong>Footslopes</"
-#~ "strong>: zone bordering steeper mountain/ hill slopes on one side and "
-#~ "valley floors/plains/plateaus on the other side.</li><li><strong>Valley "
-#~ "floors</strong>: elongated strips of level land (less than 8 %% slope), "
-#~ "flanked by sloping or steep land on both sides.</li></ul>"
-#~ msgstr ""
-#~ "Формы рельефа (ISRIC 1993, с изменениями):\n"
-#~ "•\tПлато/ равнины: протяженные горизонтальные поверхности (уклоны менее 8%"
-#~ "%).\n"
-#~ "•\tГребни: узкие вытянутые участки, приподнятые над прилегающей "
-#~ "территорией, часто вершины холмов или гор.\n"
-#~ "•\tСклоны гор (включая крупные отвесные участки): протяженные участки с "
-#~ "разницей высот более 600 м на 2 км и склонами крутизной более 15%%\n"
-#~ "•\tСклоны холмов (включая придолинные склоны и небольшие отвесные "
-#~ "участки): разница высот менее 600 м на 2 км и крутизна склонов более 8%"
-#~ "% \n"
-#~ "•\tПодножья: участки, граничащие с более крутыми склонами гор/холмов с "
-#~ "одной стороны и с днищами долин/равнинами/плато с другой\n"
-#~ "•\tДнища долин: вытянутые относительно ровные участки (крутизной менее 8%"
-#~ "%), окаймленные пологими или крутыми склонами с обеих сторон"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "If available, attach full soil description or specify the available "
-#~ "information, e.g. soil type, soil PH/ acidity, Cation Exchange Capacity, "
-#~ "nitrogen, salinity etc.)"
-#~ msgstr ""
-#~ "Если возможно, приложите полное описание почв или укажите доступную "
-#~ "информацию, например тип почв, рH/ кислотность почв, ёмкость катионного "
-#~ "обмена, содержание азота, содержание солей и т.д.)"
-
-#~ msgctxt "technologies label"
-#~ msgid "Comments and further specifications on soils"
-#~ msgstr "Комментарии и дополнительная информация по почвам"
-
-#~ msgctxt "technologies helptext"
-#~ msgid "E.g. ethnicity, etc."
-#~ msgstr "например, этническая принадлежность и т.д."
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "If not 100%% borne by land user, indicate who funded the remaining costs"
-#~ msgstr ""
-#~ "Если землепользователем оплачено менее 100%% расходов, укажите, кем "
-#~ "покрывались остальные затраты"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Indicate total costs for maintenance/ recurrent activities of the "
-#~ "Technology per year"
-#~ msgstr ""
-#~ "Общая стоимость эксплуатационного обслуживания/ периодических "
-#~ "мероприятий, необходимых для поддержания Технологии "
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Is the documented technology considered a sustainable land management "
-#~ "technology?"
-#~ msgstr "Является ли описываемая технология природосберегающей?"
-
-#~ msgctxt "technologies label"
-#~ msgid "If no, indicate why"
-#~ msgstr "Если нет, объясните почему"
-
-#~ msgctxt "technologies label"
-#~ msgid "If precise year is not known, was the Technology implemented"
-#~ msgstr "Если год достоверно неизвестен, применяется ли Технология "
-
-#~ msgctxt "technologies label"
-#~ msgid "Main animal species (livestock/wildlife)"
-#~ msgstr "Основные породы скота и виды диких животных"
-
-#~ msgctxt "technologies label"
-#~ msgid "(Semi-)natural forests"
-#~ msgstr "Природные и измененные леса "
-
-#~ msgctxt "technologies helptext"
-#~ msgid "<strong>Example:</strong> 2.5"
-#~ msgstr "Например: 2,5"
-
-#~ msgctxt "technologies label"
-#~ msgid "If costs are calculated per area, indicate size"
-#~ msgstr ""
-#~ "Если стоимость рассчитана на единицу площади, укажите размер участка "
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "If yes, how does the Technology cope with these changes and disasters in "
-#~ "view of achieving its main purposes (as defined in 3.1)?"
-#~ msgstr ""
-#~ "Если да, насколько успешно Технология справляется с воздействием этих "
-#~ "изменений и стихийных бедствий в свете выполнения своих задач (см. раздел "
-#~ "3.1)? "
-
-#~ msgctxt "technologies label"
-#~ msgid "Percentage of land users who have adopted the Technology"
-#~ msgstr "Доля (в процентах) землепользователей, применяющих Технологию"
-
-#~ msgctxt "technologies label"
-#~ msgid "Has the Technology been modified recently to adapt to"
-#~ msgstr ""
-#~ "Была ли Технология модифицирована в недавнее время с целью адаптации"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Is the described technology problematic in view of land degradation and "
-#~ "cannot be declared as a sustainable land management technology?"
-#~ msgstr ""
-#~ "Вызывает ли описанная здесь Технология проблемы деградации земель "
-#~ "настолько, что ее нельзя назвать природосберегающей?"
-
-#~ msgctxt "technologies label"
-#~ msgid "Is the Technology"
-#~ msgstr "Является ли Технология"
-
-#~ msgctxt "technologies label"
-#~ msgid "Specify whether you calculate costs and inputs"
-#~ msgstr "Уточните, как рассчитывались затраты и ресурсы"
-
-#~ msgctxt "technologies label"
-#~ msgid "Indicate name of currency used for cost calculations"
-#~ msgstr "Укажите название денежных единиц, использованных при расчётах"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "If possible, break down the costs for establishment according to the "
-#~ "following table: specify inputs and costs per input. If you are not able "
-#~ "to break down the costs, give an estimation of the total costs for the "
-#~ "establishment of the technology"
-#~ msgstr ""
-#~ "Если возможно, укажите, пожалуйста, стоимость затрат на начальной стадии "
-#~ "реализации в соответствии с таблицей ниже, детально указывая затраты по "
-#~ "каждой статье. Если невозможно указать стоимость постатейно, дайте оценку "
-#~ "общей стоимости запуска Технологии"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "If possible, break down the costs for maintenance according to the "
-#~ "following table: specify inputs and costs per input. If you are not able "
-#~ "to break down the costs, give an estimation of the total costs for the "
-#~ "maintenance of the technology"
-#~ msgstr ""
-#~ "Если возможно, укажите, пожалуйста, стоимость вложений на начальной "
-#~ "стадии реализации в соответствии с таблицей ниже, детально указывая "
-#~ "вложения по каждой статье. Если невозможно указать стоимость постатейно, "
-#~ "дайте оценку общей стоимости затрат по запуску Технологии"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "If not 100%% of costs borne by land user, indicate who funded the "
-#~ "remaining costs"
-#~ msgstr ""
-#~ "Если землепользователем оплачено менее 100%% затрат, укажите, кем "
-#~ "покрывались остальные затраты"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "If available, attach full soil description or specify the available "
-#~ "information, e.g. soil type, soil PH/ acidity, Cation Exchange Capacity, "
-#~ "nitrogen, salinity etc.)"
-#~ msgstr ""
-#~ "Если возможно, приложите полное описание почв или укажите доступную "
-#~ "информацию, например тип почв, рH/ кислотность почв, ёмкость катионного "
-#~ "обмена, содержание азота, содержание солей и т.д.)"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Area</strong>: Refer to the country/ region/ locations defined in "
-#~ "2.4. and to the land use types described in 3.2."
-#~ msgstr ""
-#~ "Area: Refer to the country/ region/ locations defined in 2.4 and to the "
-#~ "land use types described in 3.2."
-
-#~ msgctxt "technologies label"
-#~ msgid "land users' innovation"
-#~ msgstr "инновация (инициатива) землепользователей"
-
-#~ msgctxt "technologies label"
-#~ msgid "a traditional system (>50 years)"
-#~ msgstr "часть традиционной системы землепользования (более 50 лет назад)"
-
-#~ msgctxt "technologies label"
-#~ msgid "experiments/ research"
-#~ msgstr "научный/ полевой эксперимент"
-
-#~ msgctxt "technologies label"
-#~ msgid "projects/ external interventions"
-#~ msgstr "проекты/ внешнее вмешательство"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>if annually or in a rotational sequence as done e.g. on cropland "
-#~ "&rarr; A1</p><p>Examples: reducing invasive species, selective clearing, "
-#~ "encouraging desired/ introducing new species, controlled burning (e.g. "
-#~ "prescribed fires in forests/ on grazing land)/ residue burning</p>"
-#~ msgstr ""
-#~ "если ежегодно или в севооборотах, как например, на полях  A1\n"
-#~ "Примеры: снижение доли инвазивных видов, выборочные рубки, стимулирование "
-#~ "предпочтительных/ интродукция новых видов, контролируемые выжигания "
-#~ "(например, контролируемые палы в лесах/ на пастбищах)/ сжигание "
-#~ "растительных остатков"
-
-#~ msgctxt "technologies label"
-#~ msgid "mainly women"
-#~ msgstr "преимущественно женщины"
-
-#~ msgctxt "technologies label"
-#~ msgid "mainly men"
-#~ msgstr "преимущественно мужчины"
-
-#~ msgctxt "technologies label"
-#~ msgid "mixed"
-#~ msgstr "смешанный"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Structural measures</strong><ul><li>are of long duration or "
-#~ "permanent</li><li>often require substantial inputs of labour or money "
-#~ "when first installed</li><li>involve major earth movements and/ or "
-#~ "construction with wood, stone, concrete, etc. are often carried out to "
-#~ "control runoff, erosion and wind velocity and to harvest rainwater</"
-#~ "li><li>often lead to a change in slope profile</li><li>are often aligned "
-#~ "along the contour/ against prevailing wind direction</li><li>are often "
-#~ "spaced according to slope</li></ul>"
-#~ msgstr ""
-#~ "Инженерные мероприятия\n"
-#~ "•\tДолгосрочные или постоянные \n"
-#~ "•\tНа начальном этапе  часто требуют существенных вложений труда и "
-#~ "капитала\n"
-#~ "•\t Предполагают значительные земляные работы и/или  сооружение "
-#~ "конструкций из дерева, камня, бетона и т.д. для регулирования "
-#~ "поверхностного стока, эрозии, скорости ветра, а также сбора атмосферных "
-#~ "осадков\n"
-#~ "•\tЧасто приводят к изменению  профиля склона.  \n"
-#~ "•\tЧасто связаны с контурной обработкой/ противодействуют преобладающему "
-#~ "направлению ветра\n"
-#~ "•\tРасстояния между элементами часто определяются характеристиками склона"
-
-#~ msgctxt "technologies label"
-#~ msgid "751-1000 mm"
-#~ msgstr "751-1000 мм"
-
-#~ msgctxt "technologies label"
-#~ msgid "1001-1500 mm"
-#~ msgstr "1001-1500 мм"
-
-#~ msgctxt "technologies label"
-#~ msgid "1501-2000 mm"
-#~ msgstr "1501-2000 мм"
-
-#~ msgctxt "technologies label"
-#~ msgid "2001-3000 mm"
-#~ msgstr "2001-3000 мм"
-
-#~ msgctxt "technologies label"
-#~ msgid "3001-4000 mm"
-#~ msgstr "3001-4000 мм"
-
-#~ msgctxt "technologies label"
-#~ msgid "> 4000 mm"
-#~ msgstr "> 4000 мм"
-
-#~ msgctxt "technologies label"
-#~ msgid "100-500 m a.s.l."
-#~ msgstr "100-500 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "500-1000 m a.s.l."
-#~ msgstr "500-1000 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "1000-1500 m a.s.l."
-#~ msgstr "1000-1500 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "1500-2000 m a.s.l."
-#~ msgstr "1500-2000 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "2000-2500 m a.s.l."
-#~ msgstr "2000-2500 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "2500-3000 m a.s.l."
-#~ msgstr "2500-3000 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "3000-4000 m a.s.l."
-#~ msgstr "3000-4000 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "> 4000 m a.s.l."
-#~ msgstr "> 4000 м н.у.м."
-
-#~ msgctxt "technologies helptext"
-#~ msgid "<strong>Individual</strong>: right of use by single user."
-#~ msgstr "Индивидуальное: право принадлежит отдельному пользователю."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>For detailed assessment fill in questionnaire module on \"Biodiversity"
-#~ "\"</p>"
-#~ msgstr ""
-#~ "Для более детального анализа заполните анкету по \"Биоразнообразию\""
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>e.g. droughts, floods, landslides, etc.</p><p>For detailed assessment "
-#~ "fill in questionnaire module on \"Climate change adaptation\"</p>"
-#~ msgstr ""
-#~ "например, засухи, наводнения, оползни и т.д. для более детального анализа "
-#~ "заполните анкету модуля \"Адаптация к изменениям климата\""
-
-#~ msgctxt "technologies label"
-#~ msgid "reduce risk of natural disasters"
-#~ msgstr "снижение риска стихийных бедствий"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>e.g. resilience to droughts, storms.</p><p>For detailed assessment "
-#~ "fill in questionnaire module on \"Climate change adaptation\"</p>"
-#~ msgstr ""
-#~ "например, устойчивость к засухам, бурям. Для более детального анализа "
-#~ "заполните анкету модуля \"Адаптация к изменениям климата\""
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>e.g. through carbon sequestration</p><p>For detailed assessment fill "
-#~ "in questionnaire module on \"Climate change adaptation/ Carbon benefits"
-#~ "\"</p>"
-#~ msgstr ""
-#~ "например, через связывание углерода. Для более детального анализа "
-#~ "заполните анкету модуля \"Смягчение последствий изменения климата/ "
-#~ "Углеродные выгоды\""
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>e.g. increase income/ employment opportunities</p><p>For detailed "
-#~ "assessment fill in questionnaire module on \"Economics of SLM\"</p>"
-#~ msgstr ""
-#~ "создание благоприятных экономических условий Для более детального анализа "
-#~ "заполните анкету модуля \"Экономика УЗП\""
-
-#~ msgctxt "technologies label"
-#~ msgid "Traffic lines: roads, railways"
-#~ msgstr "Транспорт: автомобильные и железные дороги"
-
-#~ msgctxt "technologies label"
-#~ msgid "Energy lines: pipe lines, power lines"
-#~ msgstr "Энергетика: трубопроводы, линии электропередач"
-
-#~ msgctxt "technologies label"
-#~ msgid "Drainage lines waterways"
-#~ msgstr "Дренажные канавы, водотоки"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Plantation management:</strong> plantation forests comprise even-"
-#~ "aged monocultures and are established primarily for wood and fibre "
-#~ "production. They are usually intensively managed and have relatively high "
-#~ "growth rates and productivity."
-#~ msgstr ""
-#~ "Лесное хозяйство в лесопосадках:  лесопосадки состоят из одновозрастных "
-#~ "монокультур и служат в первую очередь для производства древесины и "
-#~ "волокна (целлюлозы). Как правило, они интенсивно эксплуатируются и "
-#~ "характеризуются относительно высокими темпами прироста и продуктивности."
-
-#~ msgctxt "technologies label"
-#~ msgid "plantation management"
-#~ msgstr "лесное хозяйство в лесопосадках"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Improved plant varieties, animal breeds:</strong> Development of "
-#~ "new varieties or breeds with features such as improved production, "
-#~ "resistance to plant pests and diseases, drought tolerance in response to "
-#~ "changing environmental conditions and land users’ needs."
-#~ msgstr ""
-#~ "Улучшение сортов растений/пород животных: Выведение новых сортов растений "
-#~ "или пород домашних животных с улучшенными свойствами, такими как "
-#~ "повышенная продуктивность, сопротивляемость вредителям и болезням или "
-#~ "засухоустойчивость в соответствии с меняющимися условиями среды и нуждами "
-#~ "землепользователей."
-
-#~ msgctxt "technologies label"
-#~ msgid "improved plant varieties, animal breeds"
-#~ msgstr "улучшение сортов растений/ пород животных"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Irrigation management (incl. water supply, greenhouses)</strong> "
-#~ "aims to achieve higher water use efficiency through more efficient water "
-#~ "collection and abstraction, water storage,  distribution, and water "
-#~ "application."
-#~ msgstr ""
-#~ "Управление орошением (включая водоснабжение, тепличное хозяйство) в целях "
-#~ "оптимизации водопользования путем более эффективного водоудержания и "
-#~ "водозабора, хранения, распределения и использования воды."
-
-#~ msgctxt "technologies label"
-#~ msgid "irrigation management (incl. water supply, greenhouses)"
-#~ msgstr "Управление орошением (включая водоснабжение, тепличное хозяйство)"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Surface water management (spring, river, lakes):</strong> "
-#~ "involves the protection of springs, rivers and lakes from pollution, from "
-#~ "high water flows(floods) or over abstraction of water"
-#~ msgstr ""
-#~ "Управление поверхностными водами (родники, реки, озёра, моря): охрана "
-#~ "родников, рек и озёр от загрязнения, предотвращение наводнений или "
-#~ "избыточного забора воды"
-
-#~ msgctxt "technologies label"
-#~ msgid "surface water management (spring, river, lakes)"
-#~ msgstr "управление поверхностными водами (родники, реки, озёра, моря)"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Ground water management:</strong> involves securing the recharge "
-#~ "and the protection from pollution and overexploitation/ overuse of the "
-#~ "groundwater."
-#~ msgstr ""
-#~ "Управление подземными водами: обеспечение своевременного пополнения "
-#~ "подземных водоносных горизонтов и их защиты от загрязнения и избыточного "
-#~ "забора воды."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Energy efficiency technologies:</strong> reduce the amount of "
-#~ "energy required to provide products and services, e.g. for cooking, "
-#~ "heating reducing the demand on fuel (fossil, wood)"
-#~ msgstr ""
-#~ "Энергосберегающие технологии: снижение энергопотребления для производства "
-#~ "товаров и услуг, например для приготовления пищи и отопления, снижение "
-#~ "потребления топлива (ископаемое топливо, дрова)"
-
-#~ msgctxt "technologies label"
-#~ msgid "less than 10%%"
-#~ msgstr "менее 10%%"
-
-#~ msgctxt "technologies label"
-#~ msgid "evenly spread over an area?"
-#~ msgstr "равномерно распределена по той или иной территории? "
-
-#~ msgctxt "technologies label"
-#~ msgid "applied at specific points/ concentrated on a small area?"
-#~ msgstr "примененяется точечно/ на небольших участках?"
-
-#~ msgctxt "technologies label"
-#~ msgid "prevent land degradation?"
-#~ msgstr "предотвращает деградацию земель?"
-
-#~ msgctxt "technologies label"
-#~ msgid "reduce land degradation?"
-#~ msgstr "снижает деградацию земель?"
-
-#~ msgctxt "technologies label"
-#~ msgid "restore/ rehabilitate severely degraded land?"
-#~ msgstr "восстановление/ реабилитация нарушенных земель?"
-
-#~ msgctxt "technologies label"
-#~ msgid "adapt to land degradation?"
-#~ msgstr "адаптировано к деградации земель?"
-
-#~ msgctxt "technologies label"
-#~ msgid "per technology unit"
-#~ msgstr "на технологическую единицу"
-
-#~ msgctxt "technologies label"
-#~ msgid "per technology area"
-#~ msgstr "на единицу площади, где применяется технология"
-
-#~ msgctxt "technologies label"
-#~ msgid "501-1000 m a.s.l."
-#~ msgstr "501-1000 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "1001-1500 m a.s.l."
-#~ msgstr "1001-1500 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "1501-2000 m a.s.l."
-#~ msgstr "1501-2000 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "2001-2500 m a.s.l."
-#~ msgstr "2001-2500 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "2501-3000 m a.s.l."
-#~ msgstr "2501-3000 м н.у.м."
-
-#~ msgctxt "technologies label"
-#~ msgid "3001-4000 m a.s.l."
-#~ msgstr "3001-4000 м н.у.м."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "The terms <strong>traditional, indigenous, innovative</strong> refer to "
-#~ "the land users’ own Technologies. They cover Technologies in use for "
-#~ "generations, as well as those developed more recently by innovative land "
-#~ "users in response to changing circumstances. Use \"other\" when the "
-#~ "Technology does not fit any of the given categories and specify why it "
-#~ "does not fit."
-#~ msgstr ""
-#~ "Термины традиционные, самобытные местные системы землепользования "
-#~ "коренных народов и инновации относятся к технологиям, используемым самими "
-#~ "землепользователями. Первые два относится к технологиям, которые "
-#~ "использовались на протяжении поколений, третий – к технологиям, "
-#~ "опробованным землепользователями относительно недавно, как попытка "
-#~ "адаптации к изменяющимся условиям среды. Используйте строчку «другим "
-#~ "путем» в том случае, если способ внедрения Технологии не соответствует ни "
-#~ "одному из предложенных вариантов и объясните почему. и инновация "
-#~ "относятся к технологиям, используемым самими землепользователями. "
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Labour costs</strong> if relevant, differentiate between skilled "
-#~ "and unskilled labour"
-#~ msgstr ""
-#~ "Оплата труда если уместно, отдельно укажите оплату квалифицированного и "
-#~ "неквалифицированного труда"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Equipment</strong> tools, machine hours, animal traction, etc. "
-#~ "Cost calculation for machine hours and animal traction should be based on "
-#~ "hiring costs - even if the machinery/ animals are owned by the land user."
-#~ msgstr ""
-#~ "Оборудование включает инструменты, использование с/х техники, тягловой "
-#~ "силы и т.д.  Подсчет стоимости использования с/х техники и тягловой силы "
-#~ "должен основываться на стоимости аренды, даже в том случае, если "
-#~ "землепользователи являются владельцами техники и животных."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Agricultural inputs</strong> include seeds, seedling, fertilizer, "
-#~ "biocides, compost/ manure, etc."
-#~ msgstr ""
-#~ "Сельскохозяйственные вложения включают семена, саженцы, минеральные "
-#~ "удобрения, гербициды, пестициды, компост/навоз и т.д. "
-
-#~ msgctxt "technologies label"
-#~ msgid "Agricultural"
-#~ msgstr "Сельскохозяйственные"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "If possible, break down the total costs for maintenance: specify inputs "
-#~ "and costs per input."
-#~ msgstr ""
-#~ "Если возможно, укажите, пожалуйста, стоимость технического обслуживания, "
-#~ "детально по каждой статье затрат. "
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p><strong>Land ownership</strong> is the type of land possession, while "
-#~ "<strong>land use rights</strong> refer to the access to land.</"
-#~ "p><p>Maximum two answers per question.</p>"
-#~ msgstr ""
-#~ "Землевладение - термин, применяющийся в отношении прав собственности на "
-#~ "землю, в то время как землепользование относится к праву распоряжаться "
-#~ "землей. Отметьте не более двух ответов. "
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Land use rights / water use rights</strong>:<ul><li>Open access: "
-#~ "means free for all.</li><li>Communal (organized): means subject to "
-#~ "community-agreed management rules.</li><li>Leased: right to use land for "
-#~ "a limited period of time against payment (contract)</li><li>Individual: "
-#~ "right of use by single user.</li></ul>"
-#~ msgstr ""
-#~ "Право пользования землей/водой:\n"
-#~ "•\tНеограниченное: бесплатное для всех.\n"
-#~ "•\tОбщинное (контролируемое): регулируется правилами, согласованными в "
-#~ "общине.\n"
-#~ "•\tАренда: право пользования землей в течение ограниченного периода "
-#~ "времени за определённую плату (по договору). \n"
-#~ "•\tИндивидуальное: право принадлежит отдельному пользователю."
-
-#~ msgctxt "technologies label"
-#~ msgid "Water use rights (if relevant)"
-#~ msgstr "Право водопользования (если применимо)"
-
-#~ msgctxt "technologies helptext"
-#~ msgid "Drought, flood, storms etc."
-#~ msgstr "засухи, наводнения, ураганы и т.д. "
-
-#~ msgctxt "technologies label"
-#~ msgid "disaster risk"
-#~ msgstr "риск возникновения стихийного бедствия"
-
-#~ msgctxt "technologies helptext"
-#~ msgid "Undesired"
-#~ msgstr "Нежелательные"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Define a specific area/unit for which you will specify costs and inputs"
-#~ msgstr ""
-#~ "Укажите единицу площади/ технологическую единицу, на которую "
-#~ "рассчитывались затраты и вложения"
-
-#~ msgctxt "technologies label"
-#~ msgid "If using national currency, indicate name"
-#~ msgstr "Если использовались местные денежные единицы, укажите их название"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Person(s) who provided most of the information documented in this "
-#~ "questionnaire. These can be land users, or local or regional experts/ SLM "
-#~ "specialists."
-#~ msgstr ""
-#~ "Лица, предоставившие большую часть информации для заполнения анкеты. Это "
-#~ "могут быть землепользователи, специалисты по УЗП (например, технические "
-#~ "эксперты, ученые) либо иные лица."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Person(s) who provided most of the information documented in this "
-#~ "questionnaire. These can be land users, or SLM specialists (e.g. "
-#~ "technical advisors, researchers) or any other persons."
-#~ msgstr ""
-#~ "Лица, предоставившие большую часть информации для заполнения анкеты. Это "
-#~ "могут быть землепользователи, специалисты по УЗП (например, технические "
-#~ "эксперты, ученые) либо иные лица."
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "How do the benefits compare with the establishment costs (from land "
-#~ "users’ perception)?"
-#~ msgstr ""
-#~ "Насколько получаемый результат сопоставим с первоначальными вложениями (с "
-#~ "точки зрения землепользователей)?"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "How do the benefits compare with the maintenance/ recurrent costs (from "
-#~ "land users' perception)?"
-#~ msgstr ""
-#~ "Насколько получаемый результат сопоставим с текущими расходами по "
-#~ "поддержанию технологии (с точки зрения землепользователей)?"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "The terms <strong>traditional and innovation</strong> refer to the land "
-#~ "users’ own technologies. They cover technologies that have been in use "
-#~ "for generations, as well as those developed more recently by innovative "
-#~ "land users in response to changing circumstances. Use “other” when the "
-#~ "Technology does not fit any of the given categories and specify why it "
-#~ "does not fit."
-#~ msgstr ""
-#~ "Термины традиционная и инновация относятся к технологиям, используемым "
-#~ "самими землепользователями. Первый относится к технологиям, которые "
-#~ "использовались на протяжении поколений, второй – к технологиям, "
-#~ "опробованным землепользователями относительно недавно, как попытка "
-#~ "адаптации к изменяющимся условиям среды. Используйте строчку «другим "
-#~ "путем» в том случае, если Технология не соответствует ни одному из "
-#~ "предложенных вариантов и объясните почему."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Describe the Technology in one sentence containing key words. The "
-#~ "definition of a Technology is very important for searching the database."
-#~ msgstr ""
-#~ "Кратко охарактеризуйте Технологию одним предложением, содержащим ключевые "
-#~ "слова. Определение Технологии - очень важно для поиска в базе данных. "
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "The description should provide a concise but comprehensive picture of the "
-#~ "Technology to outsiders and must therefore contain key characteristics "
-#~ "such as: purpose and impacts, establishment/ maintenance activities and "
-#~ "inputs, technical specifications, most important conditions regarding "
-#~ "natural and human environment, strengths and weaknesses, etc. (max. 2500 "
-#~ "characters). Fill in this information at the beginning but revise the "
-#~ "description when you have completed the questionnaire."
-#~ msgstr ""
-#~ "Описание должно давать краткое, но всестороннее представление о "
-#~ "Технологии и, в том числе для неспециалистов.  Для этого, описание должно "
-#~ "содержать следующие ключевые характеристики: цели и влияние; основные "
-#~ "мероприятия/ ресурсы необходимые для запуска/ поддержания Технологии; "
-#~ "технические характеристики; наиболее важные природные и социально-"
-#~ "экономические условия; сильные и слабые стороны и т.д. (объем описания не "
-#~ "должен превышать 2500 знаков). Лучше всего сделать краткое описание в "
-#~ "начале работы над анкетой, но обязательно вернуться к нему и "
-#~ "отредактировать после заполнения всех разделов. "
-
-#~ msgctxt "technologies label"
-#~ msgid "Description of the Technology"
-#~ msgstr "Описание Технологии"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Indicate the main purpose(s) of the SLM technology (land user's "
-#~ "perspective)"
-#~ msgstr ""
-#~ "Укажите основные цели и задачи реализации Технологии УЗП (с точки зрения "
-#~ "землепользователей)"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p><strong>Land use</strong>: human activities which are directly related "
-#~ "to land, making use of its resources or having an impact upon it."
-#~ "<br><strong>Land cover</strong>: Vegetation (natural or planted) or man-"
-#~ "made structures (buildings, etc.) that cover the earth’s surface.</p>"
-#~ msgstr ""
-#~ "Землепользование: деятельность человека непосредственно связанная с "
-#~ "землей, использованием земельных ресурсов и/или оказывающая воздействие "
-#~ "на нее. Земельный покров (Land cover): растительность (природная  или "
-#~ "насаждения/ посевы) или сооружения, созданные человеком (строения и пр.), "
-#~ "покрывающие поверхность земли."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Costs and inputs specified in this question should refer to the area/ "
-#~ "unit defined in 5.1 and to the activities listed in 5.2"
-#~ msgstr ""
-#~ "Вложения и затраты, перечисленные ниже, должны относиться к территории, "
-#~ "на которой реализуется Технология/ технологической единице, описанным в "
-#~ "пункте 5.1 и к мероприятиям, перечисленным в пункте 5.2. "
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Costs and inputs specified in this question should refer to the area/unit "
-#~ "defined in 5.1 (e.g. 2.5 hectares, 250m terrace wall), and to the "
-#~ "activities listed in 5.4."
-#~ msgstr ""
-#~ "Вложения и затраты, перечисленные ниже, должны рассчитываться по "
-#~ "отношению к  территории, на которой реализуется Технология/ к "
-#~ "технологическим единицам, определённым в пункте 5.1 (например, 2,5 га, "
-#~ "250 м стенки террасы - 250 м) и по мероприятиям, перечисленным в пункте "
-#~ "5.4.  "
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Specify the characteristics of the average/ typical land users who apply "
-#~ "the Technology. Indicate characteristics relative to your region/ country "
-#~ "standards."
-#~ msgstr ""
-#~ "Охарактеризуйте среднестатистических/ типичных землепользователей, "
-#~ "применяющих Технологию. Указывайте характеристики по отношению к средним "
-#~ "значениям по региону/стране."
-
-#~ msgctxt "technologies label"
-#~ msgid "Land user applying the SLM Technology"
-#~ msgstr "Землепользователи, применяющие Технологию УЗП"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Refer to the total area used per household (leased and owned land), "
-#~ "including the land where no Technology is applied."
-#~ msgstr ""
-#~ "Укажите общую площадь земли (арендуемой или находящейся в собственности "
-#~ "землепользователей), включая участки, где Технология не применяется. "
-
-#~ msgctxt "technologies label"
-#~ msgid "Average land size per household/ farm unit applying the Technology"
-#~ msgstr ""
-#~ "Средний размер земельных участков домохозяйств/ фермерских хозяйств, "
-#~ "применяющих Технологию"
-
-#~ msgctxt "technologies label"
-#~ msgid "Land ownership, land use, and water use rights"
-#~ msgstr "Собственность на землю, права на земле- и водопользование"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<ul><li><strong>-3</strong>: Very negative (- 50-100%%)</"
-#~ "li><li><strong>-2</strong>: Negative (- 20-50%%)</li><li><strong>-1</"
-#~ "strong>: Slightly negative (- 5-20%%)</li><li><strong>0</strong>: "
-#~ "Negligible impact</li><li><strong>1</strong>: Slightly positive (+5-20%"
-#~ "%)</li><li><strong>2</strong>: Positive (+20-50%%)</li><li><strong>3</"
-#~ "strong>: Very positive (+50-100%%)</li></ul>"
-#~ msgstr ""
-#~ "-3: Крайне отрицательное (– 50-100%%)\n"
-#~ "-2: Отрицательное  (- 20-50%%)\n"
-#~ "-1: Слабо отрицательное (- 5-20%%)\n"
-#~ "0: Влияние незаметно\n"
-#~ "1: Слабо позитивное (+5-20%%)\n"
-#~ "2: Позитивное (+20-50%%)\n"
-#~ "3: Очень позитивное (+50-100%%)"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>Please provide a comprehensive and detailed drawing (with dimensions) "
-#~ "of the Technology and indicate technical specifications, measurements, "
-#~ "spacing, gradient, etc. You can also provide several drawings showing (a) "
-#~ "a temporal sequence of operations or (b) different elements or details of "
-#~ "the Technology. Alternatively you can also provide one or several "
-#~ "photographs with technical specifications drawn and/ or written on the "
-#~ "photograph(s). Include as much as possible technical information on the "
-#~ "drawings (or photographs).</p><p>Keep the drawing simple and schematic. "
-#~ "The technical drawing is crucial for the understanding of the Technology! "
-#~ "Scan the drawing and upload the scan.</p><p>Supported file types: PDF, "
-#~ "JPG, PNG, maximum file size: 3 MB.</p><p><strong>Example</strong>: "
-#~ "Technical drawing indicating technical specifications, dimensions, "
-#~ "spacing<br><img src=\"/static/assets/img/qt_technical_drawing.jpg\"></"
-#~ "img></p>"
-#~ msgstr ""
-#~ "Пожалуйста, предоставьте исчерпывающий и детальный рисунок (включая "
-#~ "размеры), иллюстрирующий Технологию, с указанием технических "
-#~ "характеристик, размеров, расстояний между разными элементами, уклонов и т."
-#~ "д. Можно предоставить несколько рисунков, показывающих (а) "
-#~ "хронологическую последовательность операций или (б) различные элементы "
-#~ "или детали Технологии. Как альтернативный вариант, можно приложить одну "
-#~ "или несколько фотографий с техническими характеристиками, отмеченными "
-#~ "поверх изображения.  На рисунках/фотографиях постарайтесь уместить как "
-#~ "можно больше технической информации.\n"
-#~ "Рисунок должен быть простым и схематичным. Технический рисунок критически "
-#~ "важен для понимания Технологии! Отсканируйте рисунок и приложите файл к "
-#~ "анкете. Возможные форматы файлов: PDF, JPG, PNG. Размер файла не должен "
-#~ "превышать 3 МВ.\n"
-#~ "Пример: Технический рисунок, демонстрирующий особенности Технологии, "
-#~ "размеры отдельных элементов и расстояния между ними."
-
-#~ msgctxt "technologies label"
-#~ msgid "General information regarding inputs and costs"
-#~ msgstr "Общая информация по необходимым вложениям и стоимости"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>Indicate gradual climate changes and climate-related extremes as "
-#~ "observed by land users in the last 10 years (trend). Note: for detailed "
-#~ "assessment fill questionnaire module on climate change adaptation.</"
-#~ "p><strong>Exposure</strong>: is the nature and degree to which a system "
-#~ "experiences environmental or sociopolitical or other stress (IPCC "
-#~ "2007)<br><strong>Sensitivity</strong> is the degree to which a system or "
-#~ "species is affected, either adversely or beneficially, by climate "
-#~ "variability or change. The effect may be direct (e.g. a change in crop "
-#~ "yield in response to a change in the mean annual temperature) or indirect "
-#~ "(e.g. damages caused by an increase in the frequency of coastal flooding "
-#~ "due to sea level rise). (Source IPCC 5th assessment report, Climate "
-#~ "Change 2014: Impacts, Adaptation, and Vulnerability)."
-#~ msgstr ""
-#~ "Отметьте постепенные изменения климата и эстремальные погодные явления, "
-#~ "наблюдаемые землепользователями в последние 10 лет (тренд). Примечание: "
-#~ "для более детального анализа заполните анкету Модуля по адаптации к "
-#~ "изменениям климата.\n"
-#~ "Подверженность внешнему воздействию (exposure) - характер и степень "
-#~ "воздействия на систему внешних экологических, социально-политических и "
-#~ "других факторов (МГЭИК, 2007).\n"
-#~ "Чувствительность (восприимчивость) - степень, до которой система или "
-#~ "биологический вид испытывает воздействие (как отрицательное так и "
-#~ "положительное) климатической изменчивости или климатических изменений. "
-#~ "Воздействие может быть как прямым (например, изменение урожайности как "
-#~ "реакция на изменение среднегодовых температур) или косвенным (например, "
-#~ "ущерб, вызванный увеличением частоты затопления прибрежных зон из-за "
-#~ "поднятия уровня моря). (Источник: Пятый оценочный доклад МГЭИК, ИЗМЕНЕНИЕ "
-#~ "КЛИМАТА, 2014: Воздействия, Адаптация и Уязвимость)."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Note that WOCAT questionnaires focus on the documentation and assessment "
-#~ "of SLM practices. However, this questionnaire can also be used to "
-#~ "describe partly sustainable and non-sustainable land management practices."
-#~ msgstr ""
-#~ "Обратите внимание, что анкеты ВОКАТ предназначены для описания и оценки "
-#~ "практик УЗП. Однако данная Анкета также может быть использована для "
-#~ "описания практик землепользования, которые могут считаться "
-#~ "природосберегающими лишь отчасти и тех, которые не могут считаться "
-#~ "природосберегающими. "
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Adoption</strong>: voluntary implementation of a Technology "
-#~ "without external material support other than technical guidance. Refer to "
-#~ "the land use types described in 3.2 and the country/ region/ locations "
-#~ "defined in 2.4."
-#~ msgstr ""
-#~ "Добровольное внедрение: применение Технологии по собственной инициативе, "
-#~ "без какого-либо материального стимулирования со стороны кроме технических "
-#~ "консультаций. Смотрите типы землепользования, описанные в пункте 3.2 и "
-#~ "описание страны/ региона/ места применения Технологии в пункте 2.4.   "
-
-#~ msgctxt "technologies label"
-#~ msgid "Most determinate factors affecting the costs"
-#~ msgstr "Наиболее значимые факторы, влияющие на стоимость затрат"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "If available, upload video files visualizing the Technology on a public "
-#~ "platform (e.g. <a href=\"https://vimeo.com/\" target=\"_blank\" class="
-#~ "\"link\">vimeo.com</a>, <a href=\"https://www.youtube.com/\" target="
-#~ "\"_blank\" class=\"link\">youtube.com</a>) and indicate a link and a "
-#~ "short description for each video linked below."
-#~ msgstr ""
-#~ "Если имеются видеозаписи, представляющие Технологию, разместите их на "
-#~ "общедоступной платформе (например, vimeo.com, youtube.com), дайте ссылку "
-#~ "и короткое описание для каждого видеофайла."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Note that WOCAT questionnaires focus on the documentation and assessment "
-#~ "of SLM practices. However, this questionnaire can also be used to "
-#~ "describe non-sustainable land management practices, if you wish to "
-#~ "compare this practice with other technologies."
-#~ msgstr ""
-#~ "Обратите внимание, что анкеты ВОКАТ предназначены для описания и оценки "
-#~ "практик УЗП. Однако данная Анкета также может быть использована для "
-#~ "описания практики землепользования, которая не может считаться "
-#~ "природосберегающей, если вы хотите сравнить эту практику с той или иной "
-#~ "Технологией УЗП."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>The description should provide a concise but comprehensive picture of "
-#~ "the Technology to outsiders and addresses key questions such as:</"
-#~ "p><ol><li>Where is the Technology applied (natural and human environment)?"
-#~ "</li><li>What are the main characteristics/ elements of theTechnology "
-#~ "(including technical specifications)?</li><li>What are the purpose/ "
-#~ "functions of the Technology?</li><li>What activities and inputsare needed "
-#~ "to establish/ maintain the Technology?</li><li>What are the benefits/ "
-#~ "impacts of the Technology?</li><li>What do land users like / dislike "
-#~ "about the technology?</li></ol><p>Max. 2500 characters. Fill in this "
-#~ "information at the beginning but revise the description when youhave "
-#~ "completed the questionnaire.</p>"
-#~ msgstr ""
-#~ "Подробное описание должно давать краткое, но всестороннее представление о "
-#~ "Технологии и, в том числе для неспециалистов.  Для этого, описание должно "
-#~ "отвечать на следующие ключевые вопросы: \n"
-#~ "Где Технология УЗП применялась (природные и социально-экономические "
-#~ "условия)? \n"
-#~ "Каковы главные характеристики/ отличительные черты Технологии (включая "
-#~ "технические характеристики)?\n"
-#~ "Каковы цели/ функции Технологии?\n"
-#~ "Какие основные мероприятия/ресурсы необходимы для запуска/ поддержания "
-#~ "Технологии?\n"
-#~ "Каковы преимущества/ влияние Технологии?\n"
-#~ "Что землепользователям нравится/ не нравится в применении Технологии? \n"
-#~ "Объем описания не должен превышать 2500 знаков.  Лучше всего сделать "
-#~ "краткое описание в начале работы над анкетой, но обязательно вернуться к "
-#~ "нему и отредактировать после заполнения всех разделов."
-
-#~ msgctxt "technologies label"
-#~ msgid "Indicate the main purpose(s) of the SLM technology"
-#~ msgstr "Укажите основные цели и задачи реализации Технологии УЗП"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<ul><li>Preferably, activities, inputs, and costs should be calculated "
-#~ "per area where the technology is applied. If you choose a local area "
-#~ "unit, indicate conversion factor (e.g. between local unit and hectare). "
-#~ "Include not only the area which is directly covered by SLM measures (e.g. "
-#~ "the area with stone walls, tree lines, ditches) but also the area that is "
-#~ "affected/ protected by the SLM measures (e.g. the area between stone "
-#~ "walls).</li><li>If costs are not calculated per area, inputs and costs "
-#~ "can alternatively be calculated per unit (e.g. dam, animal watering "
-#~ "point, energy saving stove) or per length (e.g. meter stone line)</li></"
-#~ "ul>"
-#~ msgstr ""
-#~ "Предпочтительно, чтобы стоимость реализации мероприятий и вложения были "
-#~ "указаны в расчете на территорию, где применяется Технология. Если вы "
-#~ "используете местную единицу измерения площади, укажите соотношение между "
-#~ "местной единицей и гектаром.  Учитывайте не только площадь, где "
-#~ "непосредственно выполняются мероприятия УЗП (например, площадь, занятую "
-#~ "каменными стенками, лесополосами, канавами), но и территорию, на которую "
-#~ "мероприятия УЗП оказывают косвенное влияние и/или обеспечивают защиту от "
-#~ "деградации (например, участки между каменными стенками).\n"
-#~ "Если невозможно рассчитать стоимость работ, ресурсов и других вложений на "
-#~ "единицу площади, они могут быть рассчитаны по отдельным элементам "
-#~ "(например, сооружение запруды, устройство водопоя, строительство "
-#~ "энергосберегающей печи и т.д.) или на единицу длины (например, метр "
-#~ "каменной стенки)."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p><strong>Note</strong>: Costs and inputs specified in this question "
-#~ "should refer to the technology area/ technology unit defined in 5.1 and "
-#~ "to the activities listed in 5.2. Use the currency indicated in 5.1.</p>"
-#~ msgstr ""
-#~ "Примечание: Вложения и затраты, перечисленные ниже, должны относиться к "
-#~ "территории, на которой реализуется Технология, или к отдельным "
-#~ "мероприятиям Технологии, описанным в пункте 5.1, и к мероприятиям, "
-#~ "перечисленным в пункте 5.2. Используйте денежные единицы, указанные в "
-#~ "пункте 5.1."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Note</strong>: Costs and inputs specified in this question should "
-#~ "refer to the technology area/ technology unit defined in 5.1, and to the "
-#~ "activities listed in 5.4. Use the currency indicated in 5.1."
-#~ msgstr ""
-#~ "Примечание: Вложения и затраты, перечисленные ниже, должны относиться к "
-#~ "территории, на которой реализуется Технология, или к отдельным "
-#~ "мероприятиям Технологии, описанным в пункте 5.1, и к мероприятиям, "
-#~ "перечисленным в пункте 5.4. Используйте денежные единицы, указанные в "
-#~ "пункте 5.1."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "Refer to the total area used per household (leased and owned land), "
-#~ "including the land where no Technology is applied. Tick max. two answers."
-#~ msgstr ""
-#~ "Укажите общую площадь земли (арендуемой или находящейся в собственности "
-#~ "землепользователей), включая участки, где Технология УЗП не применяется. "
-#~ "Отметьте не более двух ответов."
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Average land size per household/ land use entreprise applying the "
-#~ "Technology"
-#~ msgstr ""
-#~ "Средний размер земельных участков домохозяйства/ фермерского хозяйства "
-#~ "землепользователей, применяющих Технологию"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p><strong>An SLM Technology</strong> is a physical practice in the field "
-#~ "that controls land degradation and/ or enhances productivity. A "
-#~ "Technology consists of one or several measures, such as agronomic, "
-#~ "vegetative, structural, and management measures.</p><p><strong>Site-"
-#~ "specific information</strong>: Information provided in this questionnaire "
-#~ "should strictly refer to the sites that were assessed/ analysed during "
-#~ "the documentation of the Technology (e.g. through interviews with land "
-#~ "users, field surveys, etc.), although the Technology might be applied or "
-#~ "be applicable in a wider area.</p>"
-#~ msgstr ""
-#~ "Технология УЗП – это совокупность практических действий на местах по "
-#~ "управлению земельными ресурсами и контролю над деградацией земель, "
-#~ "направленных на повышение их продуктивности и/или способности оказывать "
-#~ "экосистемные услуги. Технология может включать одно или несколько "
-#~ "мероприятий, такие как агротехнические, инженерные, использование "
-#~ "растительности, управленческие. Информация, привязанная к конкретному "
-#~ "месту: Информация, предоставленная в данной Анкете, должна строго "
-#~ "соответствовать месту, которое было оценено/проанализировано в процессе "
-#~ "описания Технологии УЗП (например, посредством опроса землепользователей, "
-#~ "выездов на места и т.д.), хотя сама Технология УЗП может применяться или "
-#~ "быть потенциально применимой на более широкой территории."
-
-#~ msgctxt "technologies label"
-#~ msgid "Technical specifications"
-#~ msgstr "Технические характеристики"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>Notes to implementation activities, inputs, and costs:</p><ul><li>It "
-#~ "may be very difficult to determine the costs of a Technology. "
-#~ "Nevertheless, we ask you to give your best estimate!</li><li>A "
-#~ "distinction is made between initial <strong>establishment</strong> "
-#~ "(construction, initiation) and maintenance/ <strong>recurrent annual "
-#~ "activities</strong>.</li><li>Indicate all SLM -related activities, "
-#~ "inputs, and costs (to land users, projects, etc.) of the Technology that "
-#~ "are additional to ordinary field operations. If the ordinary field "
-#~ "operations have changed/ are part of the Technology (e.g. conservation "
-#~ "agriculture), describe all activities.</li><li>Preferably, activities, "
-#~ "inputs, and costs should be indicated per area. If you choose a local "
-#~ "area unit, indicate conversion factor (e.g. between local unit and "
-#~ "hectare). Include not only the area which is directly covered by SLM "
-#~ "measures (e.g. the area with stone walls, tree lines, ditches) but also "
-#~ "the area that is affected/ protected by the SLM measures (e.g. the area "
-#~ "between stone walls).</li><li>If costs are not calculated per area, "
-#~ "inputs and costs can alternatively be calculated per unit (e.g. dam) or "
-#~ "per length (e.g. meter grass strip, meter stone line)</li><li>Exclude "
-#~ "costs for awareness creation, planning, training, research, and "
-#~ "financial/ material support (these will be addressed in the Approach "
-#~ "questionnaire)</li><li>If the objective is to compare two situations i.e. "
-#~ "after/ with SLM measures (e.g. conservation agriculture) and before/ "
-#~ "without SLM measures (e.g. conventional agriculture) fill in two "
-#~ "questionnaires.</li></ul>"
-#~ msgstr ""
-#~ "Замечания по практической реализации, необходимым вложениям и стоимости:\n"
-#~ "•\tОценка стоимости применения Технологии может быть весьма непростой "
-#~ "задачей. Тем не менее, мы просим вас дать свою максимально объективную "
-#~ "экспертную оценку.\n"
-#~ "•\tОтдельно считаются вложения (затраты) на начальной стадии реализации "
-#~ "(возведение, запуск) и техническое обслуживание/ повторяющиеся ежегодные "
-#~ "мероприятия\n"
-#~ "Укажите все мероприятия УЗП, вложения и затраты (для самих "
-#~ "землепользователей, в рамках проектов и т.д.) по реализации Технологии, "
-#~ "которые должны быть выполнены помимо обычных полевых работ. Если обычные "
-#~ "полевые работы видоизменились /являются частью Технологии (например, "
-#~ "природосберегающее сельское хозяйство), опишите все мероприятия.  \n"
-#~ "•\tПредпочтительно, чтобы стоимость реализации мероприятий и вложения "
-#~ "были указаны в расчете на территорию, где применяется Технология. Если вы "
-#~ "используете местную единицу измерения площади, укажите соотношение между "
-#~ "местной единицей и гектаром.  Учитывайте не только площадь, где "
-#~ "непосредственно выполняются мероприятия УЗП (например, площадь, занятую "
-#~ "каменными стенками, лесополосами, канавами), но и территорию, на которую "
-#~ "мероприятия УЗП оказывают косвенное влияние и/или обеспечивают защиту от "
-#~ "деградации (например, участки между каменными стенками, лесополосами, "
-#~ "канавами).\n"
-#~ "•\tНе включайте вложения на информирование (повышение осведомленности), "
-#~ "планирование, обучение, исследования, а также любую финансовую/ "
-#~ "материально-техническую поддержку (эти затраты должны быть описаны в "
-#~ "Анкете по Подходам).\n"
-#~ "•\tВ случае если необходимо сравнить две ситуации, например, после/ в "
-#~ "процессе выполнения мероприятий УЗП (природосберегающее сельское "
-#~ "хозяйство) и до применения/без Технологии УЗП (например, традиционное "
-#~ "сельское хозяйство), заполняйте, пожалуйста, две анкеты для каждой "
-#~ "отдельной ситуации."
-
-#~ msgctxt "technologies label"
-#~ msgid "Implementation, inputs, and costs"
-#~ msgstr "Практическая реализация, необходимые вложения и стоимость"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>Give details of the natural (biophysical) conditions where the "
-#~ "Technology is applied. Make specific reference to the sites where the "
-#~ "documented Technology has been assessed and analysed. Use comment "
-#~ "sections to specify and provide additional information.</"
-#~ "p><p><strong>Note</strong>: Some of the environmental conditions (e.g. "
-#~ "slope angle, soil characteristics, water quality/ availability, etc.) may "
-#~ "change as a result of the Technology! However, <strong>describe the "
-#~ "conditions as they were without any impact of sustainable land management!"
-#~ "</strong></p><p>In exceptional cases certain questions might not be "
-#~ "relevant for the Technology. In such cases skip the question but use the "
-#~ "comment sections for explanations.</p>"
-#~ msgstr ""
-#~ "Охарактеризуйте природные (физико-географические) условия территории, где "
-#~ "применяется Технология УЗП.  Укажите данные именно для тех участков, по "
-#~ "которым давалось описание и анализ Технологии УЗП.  Используйте графу "
-#~ "«комментарии» для детализации ответов и дополнительной информации. \n"
-#~ "Примечание: Некоторые условия окружающей среды  (например, крутизна "
-#~ "склона, почвенные характеристики, качество/ доступность воды) могут "
-#~ "изменяться в результате применения Технологии УЗП! Однако необходимо дать "
-#~ "описание условий до начала реализации мероприятий по УЗП! В отдельных "
-#~ "случаях, некоторые вопросы могут быть неуместны для описания той или иной "
-#~ "Технологии. В таких случаях, пропустите данный раздел, однако в пункте "
-#~ "«комментарии», объясните, пожалуйста, почему этот раздел не заполнен. "
-
-#~ msgctxt "technologies label"
-#~ msgid "Natural environment"
-#~ msgstr "Природные условия"
-
-#~ msgctxt "technologies label"
-#~ msgid "Human environment and land use"
-#~ msgstr "Социально-экономические условия и землепользование"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>Assess all relevant impacts in the table below. If data based on "
-#~ "measurements is not available, give your best estimate. Negligible means "
-#~ "\"no significant benefit nor disadvantage\". Make use of the \"Quantify "
-#~ "before SLM/ after SLM\" and \"Comments/ specify\" columns to show "
-#~ "evidence and justify your selection as far as possible. Even impacts "
-#~ "referring to quality can be quantified (e.g. coliform measurement for "
-#~ "water quality). While a 10%% increase (e.g. of yield) might be judged as "
-#~ "a great improvement, still tick the category \"Slightly positive (+5-20%"
-#~ "%)\", and use \"Comments\" to explain. Only indicate \"Quantify (before/ "
-#~ "after)\" if impacts are measured or based on surveys. Impacts that are "
-#~ "not ticked are considered \"not relevant\" or \"not applicable\".</"
-#~ "p><p><strong>On-site</strong>: concerns the actual area where the "
-#~ "Technology is applied.<br><strong>Off-site</strong>: concerns the "
-#~ "adjacent area or areas further away from the area where the Technology is "
-#~ "applied.</p>"
-#~ msgstr ""
-#~ "Оцените имеющее значение влияние в таблице ниже. Если точные/измеряемые "
-#~ "данные отсутствуют, дайте в комментариях максимально объективную "
-#~ "экспертную оценку.  «Влияние несущественно» означает, что не наблюдается "
-#~ "существенного негативного или позитивного влияния. Используйте столбцы "
-#~ "«Количественная оценка до/после УЗП» и «Комментарий», чтобы "
-#~ "продемонстрировать на примерах и как можно лучше обосновать свою оценку. "
-#~ "Для количественной оценки влияния выберите значимые показатели (например, "
-#~ "тонны/га для продуктивности зерновых, микробиологические параметры для "
-#~ "оценки качества воды и т.д.)  Даже если наблюдается 10%% увеличение "
-#~ "(например, урожайности), которое может считаться большим достижением, "
-#~ "пожалуйста, выберите категорию «слабо позитивное (+5-20%%) и поясните в "
-#~ "графе «Комментарий».  Графу «Количественная оценка (до/после)» заполняйте "
-#~ "только в случае, если влияние было измерено на месте или выявлено путем "
-#~ "обследования.  Виды влияния, против которых не поставлена галочка, в "
-#~ "контексте данной Технологии УЗП считаются не имеющими значения или не "
-#~ "применимыми. </p><p><strong>На месте</strong>:  на участках, где "
-#~ "применяется Технология. <br><strong>За пределами</strong>: на "
-#~ "территориях, прилегающих к участкам применения Технологии УЗП или "
-#~ "находящимся на некотором расстоянии от них."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p><strong>An SLM Technology</strong> is a practice applied in the field "
-#~ "that controls land degradation and/ or enhances productivity. A "
-#~ "Technology consists of one or several measures, such as agronomic, "
-#~ "vegetative, structural, and management measures.</p><p><strong>Site-"
-#~ "specific information</strong>: Information provided in this questionnaire "
-#~ "should strictly refer to the sites that were assessed/ analysed during "
-#~ "the documentation of the Technology (e.g. through interviews with land "
-#~ "users, field surveys, etc.), although the Technology might be applied or "
-#~ "be applicable in a wider area.</p>"
-#~ msgstr ""
-#~ "Технология УЗП – это совокупность практических действий на местах по "
-#~ "управлению земельными ресурсами и контролю над деградацией земель, "
-#~ "направленных на повышение их продуктивности и/или способности оказывать "
-#~ "экосистемные услуги. Технология может включать одно или несколько "
-#~ "мероприятий, такие как агротехнические, инженерные, использование "
-#~ "растительности, управленческие. Информация, привязанная к конкретному "
-#~ "месту: Информация, предоставленная в данной Анкете, должна строго "
-#~ "соответствовать месту, которое было оценено/проанализировано в процессе "
-#~ "описания Технологии УЗП (например, посредством опроса землепользователей, "
-#~ "выездов на места и т.д.), хотя сама Технология УЗП может применяться или "
-#~ "быть потенциально применимой на более широкой территории."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p>Notes to implementation activities, inputs, and costs:</p><ul><li>It "
-#~ "may be very difficult to determine the costs of a Technology. "
-#~ "Nevertheless, we ask you to give your best estimate!</li><li>A "
-#~ "distinction is made between initial establishment (construction, "
-#~ "initiation) and maintenance/ recurrent annual activities.</li><li>All "
-#~ "costs should be calculated based at market prices. If labour is provided "
-#~ "by land users themselves indicate equivalent cost of hired labour. If "
-#~ "inputs are provided/ produced by land users themselves indicate "
-#~ "equivalent market price.</li><li>Exclude costs for awareness creation, "
-#~ "planning, training, research, and financial/ material support (these will "
-#~ "be addressed in the Approach questionnaire)</li><li>If the objective is "
-#~ "to compare two situations i.e. after/ with SLM measures (e.g. "
-#~ "conservation agriculture) and before/ without SLM measures (e.g. "
-#~ "conventional agriculture) fill in two questionnaires.</li></ul>"
-#~ msgstr ""
-#~ "Замечания по практической реализации, необходимым вложениям и стоимости:\n"
-#~ "•\tОценка стоимости применения Технологии может быть весьма непростой "
-#~ "задачей. Тем не менее, мы просим вас дать свою максимально объективную "
-#~ "экспертную оценку.\n"
-#~ "•\tОтдельно считаются вложения/затраты на начальной стадии реализации "
-#~ "(возведение, запуск) и техническое обслуживание/ повторяющиеся ежегодные "
-#~ "мероприятия\n"
-#~ "•\tВсе вложения должны просчитываться с учетом рыночной стоимости. Если "
-#~ "рабочая сила обеспечивается самими землепользователями, укажите "
-#~ "эквивалентную стоимость трудозатрат. Если ресурсы предоставляются/ "
-#~ "производятся самими землепользователями, укажите их соответствующую "
-#~ "рыночную стоимость.\n"
-#~ "•\tНе включайте вложения на информирование/ повышение осведомленности, "
-#~ "планирование, обучение, исследования, а также любую финансовую/ "
-#~ "материально-техническую поддержку (эти затраты должны быть описаны в "
-#~ "Анкете по Подходам).\n"
-#~ "•\tВ случае если необходимо сравнить две ситуации, например, после/ в "
-#~ "процессе выполнения мероприятий УЗП (природосберегающее сельское "
-#~ "хозяйство) и до применения/без Технологии УЗП (например, традиционное "
-#~ "сельское хозяйство), заполняйте, пожалуйста, две анкеты для каждой "
-#~ "отдельной ситуации."
-
-#~ msgctxt "approaches helptext"
-#~ msgid "In latin letters"
-#~ msgstr "Латиницей"
-
-#~ msgctxt "technologies helptext"
-#~ msgid "In latin letters"
-#~ msgstr "Латиницей"
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Name of project/ institution which funded the documentation/ evaluation "
-#~ "of the Approach (if relevant)"
-#~ msgstr ""
-#~ "Название проекта/ организации, из чьих средств была оплачена работа по "
-#~ "описанию/ оценке Подхода (если применимо)"
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Name of project/ institution which funded the documentation/ evaluation "
-#~ "of the Technology (if relevant)"
-#~ msgstr ""
-#~ "Название проекта/ организации, из чьих средств была оплачена работа по "
-#~ "описанию/ оценке Технологии (если применимо)"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<strong>Note</strong>: If you do not accept the conditions regarding the "
-#~ "use of data documented through WOCAT you will not be able to enter and "
-#~ "edit data in the WOCAT database."
-#~ msgstr ""
-#~ "Примечание. Если вы не согласны с условиями, регламентирующими "
-#~ "использование данных, собранных ВОКАТ, то вы не имеете права вводить "
-#~ "информацию в базу данных ВОКАТ и редактировать её содержание."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<strong>Note</strong>: If you do not accept the conditions regarding the "
-#~ "use of data documented through WOCAT you will not be able to enter and "
-#~ "edit data in the WOCAT database."
-#~ msgstr ""
-#~ "Примечание. Если вы не согласны с условиями, регламентирующими "
-#~ "использование данных, собранных ВОКАТ, то вы не имеете права вводить "
-#~ "информацию в базу данных ВОКАТ и редактировать её содержание."
-
-#~ msgctxt "approaches label"
-#~ msgid "Key resource person type"
-#~ msgstr "Тип ответственного специалиста"
-
-#~ msgctxt "technologies label"
-#~ msgid "Key resource person type"
-#~ msgstr "Тип ответственного специалиста"
-
-#~ msgctxt "approaches label"
-#~ msgid "Date of documentation (in the field)"
-#~ msgstr "Когда были собраны данные (на местах)?"
-
-#~ msgctxt "technologies label"
-#~ msgid "Date of documentation (in the field)"
-#~ msgstr "Когда были собраны данные (на местах)?"
-
-#~ msgctxt "approaches label"
-#~ msgid "Specify (number of informants, documents, etc.)"
-#~ msgstr "Детали (число опрошенных, названия документов и т.п.)"
-
-#~ msgctxt "technologies label"
-#~ msgid "Specify (number of informants, documents, etc.)"
-#~ msgstr "Детали (число опрошенных, названия документов и т.п.)"
-
-#~ msgctxt "approaches label"
-#~ msgid "Define type of key resource person"
-#~ msgstr "Укажите тип ответственного специалиста"
-
-#~ msgctxt "technologies label"
-#~ msgid "Define type of key resource person"
-#~ msgstr "Укажите тип ответственного специалиста"
-
-#~ msgctxt "approaches label"
-#~ msgid "When was data compiled (in the field)?"
-#~ msgstr "Когда данные были задокументированы (на местах)? "
-
-#~ msgctxt "technologies label"
-#~ msgid "When was data compiled (in the field)?"
-#~ msgstr "Когда данные были задокументированы (на местах)?"
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Name of project which funded the documentation/ evaluation of the "
-#~ "Approach (if relevant)"
-#~ msgstr ""
-#~ "Название проекта, из средств которого была оплачена работа по описанию/ "
-#~ "оценке Подхода (если применимо) "
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Name of project which funded the documentation/ evaluation of the "
-#~ "Technology (if relevant)"
-#~ msgstr ""
-#~ "Название проекта, из средств которого была оплачена работа по описанию/ "
-#~ "оценке Технологии (если применимо) "
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Name of institution which funded the documentation/ evaluation of the "
-#~ "Approach (if relevant)"
-#~ msgstr ""
-#~ "Название организации, профинансировавшей работу по описанию/ оценке "
-#~ "Подхода (если применимо) "
-
-#~ msgctxt "technologies label"
-#~ msgid ""
-#~ "Name of institution which funded the documentation/ evaluation of the "
-#~ "Technology (if relevant)"
-#~ msgstr ""
-#~ "Название организации, профинансировавшей работу по описанию/ оценке "
-#~ "Подхода (если применимо)"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "the person/ entity who implements/ maintains the Technology(ies). The "
-#~ "term land user may refer to individual small-/ large-scale farmers, "
-#~ "groups (gender, age, status, interest), cooperatives, industrial "
-#~ "companies (e.g. mining), government institutions (e.g. state forest), etc."
-#~ msgstr ""
-#~ "физическое/юридическое лицо, применяющее Технологию (-ии). В качестве "
-#~ "землепользователя могут выступать отдельные фермерские хозяйства, группы "
-#~ "лиц (объединения по гендерному/возрастному признаку, статусу, интересам), "
-#~ "кооперативы, промышленные предприятия (например, горнодобывающие), "
-#~ "государственные учреждения (например, гослесхозы) и т.д."
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "the person/ entity who implements/ maintains the Technology(ies). The "
-#~ "term land user may refer to individual small-/ large-scale farmers, "
-#~ "groups (gender, age, status, interest), cooperatives, industrial "
-#~ "companies (e.g. mining), government institutions (e.g. state forest), etc."
-#~ msgstr ""
-#~ "физическое/юридическое лицо, применяющее Технологию (-ии). В качестве "
-#~ "землепользователя могут выступать отдельные фермерские хозяйства, группы "
-#~ "лиц (объединения по гендерному/возрастному признаку, статусу, интересам), "
-#~ "кооперативы, промышленные предприятия (например, горнодобывающие), "
-#~ "государственные учреждения (например, гослесхозы) и т.д."
-
-#~ msgctxt "approaches label"
-#~ msgid "SLM specialist/ technical advisor"
-#~ msgstr "Специалист по УЗП / технический эксперт"
-
-#~ msgctxt "technologies label"
-#~ msgid "SLM specialist/ technical advisor"
-#~ msgstr "Специалист по УЗП / технический эксперт"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p><strong>Conditions regarding the use of data documented through WOCAT</"
-#~ "strong></p><ul><li>Data captured through WOCAT questionnaires will be "
-#~ "entered, edited, and stored in the WOCAT online database by the compiler "
-#~ "or a data entry person assigned by the compiler. Overall responsibility "
-#~ "for compilation and data quality lies with the compiler. The compiler, "
-#~ "resource persons, and data entry person will be recorded and given credit "
-#~ "for the data in the database as well as in any compilation or publication "
-#~ "of the documented approach.</li><li>Data stored in the WOCAT database are "
-#~ "open access.</li><li>Data are made available for users under the <a href="
-#~ "\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" "
-#~ "class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike 3.0 "
-#~ "Unported License.</a></li></ul><p>You are free to:</"
-#~ "p><ul><li><strong>Share</strong> — copy and redistribute the material in "
-#~ "any medium or format</li><li><strong>Adapt</strong> — remix, transform, "
-#~ "and build upon the material</li></ul><p>The licensor cannot revoke these "
-#~ "freedoms as long as you follow the following license terms:</"
-#~ "p><ul><li><strong>Attribution</strong> — You must give appropriate "
-#~ "credit, provide a link to the license, and indicate if changes were made."
-#~ "</li><li><strong>NonCommercial</strong> — You may not use the material "
-#~ "for commercial purposes.</li><li><strong>ShareAlike</strong> — If you "
-#~ "remix, transform, or build upon the material, you must distribute your "
-#~ "contributions under the same license as the original.</li><li><strong>No "
-#~ "additional restrictions</strong> — You may not apply legal terms or "
-#~ "technological measures that legally restrict others from doing anything "
-#~ "the license permits.</li></ul><p><strong>Full license terms</strong>: <a "
-#~ "href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" "
-#~ "target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-"
-#~ "nc-sa/3.0/legalcode</a></p>"
-#~ msgstr ""
-#~ "Условия, регламентирующие использование данных, собранных ВОКАТ \n"
-#~ "•\tДанные, собранные с помощью анкет ВОКАТ, вводятся, редактируются и "
-#~ "хранятся в онлайновой базе данных ВОКАТ либо самим составителем, либо "
-#~ "лицом, выбранным составителем. Общая ответственность за обобщение и "
-#~ "качество данных лежит на составителе. Составитель, ключевые ответственные "
-#~ "(ключевые) специалисты и лицо, вводящее данные, должны быть указаны в "
-#~ "самой базе данных и несут ответственность за предоставленную информацию, "
-#~ "в том числе при любом последующем обобщении или при цитировании описанной "
-#~ "Технологии.  \n"
-#~ "•\tДанные, хранящиеся в базе данных ВОКАТ, находятся в открытом доступе.\n"
-#~ "•\tДоступ к данным предоставляется пользователям согласно Лицензии "
-#~ "Creative Commons Attribution-NonCommercial-ShareAlike 3.0 Unported "
-#~ "License.\n"
-#~ "У пользователей есть право:\n"
-#~ "•\tРаспространения  — копировать и распространять информацию любыми "
-#~ "способами и в любом формате. \n"
-#~ "•\tАдаптации  — перерабатывать, преобразовывать и использовать материалы "
-#~ "как основу для создания новых текстов. \n"
-#~ "Правообладатель не вправе отзывать права пользователей при условии "
-#~ "соблюдения следующих требований лицензионного соглашения:\n"
-#~ "•\tСоблюдение авторских прав — Необходимо указывать первоисточник и "
-#~ "авторство, давать ссылку на лицензию и делать отметку, если в оригинал "
-#~ "были внесены изменения.\n"
-#~ "•\tИспользование в некоммерческих целях  — Нельзя использовать материалы "
-#~ "в коммерческих целях. \n"
-#~ "•\tНа тех же условиях — Если вы перерабатываете, преобразовываете или "
-#~ "используете материалы базы данных в своей работе, распространение ваших "
-#~ "материалов должно происходить на тех же условиях, что и распространение "
-#~ "исходных данных. \n"
-#~ "•\tБез ограничивающих условий — Нельзя применять юридические условия или "
-#~ "технические ограничения, которые могут препятствовать дальнейшему "
-#~ "использованию материалов в рамках лицензии. \n"
-#~ "Полные условия лицензии: http://creativecommons.org/licenses/by-nc-sa/3.0/"
-#~ "legalcode"
-
-#~ msgctxt "cca helptext"
-#~ msgid ""
-#~ "<p><strong>Conditions regarding the use of data documented through WOCAT</"
-#~ "strong></p><ul><li>Data captured through WOCAT questionnaires will be "
-#~ "entered, edited, and stored in the WOCAT online database by the compiler "
-#~ "or a data entry person assigned by the compiler. Overall responsibility "
-#~ "for compilation and data quality lies with the compiler. The compiler, "
-#~ "resource persons, and data entry person will be recorded and given credit "
-#~ "for the data in the database as well as in any compilation or publication "
-#~ "of the documented Technology.</li><li>Data stored in the WOCAT database "
-#~ "are open access.</li><li>Data are made available for users under the <a "
-#~ "href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank"
-#~ "\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike "
-#~ "3.0 Unported License.</a></li></ul><p>You are free to:</"
-#~ "p><ul><li><strong>Share</strong> — copy and redistribute the material in "
-#~ "any medium or format</li><li><strong>Adapt</strong> — remix, transform, "
-#~ "and build upon the material</li></ul><p>The licensor cannot revoke these "
-#~ "freedoms as long as you follow the following license terms:</"
-#~ "p><ul><li><strong>Attribution</strong> — You must give appropriate "
-#~ "credit, provide a link to the license, and indicate if changes were made."
-#~ "</li><li><strong>Non-Commercial</strong> — You may not use the material "
-#~ "for commercial purposes.</li><li><strong>ShareAlike</strong> — If you "
-#~ "remix, transform, or build upon the material, you must distribute your "
-#~ "contributions under the same license as the original.</li><li><strong>No "
-#~ "additional restrictions</strong> — You may not apply legal terms or "
-#~ "technological measures that legally restrict others from doing anything "
-#~ "the license permits.</li></ul><p><strong>Full license terms</strong>: <a "
-#~ "href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" "
-#~ "target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-"
-#~ "nc-sa/3.0/legalcode</a></p>"
-#~ msgstr ""
-#~ "Условия, регламентирующие использование данных, собранных ВОКАТ \n"
-#~ "•\tДанные, собранные с помощью анкет ВОКАТ, вводятся, редактируются и "
-#~ "хранятся в онлайновой базе данных ВОКАТ либо самим составителем, либо "
-#~ "лицом, выбранным составителем. Общая ответственность за обобщение и "
-#~ "качество данных лежит на составителе. Составитель, ответственные "
-#~ "специалисты и лицо, вводящее данные, должны быть указаны в самой базе "
-#~ "данных и несут ответственность за предоставленную информацию, в том числе "
-#~ "при любом последующем обобщении или при цитировании описанной "
-#~ "Технологии.  \n"
-#~ "•\tДанные, хранящиеся в базе данных ВОКАТ, находятся в открытом доступе.\n"
-#~ "•\tДоступ к данным предоставляется пользователям согласно <a href="
-#~ "\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" "
-#~ "class=\"link\"> Лицензии Creative Commons Attribution-NonCommercial-"
-#~ "ShareAlike 3.0 Unported License.\n"
-#~ "У пользователей есть право:\n"
-#~ "•\tРаспространения  — копировать и распространять информацию любыми "
-#~ "способами и в любом формате. \n"
-#~ "•\tАдаптации  — перерабатывать, преобразовывать и использовать материалы "
-#~ "как основу для создания новых текстов. \n"
-#~ "Правообладатель не вправе отзывать права пользователей при условии "
-#~ "соблюдения следующих требований лицензионного соглашения:\n"
-#~ "•\tСоблюдение авторских прав — Необходимо указывать первоисточник и "
-#~ "авторство, давать ссылку на лицензию и делать отметку, если в оригинал "
-#~ "были внесены изменения.\n"
-#~ "•\tИспользование в некоммерческих целях  — Нельзя использовать материалы "
-#~ "в коммерческих целях. \n"
-#~ "•\tНа тех же условиях — Если вы перерабатываете, преобразовываете или "
-#~ "используете материалы базы данных в своей работе, распространение ваших "
-#~ "материалов должно происходить на тех же условиях, что и распространение "
-#~ "исходных данных. \n"
-#~ "•\tБез ограничивающих условий — Нельзя применять юридические условия или "
-#~ "технические ограничения, которые могут препятствовать дальнейшему "
-#~ "использованию материалов в рамках лицензии. \n"
-#~ "Полные условия лицензии:\n"
-#~ "<a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" "
-#~ "target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-"
-#~ "nc-sa/3.0/legalcode</a></p>"
-
-#~ msgctxt "technologies helptext"
-#~ msgid ""
-#~ "<p><strong>Conditions regarding the use of data documented through WOCAT</"
-#~ "strong></p><ul><li>Data captured through WOCAT questionnaires will be "
-#~ "entered, edited, and stored in the WOCAT online database by the compiler "
-#~ "or a data entry person assigned by the compiler. Overall responsibility "
-#~ "for compilation and data quality lies with the compiler. The compiler, "
-#~ "resource persons, and data entry person will be recorded and given credit "
-#~ "for the data in the database as well as in any compilation or publication "
-#~ "of the documented technology.</li><li>Data stored in the WOCAT database "
-#~ "are open access.</li><li>Data are made available for users under the <a "
-#~ "href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank"
-#~ "\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike "
-#~ "3.0 Unported License.</a></li></ul><p>You are free to:</"
-#~ "p><ul><li><strong>Share</strong> — copy and redistribute the material in "
-#~ "any medium or format</li><li><strong>Adapt</strong> — remix, transform, "
-#~ "and build upon the material</li></ul><p>The licensor cannot revoke these "
-#~ "freedoms as long as you follow the following license terms:</"
-#~ "p><ul><li><strong>Attribution</strong> — You must give appropriate "
-#~ "credit, provide a link to the license, and indicate if changes were made."
-#~ "</li><li><strong>NonCommercial</strong> — You may not use the material "
-#~ "for commercial purposes.</li><li><strong>ShareAlike</strong> — If you "
-#~ "remix, transform, or build upon the material, you must distribute your "
-#~ "contributions under the same license as the original.</li><li><strong>No "
-#~ "additional restrictions</strong> — You may not apply legal terms or "
-#~ "technological measures that legally restrict others from doing anything "
-#~ "the license permits.</li></ul><p><strong>Full license terms</strong>: <a "
-#~ "href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" "
-#~ "target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-"
-#~ "nc-sa/3.0/legalcode</a></p>"
-#~ msgstr ""
-#~ "Условия, регламентирующие использование данных, собранных ВОКАТ \n"
-#~ "•\tДанные, собранные с помощью анкет ВОКАТ, вводятся, редактируются и "
-#~ "хранятся в онлайновой базе данных ВОКАТ либо самим составителем, либо "
-#~ "лицом, выбранным составителем. Общая ответственность за обобщение и "
-#~ "качество данных лежит на составителе. Составитель, ответственные "
-#~ "специалисты и лицо, вводящее данные, должны быть указаны в самой базе "
-#~ "данных и несут ответственность за предоставленную информацию, в том числе "
-#~ "при любом последующем обобщении или при цитировании описанной "
-#~ "Технологии.  \n"
-#~ "•\tДанные, хранящиеся в базе данных ВОКАТ, находятся в открытом доступе.\n"
-#~ "•\tДоступ к данным предоставляется пользователям согласно <a href="
-#~ "\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" "
-#~ "class=\"link\"> Лицензии Creative Commons Attribution-NonCommercial-"
-#~ "ShareAlike 3.0 Unported License.\n"
-#~ "У пользователей есть право:\n"
-#~ "•\tРаспространения  — копировать и распространять информацию любыми "
-#~ "способами и в любом формате. \n"
-#~ "•\tАдаптации  — перерабатывать, преобразовывать и использовать материалы "
-#~ "как основу для создания новых текстов. \n"
-#~ "Правообладатель не вправе отзывать права пользователей при условии "
-#~ "соблюдения следующих требований лицензионного соглашения:\n"
-#~ "•\tСоблюдение авторских прав — Необходимо указывать первоисточник и "
-#~ "авторство, давать ссылку на лицензию и делать отметку, если в оригинал "
-#~ "были внесены изменения.\n"
-#~ "•\tИспользование в некоммерческих целях  — Нельзя использовать материалы "
-#~ "в коммерческих целях. \n"
-#~ "•\tНа тех же условиях — Если вы перерабатываете, преобразовываете или "
-#~ "используете материалы базы данных в своей работе, распространение ваших "
-#~ "материалов должно происходить на тех же условиях, что и распространение "
-#~ "исходных данных. \n"
-#~ "•\tБез ограничивающих условий — Нельзя применять юридические условия или "
-#~ "технические ограничения, которые могут препятствовать дальнейшему "
-#~ "использованию материалов в рамках лицензии. \n"
-#~ "Полные условия лицензии:\n"
-#~ "<a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" "
-#~ "target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-"
-#~ "nc-sa/3.0/legalcode</a></p>"
-
-#~ msgctxt "watershed helptext"
-#~ msgid ""
-#~ "<p><strong>Conditions regarding the use of data documented through WOCAT</"
-#~ "strong></p><ul><li>Data captured through WOCAT questionnaires will be "
-#~ "entered, edited, and stored in the WOCAT online database by the compiler "
-#~ "or a data entry person assigned by the compiler. Overall responsibility "
-#~ "for compilation and data quality lies with the compiler. The compiler, "
-#~ "resource persons, and data entry person will be recorded and given credit "
-#~ "for the data in the database as well as in any compilation or publication "
-#~ "of the documented technology.</li><li>Data stored in the WOCAT database "
-#~ "are open access.</li><li>Data are made available for users under the <a "
-#~ "href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank"
-#~ "\" class=\"link\">Creative Commons Attribution-NonCommercial-ShareAlike "
-#~ "3.0 Unported License.</a></li></ul><p>You are free to:</"
-#~ "p><ul><li><strong>Share</strong> — copy and redistribute the material in "
-#~ "any medium or format</li><li><strong>Adapt</strong> — remix, transform, "
-#~ "and build upon the material</li></ul><p>The licensor cannot revoke these "
-#~ "freedoms as long as you follow the following license terms:</"
-#~ "p><ul><li><strong>Attribution</strong> — You must give appropriate "
-#~ "credit, provide a link to the license, and indicate if changes were made."
-#~ "</li><li><strong>NonCommercial</strong> — You may not use the material "
-#~ "for commercial purposes.</li><li><strong>ShareAlike</strong> — If you "
-#~ "remix, transform, or build upon the material, you must distribute your "
-#~ "contributions under the same license as the original.</li><li><strong>No "
-#~ "additional restrictions</strong> — You may not apply legal terms or "
-#~ "technological measures that legally restrict others from doing anything "
-#~ "the license permits.</li></ul><p><strong>Full license terms</strong>: <a "
-#~ "href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" "
-#~ "target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-"
-#~ "nc-sa/3.0/legalcode</a></p>"
-#~ msgstr ""
-#~ "Условия, регламентирующие использование данных, собранных ВОКАТ \n"
-#~ "•\tДанные, собранные с помощью анкет ВОКАТ, вводятся, редактируются и "
-#~ "хранятся в онлайновой базе данных ВОКАТ либо самим составителем, либо "
-#~ "лицом, выбранным составителем. Общая ответственность за обобщение и "
-#~ "качество данных лежит на составителе. Составитель, ответственные "
-#~ "специалисты и лицо, вводящее данные, должны быть указаны в самой базе "
-#~ "данных и несут ответственность за предоставленную информацию, в том числе "
-#~ "при любом последующем обобщении или при цитировании описанной "
-#~ "Технологии.  \n"
-#~ "•\tДанные, хранящиеся в базе данных ВОКАТ, находятся в открытом доступе.\n"
-#~ "•\tДоступ к данным предоставляется пользователям согласно <a href="
-#~ "\"http://creativecommons.org/licenses/by-nc-sa/3.0/\" target=\"_blank\" "
-#~ "class=\"link\"> Лицензии Creative Commons Attribution-NonCommercial-"
-#~ "ShareAlike 3.0 Unported License.\n"
-#~ "У пользователей есть право:\n"
-#~ "•\tРаспространения  — копировать и распространять информацию любыми "
-#~ "способами и в любом формате. \n"
-#~ "•\tАдаптации  — перерабатывать, преобразовывать и использовать материалы "
-#~ "как основу для создания новых текстов. \n"
-#~ "Правообладатель не вправе отзывать права пользователей при условии "
-#~ "соблюдения следующих требований лицензионного соглашения:\n"
-#~ "•\tСоблюдение авторских прав — Необходимо указывать первоисточник и "
-#~ "авторство, давать ссылку на лицензию и делать отметку, если в оригинал "
-#~ "были внесены изменения.\n"
-#~ "•\tИспользование в некоммерческих целях  — Нельзя использовать материалы "
-#~ "в коммерческих целях. \n"
-#~ "•\tНа тех же условиях — Если вы перерабатываете, преобразовываете или "
-#~ "используете материалы базы данных в своей работе, распространение ваших "
-#~ "материалов должно происходить на тех же условиях, что и распространение "
-#~ "исходных данных. \n"
-#~ "•\tБез ограничивающих условий — Нельзя применять юридические условия или "
-#~ "технические ограничения, которые могут препятствовать дальнейшему "
-#~ "использованию материалов в рамках лицензии. \n"
-#~ "Полные условия лицензии:\n"
-#~ "<a href=\"http://creativecommons.org/licenses/by-nc-sa/3.0/legalcode\" "
-#~ "target=\"_blank\" class=\"link\">http://creativecommons.org/licenses/by-"
-#~ "nc-sa/3.0/legalcode</a></p>"
-
-#~ msgctxt "approaches label"
-#~ msgid "Definition of the SLM Approach"
-#~ msgstr "Определение Подхода УЗП"
-
-#~ msgctxt "approaches label"
-#~ msgid "Specify stakeholders and describe their roles."
-#~ msgstr ""
-#~ "Перечислите заинтересованные стороны и охарактеризуйте их участие/роли."
-
-#~ msgctxt "approaches label"
-#~ msgid "If precise year is not known, was the Approach initiated"
-#~ msgstr ""
-#~ "Если год начала реализации Подхода достоверно неизвестен, дайте примерную "
-#~ "оценку:"
-
-#~ msgctxt "approaches label"
-#~ msgid "Indicate year of termination (if not continued to date)"
-#~ msgstr "Год окончания (Если Подход больше не применяется)"
-
-#~ msgctxt "approaches label"
-#~ msgid "Were decisions on the selection of the Technology(ies) made"
-#~ msgstr "Было решение по выбору Технологии (-ий) принято"
-
-#~ msgctxt "approaches label"
-#~ msgid "Is decision-making based on"
-#~ msgstr "Было ли принятие решения основано на "
-
-#~ msgctxt "approaches label"
-#~ msgid "Who was trained"
-#~ msgstr "Кто проходил обучение?"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p><strong>Advisory service</strong>: technical assistance provided to "
-#~ "land users by extension workers/ advisors from government, NGOs, "
-#~ "projects, etc.</p><p>If yes, please answer the following sub-questions.</"
-#~ "p><p>If no, go to question 4.3.</p>"
-#~ msgstr ""
-#~ "Консультационные услуги: техническая поддержка, предоставляемая "
-#~ "землепользователям консультационными службами/ экспертами "
-#~ "правительственных и неправительственных организаций, проектов и т.д. \n"
-#~ "Если да, то ответьте пожалуйста, на следующие дополнительные вопросы. </"
-#~ "p><p>Если нет, то переходите к вопросу 4.3.</p>"
-
-#~ msgctxt "approaches label"
-#~ msgid "If yes, is the service provided"
-#~ msgstr "Если да, где оказываются консультационные услуги"
-
-#~ msgctxt "approaches label_view"
-#~ msgid "If yes, is the service provided"
-#~ msgstr "Если да, где оказываются консультационные услуги"
-
-#~ msgctxt "approaches label"
-#~ msgid "Describe/ comment"
-#~ msgstr "Пояснение/ комментарий"
-
-#~ msgctxt "approaches label"
-#~ msgid "At what level have institutions been strengthened or established"
-#~ msgstr ""
-#~ "Укажите уровень, на котором структуры были укреплены или вновь созданы"
-
-#~ msgctxt "approaches label"
-#~ msgid "Specify support"
-#~ msgstr "Укажите тип поддержки"
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Indicate the annual budget for the SLM component of the Approach "
-#~ "(including training and extension, research, implementation of the "
-#~ "Technology) in US$"
-#~ msgstr ""
-#~ "Укажите годовой бюджет мероприятий УЗП в рамках Подхода (включая обучение "
-#~ "и привлечение специалистов извне, исследования, применение технологии/ "
-#~ "технологий) в долларах США"
-
-#~ msgctxt "approaches label"
-#~ msgid "If precise budget is not known, indicate range"
-#~ msgstr ""
-#~ "Если точный годовой бюжет неизвестен, укажите примерный диапазон затрат"
-
-#~ msgctxt "approaches label"
-#~ msgid "Specify credit provider"
-#~ msgstr "Перечислите кредитные организации"
-
-#~ msgctxt "approaches label"
-#~ msgid "Specify credit receiver"
-#~ msgstr "Перечислите кредитные организации"
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Did the Approach empower local land users, improve stakeholder "
-#~ "involvement?"
-#~ msgstr ""
-#~ "Сумел ли Подход расширить возможности местных землепользователей, "
-#~ "повысить участие заинтересованных сторон?"
-
-#~ msgctxt "approaches label"
-#~ msgid "If yes, specify improvements. If no, give reasons."
-#~ msgstr "Если да, поясните. Если нет, укажите причины."
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Did the Approach help land users to implement and maintain SLM "
-#~ "technologies?"
-#~ msgstr ""
-#~ "Сумел ли Подход помочь землепользователям внедрить и поддерживать "
-#~ "технологии УЗП?"
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Did the Approach empower socially and economically disadvantaged groups "
-#~ "(gender, ethnic, etc.)?"
-#~ msgstr ""
-#~ "Сумел ли Подход расширить возможности социально и экономически уязвимых "
-#~ "групп (например, по гендерной, этнической принадлежности, ит.п.)?"
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Did the Approach improve land tenure issues/ user rights that hindered "
-#~ "the implementation of the Technology?"
-#~ msgstr ""
-#~ "Сумел ли Подход разрешить правовые проблемы землевладения/ "
-#~ "землепользования, препятствующие использованию технологий УЗП?"
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "If yes, is systematic documentation of SLM technologies part of reporting "
-#~ "procedures?"
-#~ msgstr ""
-#~ "Если да, является ли систематическое документирование технологий УЗП "
-#~ "частью отчётности?"
-
-#~ msgctxt "approaches label"
-#~ msgid "Description of the Approach"
-#~ msgstr "Описание Подхода"
-
-#~ msgctxt "approaches label"
-#~ msgid "Is advisory service provided"
-#~ msgstr "Укажите, где именно оказываются консультационные услуги"
-
-#~ msgctxt "approaches helptext"
-#~ msgid "E.g. tax exemptions, compensation payments, subsidies"
-#~ msgstr "например, налоговые льготы, компенсанционные выплаты, субсидии"
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Have land users received financial/ material support for the "
-#~ "implementation of the technology?"
-#~ msgstr ""
-#~ "Предоставлялась ли землепользователям финансовая/материальная поддержка "
-#~ "для применения технологиии? "
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "land users themselves without international agencies, government and non-"
-#~ "governmental interventions"
-#~ msgstr ""
-#~ "сами землепользователи без вмешательства международных агенств, "
-#~ "госструктур или неправительственных организаций"
-
-#~ msgctxt "approaches label"
-#~ msgid "local land users/ community"
-#~ msgstr "местные землепользователи/ местные сообщества"
-
-#~ msgctxt "approaches label"
-#~ msgid "SLM specialists/ agricultural advisors"
-#~ msgstr "эксперты по УЗП/сельскому хозяйству"
-
-#~ msgctxt "approaches label"
-#~ msgid "by land users alone (self-initiative)?"
-#~ msgstr "исключительно землепользователи (по собственной инициативе)?"
-
-#~ msgctxt "approaches label"
-#~ msgid "mainly by land users supported by SLM specialists?"
-#~ msgstr "в основном  землепользователи при поддержке специалистов по УЗП?"
-
-#~ msgctxt "approaches label"
-#~ msgid "through a participatory approach involving all relevant actors?"
-#~ msgstr "все участники как часть процесса совместных действий?"
-
-#~ msgctxt "approaches label"
-#~ msgid "mainly by SLM specialists with consultation of land users?"
-#~ msgstr ""
-#~ "преимущественно специалисты по УЗП после консультаций с "
-#~ "землепользователями?"
-
-#~ msgctxt "approaches label"
-#~ msgid "by SLM specialists alone?"
-#~ msgstr "исключительно специалисты по УЗП"
-
-#~ msgctxt "approaches label"
-#~ msgid "by politicians/ leaders?"
-#~ msgstr "политики/ руководители"
-
-#~ msgctxt "approaches label"
-#~ msgid "personal experience and opinions (not documented)"
-#~ msgstr "личный опыт и мнения (незадокументированные)"
-
-#~ msgctxt "approaches label"
-#~ msgid "field staff/ advisors"
-#~ msgstr "местный персонал/ консультанты"
-
-#~ msgctxt "approaches label"
-#~ msgid "farmer to farmer"
-#~ msgstr "обмен опытом между фермерами"
-
-#~ msgctxt "approaches label"
-#~ msgid "permanent centres"
-#~ msgstr "постоянно функционирующие центры"
-
-#~ msgctxt "approaches label"
-#~ msgid "yes, little"
-#~ msgstr "да, немного"
-
-#~ msgctxt "approaches label"
-#~ msgid "community"
-#~ msgstr "местный"
-
-#~ msgctxt "approaches label"
-#~ msgid "training"
-#~ msgstr "обучение"
-
-#~ msgctxt "approaches label"
-#~ msgid "customs and beliefs, moral"
-#~ msgstr "традиции и верования, нравственные ценности"
-
-#~ msgctxt "approaches label"
-#~ msgid "aesthetic"
-#~ msgstr "улучшение эстетической привлекательности"
-
-#~ msgctxt "approaches label"
-#~ msgid "land governance (decision making, implementation and enforcement)"
-#~ msgstr ""
-#~ "Управление земельными ресурсами (принятие решений, осуществление и "
-#~ "контроль за выполнением)"
-
-#~ msgctxt "approaches label"
-#~ msgid "knowledge on SLM, access to technical support"
-#~ msgstr "Осведомленность в области УЗП, доступность технической поддержки"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "Person(s) who provided most of the information documented in this "
-#~ "questionnaire. These can be land users, or local or regional experts/ SLM "
-#~ "specialists."
-#~ msgstr ""
-#~ "Лица, предоставившие большую часть информации для заполнения анкеты. Это "
-#~ "могут быть землепользователи, специалисты по УЗП (например, технические "
-#~ "эксперты, ученые) либо иные лица."
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "Name of the SLM Approach: Do not use exactly the same name as used for "
-#~ "the corresponding Technology (QT); try to name the main characteristic of "
-#~ "the Approach (name of project/ programme/ initiative; name of "
-#~ "implementation/ extension/ promotion method used, etc.)"
-#~ msgstr ""
-#~ "Название Подхода УЗП: Избегайте повторения названия соответствующей "
-#~ "Технологии (из АТ); постарайтесь подобрать название, отражающее специфику "
-#~ "Подхода (название проекта/ программы/ инициативы, название метода "
-#~ "реализации/ продления/ распространения и т.д.)"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p>Describe the Approach in one sentence containing key words. The "
-#~ "definition of an approach is very important as it determines whether "
-#~ "anyone searching the database will read further.</p>"
-#~ msgstr ""
-#~ "Кратко охарактеризуйте Подход одним предложением, содержащим ключевые "
-#~ "слова. Определение Подхода – очень важно, так как именно от него зависит, "
-#~ "будет ли пользователь базы данных читать дальше. "
-
-#~ msgctxt "approaches label"
-#~ msgid "Definition of the Approach"
-#~ msgstr "Определение Подхода"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "If you have already filled in Questionnaires on SLM Technologies that "
-#~ "were implemented under this Approach, refer to the information given "
-#~ "there in section QT 2.4"
-#~ msgstr ""
-#~ "Если вы уже заполнили Анкету по Технологиям УЗП, примененным в рамках "
-#~ "данного Подхода, сделайте ссылку на раздел 2.4 АТ."
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "Make sure the description contains the key characteristics/ distinct "
-#~ "features of the Approach, its aims/ objectives, methods used, stages of "
-#~ "implementation, roles of involved stakeholders, strengths, and "
-#~ "weaknesses. This summary has to provide a comprehensive/ concise picture "
-#~ "of the Approach to outsiders. After having gone through the whole "
-#~ "questionnaire, come back and revise/ complement this section."
-#~ msgstr ""
-#~ "Убедитесь, что описание содержит ключевые характеристики/ отличительные "
-#~ "черты Подхода, его цели/задачи, использованные методы, этапы реализации, "
-#~ "роли участвующих заинтересованных сторон, сильные и слабые стороны. "
-#~ "Краткое описание должно давать всестороннее и лаконичное представление о "
-#~ "Подходе для неспециалиста. После заполнения всех разделов Анкеты "
-#~ "вернитесь к данному тексту и отредактируйте/ дополните его. "
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p>Provide photos showing stakeholders interacting with each other/ "
-#~ "implementing/ in training, etc.</p><p>Provide at least two digital files "
-#~ "(JPG, PNG, GIF), i.e. files from a digital camera, or scans from prints, "
-#~ "negative films or slide films.</p><p>Maximum file size: 3 MB.</"
-#~ "p><p>Photos should be of high quality/ high resolution and not "
-#~ "manipulated or distorted.</p><p>An explanation (description) is required "
-#~ "for each photo submitted! Photos should match the description given in "
-#~ "2.2.</p>"
-#~ msgstr ""
-#~ "Приложите фотографии, показывающие участников взаимодействующих друг с "
-#~ "другом/ выполняющих мероприятия на местах/ проходящих обучение и т.д. \n"
-#~ "Приложите не менее двух цифровых файлов (формата JPG, PNG, GIF), т.е. "
-#~ "фото, снятые цифровой камерой, либо отсканированные фотографии, негативы "
-#~ "или слайды. Максимальный размер файла: 3 MB.\n"
-#~ "Фотографии должны быть хорошего качества/высокого разрешения, не "
-#~ "измененные и без искажений.\n"
-#~ "Каждый снимок должен быть снабжен пояснениями (описанием)! Фото должны "
-#~ "соответствовать описанию, данному в пункте 2.2."
-
-#~ msgctxt "approaches label"
-#~ msgid "Photos showing impressions of the Approach"
-#~ msgstr "Фотографии, иллюстрирующие Подход"
-
-#~ msgctxt "approaches helptext"
-#~ msgid "Specify and indicate implementing agencies in question 3.1"
-#~ msgstr "Укажите организации-исполнители в пункте 3.1."
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "Several answers possible. If for the same condition there are enabling as "
-#~ "well as hindering factors, tick and specify both of them."
-#~ msgstr ""
-#~ "Возможно несколько ответов. Если условия одновременно выступают как "
-#~ "содействующие и затрудняющие факторы, поставьте две галочки и поясните."
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Conditions enabling or hindering the implementation of the Technology"
-#~ msgstr "Условия, содействующие применению Технологии или затрудняющие его"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p>Provide a visual summary pointing out important actors, acitivites, "
-#~ "key stages of implementation, etc. You could also use different colours "
-#~ "to distinguish stakeholders.</p><p>Supported file types: PDF, JPG, PNG, "
-#~ "maximum file size: 3 MB.</p><p><strong>Example</strong>: Process of "
-#~ "Participatory Technology Development through close researcher-farmer "
-#~ "interaction in Syria<br><img src=\"/static/assets/img/qa_flowchart.png"
-#~ "\"></img></p>"
-#~ msgstr ""
-#~ "Приложите визуальную схему взаимодействия ключевых действующих лиц, "
-#~ "последовательности мероприятий, ключевых стадий процесса и т.д. Для того, "
-#~ "чтобы легче идентифицировать разные заинтересованные стороны, используйте "
-#~ "разные цвета.\n"
-#~ "Допустимый формат файлов: JPG, PNG, GIF, максимальный размер файла: 3 "
-#~ "MB.\n"
-#~ "Пример: Процесс коллективной разработки Технологии, обеспечивающий "
-#~ "участие всех заинтересованных сторон через тесное взаимодействие  между "
-#~ "учеными и фермерами в Сирии."
-
-#~ msgctxt "approaches label"
-#~ msgid "Decision-making on the selection of SLM Technology(ies)"
-#~ msgstr "Принятие решения по выбору Технологии (-ий) УЗП"
-
-#~ msgctxt "approaches label"
-#~ msgid "Training/ awareness raising"
-#~ msgstr "Обучение/ повышение осведомлённости"
-
-#~ msgctxt "approaches label"
-#~ msgid "Institution strengthening (organisational development)"
-#~ msgstr "Институциональная (организационная) поддержка"
-
-#~ msgctxt "approaches label"
-#~ msgid "Contributions per area, per unit, or per product"
-#~ msgstr ""
-#~ "Удельный вклад на единицу площади, на технологическую единицу или на "
-#~ "единицу продукции"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p>The term Approach refers to the implementation of one or several "
-#~ "Technology(ies). It may have been introduced through a project/ "
-#~ "programme, or be part of an indigenous system, or refer to a spontaneous "
-#~ "adoption/ adaptation based on individual initiative.</p><p>First, tick "
-#~ "relevant impacts. Then for each selected impact, tick the extent and "
-#~ "specify / give reasons.</p>"
-#~ msgstr ""
-#~ "Термин Подход относится к применению одной или нескольких технологий. "
-#~ "Технология может применяться в рамках какого-либо проекта/программы, "
-#~ "являться частью системы традиционного природопользования, а также может "
-#~ "внедряться/адаптироваться по индивидуальной инициативе.\n"
-#~ "В первую очередь, отметьте все существенные виды воздействия (квадратики "
-#~ "слева). Далее, по каждому виду воздействия, отметьте уровень воздействия "
-#~ "и укажите подробности/причины."
-
-#~ msgctxt "approaches label"
-#~ msgid "Main motivation of the land user to implement SLM"
-#~ msgstr "Основные причины, побуждающие землепользователей внедрять УЗП"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p>Indicate SLM Technologies which were promoted by and implemented "
-#~ "through this Approach.</p><p>The major Technologies promoted by and "
-#~ "implemented through this Approach must be described in separate SLM "
-#~ "Technology questionnaires. WOCAT recommends that you first fill in the "
-#~ "Technology questionnaire and that you focus the description of the "
-#~ "Approach to the Technology(ies) documented.</p>"
-#~ msgstr ""
-#~ "Укажите Технологии УЗП, которые применялись в рамках данного Подхода, и "
-#~ "назовите составителей. Основные технологии, поддержанные и примененные в "
-#~ "рамках данного Подхода, должны быть описаны в отдельных Анкетах по "
-#~ "Технологиям УЗП. ВОКАТ рекомендует сначала заполнить Анкету по "
-#~ "Технологиям, а в описании Подхода сослаться на задокументированную "
-#~ "Технологию (-ии)."
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "If available, upload video files visualizing the Approach activities on a "
-#~ "public platform (e.g. <a href=\"https://vimeo.com/\" target=\"_blank\" "
-#~ "class=\"link\">vimeo.com</a>, <a href=\"https://www.youtube.com/\" target="
-#~ "\"_blank\" class=\"link\">youtube.com</a>) and indicate a link and a "
-#~ "short description for each video linked below."
-#~ msgstr ""
-#~ "Если имеются видеозаписи, рассказывающие о Подходе, разместите их на "
-#~ "общедоступной платформе (например, href=\"https://vimeo.com/\" target="
-#~ "\"_blank\" class=\"link\"vimeo.com</a>, <a href=\"https://www.youtube.com/"
-#~ "\" target=\"_blank\" class=\"link\"> youtube.com</a>), дайте ссылку и "
-#~ "короткое описание для каждого файла."
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p>The description should provide a concise but comprehensive picture of "
-#~ "the Approach to outsiders and addresses key questions such as:</"
-#~ "p><ol><li>What are the main characteristics/ distinct features of the "
-#~ "Approach?</li><li>What are the aims/ objectives of the Approach?</"
-#~ "li><li>Which methods were used?</li><li>Which were the stages of "
-#~ "implementation?</li><li>Which stakeholders were involved and what were "
-#~ "their roles?</li><li>What did land users like / dislike about the "
-#~ "Approach?</li></ol><p>Max. 2500 characters. Fill in this information at "
-#~ "the beginning but revise the description when you have completed the "
-#~ "questionnaire.</p>"
-#~ msgstr ""
-#~ "<p>Описание должно давать краткое, но всесторонее представление о "
-#~ "Подходе, в том числе для неспециалистов. Для этого описание должно "
-#~ "отвечать на следующие ключевые вопросы:</p><ol><li>Каковы главные "
-#~ "характеристики/ отличительные черты Подхода?</li><li>Каковы цели/ задачи "
-#~ "Подхода?</li><li>Какие методы были использованы?</li><li>Каковы стадии "
-#~ "реализации?</li><li>Какие заинтересованные стороны участвовали в процессе "
-#~ "и каковы их роли?</li><li>Что землепользователям понравилось/не "
-#~ "понравилось в реализации Подхода?</li></ol><p>Объем описания не должен "
-#~ "превышать 2500 знаков. Составьте описание в начале работы над анкетой, а "
-#~ "после заполнения всех разделов анкеты вернитесь к нему и отредактируйте.</"
-#~ "p>"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "If you have already filled in Questionnaires on SLM Technologies that "
-#~ "were implemented under this Approach, refer to the information given "
-#~ "there in section QT 2.5"
-#~ msgstr ""
-#~ "Если вы уже заполнили Анкету по Технологиям УЗП, примененным в рамках "
-#~ "данного Подхода, сделайте ссылку на раздел 2.5 АТ."
-
-#~ msgctxt "approaches label"
-#~ msgid ""
-#~ "Conditions enabling or hindering the implementation of the Technology/ies "
-#~ "applied under the Approach"
-#~ msgstr ""
-#~ "2.9\tУсловия содействующие применению Технологии/ Технологий в рамках "
-#~ "Подхода или затрудняющие его"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p>The <strong>SLM Approach</strong> (hereafter referred to as the "
-#~ "Approach) defines the ways and means used to implement one or several SLM "
-#~ "Technology(ies), including technical and material support, involvement "
-#~ "and roles of different stakeholders, etc. All types of Approaches may be "
-#~ "documented using this questionnaire: Besides SLM technologies introduced "
-#~ "through projects or programmes, WOCAT includes traditional SLM practices "
-#~ "and spontaneous adoptions or adaptations of Technologies. <strong>In the "
-#~ "case of a project, WOCAT asks you to document only those components or "
-#~ "activities that are relevant to SLM.</strong></p>"
-#~ msgstr ""
-#~ "<p><strong>Подход УЗП</strong> (далее «Подход») определяет пути и способы "
-#~ "применения Технологии (-й) УЗП.  Сюда относятся материально-техническое "
-#~ "обеспечение, вовлечение и роли различных заинтересованных сторон и т.д.  "
-#~ "Данная Анкета может использоваться для описания любого типа Подхода.  "
-#~ "Кроме Технологий УЗП, внедренных с помощью специальных проектов или "
-#~ "программ, ВОКАТ относит сюда традиционные системы землепользования и "
-#~ "примеры спонтанного применения или адаптации технологий. <strong>Если "
-#~ "описываемый Подход применялся в ходе того или иного проекта, пожалуйста, "
-#~ "дайте описание только тех компонентов или мероприятий проекта, которые "
-#~ "имеют отношение к УЗП.</strong></p>"
-
-#~ msgctxt "approaches label"
-#~ msgid "Specification of the SLM Approach"
-#~ msgstr "Характеристики Подхода УЗП"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "<p><strong>External material support</strong>: includes in-kind and "
-#~ "financial support or incentives from government or private organisations."
-#~ "</p><p>Questions regarding financing consider all costs of the Approach "
-#~ "including the implementation of the Technology.</p>"
-#~ msgstr ""
-#~ "Внешняя материальная поддержка: включает финансовую и прочую материальную "
-#~ "поддержку или меры стимулирования, предоставляемые государством или "
-#~ "независимыми организациями.\n"
-#~ "Вопросы по финансированию касаются всех затрат на реализацию Подхода, "
-#~ "включая применение Технологии."
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "Impact analysis is crucial to assess investments made in SLM, which are "
-#~ "often poorly assessed and documented; please provide as much information "
-#~ "as possible. Note: Impacts of the Technology on natural resources, "
-#~ "production, etc. must be specified in the corresponding questionnaire(s) "
-#~ "on SLM Technologies."
-#~ msgstr ""
-#~ "Анализ влияния критически важен для оценки инвестиций, вкладываемых в "
-#~ "УЗП, эта тема часто слабо освещена и недостаточно задокументирована. "
-#~ "Пожалуйста, предоставьте как можно больше информации.  Примечание: "
-#~ "влияние Технологии (-ий) на природные ресурсы, продуктивность и т.д. "
-#~ "должно быть детализировано в соответствующей анкете/анкетах по "
-#~ "технологиям УЗП."
-
-#~ msgctxt "approaches label"
-#~ msgid "Impact analysis"
-#~ msgstr "Анализ влияния"
-
-#~ msgctxt "approaches helptext"
-#~ msgid ""
-#~ "The concluding statements should concentrate on the Approach you "
-#~ "described in this document. Concluding statements for the Technologies "
-#~ "associated with this Approach are to be made in the separate "
-#~ "Questionnaire on SLM Technologies."
-#~ msgstr ""
-#~ "В  заключительных положениях основное внимание должно уделяться Подходу, "
-#~ "описанному в данной Анкете. Заключительные положения, относящиеся к "
-#~ "Технологиям, связанным с данным Подходом, должны быть сформулированы в "
-#~ "отдельной Анкете по Технологиям УЗП."
-
-#~ msgctxt "approaches label"
-#~ msgid "Conclusions and lessons learnt"
-#~ msgstr "Заключительные положения и извлеченные уроки "
-
-#~ msgid "unknown"
-#~ msgstr "неизвестно"
+#~ msgid "Bosnian"
+#~ msgstr "боснийский"

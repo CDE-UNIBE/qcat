@@ -40,7 +40,7 @@
       <li>
         <span class="is-muted">{% if metadata.editors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
         {% for editor in metadata.editors %}
-          <a rel="author" href="#" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
+          <a rel="author" href="{% url 'user_details' editor.id %}" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
         {% empty %}
           &ndash;
         {% endfor %}

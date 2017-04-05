@@ -9,7 +9,7 @@
 
 {% block content %}
 
-  {% if 'assign_questionnaire' in permissions %}
+  {% if 'assign_questionnaire' in permissions or 'change_compiler' in permissions %}
     {% addtoblock 'js' %}
       <script src="{% static 'js/jquery-ui.min.js' %}"></script>
       <script src="{% static 'js/review.min.js' %}"></script>

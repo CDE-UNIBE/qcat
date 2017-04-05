@@ -69,7 +69,8 @@
                 <li><a href="#" data-type="all">{% trans "All SLM Data" %}</a></li>
                 <li><a href="#" data-type="technologies">{% trans "SLM Technologies" %}</a></li>
                 <li><a href="#" data-type="approaches">{% trans "SLM Approaches" %}</a></li>
-                <li><a href="#" data-type="watershed">{% trans "Watershed and Runoff" %}</a></li>
+                <li><a href="#" data-type="unccd">{% trans "UNCCD PRAIS Practices" %}</a></li>
+{#                <li><a href="#" data-type="watershed">{% trans "Watershed and Runoff" %}</a></li>#}
               </ul>
               <input type="hidden" name="type" id="search-type" value="all">
             </div>
@@ -106,7 +107,7 @@
     </div>
     <section class="tech-list small-12 columns">
       <div class="tech-group">
-        <h2 class="is-group">{% trans "WOCAT and UNCCD SLM practices" %} (<span id="questionnaire-count">{{ count }}</span>)</h2>
+        <h2 class="is-group">{% trans "Your search results" %} (<span id="questionnaire-count">{{ count }}</span>)</h2>
         <div id="questionnaire-list">
           {% include "wocat/questionnaire/partial/list.html" %}
         </div>

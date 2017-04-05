@@ -101,7 +101,6 @@ class BaseSettings(Configuration):
         ('km', _('Khmer')),
         ('lo', _('Lao')),
         ('ar', _('Arabic')),
-        ('bs', _('Bosnian')),
         ('pt', _('Portuguese')),
     )
     # languages with extraordinarily long words that need 'forced' line breaks

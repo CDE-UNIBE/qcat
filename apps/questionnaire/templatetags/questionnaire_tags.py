@@ -1,6 +1,7 @@
 import warnings
 
 from django import template
+from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.files import get_thumbnailer
 
 from ..models import Questionnaire
@@ -83,16 +84,20 @@ def prepare_image(image):
         # Create a thumbnailer instance (file-like object) and create its
         # thumbnail according to the options.
         # Return the thumbnails url and overwrite the interchange-dict.
-        thumbnailer = get_thumbnailer(
-            image['absolute_path']
-        ).get_thumbnail({
-            'size': size,
-            'crop': size,
-            'upscale': True,
-            'target': image['target']
-        })
-        url = get_url_by_file_name(thumbnailer.name.rsplit('/')[-1])
-        interchange = list(replace_large(image.get('interchange'), url))
+        try:
+            thumbnailer = get_thumbnailer(
+                image['absolute_path']
+            ).get_thumbnail({
+                'size': size,
+                'crop': size,
+                'upscale': True,
+                'target': image['target']
+            })
+            url = get_url_by_file_name(thumbnailer.name.rsplit('/')[-1])
+            interchange = list(replace_large(image.get('interchange'), url))
+        except InvalidImageFormatError:
+            interchange = image.get('interchange')
+            url = image.get('image')
 
     else:
         interchange = image.get('interchange')

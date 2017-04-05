@@ -1,0 +1,37 @@
+<div class="row process-action">
+  <div class="medium-2 columns">
+    <a class="button expand" data-toggle="review-change-compiler-panel">Change compiler</a>
+  </div>
+  <div class="medium-10 columns">
+    <p>As a member of the WOCAT secretariat, you can change the compiler of this {{ questionnaire_type }}.</p>
+
+    <div class="row">
+      <div class="medium-12 columns hide review-assigned-users" id="review-change-compiler-panel">
+        <a href="#" class="review-assigned-users-toggle" data-toggle="review-change-compiler-panel">
+          <svg class="icon"><use xlink:href="#icon-cross" xmlns:xlink="http://www.w3.org/1999/xlink"></use></svg>
+        </a>
+        <p>Search and select a user who will be the new compiler of this {{ questionnaire_type }}.</p>
+        <div class="row">
+          <div class="medium-9 columns">
+            <div id="review-new-compiler" class="user-display">
+              <input type="hidden" name="compiler-id" value="">
+            </div>
+            <input type="search"
+                   id="review-change-compiler"
+                   placeholder="Search user"
+                   data-search-url="{% url 'user_search' %}"
+                   data-user-input-field="compiler-id"
+                   data-max-users="1"
+                   data-translation-no-results="No results found"
+                   data-translation-too-many-results="Too many results found, please narrow the search"
+                   data-display-container="review-new-compiler">
+          </div>
+          <div class="medium-2 medium-offset-1 columns">
+            <label><input type="checkbox" name="change-compiler-keep-editor"> Keep the current compiler as editor?</label>
+            <input type="submit" id="button-change-compiler" name="change-compiler" class="button expand" value="Update compiler">
+          </div>
+        </div>
+      </div>
+    </div>
+  </div>
+</div>
