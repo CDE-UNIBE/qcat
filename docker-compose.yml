@@ -1,0 +1,34 @@
+version: '3'
+
+services:
+  postgres:
+    build:
+      context: .
+      dockerfile: ./docker_compose/postgis/Dockerfile
+
+  elasticsearch:
+    image: elasticsearch:2
+
+  memcached:
+    image: memcached:1.4
+    # allow bigger keys, required for the configurations
+    command: memcached -I 10m
+
+  web:
+    build:
+      context: .
+      dockerfile: ./docker_compose/web/Dockerfile
+    image: qcat:dev
+    environment:
+      # additional envs are set in the entrypoint-script
+      - PYTHONPATH=/code/apps
+    entrypoint: /entrypoint/entrypoint.sh
+    command: python manage.py test
+    volumes:
+      - .:/code
+    ports:
+      - "8000:8000"
+    depends_on:
+      - postgres
+      - elasticsearch
+      - memcached
