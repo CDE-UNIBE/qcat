@@ -441,25 +441,6 @@ class MailPreferencesTest(TestCase):
         with override_settings(DO_SEND_STAFF_ONLY=True, DO_SEND_EMAILS=True):
             self.assertTrue(superuser.mailpreferences.is_allowed_send_mails)
 
-    def test_is_allowed_domain_all_settings(self):
-        with override_settings(MAILS_RESTRICT_DOMAINS='*'):
-            self.assertTrue(self.obj.is_allowed_mail_domain)
-
-    def test_is_allowed_domain_restrict_settings(self):
-        self.obj.user.email = 'foo@restriced.domain'
-        with override_settings(MAILS_RESTRICT_DOMAINS='allowed.domain'):
-            self.assertFalse(self.obj.is_allowed_mail_domain)
-
-    def test_is_allowed_domain_allowed_settings(self):
-        self.obj.user.email = 'foo@allowed.domain'
-        with override_settings(MAILS_RESTRICT_DOMAINS='allowed.domain'):
-            self.assertTrue(self.obj.is_allowed_mail_domain)
-
-    def test_is_allowed_domain_allowed_settings_tuple(self):
-        self.obj.user.email = 'foo@yo.da'
-        with override_settings(MAILS_RESTRICT_DOMAINS=('da.yo', 'yo.da')):
-            self.assertTrue(self.obj.is_allowed_mail_domain)
-
     def test_not_allowed_send_mails_subscription(self):
         self.obj.subscription = settings.NOTIFICATIONS_NO_MAILS
         with override_settings(DO_SEND_EMAILS=True):

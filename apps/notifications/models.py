@@ -568,7 +568,6 @@ class MailPreferences(models.Model):
     def do_send_mail(self, log: Log) -> bool:
         return all([
             self.is_allowed_send_mails,
-            self.is_allowed_mail_domain,
             self.is_wanted_action(log.action),
             self.is_todo_log(log)
         ])
@@ -582,11 +581,6 @@ class MailPreferences(models.Model):
         return settings.DO_SEND_EMAILS and \
                self.subscription != settings.NOTIFICATIONS_NO_MAILS and \
                (not settings.DO_SEND_STAFF_ONLY or self.user.is_staff)
-
-    @property
-    def is_allowed_mail_domain(self):
-        return settings.MAILS_RESTRICT_DOMAINS[0] == '*' \
-               or self.user.email.endswith(settings.MAILS_RESTRICT_DOMAINS)
 
     def is_wanted_action(self, action: int) -> bool:
         return str(action) in self.wanted_actions.split(',')
