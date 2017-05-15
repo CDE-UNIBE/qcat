@@ -273,17 +273,21 @@ def logout(request):
 
     django_logout(request)
 
-    ses_id = request.COOKIES.get(settings.AUTH_COOKIE_NAME)
-    if ses_id is not None:
-        response = HttpResponseRedirect(
-            typo3_client.get_logout_url(request.build_absolute_uri(url))
-        )
-        # The cookie is not always removed on wocat.net
-        response.delete_cookie(settings.AUTH_COOKIE_NAME)
+    if not hasattr(settings, 'USE_NEW_WOCAT_AUTHENTICATION') or not settings.USE_NEW_WOCAT_AUTHENTICATION:
+        ses_id = request.COOKIES.get(settings.AUTH_COOKIE_NAME)
+        if ses_id is not None:
+            response = HttpResponseRedirect(
+                typo3_client.get_logout_url(request.build_absolute_uri(url))
+            )
+            # The cookie is not always removed on wocat.net
+            response.delete_cookie(settings.AUTH_COOKIE_NAME)
+        else:
+            response = HttpResponseRedirect(url)
+
+        response.delete_cookie(settings.ACCOUNTS_ENFORCE_LOGIN_COOKIE_NAME)
     else:
         response = HttpResponseRedirect(url)
 
-    response.delete_cookie(settings.ACCOUNTS_ENFORCE_LOGIN_COOKIE_NAME)
     return response
 
 

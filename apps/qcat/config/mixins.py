@@ -126,18 +126,16 @@ class AuthenticationFeatureSwitch:
     USE_NEW_WOCAT_AUTHENTICATION = values.BooleanValue(
         environ_prefix='', default=False
     )
-    CAS_SERVER_URL = values.Value(environ_prefix='', default='')
 
     @property
     def AUTHENTICATION_BACKENDS(self):
         if self.USE_NEW_WOCAT_AUTHENTICATION:
-            return ('django_cas_ng.backends.CASBackend', )
+            return ('accounts.authentication.WocatCMSAuthenticationBackend', )
         else:
             return super().AUTHENTICATION_BACKENDS
 
     @property
     def MIDDLEWARE_CLASSES(self):
-        # We probably need a new middleware.
         middlewares = super().MIDDLEWARE_CLASSES
         old_middleware = 'accounts.middleware.WocatAuthenticationMiddleware'
         if old_middleware in middlewares:

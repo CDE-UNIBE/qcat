@@ -1,12 +1,10 @@
 # -*- coding: utf-8 -*-
-import json
 import logging
 import requests
 
 from django.contrib.auth import get_user_model
 from django.core.exceptions import ValidationError
 from django.db import IntegrityError
-from django.http import JsonResponse
 from django.utils.timezone import now
 from django.utils.translation import ugettext_lazy as _
 
@@ -260,16 +258,30 @@ class WocatWebsiteUserClient:
         """
         Simple helper to request api; all requests are GET.
         """
-        return requests.get(
-            url='{base_url}{url}'.format(
-                base_url=settings.AUTH_API_URL, url=url
-            ),
-            headers={
+        return requests.get(**self._get_request_params(url=url))
+
+    def _post(self, url: str, **data):
+        data.update(self._get_request_params(url=url))
+        return requests.post(**data)
+
+    def _get_request_params(self, url: str) -> dict:
+        return {
+            'url': f'{settings.AUTH_API_URL}{url}',
+            'headers': {
                 'Accept': 'application/json',
                 'Content-Type': 'application/json',
-                'Authorization': 'Token {}'.format(settings.AUTH_API_TOKEN)
+                'Authorization': f'Token {settings.AUTH_API_TOKEN}'
             }
+        }
+
+    def remote_login(self, username: str, password: str):
+        response = self._post(
+            url='auth/login/',
+            json={'username': username, 'password': password}
         )
+        if response.ok:
+            return response.json()
+        return None
 
     def get_user_id(self, session_id):
         raise NotImplementedError('Deprecated method with new auth.')
@@ -277,14 +289,18 @@ class WocatWebsiteUserClient:
     def api_login(self):
         raise NotImplementedError('Deprecated method with new auth.')
 
-    def get_and_update_django_user(self, user_id, session_id):
-        raise NotImplementedError('Deprecated method with new auth.')
+    def get_and_update_django_user(self, **user_info):
+        user_id = user_info.pop('pk')
+        user, created = get_user_model().objects.get_or_create(id=user_id)
+        if not created:
+            self.update_user(user, user_info)
+        return user
 
     def search_users(self, name='') -> dict:
         """
-        wait for api on wocat
+        Keep response format as in the previous API from typo3.
         """
-        response = self._get('users/?name={}'.format(name))
+        response = self._get(f'users/?name={name}')
         if not response.ok or not response.json():
             return {'success': True, 'message': '', 'users': [], 'count': 0}
 
@@ -307,18 +323,17 @@ class WocatWebsiteUserClient:
         """
         Get user info from remote system as dictionary.
         """
-        response = self._get('users/{}'.format(user_id))
+        response = self._get(f'users/{user_id}/')
         if response.ok:
             return response.json()
         return None
 
     def update_user(self, user: User, user_information: dict):
-        """
-        discuss: user-ids on wocat-website don't match qcat user ids.
-        """
         if user_information:
             user.update(
-                email=user_information.get('email')
+                email=user_information['email'],
+                lastname=user_information['last_name'],
+                firstname=user_information['first_name']
             )
 
 
