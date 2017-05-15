@@ -260,7 +260,7 @@ class WocatWebsiteUserClient:
         """
         return requests.get(**self._get_request_params(url=url))
 
-    def _post(self, url: str, **data):
+    def _post(self, url: str, **data) -> requests.Response:
         data.update(self._get_request_params(url=url))
         return requests.post(**data)
 
@@ -274,7 +274,7 @@ class WocatWebsiteUserClient:
             }
         }
 
-    def remote_login(self, username: str, password: str):
+    def remote_login(self, username: str, password: str) -> dict:
         response = self._post(
             url='auth/login/',
             json={'username': username, 'password': password}
@@ -289,7 +289,7 @@ class WocatWebsiteUserClient:
     def api_login(self):
         raise NotImplementedError('Deprecated method with new auth.')
 
-    def get_and_update_django_user(self, **user_info):
+    def get_and_update_django_user(self, **user_info) -> User:
         user_id = user_info.pop('pk')
         user, created = get_user_model().objects.get_or_create(id=user_id)
         if not created:
