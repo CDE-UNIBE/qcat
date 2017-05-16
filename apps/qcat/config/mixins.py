@@ -68,6 +68,14 @@ class LogMixin:
                     'filename': '{}/logs/django.log'.format(super().BASE_DIR),
                     'formatter': 'verbose'
                 },
+                'cache_info': {
+                    'level': 'DEBUG',
+                    'class': 'logging.handlers.TimedRotatingFileHandler',
+                    'when': 'midnight',
+                    'backupCount': 2,
+                    'filename': '{}/logs/caches.log'.format(super().BASE_DIR),
+                    'formatter': 'verbose'
+                },
             },
             'loggers': {
                 '': {
@@ -75,6 +83,11 @@ class LogMixin:
                     'propagate': True,
                     'level': 'WARNING',
                 },
+                'config_cache': {
+                    'handlers': ['cache_info'],
+                    'propagate': True,
+                    'level': 'INFO'
+                }
             },
         }
 
@@ -125,6 +138,9 @@ class AuthenticationFeatureSwitch:
     """
     USE_NEW_WOCAT_AUTHENTICATION = values.BooleanValue(
         environ_prefix='', default=False
+    )
+    REACTIVATE_WOCAT_ACCOUNT_URL = values.URLValue(
+        environ_prefix='', default='https://beta.wocat.net/accounts/reactivate/'
     )
 
     @property

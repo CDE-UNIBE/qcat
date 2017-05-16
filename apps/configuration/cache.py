@@ -1,9 +1,12 @@
+import logging
 from functools import lru_cache
 
 from django.conf import settings
 from django.core.cache import cache
-from django.db import ProgrammingError
 from django.utils.translation import get_language
+
+
+logger = logging.getLogger('config_cache')
 
 
 def get_configuration(configuration_code):
@@ -27,6 +30,10 @@ def get_configuration(configuration_code):
             cache_key,
             configuration_code
         )
+        cache_info = get_cached_configuration.cache_info()
+        logger.info(f'"{configuration_code}" (cache_key {cache_key}) - '
+                       f'misses: {cache_info.misses}, '
+                       f'size: {cache_info.currsize}')
         return configuration
 
     return get_configuration_by_code(configuration_code)
