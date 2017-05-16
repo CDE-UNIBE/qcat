@@ -75,6 +75,22 @@ class LoginView(FormView):
         )
         return response
 
+    def form_invalid(self, form):
+        """
+        If this user has logged in before, check if the account was deactivated
+        when relaunching the wocat website. If so, return a redirect to the
+        reactivation view on the new wocat website.
+        """
+        if hasattr(settings, 'USE_NEW_WOCAT_AUTHENTICATION') and settings.USE_NEW_WOCAT_AUTHENTICATION:
+            has_user = User.objects.filter(email=form.cleaned_data['username'])
+            if has_user.exists() and has_user.count() == 1:
+                user_info = typo3_client.get_user_information(has_user[0].pk)
+                if user_info and not user_info.get('is_active', True):
+                    return HttpResponseRedirect(settings.REACTIVATE_WOCAT_ACCOUNT_URL)
+
+        return super().form_invalid(form)
+
+
     def get_success_url(self):
         # Explicitly passed ?next= url takes precedence.
         redirect_to = self.request.GET.get('next') or reverse(self.success_url)
