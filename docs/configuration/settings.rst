@@ -102,3 +102,31 @@ Example::
             ('application/pdf', 'pdf'),
         )
     }
+
+
+``USE_NEW_WOCAT_AUTHENTICATION``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+A boolean indicating whether to use the new (2017) WOCAT website as
+authentication service or not.
+
+Default: ``False``
+
+
+``REACTIVATE_WOCAT_ACCOUNT_URL``
+^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^^
+
+An URL to which users are redirected if the login failed because their account
+is not yet activated. Background is that upon switching to the new WOCAT website
+in 2017, all existing user accounts have to be reactivated manually.
+
+Default: ``https://beta.wocat.net/accounts/reactivate/``
+
+
+``AUTH_API_TOKEN``
+^^^^^^^^^^^^^^^^^^
+
+The API token used for the authentication.
+
+Default: ``None``
+
