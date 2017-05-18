@@ -76,6 +76,22 @@ class LoginView(FormView):
         )
         return response
 
+    def form_invalid(self, form):
+        """
+        If this user has logged in before, check if the account was deactivated
+        when relaunching the wocat website. If so, return a redirect to the
+        reactivation view on the new wocat website.
+        """
+        if hasattr(settings, 'USE_NEW_WOCAT_AUTHENTICATION') and settings.USE_NEW_WOCAT_AUTHENTICATION:
+            has_user = User.objects.filter(email=form.cleaned_data['username'])
+            if has_user.exists() and has_user.count() == 1:
+                user_info = typo3_client.get_user_information(has_user[0].pk)
+                if user_info and not user_info.get('is_active', True):
+                    return HttpResponseRedirect(settings.REACTIVATE_WOCAT_ACCOUNT_URL)
+
+        return super().form_invalid(form)
+
+
     def get_success_url(self):
         # Explicitly passed ?next= url takes precedence.
         redirect_to = self.request.GET.get('next') or reverse(self.success_url)
@@ -364,17 +380,21 @@ def logout(request):
 
     django_logout(request)
 
-    ses_id = request.COOKIES.get(settings.AUTH_COOKIE_NAME)
-    if ses_id is not None:
-        response = HttpResponseRedirect(
-            typo3_client.get_logout_url(request.build_absolute_uri(url))
-        )
-        # The cookie is not always removed on wocat.net
-        response.delete_cookie(settings.AUTH_COOKIE_NAME)
+    if not hasattr(settings, 'USE_NEW_WOCAT_AUTHENTICATION') or not settings.USE_NEW_WOCAT_AUTHENTICATION:
+        ses_id = request.COOKIES.get(settings.AUTH_COOKIE_NAME)
+        if ses_id is not None:
+            response = HttpResponseRedirect(
+                typo3_client.get_logout_url(request.build_absolute_uri(url))
+            )
+            # The cookie is not always removed on wocat.net
+            response.delete_cookie(settings.AUTH_COOKIE_NAME)
+        else:
+            response = HttpResponseRedirect(url)
+
+        response.delete_cookie(settings.ACCOUNTS_ENFORCE_LOGIN_COOKIE_NAME)
     else:
         response = HttpResponseRedirect(url)
 
-    response.delete_cookie(settings.ACCOUNTS_ENFORCE_LOGIN_COOKIE_NAME)
     return response
 
 

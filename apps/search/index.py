@@ -100,6 +100,17 @@ def get_mappings(questionnaire_configuration):
         }
     }
 
+    # Add the global questiongroups to the mapping if they are not already part
+    # of it. This is needed to prevent crashes when filtering (nested) by these
+    # questiongroups in configurations that do not have these questiongroups
+    # (e.g. UNCCD configuration).
+    for global_questiongroup in settings.QUESTIONNAIRE_GLOBAL_QUESTIONGROUPS:
+        if global_questiongroup not in data_properties.keys():
+            data_properties[global_questiongroup] = {
+                'type': 'nested',
+                'properties': {},
+            }
+
     mappings = {
         'questionnaire': {
             'properties': {
@@ -274,7 +285,7 @@ def create_or_update_index(configuration_code, mappings):
     return True, logs, ''
 
 
-def put_questionnaire_data(configuration_code, questionnaire_objects):
+def put_questionnaire_data(configuration_code, questionnaire_objects, **kwargs):
     """
     Add a list of documents to the index. New documents will be created,
     existing documents will be updated.
@@ -313,7 +324,7 @@ def put_questionnaire_data(configuration_code, questionnaire_objects):
         }
         actions.append(action)
 
-    actions_executed, errors = bulk(es, actions)
+    actions_executed, errors = bulk(es, actions, **kwargs)
 
     es.indices.refresh(index=alias)
     return actions_executed, errors
@@ -325,12 +336,15 @@ def put_all_data():
     """
     configurations = Configuration.objects.filter(active=True)
     for configuration in configurations:
-        put_questionnaire_data(
-            configuration,
-            Questionnaire.with_status.public().filter(
-                configurations__code=configuration
-            )
+        questionnaires = Questionnaire.with_status.public().filter(
+            configurations=configuration
         )
+        if questionnaires.exists():
+            put_questionnaire_data(
+                configuration_code=configuration.code,
+                questionnaire_objects=questionnaires,
+                request_timeout=60
+            )
 
 
 def delete_questionnaires_from_es(configuration_code, questionnaire_objects):

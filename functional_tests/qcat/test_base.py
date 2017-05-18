@@ -112,7 +112,7 @@ class BaseTemplateTest(FunctionalTest):
         # jay opens the start page
         self.browser.get(self.live_server_url)
 
-        # the home-keynumbers-list is shown after a while, and shows 7
+        # the home-keynumbers-list is shown after a while, and shows 6
         # entries.
         self.wait_for('class_name', 'home-keynumbers-list')
         keynumbers_list = self.findBy('class_name', 'home-keynumbers-list')

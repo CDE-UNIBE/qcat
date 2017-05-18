@@ -4,6 +4,7 @@
       {% if list_item.title %}<b>{{ list_item.title }}:</b>{% endif %}
       {{ list_item.text|safe}}
       {% if list_item.subtext %}<span class="subtext">{{ list_item.subtext }}</span>{% endif %}
+      {% if list_item.suffix %}{{ list_item.suffix}}{% endif %}
     </li>
   {% endfor %}
 </ul>

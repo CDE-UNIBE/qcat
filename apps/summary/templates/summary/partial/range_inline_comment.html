@@ -1,10 +1,9 @@
 {% for range_item in list_items %}
-  <div class="row range" >
+  <div class="row range">
     <div class="small-3 columns">
       {{ range_item.label }}
-      <p class="comment">{{ range_item.comment }}</p>
     </div>
-    <div class="small-9 columns no-wrap-container">
+    <div class="small-4 columns no-wrap-container">
       <div>
         <div class="range_title range_min">
           {{ range_item.min }}
@@ -18,6 +17,9 @@
         <div class="range_title range_max">
           {{ range_item.max }}
         </div>
+    </div>
+    <div class="small-5 columns">
+      <p class="comment">{{ range_item.comment|linebreaksbr }}</p>
     </div>
   </div>
 {% endfor %}

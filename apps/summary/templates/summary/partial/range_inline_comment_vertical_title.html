@@ -14,10 +14,10 @@
       </div>
     </div>
   {% endif %}
-  <div class="row range" >
+  <div class="row range inline-comment">
     <div class="small-10 columns">
       {{ range_item.label }}
-      <p class="comment">{{ range_item.text }}</p>
+      <p><i>{{ range_item.text }}</i></p>
     </div>
     <div class="small-2 columns">
       <div>
@@ -26,6 +26,8 @@
         {% endfor %}
       </div>
     </div>
+    <div class="small-12 columns">
+      <hr>
+    </div>
   </div>
-  <hr class="small">
 {% endfor %}

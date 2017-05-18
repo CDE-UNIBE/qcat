@@ -8,5 +8,6 @@ html.ie {
     .card {
         // No display: flex supported
         display: block;
+        height: auto;
     }
 }

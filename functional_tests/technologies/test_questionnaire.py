@@ -31,11 +31,6 @@ class QuestionnaireTest(FunctionalTest):
         self.findBy('xpath', '//section[contains(@class, "top-bar-section")]//'
                              'a[contains(@href, "/wocat/add")]').click()
 
-        # She is taken to a page where she can select what to add. She wants to
-        # add SLM Practices
-        self.findBy('xpath', '//div[contains(@class, "card")]//'
-                             'a[contains(@href, "/add/practice")]').click()
-
         # She is taken to a page where she can click "add new Tech"
         self.findBy(
             'xpath', '//div[contains(@class, "card")]//a[contains('

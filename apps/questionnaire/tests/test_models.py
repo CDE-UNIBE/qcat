@@ -15,6 +15,7 @@ from model_mommy import mommy
 from accounts.models import User
 from accounts.tests.test_models import create_new_user
 from configuration.models import Configuration, Value
+from configuration.utils import create_new_code
 from qcat.tests import TestCase
 from questionnaire.errors import QuestionnaireLockedException
 from questionnaire.models import Questionnaire, QuestionnaireLink, File, Lock, \
@@ -175,8 +176,8 @@ class QuestionnaireModelTest(TestCase):
     @patch('configuration.utils.create_new_code')
     def test_create_new_calls_create_code(self, mock_create_new_code):
         mock_create_new_code.return_value = 'foo'
-        get_valid_questionnaire(self.user)
-        mock_create_new_code.assert_called_once_with('sample', {'foo': 'bar'})
+        q = get_valid_questionnaire(self.user)
+        mock_create_new_code.assert_called_once_with(q, 'sample')
 
     def test_create_new_raises_error_if_invalid_status(self):
         with self.assertRaises(ValidationError):
@@ -716,13 +717,14 @@ class QuestionnaireModelTest(TestCase):
         questionnaire_1.add_link(questionnaire_2)
         links_property = questionnaire_1.links_property
         link_urls = links_property[0]['url']
+        code = create_new_code(questionnaire_2, 'sample')
         self.assertEqual(len(link_urls), 3)
         activate('es')
         self.assertEqual(link_urls['es'], reverse(
-            'sample:questionnaire_details', kwargs={'identifier': 'sample_1'}))
+            'sample:questionnaire_details', kwargs={'identifier': code}))
         activate('en')
         en_url = reverse(
-            'sample:questionnaire_details', kwargs={'identifier': 'sample_1'})
+            'sample:questionnaire_details', kwargs={'identifier': code})
         self.assertEqual(link_urls['default'], en_url)
         self.assertEqual(link_urls['en'], en_url)
 

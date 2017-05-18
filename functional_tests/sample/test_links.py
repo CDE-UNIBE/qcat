@@ -134,6 +134,18 @@ class LinkTests(FunctionalTest):
 
         url = self.browser.current_url
 
+        # She even opens the form and sees there is only one version
+        self.review_action('edit')
+        self.click_edit_section('cat_5')
+        links = self.findManyBy(
+            'xpath',
+            '//fieldset[@id="subcat_5_3"]//div[contains(@class, "alert-box")]')
+        self.assertEqual(len(links), 1)
+        self.findBy(
+            'xpath',
+            '//fieldset[@id="subcat_5_3"]//div[contains(@class, "alert-box") '
+            'and contains(text(), " (changed)")]')
+
         # She logs out and sees only one questionnaire is linked (the
         # active one)
         self.doLogout()
@@ -174,6 +186,9 @@ class LinkTests(FunctionalTest):
     def test_add_only_one_side_of_link_to_es_when_publishing(
             self, mock_get_user_id):
 
+        sample_name = 'asdfasdf'
+        samplemulti_name = 'foobar'
+
         # Alice logs in
         user_alice = User.objects.get(pk=101)
         user_alice.groups = [Group.objects.get(pk=3), Group.objects.get(pk=4)]
@@ -199,7 +214,7 @@ class LinkTests(FunctionalTest):
         self.browser.get(self.live_server_url + reverse(
             route_questionnaire_new))
         self.click_edit_section('cat_1')
-        self.findBy('name', 'qg_1-0-original_key_1').send_keys('Foo')
+        self.findBy('name', 'qg_1-0-original_key_1').send_keys(sample_name)
         self.submit_form_step()
 
         sample_url = self.browser.current_url
@@ -209,15 +224,16 @@ class LinkTests(FunctionalTest):
         self.browser.get(self.live_server_url + reverse(
             route_questionnaire_new_samplemulti))
         self.click_edit_section('mcat_1')
-        self.findBy('name', 'mqg_01-0-original_mkey_01').send_keys('Bar')
+        self.findBy('name', 'mqg_01-0-original_mkey_01').send_keys(
+            samplemulti_name)
         self.findBy(
             'xpath', '//input[contains(@class, "link-search-field")]'
-                     '[1]').send_keys('Foo')
+                     '[1]').send_keys(sample_name)
         self.wait_for('xpath', '//li[@class="ui-menu-item"]')
         self.findBy(
             'xpath',
-            '//li[@class="ui-menu-item"]//strong[text()="Foo"'
-            ']').click()
+            '//li[@class="ui-menu-item"]//strong[text()="{}"'
+            ']'.format(sample_name)).click()
         self.submit_form_step()
 
         samplemulti_url = self.browser.current_url
@@ -239,6 +255,7 @@ class LinkTests(FunctionalTest):
 
         # She goes back to the SAMPLEMULTI questionnaire and publishes it
         self.browser.get(samplemulti_url)
+        import time; time.sleep(1)  # I know, not nice ...
         self.review_action('submit')
         self.review_action('review')
         self.review_action('publish')
@@ -435,6 +452,7 @@ class LinkTests(FunctionalTest):
                 '@class, "is-submitted")]'.format(xpath))
 
         # She publishes the Sample Questionnaire and still, only one link
+        import time; time.sleep(1)
         self.review_action('review')
         self.review_action('publish')
         section_xpath = '//section[@id="cat_5"]'

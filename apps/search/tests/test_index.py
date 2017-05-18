@@ -1,6 +1,7 @@
 import uuid
 import logging
 
+from django.conf import settings
 from django.test.utils import override_settings
 from elasticsearch import TransportError
 from unittest.mock import patch, Mock
@@ -80,7 +81,7 @@ class GetMappingsTest(TestCase):
         mappings = get_mappings(mock_Conf)
         qgs = mappings.get('questionnaire', {}).get('properties', {}).get(
             'data', {}).get('properties')
-        self.assertEqual(len(qgs), 2)
+        self.assertEqual(len(qgs), 2+len(settings.QUESTIONNAIRE_GLOBAL_QUESTIONGROUPS))
         for qg_name in ['foo', 'bar']:
             qg = qgs.get(qg_name)
             self.assertEqual(qg.get('type'), 'nested')
@@ -102,7 +103,7 @@ class GetMappingsTest(TestCase):
         mappings = get_mappings(mock_Conf)
         qgs = mappings.get('questionnaire', {}).get('properties', {}).get(
             'data', {}).get('properties')
-        self.assertEqual(len(qgs), 1)
+        self.assertEqual(len(qgs), 1+len(settings.QUESTIONNAIRE_GLOBAL_QUESTIONGROUPS))
         qs = qgs.get('foo', {}).get('properties', {})
         for q_name in ['a', 'b']:
             q = qs.get(q_name)
@@ -119,7 +120,10 @@ class GetMappingsTest(TestCase):
         mappings = get_mappings(mock_Conf)
         q_props = mappings.get('questionnaire').get('properties')
         self.assertEqual(len(q_props), 11)
-        self.assertEqual(q_props['data'], {'properties': {}})
+        default_props = {}
+        for global_questiongroup in settings.QUESTIONNAIRE_GLOBAL_QUESTIONGROUPS:
+            default_props[global_questiongroup] = {'properties': {}, 'type': 'nested'}
+        self.assertEqual(q_props['data'], {'properties': default_props})
         self.assertEqual(q_props['created'], {'type': 'date'})
         self.assertEqual(q_props['updated'], {'type': 'date'})
         self.assertEqual(q_props['translations'], {'type': 'string'})

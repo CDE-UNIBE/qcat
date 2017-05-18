@@ -4,7 +4,7 @@ language:
   python
 
 python:
-  - 3.5
+  - 3.6
 
 env:
   global:
@@ -13,7 +13,7 @@ env:
 build:
   pre_ci_boot:
     image_name: drydock/u16pytall
-    image_tag: tip
+    image_tag: v5.5.3
 
   ci:
     - export LC_ALL=C

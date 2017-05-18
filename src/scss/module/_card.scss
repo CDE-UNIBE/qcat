@@ -2,11 +2,11 @@
   background-color: white;
   display:flex;
   flex-direction:column;
-  margin-top: rem-calc(24);
 }
 
 .home-main .card {
   background-color: #f5f4ef;
+  height: 100%;
 }
 
 .card-image-holder {
@@ -64,3 +64,7 @@
     align-items:stretch;
     flex-wrap:wrap;
   }
+
+.card-row>div {
+  padding-top: rem-calc(24);
+}

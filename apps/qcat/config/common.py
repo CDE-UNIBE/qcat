@@ -102,6 +102,7 @@ class BaseSettings(Configuration):
         ('lo', _('Lao')),
         ('ar', _('Arabic')),
         ('pt', _('Portuguese')),
+        ('af', _('Afrikaans')),
     )
     # languages with extraordinarily long words that need 'forced' line breaks
     # to remain consistent in the box-layout.
@@ -151,21 +152,43 @@ class BaseSettings(Configuration):
     )
     THUMBNAIL_ALIASES = {
         'summary': {
-            'header_image': {
-                'size': (0, 920),
-                'crop': 'smart',
-                'upscale': True
+            'screen': {
+                'header_image': {
+                    'size': (0, 1840),
+                    'crop': 'smart',
+                    'upscale': True
+                },
+                'half_height': {
+                    'size': (640, 640),
+                    'crop': 'smart',
+                    'upscale': True
+                },
+                'map': {
+                    'size': (560, 0)
+                },
+                'flow_chart': {
+                    'size': (900, 0),
+                    'upscale': True
+                }
             },
-            'half_height': {
-                'size': (400, 350),
-                'crop': 'smart',
-                'upscale': True
-            },
-            'map': {
-                'size': (280, 0)
-            },
-            'flow_chart': {
-                'size': (450, 0)
+            'print': {
+                'header_image': {
+                    'size': (0, 7360),
+                    'crop': 'smart',
+                    'upscale': True
+                },
+                'half_height': {
+                    'size': (2560, 2560),
+                    'crop': 'smart',
+                    'upscale': True
+                },
+                'map': {
+                    'size': (2240, 0)
+                },
+                'flow_chart': {
+                    'size': (3600, 0),
+                    'upscale': True
+                }
             }
         }
     }
@@ -195,7 +218,6 @@ class BaseSettings(Configuration):
     )
     LOGIN_URL = 'login'
 
-    # TODO: Try if tests can be run with --with-fixture-bundling
     TEST_RUNNER = 'qcat.discover_runner.QcatTestSuiteRunner'
     NOSE_ARGS = [
         '--cover-html', '--cover-html-dir=coverage_html', '--cover-erase',
@@ -253,7 +275,7 @@ class BaseSettings(Configuration):
     }
     API_PAGE_SIZE = values.IntegerValue(default=25, environ_prefix='')
 
-    DATABASES = values.DatabaseURLValue()
+    DATABASES = values.DatabaseURLValue(environ_required=True)
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = values.BooleanValue(default=False)
@@ -262,17 +284,18 @@ class BaseSettings(Configuration):
 
     ALLOWED_HOSTS = values.ListValue(default=['localhost', '127.0.0.1'])
 
-    SECRET_KEY = values.SecretValue()
+    SECRET_KEY = values.SecretValue(environ_required=True)
 
     # The base URL of the Typo3 REST API used for authentication
     AUTH_API_URL = values.Value(environ_prefix='',
-                                default='https://dev.wocat.net/rest/')
+                                default='https://beta.wocat.net/api/v1/')
 
     # The username used for API login
     AUTH_API_USER = values.Value(environ_prefix='')
 
     # The key used for API login
     AUTH_API_KEY = values.Value(environ_prefix='')
+    AUTH_API_TOKEN = values.Value(environ_prefix='')
 
     # The URL of the WOCAT authentication form. Used to handle both login
     # and logout
@@ -336,6 +359,7 @@ class BaseSettings(Configuration):
     DO_SEND_STAFF_ONLY = values.BooleanValue(environ_prefix='', default=True)
 
     WOCAT_IMPORT_DATABASE_URL = values.Value(environ_prefix='')
+    WOCAT_IMPORT_DATABASE_URL_LOCAL = values.Value(environ_prefix='')
 
     # TODO: Temporary test of UNCCD flagging.
     TEMP_UNCCD_TEST = values.ListValue(environ_prefix='')

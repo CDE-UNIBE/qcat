@@ -22,3 +22,6 @@ coverage_html
 bower_components
 node_modules
 /static
+
+# new relic config file
+newrelic.ini

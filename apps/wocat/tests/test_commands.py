@@ -3,7 +3,7 @@ from datetime import datetime
 
 from qcat.tests import TestCase
 from wocat.management.commands.import_wocat_data import QTImport, WOCATImport, \
-    ImportObject
+    ImportObject, is_empty_questiongroup
 
 
 class TestImport(WOCATImport):
@@ -889,6 +889,146 @@ class TestImport(WOCATImport):
                 }
             },
             'split_questions': True,
+        },
+        'qg_29': {
+            'questions': {
+                'question_29_1': {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_29_1',
+                            'wocat_column': 'column_29_1_1'
+                        }
+                    ],
+                    'type': 'string',
+                },
+                'question_29_2': {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_29_1',
+                            'wocat_column': 'column_29_1_2'
+                        }
+                    ],
+                    'type': 'string',
+                }
+            },
+            'repeating': True,
+            'wocat_table': 'table_29_1',
+            'index_filter': [
+                {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_29_1',
+                            'wocat_column': 'column_29_1_0'
+                        }
+                    ],
+                    'operator': 'equals',
+                    'value': '1',
+                }
+            ]
+        },
+        'qg_30': {
+            'questions': {
+                'question_30_1': {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_30_1',
+                            'wocat_column': 'column_30_1_1',
+                            'value_mapping': 'Column 30 1 1'
+                        },
+                        {
+                            'wocat_table': 'table_30_1',
+                            'wocat_column': 'column_30_2_1',
+                            'value_mapping': 'Column 30 2 1'
+                        }
+                    ],
+                    'type': 'string',
+                },
+                'question_30_2': {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_30_1',
+                            'wocat_column': 'column_30_1_1',
+                        },
+                        {
+                            'wocat_table': 'table_30_1',
+                            'wocat_column': 'column_30_2_1',
+                        }
+                    ],
+                    'value_mapping_list': {
+                        0: '',
+                        1: 'one',
+                        2: 'two',
+                        3: 'three',
+                    },
+                    'type': 'dropdown'
+                },
+                'question_30_3': {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_30_1',
+                            'wocat_column': 'column_30_1_2',
+                        },
+                        {
+                            'wocat_table': 'table_30_1',
+                            'wocat_column': 'column_30_2_2',
+                        }
+                    ],
+                    'type': 'string',
+                }
+            },
+            'split_questions': True,
+        },
+        'qg_31': {
+            'questions': {
+                'question_31_1': {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_31_1',
+                            'wocat_column': 'column_31_1_1',
+                            'value_mapping': 'Column 30 1 1'
+                        },
+                        {
+                            'wocat_table': 'table_31_1',
+                            'wocat_column': 'column_31_2_1',
+                            'value_mapping': 'Column 30 2 1'
+                        }
+                    ],
+                    'type': 'string',
+                },
+                'question_31_2': {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_31_1',
+                            'wocat_column': 'column_31_1_1',
+                        },
+                        {
+                            'wocat_table': 'table_31_1',
+                            'wocat_column': 'column_31_2_1',
+                        }
+                    ],
+                    'value_mapping_list': {
+                        0: '',
+                        1: 'one',
+                        2: 'two',
+                        3: 'three',
+                    },
+                    'type': 'dropdown'
+                },
+                'question_31_3': {
+                    'mapping': [
+                        {
+                            'wocat_table': 'table_31_1',
+                            'wocat_column': 'column_31_1_2',
+                        },
+                        {
+                            'wocat_table': 'table_31_1',
+                            'wocat_column': 'column_31_2_2',
+                        }
+                    ],
+                    'type': 'string',
+                }
+            },
+            'split_questions': True,
         }
     }
     configuration_code = 'sample'
@@ -1171,6 +1311,39 @@ class DoMappingTest(TestCase):
                     'column_28_1_1': 'one',
                     'column_28_1_2': 'two',
                 }
+            ],
+            'table_29_1': [
+                {
+                    'column_29_1_0': '1',  # Criteria
+                    'column_29_1_1': '1',
+                    'column_29_1_2': 'a',
+                },
+                {
+                    'column_29_1_0': '2',  # Criteria
+                    'column_29_1_1': '2',
+                    'column_29_1_2': 'b',
+                },
+                {
+                    'column_29_1_0': '1',  # Criteria
+                    'column_29_1_1': '3',
+                    'column_29_1_2': 'c',
+                }
+            ],
+            'table_30_1': [
+                {
+                    'column_30_1_1': '1',
+                    'column_30_1_2': 'Comment one',
+                    'column_30_2_1': '2',
+                    'column_30_2_2': 'Comment two',
+                }
+            ],
+            'table_31_1': [
+                {
+                    'column_31_1_1': '',
+                    'column_31_1_2': '',
+                    'column_31_2_1': '',
+                    'column_31_2_2': '',
+                }
             ]
         }
         lookup_table_text = {}
@@ -1364,6 +1537,14 @@ class DoMappingTest(TestCase):
                     'column_25_2_2': 'Faz 4',
                 }
             ],
+            'table_30_1': [
+                {
+                    'column_30_1_1': '1',
+                    'column_30_1_2': 'Comment one',
+                    'column_30_2_1': '1',
+                    'column_30_2_2': 'Comment two',
+                }
+            ]
         }
         lookup_table_text = {}
         file_infos = {}
@@ -1435,6 +1616,14 @@ class DoMappingTest(TestCase):
                     'column_28_1_1': 'one',
                     'column_28_1_2': 'two',
                 }
+            ],
+            'table_30_1': [
+                {
+                    'column_30_1_1': '',
+                    'column_30_1_2': '',
+                    'column_30_2_1': '1',
+                    'column_30_2_2': 'Comment two',
+                }
             ]
         }
         lookup_table_text = {}
@@ -1489,6 +1678,14 @@ class DoMappingTest(TestCase):
                     'column_28_1_1': 'un',
                     'column_28_1_2': 'deux',
                     'column_28_1_3': 'trois'
+                }
+            ],
+            'table_30_1': [
+                {
+                    'column_30_1_1': '',
+                    'column_30_1_2': '',
+                    'column_30_2_1': '1',
+                    'column_30_2_2': 'Commentaire deux',
                 }
             ]
         }
@@ -2122,11 +2319,112 @@ class DoMappingTest(TestCase):
             'question_28_1': {'fr': 'trois'}
         })
 
-    # from nose.plugins.attrib import attr
-    # @attr('foo')
-    # def test_repeating_in_same_row(self):
-    #     self.imprt.do_mapping()
-    #     import_object_1 = self.imprt.import_objects[0]
-    #     qg_data_26 = import_object_1.data_json.get('qg_26')
-    #     self.assertEqual(qg_data_26, '')
-    #     self.assertEqual(len(qg_data_26), 2)
+    def test_index_filter_on_repeating_questiongroups(self):
+        self.imprt.check_translations()
+        self.imprt.do_mapping()
+        import_object_1 = self.imprt.import_objects[0]
+        qg_data_29 = import_object_1.data_json.get('qg_29')
+        self.assertEqual(len(qg_data_29), 2)
+        self.assertEqual(qg_data_29[0], {
+            'question_29_1': {'en': '1'}, 'question_29_2': {'en': 'a'}
+        })
+        self.assertEqual(qg_data_29[1], {
+            'question_29_1': {'en': '3'}, 'question_29_2': {'en': 'c'}
+        })
+
+    def test_split_questions_simple(self):
+        self.imprt.check_translations()
+        self.imprt.do_mapping()
+        import_object_1 = self.imprt.import_objects[0]
+        qg_data_30 = import_object_1.data_json.get('qg_30')
+        self.assertEqual(len(qg_data_30), 2)
+        self.assertEqual(qg_data_30[0], {
+            'question_30_1': {'en': 'Column 30 1 1'},
+            'question_30_2': 'one',
+            'question_30_3': {'en': 'Comment one'}
+        })
+        self.assertEqual(qg_data_30[1], {
+            'question_30_1': {'en': 'Column 30 2 1'},
+            'question_30_2': 'two',
+            'question_30_3': {'en': 'Comment two'}
+        })
+
+    def test_split_questions_duplicate_dropdown_value(self):
+        self.imprt.check_translations()
+        self.imprt.do_mapping()
+        import_object_2 = self.imprt.import_objects[1]
+        qg_data_30 = import_object_2.data_json.get('qg_30')
+        self.assertEqual(len(qg_data_30), 2)
+        self.assertEqual(qg_data_30[0], {
+            'question_30_1': {'en': 'Column 30 1 1'},
+            'question_30_2': 'one',
+            'question_30_3': {'en': 'Comment one'}
+        })
+        self.assertEqual(qg_data_30[1], {
+            'question_30_1': {'en': 'Column 30 2 1'},
+            'question_30_2': 'one',
+            'question_30_3': {'en': 'Comment two'}
+        })
+
+    def test_split_questions_translation_with_empty_first(self):
+        self.imprt.check_translations()
+        self.imprt.do_mapping()
+        import_object_3 = self.imprt.import_objects[2]
+        qg_data_30 = import_object_3.data_json.get('qg_30')
+        self.assertEqual(len(qg_data_30), 1)
+        self.assertEqual(qg_data_30[0], {
+            'question_30_1': {'en': 'Column 30 2 1', 'fr': 'Column 30 2 1'},
+            'question_30_2': 'one',
+            'question_30_3': {'en': 'Comment two', 'fr': 'Commentaire deux'}
+        })
+
+    def test_split_questions_empty(self):
+        self.imprt.check_translations()
+        self.imprt.do_mapping()
+        import_object_1 = self.imprt.import_objects[0]
+        qg_data_31 = import_object_1.data_json.get('qg_31')
+        self.assertEqual(len(qg_data_31), 0)
+
+
+class TestIsEmptyQuestiongroup(TestCase):
+
+    def test_contains_dropdown(self):
+        qg = {'question_1': 'foo'}
+        self.assertFalse(is_empty_questiongroup(qg))
+
+    def test_contains_text(self):
+        qg = {'question_1': {'en': 'foo'}}
+        self.assertFalse(is_empty_questiongroup(qg))
+
+    def test_contains_empty_text(self):
+        qg = {'question_1': {'en': ''}}
+        self.assertTrue(is_empty_questiongroup(qg))
+
+    def test_contains_empty_text_multiple(self):
+        qg = {'question_1': {'en': '', 'fr': ''}}
+        self.assertTrue(is_empty_questiongroup(qg))
+
+    def test_contains_empty_text_mixed(self):
+        qg = {'question_1': {'en': '', 'fr': 'foo'}}
+        self.assertFalse(is_empty_questiongroup(qg))
+
+    def test_multiple_questiongroups_with_content(self):
+        qg = {'question_1': 'foo', 'question_2': ''}
+        self.assertFalse(is_empty_questiongroup(qg))
+
+    def test_multiple_questiongroups_with_content_2(self):
+        qg = {'question_1': '', 'question_2': {'en': ''}, 'question_3': 'foo'}
+        self.assertFalse(is_empty_questiongroup(qg))
+
+    def test_multiple_questiongroups_without_content(self):
+        qg = {}
+        self.assertTrue(is_empty_questiongroup(qg))
+
+    def test_multiple_questiongroups_without_content_2(self):
+        qg = {'question_1': ''}
+        self.assertTrue(is_empty_questiongroup(qg))
+
+    def test_multiple_questiongroups_without_content_3(self):
+        qg = {'question_1': '', 'question_2': {'en': ''},
+              'question_3': {'en': '', 'fr': ''}}
+        self.assertTrue(is_empty_questiongroup(qg))

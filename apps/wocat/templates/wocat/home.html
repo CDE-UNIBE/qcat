@@ -112,9 +112,9 @@
             </div>
           </div>
         </div>
-        <div class="row is-flex">
+        <div class="row is-flex card-row">
           {# Technologies #}
-          <div class="small-12 medium-4 columns is-flex">
+          <div class="small-12 medium-4 columns">
             <div class="card">
               <a href="{% url 'wocat:questionnaire_list' %}?type=technologies">
                 <div class="card-image-holder">
@@ -134,7 +134,7 @@
             </div>
           </div>
           {# Approaches #}
-          <div class="small-12 medium-4 columns is-flex">
+          <div class="small-12 medium-4 columns">
             <div class="card">
               <a href="{% url 'wocat:questionnaire_list' %}?type=approaches">
                 <div class="card-image-holder">
@@ -154,7 +154,7 @@
             </div>
           </div>
           {# UNCCD #}
-          <div class="small-12 medium-4 columns is-flex">
+          <div class="small-12 medium-4 columns">
             <div class="card">
               <a href="{% url 'wocat:questionnaire_list' %}?type=unccd">
                 <div class="card-image-holder">
@@ -171,9 +171,9 @@
             </div>
           </div>
         </div>
-        <div class="row is-flex">
+        <div class="row is-flex card-row">
           {# Watershed / Watershed and Runoff #}
-          <div class="small-12 medium-4 columns is-flex">
+          <div class="small-12 medium-4 columns">
             <div class="card">
               {% if IS_ACTIVE_FEATURE_WATERSHED %}
               <a href="{% url 'wocat:questionnaire_list' %}?type=watershed">
@@ -211,7 +211,7 @@
             </div>
           </div>
           {# Maps / Land Degradation/Conservation #}
-          <div class="small-12 medium-4 columns is-flex">
+          <div class="small-12 medium-4 columns">
             <div class="card">
               <a href="http://qm.wocat.net/" target="_blank">
                 <div class="card-image-holder">
@@ -233,7 +233,7 @@
             </div>
           </div>
           {# CCA #}
-          <div class="small-12 medium-4 columns is-flex">
+          <div class="small-12 medium-4 columns">
             <div class="card">
               {% if IS_ACTIVE_FEATURE_MODULE %}
               <a href="{% url 'wocat:questionnaire_list' %}?type=cca">

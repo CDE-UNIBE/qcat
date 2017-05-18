@@ -22,6 +22,7 @@ class QuestionnaireSummaryPDFCreateViewTest(TestCase):
         self.request.user = MagicMock()
         self.view = self.setup_view(self.base_view, self.request, id=1)
         self.view.code = 'sample'
+        self.view.quality = 'screen'
 
     @patch.object(SummaryPDFCreateView, 'get_object')
     @patch.object(SummaryPDFCreateView, 'get_prepared_data')
@@ -43,7 +44,7 @@ class QuestionnaireSummaryPDFCreateViewTest(TestCase):
 
     def test_get_filename(self):
         this_moment = now()
-        expected = 'wocat-id-en-full-summary-{}.pdf'.format(
+        expected = 'wocat-id-en-full-screen-summary-{}.pdf'.format(
             this_moment.strftime('%Y-%m-%d-%H:%m')
         )
         self.view.questionnaire = MagicMock(
@@ -58,6 +59,7 @@ class QuestionnaireSummaryPDFCreateViewTest(TestCase):
         renderer = MagicMock()
         base_view = SummaryPDFCreateView()
         base_view.code = 'code'
+        base_view.quality = 'screen'
         base_view.summary_type = 'summary_type'
         base_view.render_classes = {'config_type': {'summary_type': renderer}}
         base_view.questionnaire = MagicMock()
@@ -68,6 +70,7 @@ class QuestionnaireSummaryPDFCreateViewTest(TestCase):
         renderer.assert_called_once_with(
             base_url='http://testserver/',
             config=mock_config,
+            quality='screen',
             questionnaire=base_view.questionnaire
         )
 

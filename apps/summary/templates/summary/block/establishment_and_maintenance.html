@@ -11,7 +11,7 @@
           <h5>{{ content.introduction.title }}</h5>
           <ul class="bullets">
             {% for list_item in content.introduction.items  %}
-              <li>{{ list_item }}</li>
+              <li>{{ list_item|safe }}</li>
             {% endfor %}
           </ul>
         </div>

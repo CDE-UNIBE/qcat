@@ -6,3 +6,4 @@
 
 pylibmc==1.5.1
 raven==5.32.0
+newrelic==2.86.0.65

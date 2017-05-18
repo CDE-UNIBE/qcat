@@ -6,10 +6,11 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.core.urlresolvers import reverse
-from django.http import Http404
-from django.http import JsonResponse
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.template.response import TemplateResponse
+from django.test import override_settings
 from django.test.client import RequestFactory
+
 from qcat.tests import TestCase
 from questionnaire.models import Questionnaire
 
@@ -35,7 +36,20 @@ class LoginViewTest(TestCase):
     def setUp(self):
         self.invalid_login_credentials = {'username': 'foo', 'password': 'bar'}
         self.factory = RequestFactory()
+        self.factory.GET = MagicMock()
         self.user = create_new_user()
+        self.view = self.setup_view(view=LoginView(), request=self.factory)
+
+    def setup_view(self, view, request, *args, **kwargs):
+        """
+        Mimic as_view() returned callable, but returns view instance.
+
+        args and kwargs are the same you would pass to ``reverse()``
+        """
+        view.request = request
+        view.args = args
+        view.kwargs = kwargs
+        return view
 
     def test_form_invalid_credentials(self):
         """Invalid data must return a form with errors"""
@@ -89,16 +103,40 @@ class LoginViewTest(TestCase):
         self.assertEqual(request.user, self.user)
         self.assertEqual(response.url, reverse('home'))
 
-    def setup_view(self, view, request, *args, **kwargs):
-        """
-        Mimic as_view() returned callable, but returns view instance.
+    @override_settings(USE_NEW_WOCAT_AUTHENTICATION=False)
+    def test_form_invalid_old_auth_backend(self):
+        response = self.view.form_invalid(form=None)
+        self.assertIsInstance(response, TemplateResponse)
 
-        args and kwargs are the same you would pass to ``reverse()``
-        """
-        view.request = request
-        view.args = args
-        view.kwargs = kwargs
-        return view
+    @override_settings(USE_NEW_WOCAT_AUTHENTICATION=True)
+    def test_form_invalid_new_auth_backend_unkknown_user(self):
+        form = MagicMock(cleaned_data={'username': 'foo'})
+        response = self.view.form_invalid(form)
+        self.assertIsInstance(response, TemplateResponse)
+
+    @override_settings(USE_NEW_WOCAT_AUTHENTICATION=True)
+    @patch('accounts.client.typo3_client.get_user_information')
+    def test_form_invalid_new_auth_backend_unkknown_api_user(self, mock_get_info):
+        form = MagicMock(cleaned_data={'username': 'a@b.com'})
+        response = self.view.form_invalid(form)
+        self.assertIsInstance(response, TemplateResponse)
+        mock_get_info.assert_called_once_with(1)
+
+    @override_settings(
+        USE_NEW_WOCAT_AUTHENTICATION=True,
+        REACTIVATE_WOCAT_ACCOUNT_URL='42'
+    )
+    @patch('accounts.client.typo3_client.get_user_information')
+    def test_form_invalid_new_auth_backend_known_user(self, mock_get_info):
+        form = MagicMock(cleaned_data={'username': 'a@b.com'})
+        mock_get_info.return_value = {'is_active': True}
+        response = self.view.form_invalid(form)
+        self.assertIsInstance(response, TemplateResponse)
+        form = MagicMock(cleaned_data={'username': 'a@b.com'})
+        mock_get_info.return_value = {'is_active': False}
+        response = self.view.form_invalid(form)
+        self.assertIsInstance(response, HttpResponseRedirect)
+        self.assertEqual(response.url, '42')
 
 
 class ProfileViewTest(TestCase):
@@ -262,7 +300,7 @@ class UserUpdateTest(TestCase):
         self.assertEqual(len(users), 1)
         self.assertEqual(users[0].email, 'foo@bar.com')
 
-    @patch('accounts.client.typo3_client.get_user_information')
+    @patch('accounts.client.Typo3Client.get_user_information')
     def test_updates_user(self, mock_get_user_information):
         mock_get_user_information.return_value = {
             'username': 'foo@bar.com',

@@ -194,10 +194,10 @@ class TechnologyParserTest(ParserTestMixin, TestCase):
             list(values[0].keys()), ['url', 'title', 'text']
         )
 
-    def test_get_qg_values_with_scale(self):
+    def test_get_impact(self):
         child = self.get_child('tech_qg_76', 'tech_impacts_cropproduction')
         values = list(
-            self.parser.get_qg_values_with_scale(child, qg_style='multi_select')
+            self.parser.get_impact(child, has_siblings=True)
         )
         self.assertEqual(
             values[0],

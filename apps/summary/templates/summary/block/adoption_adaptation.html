@@ -12,14 +12,19 @@
     <h5>{{ content.adopted_no_incentive.title }}</h5>
     {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.adopted_no_incentive.items %}
   </div>
+  {% if content.quantify.text %}
+    <div class="small-12 columns">
+      <h5>{{ content.quantify.title }}</h5>
+      {{ content.quantify.text }}
+    </div>
+  {% endif %}
 </div>
 <div class="row">
   <hr>
   <div class="small-6 columns">
     <h5>{{ content.adaptation.title }}</h5>
-    {{ content.adaptation.text }}
     {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.adaptation.items %}
-    <p>{{ content.condition.title }}</p>
+    <h5>{{ content.condition.title }}</h5>
     {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.condition.items %}
   </div>
   <div class="small-6 columns adaptation-comments">

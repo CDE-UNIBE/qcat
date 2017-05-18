@@ -89,8 +89,16 @@ class QuestionnaireLinkSearchView(QuestionnaireSearchView, LoginRequiredMixin):
 
     def get_queryset(self):
         term = self.request.GET.get('term', '')
+        name_questiongroup = 'qg_name'
+        if self.configuration_code in ['sample', 'samplemulti']:
+            # This is mainly for historic reasons. "sample" and "samplemulti"
+            # (these are exclusively used for testing) do not have a
+            # questiongroup "qg_name". Get their name questiongroups from the
+            # configuration.
+            configuration = get_configuration(self.configuration_code)
+            __, name_questiongroup = configuration.get_name_keywords()
         data_lookup_params = {
-            'questiongroup': 'qg_name',
+            'questiongroup': name_questiongroup,
             'lookup_by': 'string',
             'value': term,
         }
@@ -696,7 +704,10 @@ class QuestionnaireView(QuestionnaireRetrieveMixin, StepsMixin, InheritedDataMix
 
         complete, total = self.questionnaire_configuration.get_completeness(
             data)
-        completeness_percentage = int(round(complete / total * 100))
+        try:
+            completeness_percentage = int(round(complete / total * 100))
+        except ZeroDivisionError:
+            completeness_percentage = 0
 
         sections = self.questionnaire_configuration.get_details(
             data, permissions=permissions,

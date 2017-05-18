@@ -41,18 +41,18 @@ class LinkedChoicesTest(FunctionalTest):
         self.submit_form_step()
         self.click_edit_section('cca__2')
 
-        self.findBy('id', 'meteorological-disasters').click()
+        self.findBy('xpath', '//input[@id="cca__2__2__meteorological"]').click()
         self.findBy('xpath', '//input[@data-container="cca_qg_9"]').click()
         self.findBy('xpath',
                     '//select[@id="id_cca_qg_9-0-cca_exposure_decrstabincr"]/option[@value="stable"]').click()
 
-        self.findBy('id', 'biological-disasters').click()
+        self.findBy('xpath', '//input[@id="cca__2__2__biological"]').click()
         self.findBy('xpath', '//input[@data-container="cca_qg_29"]').click()
         self.findBy('xpath',
                     '//select[@id="id_cca_qg_29-0-cca_exposure_decrstabincr_other"]/option[@value="cca_decrease"]').click()
 
         # She also selects a gradual climate change
-        self.findBy('id', 'gradual-climate-change').click()
+        self.findBy('xpath', '//input[@id="cca__2__2__gradual"]').click()
         self.findBy('xpath', '//input[@data-container="cca_qg_2"]').click()
         self.findBy('xpath',
                     '//select[@id="id_cca_qg_2-0-cca_exposure_decrstabincr"]/option[@value="cca_decrease"]').click()
@@ -86,7 +86,7 @@ class LinkedChoicesTest(FunctionalTest):
 
         # She selects some disasters in 2.2 and sees that they are now available
         # for selection in 2.3
-        self.findBy('id', 'meteorological-disasters').click()
+        self.findBy('xpath', '//input[@id="cca__2__2__meteorological"]').click()
         self.findBy('xpath', '//input[@data-container="cca_qg_9"]').click()
         # It is not sufficient to click the checkbox of the questiongroup, an
         # actual value of the questiongroup must be selected.
@@ -94,7 +94,7 @@ class LinkedChoicesTest(FunctionalTest):
         self.findBy('xpath', '//select[@id="id_cca_qg_9-0-cca_exposure_decrstabincr"]/option[@value="stable"]').click()
         self.assertEqual(len(get_cca_2_3_options(self)), 1)
 
-        self.findBy('id', 'biological-disasters').click()
+        self.findBy('xpath', '//input[@id="cca__2__2__biological"]').click()
         self.findBy('xpath', '//input[@data-container="cca_qg_29"]').click()
         self.assertEqual(len(get_cca_2_3_options(self)), 1)
         self.findBy('xpath',
@@ -103,7 +103,7 @@ class LinkedChoicesTest(FunctionalTest):
 
         # She also selects a gradual climate change and sees it is not an option
         # in 2.3
-        self.findBy('id', 'gradual-climate-change').click()
+        self.findBy('xpath', '//input[@id="cca__2__2__gradual"]').click()
         self.findBy('xpath', '//input[@data-container="cca_qg_2"]').click()
         self.findBy('xpath',
                     '//select[@id="id_cca_qg_2-0-cca_exposure_decrstabincr"]/option[@value="cca_decrease"]').click()

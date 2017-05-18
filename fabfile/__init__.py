@@ -130,6 +130,7 @@ def deploy_host(environment):
         _delete_caches()
         _reload_uwsgi()
         _rebuild_elasticsearch_indexes()
+        _purge_summary_pdfs()
     _set_maintenance_mode(False)
 
     print(green("Everything OK"))
@@ -141,6 +142,7 @@ def _get_latest_source():
     with cd(env.source_folder):
         run('git fetch')
         run('git pull origin %(branch)s' % env)
+        run('git fetch --tags')
 
 
 def _update_virtualenv():
@@ -186,6 +188,12 @@ def _delete_caches():
 
 def _rebuild_elasticsearch_indexes():
     _manage_py('rebuild_es_indexes')
+
+
+def _purge_summary_pdfs():
+    with cd(env.site_folder):
+        # -f suppresses error when folder is empty
+        run('rm -f upload/summary-pdf/*')
 
 
 def _reload_uwsgi():

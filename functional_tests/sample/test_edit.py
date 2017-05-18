@@ -816,7 +816,7 @@ class LinkedChoicesTest(FunctionalTest):
         self.click_edit_section('cat_4')
 
         # She selects some options in 4.4
-        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@id="subcat_4_4"]').click()
         self.findBy('xpath', '//input[@data-container="qg_40"]').click()
         self.findBy('xpath',
                     '//select[@id="id_qg_40-0-key_57"]/option['
@@ -915,7 +915,7 @@ class LinkedChoicesTest(FunctionalTest):
 
         # She selects some questiongroups in 4.4 and sees that they are now
         # available for selection in 4.5
-        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@id="subcat_4_4"]').click()
         self.findBy('xpath', '//input[@data-container="qg_40"]').click()
         # It is not sufficient to click the checkbox of the questiongroup, an
         # actual value of the questiongroup must be selected.
@@ -1063,7 +1063,7 @@ class LinkedChoicesTest(FunctionalTest):
 
         # She selects some questiongroups in 4.4 and sees that they are now
         # available for selection in 4.5
-        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@id="subcat_4_4"]').click()
         self.findBy('xpath', '//input[@data-container="qg_41"]').click()
         self.findBy('xpath',
                     '//select[@id="id_qg_41-0-key_57"]/option['
