@@ -75,6 +75,11 @@ class SendMailRecipientMixin(TestCase):
                 role=role, user=user, questionnaire=self.questionnaire
             )
 
+    def create_log(self, klass, action: int, sender: User, **kwargs) -> Log:
+        log = klass(action=action, sender=sender, questionnaire=self.questionnaire)
+        log.create(**kwargs)
+        return log.log
+
     def assert_no_unsent_logs(self, all_logs_count: int):
         """
         Ensure the expected number of logs were created, and all have been sent.
@@ -123,16 +128,83 @@ class SendMailRecipientMixin(TestCase):
             yield outbox
 
 
+class SettingsMailTest(SendMailRecipientMixin):
+
+    @override_settings(DO_SEND_STAFF_ONLY=True)
+    def test_do_send_staff_only(self):
+        self.questionnaire.status = settings.QUESTIONNAIRE_SUBMITTED
+        self.questionnaire.save()
+        # Set a staff user - only this one must receive mails.
+        self.reviewer_all.is_superuser = True
+        self.reviewer_all.save()
+        logs = []
+        for compiler in self.compilers:
+            log = self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CHANGE_STATUS,
+                sender=compiler,
+                is_rejected=False,
+                message='submit'
+            )
+            logs.append(log)
+
+        with self.send_notification_mails() as outbox:
+            self.assertEqual(len(outbox), 3)
+            expected = list(self.filter_expected_logs(self.reviewer_all, logs))
+            self.assert_only_expected(outbox, *expected)
+        self.assert_no_unsent_logs(3)
+
+    @override_settings(DO_SEND_STAFF_ONLY=True)
+    def test_do_send_all(self):
+        self.questionnaire.status = settings.QUESTIONNAIRE_SUBMITTED
+        self.questionnaire.save()
+        # no staff user set - send no mails!
+        logs = []
+        for compiler in self.compilers:
+            log = self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CHANGE_STATUS,
+                sender=compiler,
+                is_rejected=False,
+                message='submit'
+            )
+            logs.append(log)
+
+        with self.send_notification_mails() as outbox:
+            self.assertEqual(len(outbox), 0)
+        self.assert_no_unsent_logs(3)
+
+    @override_settings(DO_SEND_STAFF_ONLY=False)
+    def test_wanted_only_all_wanted(self):
+        logs = []
+        self.compiler_all.mailpreferences.wanted_actions = []
+        self.compiler_all.mailpreferences.save()
+        for reviewer in self.reviewers:
+            log = self.create_log(
+                klass=StatusLog,
+                action=settings.NOTIFICATIONS_CHANGE_STATUS,
+                sender=reviewer,
+                is_rejected=True,
+                message='submit'
+            )
+            self.add_questionnairememberships('compiler', *self.compilers)
+            logs.append(log)
+
+        with self.send_notification_mails() as outbox:
+            expected = [{
+                'log_id': str(logs[2].id),
+                'recipient': self.compiler_todo.email,
+                'subject': str(logs[2].mail_subject)
+            }]
+            self.assert_only_expected(outbox, *expected)
+        self.assert_no_unsent_logs(3)
+
+
 @override_settings(DO_SEND_STAFF_ONLY=False)
 class PublicationWorkflowMailTest(SendMailRecipientMixin):
     """
     Tests for the typical publication workflow of a questionnaire.
     """
-    def create_log(self, klass, action: int, sender: User, **kwargs) -> Log:
-        log = klass(action=action, sender=sender, questionnaire=self.questionnaire)
-        log.create(**kwargs)
-        return log.log
-
     def test_questionnaire_created(self):
         for compiler in self.compilers:
             self.create_log(

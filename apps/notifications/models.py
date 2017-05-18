@@ -578,9 +578,9 @@ class MailPreferences(models.Model):
 
     @property
     def is_allowed_send_mails(self):
-        return settings.DO_SEND_EMAILS and \
-               self.subscription != settings.NOTIFICATIONS_NO_MAILS and \
-               (not settings.DO_SEND_STAFF_ONLY or self.user.is_staff)
+        is_subscriber = self.subscription != settings.NOTIFICATIONS_NO_MAILS
+        is_staff_only = not settings.DO_SEND_STAFF_ONLY or self.user.is_staff
+        return settings.DO_SEND_EMAILS and is_subscriber and is_staff_only
 
     def is_wanted_action(self, action: int) -> bool:
         return str(action) in self.wanted_actions.split(',')
