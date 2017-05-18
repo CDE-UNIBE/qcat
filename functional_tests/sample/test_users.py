@@ -1,26 +1,24 @@
-from accounts.middleware import WocatAuthenticationMiddleware
 from django.conf import settings
+from django.contrib.auth import get_user_model
 from django.contrib.auth.models import Group
 from django.core.urlresolvers import reverse
-
-from accounts.tests.test_models import create_new_user
-from questionnaire.tests.test_models import get_valid_questionnaire
-
-from functional_tests.base import FunctionalTest
-
-from accounts.client import Typo3Client
-from accounts.models import User
-from accounts.tests.test_views import accounts_route_questionnaires
 from django.test.utils import override_settings
+
+from model_mommy import mommy
 from selenium.webdriver.common.by import By
 from selenium.webdriver.support.ui import WebDriverWait
 from selenium.webdriver.support import expected_conditions as EC
 from unittest.mock import patch
 
+from accounts.client import Typo3Client
+from accounts.middleware import WocatAuthenticationMiddleware
+from accounts.models import User
+from accounts.tests.test_models import create_new_user
+from functional_tests.base import FunctionalTest
+from functional_tests.sample.test_search import LIST_EMPTY_RESULTS_TEXT
+from questionnaire.tests.test_models import get_valid_questionnaire
 from questionnaire.models import Questionnaire
-from sample.tests.test_views import (
-    route_questionnaire_new_step,
-)
+from sample.tests.test_views import route_questionnaire_new_step
 
 TEST_INDEX_PREFIX = 'qcat_test_prefix_'
 
@@ -224,6 +222,72 @@ class UserTest(FunctionalTest):
         # self.findBy(
         #     'xpath', '//p[@class="questionnaire-list-empty" and contains('
         #     'text(), "No WOCAT and UNCCD SLM practices found.")]')
+
+    def test_questionnaire_search(self, mock_get_user_id):
+        alice = mommy.make(
+            get_user_model(),
+            is_superuser=True
+        )
+        # alice the superuser logs in and heads to the my slm data page
+        self.doLogin(alice)
+        self.browser.get(
+            '{base_url}{accounts}'.format(
+                base_url=self.live_server_url,
+                accounts=reverse('account_questionnaires')
+            )
+        )
+
+        # she finds the search element and starts typing
+        search_input = self.findBy('id', 'search-questionnaires')
+        search_input.send_keys('terra')
+
+        # the results box has one entry (a draft)
+        self.wait_for('class_name', 'ui-autocomplete')
+        results = self.findBy(
+            'class_name', 'ui-autocomplete'
+        ).find_elements_by_tag_name('li')
+
+        self.assertEqual(len(results), 2)
+        self.assertEqual(
+            results[0].text, 'Foo 1 (Draft)\nCompiler: Foo Bar | Country:'
+        )
+        # clicking on the element takes alice to the detail page.
+        results[0].click()
+        self.assertEqual(
+            self.browser.current_url,
+            '{}/en/sample/view/sample_1/'.format(self.live_server_url)
+        )
+
+        # she realises it's a premature click and heads back, searching again
+        self.browser.back()
+        search_input = self.findBy('id', 'search-questionnaires')
+        search_input.send_keys('terra')
+        self.wait_for('class_name', 'ui-autocomplete')
+        results = self.findBy(
+            'class_name', 'ui-autocomplete'
+        ).find_elements_by_tag_name('li')
+        # she clicks on the 'see all results' link
+        results[1].click()
+        self.assertEqual(
+            self.browser.current_url,
+            '{base_url}{search_results_view}?term=terra'.format(
+                base_url=self.live_server_url,
+                search_results_view=reverse('staff_questionnaires_search')
+            )
+        )
+
+    def test_questionnaire_search_normal_user(self, mock_get_user_id):
+        # bob is not a superuser and visits the my slm data page
+        bob = mommy.make(get_user_model())
+        self.doLogin(bob)
+        self.browser.get(
+            '{base_url}{accounts}'.format(
+                base_url=self.live_server_url,
+                accounts=reverse('account_questionnaires')
+            )
+        )
+        # but the search bar is not shown.
+        self.findByNot('id', 'search-questionnaires')
 
 
 @override_settings(ES_INDEX_PREFIX=TEST_INDEX_PREFIX)
@@ -920,8 +984,8 @@ class UserDetailTest(FunctionalTest):
             'Focal Point')
         )
         # The user has no public questionnaires
-        self.findBy('xpath', '//*[contains(text(), "No WOCAT and UNCCD SLM '
-                             'practices found.")]')
+        self.findBy('xpath', '//*[contains(text(), "{}")]'.format(
+            LIST_EMPTY_RESULTS_TEXT))
 
         # Now jay logs in
         self.doLogin(user=self.user)

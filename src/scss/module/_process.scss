@@ -64,7 +64,7 @@
   margin-top: 1rem;
 }
 
-#review-edit-assigned-users {
+.review-assigned-users {
 
   margin-top: 1rem;
 
@@ -109,7 +109,7 @@
     }
   }
 
-  #button-assign {
+  #button-assign, #button-change-compiler {
     margin-top: rem-calc(6);
   }
 }

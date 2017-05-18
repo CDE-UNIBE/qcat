@@ -200,6 +200,32 @@ fieldset div h3.form-subcategory {
 fieldset div:first-of-type h3.form-subcategory {
   margin-top: 0;
 }
+fieldset div h3.h3-small-margin-top {
+  margin-top: rem-calc(12);
+}
+fieldset.fieldset-titled legend {
+  padding-top: rem-calc(12);
+}
+fieldset.fieldset-titled {
+  padding: rem-calc(14) rem-calc(14) 0;
+}
+
+.list-item-flex {
+  display: flex;
+
+  div:not(:last-of-type) {
+    padding-right: 2rem;
+  }
+
+  .flex-grow {
+    flex-grow: 10;
+  }
+
+  .single-item:not(:first-child) {
+    margin-top: 0;
+  }
+}
+
 img.output-image-cb {
   width: 50px;
   height: 50px;

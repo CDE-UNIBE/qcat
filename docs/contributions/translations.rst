@@ -76,12 +76,22 @@ they are in the translation as well. Sometimes, they contain keywords (such as
 ``{user}``) which **should not be translated** but added identically to the
 translation.
 
+Other placeholders are ``%(keyword)s``. Again, these need to be added exactly as
+they are in the translation.
+
+.. hint::
+    In Transifex, these placeholders are highlighted in the original text in an
+    orange color. You can click on these highlighted placeholders in the original
+    text to copy them to the translation.
+
 +-----------------------------------------------------+---------------------------------------------------------------+
 | Text                                                | Translation text                                              |
 +=====================================================+===============================================================+
 | Welcome {}                                          | Bienvenue {}                                                  |
 +-----------------------------------------------------+---------------------------------------------------------------+
 | This questionnaire is locked for editing by {user}. | Ce questionnaire est verrouillé pour modification par {user}. |
++-----------------------------------------------------+---------------------------------------------------------------+
+| View this %(questionnaire_type)s.                   | Voir cette %(questionnaire_type)s.                            |
 +-----------------------------------------------------+---------------------------------------------------------------+
 
 

@@ -15,6 +15,7 @@ from search.index import delete_all_indices
 from search.tests.test_index import create_temp_indices
 
 
+LIST_EMPTY_RESULTS_TEXT = 'No results found.'
 TEST_INDEX_PREFIX = 'qcat_test_prefix_'
 
 

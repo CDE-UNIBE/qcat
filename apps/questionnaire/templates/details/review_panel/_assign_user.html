@@ -40,7 +40,7 @@
       {% if not users %}<i class="is-muted">{{ assign_empty }}</i>{% endif %}
     </div>
   <div class="row">
-    <div class="medium-12 columns hide" id="review-edit-assigned-users">
+    <div class="medium-12 columns hide review-assigned-users" id="review-edit-assigned-users">
       <a href="#" class="review-assigned-users-toggle js-toggle-edit-assigned-users">
         <svg class="icon"><use xlink:href="#icon-cross" xmlns:xlink="http://www.w3.org/1999/xlink"></use></svg>
       </a>
@@ -63,6 +63,7 @@
                  placeholder="{% trans 'Search user' %}"
                  data-search-url="{% url 'user_search' %}"
                  data-display-container="review-new-user"
+                 data-user-input-field="user-id"
                  data-translation-no-results="{% trans 'No results found' %}"
                  data-translation-too-many-results="{% trans 'Too many results found, please narrow the search' %}">
         </div>

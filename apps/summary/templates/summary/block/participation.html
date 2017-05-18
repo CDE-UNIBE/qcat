@@ -27,6 +27,9 @@
   <div class="small-12 columns">
     <p>
       <img src="{{ content.flow_chart.url }}" align="left" class="flow-chart">
+      {% if content.flow_chart.author %}
+        <div class="img-caption">{{ content.flow_chart.author }}</div>
+      {% endif %}
       <p><strong>{{ content.flow_chart.title }}</strong></p>
       {{ content.flow_chart.text|linebreaksbr }}
     </p>

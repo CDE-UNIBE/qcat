@@ -4,7 +4,7 @@ from django.views.generic import TemplateView
 
 from questionnaire.views import QuestionnaireEditView, QuestionnaireStepView, \
     QuestionnaireMapView, QuestionnaireCheckModulesView, \
-    QuestionnaireAddModule, QuestionnaireView
+    QuestionnaireAddModule, QuestionnaireView, QuestionnaireLinkSearchView
 
 urlpatterns = patterns(
     '',
@@ -24,8 +24,8 @@ urlpatterns = patterns(
         name='questionnaire_edit'),
     url(r'^edit/(?P<identifier>[^/]+)/(?P<step>\w+)/$',
         QuestionnaireStepView.as_view(url_namespace=__package__), name='questionnaire_new_step'),
-    url(r'^search/links/$', 'sample.views.questionnaire_link_search',
-        name='questionnaire_link_search'),
+    url(r'^search/links/$', QuestionnaireLinkSearchView.as_view(
+        configuration_code=__package__), name='questionnaire_link_search'),
     url(r'^list/$', 'sample.views.questionnaire_list',
         name='questionnaire_list'),
     url(r'^list_partial/$', 'sample.views.questionnaire_list_partial',

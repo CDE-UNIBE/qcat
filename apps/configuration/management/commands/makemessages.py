@@ -4,6 +4,7 @@ import subprocess
 
 from django.core.management import call_command
 from django.core.management.commands import makemessages
+from django.db.models import Q
 
 from configuration.models import Translation, TranslationContent
 
@@ -83,6 +84,11 @@ class Command(makemessages.Command):
         # translation per configuration and keyword is ensured.
         all_translations = TranslationContent.objects.exclude(
             text=''
+        ).filter(
+            Q(translation__category__isnull=False) |
+            Q(translation__questiongroup__isnull=False) |
+            Q(translation__key__isnull=False) |
+            Q(translation__value__isnull=False)
         ).order_by(
             'translation__id', 'id'
         )

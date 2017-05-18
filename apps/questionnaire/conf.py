@@ -38,6 +38,16 @@ class QuestionnaireConf(AppConf):
         'original_locale',
     ]
 
+    # A list of questiongroups which can be filtered for every configuration.
+    # Those configurations that do not have these questiongroups will receive a
+    # mapping for them anyways (to prevent ES crashes).
+    GLOBAL_QUESTIONGROUPS = [
+        'qg_name',
+        'qg_location',
+        'qg_funding_project',
+        'qg_funding_institution',
+    ]
+
     # Mapping for consistent field names on the API. See
     # questionnaire.api.views.QuestionnaireAPIMixin for usage.
     API_CHANGE_KEYS = {

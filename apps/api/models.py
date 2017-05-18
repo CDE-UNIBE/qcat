@@ -34,22 +34,23 @@ class RequestLog(models.Model):
         if settings.PIWIK_SITE_ID and settings.PIWIK_URL and settings.PIWIK_AUTH_TOKEN:
             # List of all attributes: http://developer.piwik.org/api-reference/tracking-api
             with contextlib.suppress(RequestException):
-                response = requests.post(settings.PIWIK_URL, data={
-                    'idsite': settings.PIWIK_SITE_ID,
-                    'rec': '1',  # fixed value according to API docs
-                    'url': self.resource,
-                    'action_name': 'API',
-                    '_id': self.user_id,
-                    'rand': random.random(),
-                    'apiv': settings.PIWIK_API_VERSION,  # only version 1 available as of now
-                    'token_auth': settings.PIWIK_AUTH_TOKEN,
-                    'uid': self.user.email
-                })
+                response = requests.post(
+                    '{}piwik.php'.format(settings.PIWIK_URL), data={
+                        'idsite': settings.PIWIK_SITE_ID,
+                        'rec': '1',  # fixed value according to API docs
+                        'url': self.resource,
+                        'action_name': 'API',
+                        '_id': self.user_id,
+                        'rand': random.random(),
+                        'apiv': settings.PIWIK_API_VERSION,  # only version 1 available as of now
+                        'token_auth': settings.PIWIK_AUTH_TOKEN,
+                        'uid': self.user.email
+                    }
+                )
                 if not response.ok:
                     logger.error(
-                        'Error submitting API requests to piwik: {r.content} (status: {r.status_code})'.format(
-                            r=response
-                        ))
+                        'Error submitting API requests to piwik: {r.content} '
+                        '(status: {r.status_code})'.format(r=response))
 
 
 class NoteToken(Token):

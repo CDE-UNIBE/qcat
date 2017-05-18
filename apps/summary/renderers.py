@@ -5,10 +5,13 @@ import itertools
 import os
 
 from django.conf import settings
-from django.utils.translation import ugettext_lazy as _, get_language
+from django.contrib.auth import get_user_model
+from django.core.exceptions import ObjectDoesNotExist
+from django.templatetags.static import static
+from django.utils.translation import ugettext_lazy as _
+from easy_thumbnails.exceptions import InvalidImageFormatError
 from easy_thumbnails.files import get_thumbnailer
 
-from configuration.cache import get_configuration
 from configuration.configuration import QuestionnaireConfiguration
 from configuration.models import Project, Institution
 from questionnaire.models import Questionnaire, QuestionnaireLink
@@ -41,7 +44,8 @@ class SummaryRenderer:
     n_a = 'n.a.'
 
     def __init__(self, config: QuestionnaireConfiguration,
-                 questionnaire: Questionnaire, base_url: str, **data):
+                 questionnaire: Questionnaire, quality: str,
+                 base_url: str, **data):
         """
         Load full (raw) data in the same way that it is created for the API and
         apply data transformations/parsing to self.data.
@@ -51,6 +55,7 @@ class SummaryRenderer:
             questionnaire=questionnaire, n_a=self.n_a, **data
         ).data
         self.questionnaire = questionnaire
+        self.quality = quality
         self.data = dict(self.get_data())
         self.base_url = base_url
 
@@ -89,8 +94,8 @@ class GlobalValuesMixin:
         Get the first 'value' for given key from the data.
         """
         try:
-            val = self.raw_data[key][0][value] if value else self.raw_data[key]
-            return val if val else ''
+            value = self.raw_data[key][0][value] if value else self.raw_data[key]
+            return value or ''
         except (AttributeError, TypeError, KeyError, IndexError):
             return ''
 
@@ -109,21 +114,24 @@ class GlobalValuesMixin:
         pictures element.
         """
         image = self.raw_data_getter('header_image_image')
-        text = '{caption} {remarks} ({name})'.format(
-            caption=self.raw_data_getter('header_image_caption'),
-            remarks=self.raw_data_getter('header_image_remarks'),
-            name=self.raw_data_getter('header_image_photographer')
-        )
-        if not image:
+        if image:
+            photographer = self.raw_data_getter('header_image_photographer')
+            text = '{caption} {remarks} {name}'.format(
+                caption=self.raw_data_getter('header_image_caption'),
+                remarks=self.raw_data_getter('header_image_remarks'),
+                name='({})'.format(photographer) if photographer else ''
+            )
+        else:
             image_urls = self.raw_data_getter('images_image', value='')
+            text = ''
             if image_urls:
                 # use first element from photos, and remove it from the photos
                 # element, so the images on display are the 'next' images.
                 image_element = self.raw_data['images_image'].pop(0)
                 image = image_element['value']
+                text = self.get_image_caption(0)
                 self.raw_data['images_caption'].pop(0)
                 self.raw_data['images_photographer'].pop(0)
-                text = self.get_image_caption(0)
 
         return {
             'partials': {
@@ -135,7 +143,11 @@ class GlobalValuesMixin:
                 },
                 'caption': {
                     'text': text
-                }
+                },
+                'wocat_logo_url': '{base_url}{logo}'.format(
+                    base_url=self.base_url.rstrip('/'),
+                    logo=static('assets/img/wocat_logo_text_shadow.svg')
+                )
             }
         }
 
@@ -158,6 +170,7 @@ class GlobalValuesMixin:
         }
 
     def images(self):
+        # note: data from images_image may be popped in header_image.
         image_urls = self.raw_data_getter('images_image', value='')
         images = []
         if image_urls:
@@ -192,32 +205,40 @@ class GlobalValuesMixin:
             return ''
 
     def conclusion(self):
-        # Combine answers from two questions: strengths compiler and landuser
-        pro_list = [
-            {'text': item['value']} for item in
-            (self.raw_data_getter('strengths_compiler', value='') or []) +
-            (self.raw_data_getter('strengths_landuser', value='') or [])
-            ]
+        land_users_view = _("land user's view")
+        compilers_view = _("compiler’s or other key resource person’s view")
 
+        # Combine answers from two questions: strengths compiler and landuser
+        pro_compilers = self._get_conclusion_row(
+            suffix=land_users_view,
+            rows=self.raw_data_getter('strengths_compiler', value='')
+        )
+        pro_landusers = self._get_conclusion_row(
+            suffix=compilers_view,
+            rows=self.raw_data_getter('strengths_landuser', value='')
+        )
         # combine answers from two questions: weaknesses compiler + landuser -
         # and get the 'overcome' value as subtext
         weaknesses_list = []
-        weaknesses_datasets = {
-            'weaknesses_compiler': 'weaknesses_compiler_overcome',
-            'weaknesses_landuser': 'weaknesses_landuser_overcome',
-        }
-        for key_name, overcome_name in weaknesses_datasets.items():
+        weaknesses_datasets = [
+            ('weaknesses_compiler', 'weaknesses_compiler_overcome', compilers_view),
+            ('weaknesses_landuser', 'weaknesses_landuser_overcome', land_users_view)
+        ]
+        for key_name, overcome_name, suffix in weaknesses_datasets:
             for index, item in enumerate(self.raw_data_getter(key_name, value='')):
+                subtext = self.raw_data_getter(overcome_name, value='')[index].get('value', '')
                 weaknesses_list.append({
                     'text': item['value'],
-                    'subtext': self.raw_data_getter(overcome_name, value='')[index].get('value')
+                    'subtext': subtext,
+                    'suffix': f'({suffix})'
                 })
+
         return {
             'title': _('Conclusions and lessons learnt'),
             'partials': {
                 'pro': {
                     'label': _('Strengths'),
-                    'items': pro_list
+                    'items': itertools.chain(pro_compilers, pro_landusers)
                 },
                 'contra': {
                     'label': _('Weaknesses/ disadvantages/ risks'),
@@ -226,6 +247,10 @@ class GlobalValuesMixin:
                 }
             }
         }
+
+    def _get_conclusion_row(self, suffix: str, rows: []):
+        for row in rows:
+            yield {'text': f'{row["value"]} ({suffix})'}
 
     def references(self):
         return {
@@ -242,7 +267,7 @@ class GlobalValuesMixin:
                     'items': self.get_reference_resource_persons()
                 },
                 'more': {
-                    'title': _('More about this case study'),
+                    'title': _('Full description in the WOCAT database'),
                     'css_class': 'bullets',
                     'items': self.get_reference_links()
                 },
@@ -255,6 +280,22 @@ class GlobalValuesMixin:
                     'title': _('Key references'),
                     'css_class': 'bullets',
                     'items': self.get_reference_articles()
+                },
+                'web_references': {
+                    'title': _('Links to relevant information which is available online'),
+                    'css_class': 'bullets',
+                    'items': self.get_reference_web()
+                },
+                'project_institution': {
+                    'title': _('Documentation was faciliated by'),
+                    'projects': {
+                        'title': _('Project'),
+                        'items': self.get_projects(),
+                    },
+                    'institutions': {
+                        'title': _('Institution'),
+                        'items': self.get_institutions(),
+                    }
                 }
             }
         }
@@ -287,26 +328,47 @@ class GlobalValuesMixin:
         person_lastnames = self.raw_data_getter(
             'references_resourceperson_lastname', value=''
         )
+        person_emails = self.raw_data_getter(
+            'references_person_email', value=''
+        )
         person_user_id = self.raw_data_getter(
             'references_resourceperson_user_id', value=''
         )
+        person_types_other = self.raw_data_getter(
+            'references_person_type_other', value=''
+        )
+
         for index, person in enumerate(resoureperson_types):
             if person_user_id[index] and isinstance(person_user_id[index], dict):
                 name = person_user_id[index].get('value')
+                try:
+                    email = get_user_model().objects.get(
+                        id=person_user_id[index]['user_id']
+                    ).email
+                except ObjectDoesNotExist:
+                    email = ''
             elif len(person_firstnames) >= index and len(person_lastnames) >= index:
                 name = '{first_name} {last_name}'.format(
                     first_name=person_firstnames[index].get('value') or '',
                     last_name=person_lastnames[index].get('value') or ''
                 )
+                email=person_emails[index].get('value') or ''
             else:
                 continue
-            yield {'text': '{name} - {type}'.format(
-                name=name, type=', '.join(person.get('values', [])))}
+
+            if person.get('values'):
+                person_type = ', '.join(person.get('values', []))
+            else:
+                person_type = person_types_other[index].get('value', '')
+
+            yield {'text': '{name}{email} - {type}'.format(
+                name=name,
+                email=' ({})'.format(email) if email else '',
+                type=person_type)}
 
     def get_reference_links(self):
-        text = _('This data in the WOCAT database: <a href="{base_url}{url}">'
-                 '{base_url}{url}</a>'.format(
-            base_url=self.base_url,
+        text = _('<a href="{base_url}{url}">{base_url}{url}</a>'.format(
+            base_url=self.base_url.rstrip('/'),
             url=self.questionnaire.get_absolute_url())
         )
 
@@ -320,14 +382,15 @@ class GlobalValuesMixin:
                 vimeo_id[0].get('value')
             )
             link_items.append({
-                'text': _('Video: <a href="{vimeo_url}">{vimeo_url}</a>'.format(
-                    vimeo_url=vimeo_url))
+                'text': '{video}: <a href="{vimeo_url}">{vimeo_url}</a>'.format(
+                    video=_('Video'), vimeo_url=vimeo_url)
             })
         return link_items or [{'text': self.n_a}]
 
     def get_reference_linked_questionnaires(self):
         links = QuestionnaireLink.objects.filter(
-            from_questionnaire=self.questionnaire
+            from_questionnaire=self.questionnaire,
+            to_questionnaire__status=settings.QUESTIONNAIRE_PUBLIC
         )
         if not links.exists():
             yield {'text': self.n_a}
@@ -335,14 +398,12 @@ class GlobalValuesMixin:
         for link in links:
             config = link.to_questionnaire.configurations.filter(active=True)
             if config.exists():
-                configuration = get_configuration(config.first().code)
-                name = configuration.get_questionnaire_name(
-                    link.to_questionnaire.data
-                )
-                yield {'text': '{config}: {name} (<a href="{url}">{url}</a>)'.format(
+                yield {'text': '{config}: {name} <a href="{base_url}{url}">'
+                               '{base_url}{url}</a>'.format(
                     config=config.first().name,
-                    name=name.get(get_language(), name.get('en')),
-                    url=self.base_url + link.to_questionnaire.get_absolute_url())
+                    name=link.to_questionnaire.get_name(),
+                    base_url=self.base_url.rstrip('/'),
+                    url=link.to_questionnaire.get_absolute_url())
                 }
 
     def get_reference_articles(self):
@@ -355,27 +416,28 @@ class GlobalValuesMixin:
                     title=title['value'],
                     source=sources[index].get('value') or '' if sources[index] else '')}
 
-    def project_institution(self):
+    def get_projects(self):
+        ids = self.raw_data.get('project_institution_project', [])
+        return self._get_project_institutions(Project, *ids)
 
-        project_ids = [project['value'] for project in
-                       self.raw_data.get('project_institution_project', [])]
+    def get_institutions(self):
+        ids = self.raw_data.get('project_institution_institution', [])
+        return self._get_project_institutions(Institution, *ids)
 
-        projects = Project.objects.filter(id__in=project_ids)
+    def _get_project_institutions(self, model, *elements):
+        ids = [item['value'] for item in elements]
+        objects = model.objects.filter(id__in=ids)
+        object_list = [{'title': elem.name, 'logo': ''} for elem in objects]
+        return object_list or [{'title': self.n_a}]
 
-        institution_ids = [institution['value'] for institution in
-                       self.raw_data.get('project_institution_institution', [])]
-        institutions = Institution.objects.filter(id__in=institution_ids)
-
-        if projects or institutions:
-            items = [{'title': elem.name, 'logo': ''} for elem in
-                     itertools.chain(projects, institutions)]
-        else:
-            items = [{'title': self.n_a}]
-
-        return {
-            'title': _('Documentation was faciliated by'),
-            'items': items
-        }
+    def get_reference_web(self):
+        titles = self.raw_data_getter('references_links_title', value='')
+        urls = self.raw_data_getter('references_links_url', value='')
+        for index, title in enumerate(titles):
+            yield {
+                'title': title.get('value'),
+                'url': urls[index].get('value')
+            }
 
     def get_thumbnail_url(self, image: str, option_key: str) -> str:
         """
@@ -390,11 +452,13 @@ class GlobalValuesMixin:
             root=settings.MEDIA_ROOT,
             image=image[len(settings.MEDIA_URL):]
         )
-
-        thumbnail = get_thumbnailer(full_name).get_thumbnail(
-            settings.THUMBNAIL_ALIASES['summary'][option_key],
-            silent_template_exception=True
-        )
+        try:
+            thumbnail = get_thumbnailer(full_name).get_thumbnail(
+                settings.THUMBNAIL_ALIASES['summary'][self.quality][option_key],
+                silent_template_exception=True
+            )
+        except InvalidImageFormatError:
+            return ''
 
         # Return full url, not file path. Use 'abspath' to remove '..' from dir.
         return thumbnail.url.replace(
@@ -404,6 +468,12 @@ class GlobalValuesMixin:
                 upload=settings.MEDIA_URL
             )
         )
+
+    def get_location_values(self, *fields):
+        for field in fields:
+            value = self.raw_data_getter(field)
+            if value:
+                yield value
 
 
 class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
@@ -419,7 +489,7 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 'classification', 'technical_drawing', 'establishment_costs',
                 'natural_environment', 'human_environment', 'impacts', 
                 'climate_change', 'adoption_adaptation', 'conclusion',
-                'references', 'project_institution']
+                'references']
 
     def header_image(self):
         data = super().header_image()
@@ -431,9 +501,15 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
         return data
 
     def location(self):
-        title_keys = ['location_further', 'location_state_province', 'country']
-        title_text = [self.raw_data_getter(key) for key in title_keys if
-                      self.raw_data_getter(key)]
+        year = self.raw_data_getter('location_implementation_year')
+        decade = self.string_from_list('location_implementation_decade')
+        spread = self.string_from_list('location_spread')
+        spread_area = self.string_from_list('location_spread_area')
+        if spread_area:
+            spread = '{spread} (approx. {area})'.format(
+                spread=spread,
+                area=spread_area
+            )
 
         return {
             'title': _('Location'),
@@ -447,22 +523,28 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 'infos': {
                     'location': {
                         'title': _('Location'),
-                        'text': ', '.join(title_text)
+                        'text': ', '.join(self.get_location_values(
+                            'location_further', 'location_state_province', 'country')
+                        )
                     },
                     'sites': {
-                        'title': 'No. of Technology sites analysed',
+                        'title': _('No. of Technology sites analysed'),
                         'text': self.string_from_list('location_sites_considered')
                     },
+                    'geo_reference_title': _('Geo-reference of selected sites'),
                     'geo_reference': self.raw_data.get(
                         'location_map_data', {}
                     ).get('coordinates') or [self.n_a],
                     'spread': {
                         'title': _('Spread of the Technology'),
-                        'text': self.string_from_list('location_spread')
+                        'text': spread
                     },
                     'date': {
                         'title': _('Date of implementation'),
-                        'text': self.string_from_list('location_implementation_decade')
+                        'text': '{year}{decade}'.format(
+                            year=year,
+                            decade='; {}'.format(decade) if year and decade else decade
+                        )
                     },
                     'introduction': {
                         'title': _('Type of introduction'),
@@ -478,16 +560,30 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 'classification_slm_group', value=''
             )[0].get('values')
             # structure as required for an unordered list.
-            slm_group = [{'text': text for text in slm_group}]
+            slm_group = [{'text': text} for text in slm_group]
         except (KeyError, IndexError):
-            slm_group = None
+            slm_group = []
+
+        slm_group_other = self.raw_data_getter('classification_slm_group_other')
+        if slm_group_other:
+            slm_group.append({'text': slm_group_other})
+
+        # append various 'other' fields
+        purpose = list(self.raw_data.get('classification_main_purpose'))
+        purpose_other = self.raw_data_getter('classification_main_purpose_other')
+        if purpose_other:
+            purpose.append({'highlighted': True, 'text': purpose_other})
+        water_supply = list(self.raw_data.get('classification_watersupply'))
+        water_supply_other = self.raw_data_getter('classification_watersupply_other')
+        if water_supply_other:
+            water_supply.append({'highlighted': True, 'text': water_supply_other})
 
         return {
             'title': _('Classification of the Technology'),
             'partials': {
                 'main_purpose': {
                     'title': _('Main purpose'),
-                    'partials': self.raw_data.get('classification_main_purpose')
+                    'partials': purpose
                 },
                 'landuse': {
                     'title': _('Land use'),
@@ -496,19 +592,19 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 'water_supply': {
                     'title': _('Water supply'),
                     'partials': {
-                        'list': self.raw_data.get('classification_watersupply'),
+                        'list': water_supply,
                         'text': [
                             {
                                 'title': _('Number of growing seasons per year'),
-                                'text': self.string_from_list('classification_growing_seasons')
+                                'text': self.string_from_list('classification_growing_seasons') or self.n_a
                             },
                             {
                                 'title': _('Land use before implementation of the Technology'),
-                                'text': self.raw_data_getter('classification_lu_before')
+                                'text': self.raw_data_getter('classification_lu_before') or self.n_a
                             },
                             {
                                 'title': _('Livestock density'),
-                                'text': self.raw_data_getter('classification_livestock')
+                                'text': self.raw_data_getter('classification_livestock') or self.n_a
                             }
                         ]
                     }
@@ -523,41 +619,72 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 },
                 'slm_group': {
                     'title': _('SLM group'),
-                    'partials': slm_group
+                    'partials': slm_group or self.n_a
                 },
                 'measures': {
                     'title': _('SLM measures'),
-                    'partials': self.raw_data.get('classification_measures')
+                    'partials': self.raw_data.get('classification_measures') or self.n_a
                 }
             }
         }
 
     def technical_drawing(self):
+        drawing_files = self.raw_data.get('tech_drawing_image', [])
+        drawing_authors = self.raw_data.get('tech_drawing_author', [])
+        images = []
+
+        for index, file in enumerate(drawing_files):
+            preview = file.get('preview_image')
+            if preview:
+                try:
+                    author = drawing_authors[index]['value']
+                except (KeyError, IndexError):
+                    author = ''
+                images.append({
+                    'url': self.get_thumbnail_url(preview, 'flow_chart'),
+                    'author': _('Author: {}').format(author) if author else ''
+                })
+
         return {
             'title': _('Technical drawing'),
             'partials': {
                 'title': _('Technical specifications'),
                 'text': self.raw_data_getter('tech_drawing_text'),
-                'urls': [img['value'] for img in self.raw_data.get('tech_drawing_image', [])]
+                'images': images
             }
         }
 
     def establishment_costs(self):
         base = self.string_from_list('establishment_cost_calculation_base')
+
         perarea_size = self.raw_data_getter('establishment_perarea_size')
-        conversion = self.raw_data_getter('establishment_unit_conversion')
-        conversion_text = '; conversion factor to one hectare: {}'.format(conversion)
-        explanation = ' (size and area unit: {size}{conversion_text})'.format(
-            size=perarea_size,
-            conversion_text=conversion_text if conversion else ''
-        )
+        perarea_conversion = self.raw_data_getter('establishment_perarea_unit_conversion')
+
+        perunit_unit = self.raw_data_getter('establishment_perunit_unit')
+        perunit_volume = self.raw_data_getter('establishment_perunit_volume')
+
+        # chose explanation text according to selected calculation type.
+        extra = ''
+        if perarea_size:
+            conversion_text = _('; conversion factor to one hectare: <b>1 ha = {}</b>').format(perarea_conversion)
+            extra = _(' (size and area unit: <b>{}</b>{})').format(
+                perarea_size,
+                conversion_text if perarea_conversion else ''
+            )
+        if perunit_unit:
+            perunit_text = _('unit: <b>{}</b>').format(perunit_unit)
+            extra = ' ({}{})'.format(
+                perunit_text,
+                ' volume, length: <b>{}</b>'.format(perunit_volume) if perunit_volume else ''
+            )
+
         calculation = '{base}{extra}'.format(
             base=base,
-            extra=explanation if perarea_size else ''
+            extra=extra
         )
         usd = self.string_from_list('establishment_dollar')
         national_currency = self.raw_data_getter('establishment_national_currency')
-        currency = usd or national_currency or 'n.a'
+        currency = usd or national_currency or self.n_a
         wage = self.raw_data_getter('establishment_average_wage') or _('n.a')
         exchange_rate = self.raw_data_getter('establishment_exchange_rate') or _('n.a')
 
@@ -568,28 +695,28 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                     'title': _('Calculation of inputs and costs'),
                     'items': [
                         _('Costs are calculated: {}').format(calculation),
-                        _('Currency used for cost calculation: {}').format(currency),
-                        _('Exchange rate (to USD): {}.').format(exchange_rate),
-                        _('Average wage cost of hired labour: {}.').format(wage)
+                        _('Currency used for cost calculation: <b>{}</b>').format(currency),
+                        _('Exchange rate (to USD): 1 USD = {}.').format(exchange_rate),
+                        _('Average wage cost of hired labour per day: {}.').format(wage)
                     ],
                     'main_factors': self.raw_data_getter('establishment_determinate_factors') or self.n_a,
                     'main_factors_title': _('Most important factors affecting the costs')
                 },
                 'establishment': {
                     'title': _('Establishment activities'),
-                    'list': self._get_establishment_list_items('establishment'),
+                    'list': list(self._get_establishment_list_items('establishment')),
                     'comment': self.raw_data_getter('establishment_input_comments'),
                     'table': {
-                        'title': _('Establishment inputs and costs per ha'),
+                        'title': _('Establishment inputs and costs'),
                         **self.raw_data.get('establishment_input', {}),
                     }
                 },
                 'maintenance': {
                     'title': _('Maintenance activities'),
-                    'list': self._get_establishment_list_items('maintenance'),
+                    'list': list(self._get_establishment_list_items('maintenance')),
                     'comment': self.raw_data_getter('establishment_maintenance_comments'),
                     'table': {
-                        'title': 'Maintenance inputs and costs per ha',
+                        'title': _('Maintenance inputs and costs'),
                         **self.raw_data.get('maintenance_input', {}),
                     }
                 }
@@ -597,6 +724,9 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
         }
 
     def _get_establishment_list_items(self, content_type: str):
+        """
+        Combine measure type and timing for identical question groups.
+        """
         activity = 'establishment_{}_activities'.format(content_type)
         measure = 'establishment_{}_measure_type'.format(content_type)
         timing = 'establishment_{}_timing'.format(content_type)
@@ -626,6 +756,21 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 )}
 
     def natural_environment(self):
+        specifications = ''
+        climate_zone_text = self.raw_data_getter('natural_env_climate_zone_text')
+        rainfall = self.raw_data_getter('natural_env_rainfall_annual')
+        rainfall_specifications = self.raw_data_getter('natural_env_rainfall_specifications')
+        meteostation = self.raw_data_getter('natural_env_rainfall_meteostation')
+
+        if rainfall:
+            rainfall = _('Average annual rainfall in mm: {}').format(rainfall)
+        if meteostation:
+            meteostation = _('Name of the meteorological station: {}').format(meteostation)
+
+        for text in [rainfall, rainfall_specifications, meteostation, climate_zone_text]:
+            if text:
+                specifications += text + '\n'
+
         return {
             'title': _('Natural environment'),
             'partials': {
@@ -639,7 +784,7 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 },
                 'specifications': {
                     'title': _('Specifications on climate'),
-                    'text': self.raw_data_getter('natural_env_climate_zone_text')
+                    'text': specifications or self.n_a
                 },
                 'slope': {
                     'title': _('Slope'),
@@ -801,12 +946,12 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
     def climate_change(self):
         return {
             'title': _('Climate change'),
-            'subtitle': _('Exposure and sensitivity of the Technology to gradual climate change and climate-related extremes (disasters).'),
             'labels': {
-                'left': 'Climate change/ extreme to which the Technology is exposed',
-                'right': 'How does the Technology cope with these changes/ extremes'
+                'left': _('Climate change/ extreme to which the Technology is exposed'),
+                'right': _('How the Technology copes with these changes/extremes')
             },
-            'partials': self.raw_data.get('climate_change')
+            'partials': self.raw_data.get('climate_change'),
+            'comment': self.raw_data_getter('climate_change_comment')
         }
     
     def adoption_adaptation(self):
@@ -821,9 +966,12 @@ class TechnologyFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                     'title': _('Of all those who have adopted the Technology, how many have did so without receiving material incentives?'),
                     'items': self.raw_data.get('adoption_spontaneously')
                 },
+                'quantify': {
+                    'title': _('Number of households and/ or area covered'),
+                    'text': self.raw_data_getter('adoption_quantify')
+                },
                 'adaptation': {
-                    'title': _('Adaptation'),
-                    'text': _('Has the Technology been modified recently to adapt to changing conditions?'),
+                    'title': _('Has the Technology been modified recently to adapt to changing conditions?'),
                     'items': self.raw_data.get('adoption_modified')
                 },
                 'condition': {
@@ -861,24 +1009,23 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 'infos': {
                     'location': {
                         'title': _('Location'),
-                        'text': '{detail}, {prov}, {country}'.format(
-                            detail=self.raw_data_getter('location_further'),
-                            prov=self.raw_data_getter('location_state_province'),
-                            country=self.raw_data_getter('country')
-                        )
+                        'text': ', '.join(self.get_location_values(
+                            'location_further', 'location_state_province', 'country'
+                        ))
                     },
+                    'geo_reference_title': _('Geo-reference of selected sites'),
                     'geo_reference': self.raw_data.get(
                         'location_map_data', {}
                     ).get('coordinates') or [self.n_a],
                     'start_date': {
                         'title': _('Initiation date'),
                         'text': self.raw_data_getter(
-                            'location_initiation_year') or _('unknown')
+                            'location_initiation_year') or self.n_a
                     },
                     'end_date': {
                         'title': _('Year of termination'),
                         'text': self.raw_data_getter(
-                            'location_termination_year') or '*'
+                            'location_termination_year') or self.n_a
                     },
                     'introduction': {
                         'title': _('Type of Approach'),
@@ -911,6 +1058,7 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
 
     def participation(self):
         lead_agency = self.raw_data_getter('participation_lead_agency')
+        author = self.raw_data_getter('participation_flowchart_author')
         return {
             'title': _('Participation and roles of stakeholders involved'),
             'partials': {
@@ -932,6 +1080,7 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                         image=self.raw_data_getter('participation_flowchart_file'),
                         option_key='flow_chart'
                     ),
+                    'author': _('Author: {}').format(author) if author else '',
                     'title': _('Flow chart'),
                     'text': self.raw_data_getter('participation_flowchart_text')
                 },
@@ -961,7 +1110,7 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
             'title': _('Technical support, capacity building, and knowledge management'),
             'partials': {
                 'activities': {
-                    'title': 'The following activities or services have been part of the approach',
+                    'title': _('The following activities or services have been part of the approach'),
                     'items': [
                         self.raw_data.get('tech_support_training_is_training'),
                         self.raw_data.get('tech_support_advisory_is_advisory'),
@@ -971,7 +1120,7 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                     ]
                 },
                 'training': {
-                    'title': 'Capacity building/ training',
+                    'title': _('Capacity building/ training'),
                     'elements': [
                         {
                             'title': _('Training was provided to the following stakeholders'),
@@ -1001,23 +1150,24 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                     'title': _('Institution strengthening'),
                     'subtitle': {
                         'title': _('Institutions have been strengthened / established'),
-                        'value': self.raw_data.get('tech_support_institutions_is_institution', {}).get('value')
+                        'value': self.raw_data.get('tech_support_institutions_is_institution', {}).get('value'),
                     },
-                    'elements': [
-                        {
-                            'title': _('at the following level'),
-                            'items': self.raw_data.get('tech_support_institutions_level'),
-                            'description': self.raw_data_getter('tech_support_institutions_describe')
-                        },
-                        {
-                            'title': _('Type of support'),
-                            'items': self.raw_data.get('tech_support_institutions_support'),
-                            'description': self.raw_data_getter('tech_support_institutions_support_specify')
-                        }
-                    ]
+                    'level': {
+                        'title': _('at the following level'),
+                        'items': self.raw_data.get('tech_support_institutions_level'),
+                        'description': self.raw_data_getter('tech_support_institutions_describe'),
+                        'comment_title': _('Describe institution, roles and responsibilities, members, etc.'),
+                    },
+                    'support_type': {
+                        'title': _('Type of support'),
+                        'items': self.raw_data.get('tech_support_institutions_support'),
+                        'description': self.raw_data_getter('tech_support_institutions_support_specify'),
+                        'comment_title': _('Further details')
+                    }
                 },
                 'monitoring': {
                     'title': _('Monitoring and evaluation'),
+                    'comment': self.raw_data_getter('tech_support_monitoring_comment'),
                     'intended': monitoring_intention
                 },
                 'research': {
@@ -1034,18 +1184,18 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
             'title': _('Financing and external material support'),
             'partials': {
                 'budget': {
-                    'title': _('Annual budget for the SLM component of the Approach'),
+                    'title': _('Annual budget in USD for the SLM component'),
                     'items': self.raw_data.get('financing_budget'),
                     'description': self.raw_data_getter('financing_budget_comments'),
                     'addendum': _('Precise annual budget: {}'.format(self.raw_data_getter('financing_budget_precise') or self.n_a))
                 },
                 'services': {
-                    'title': _('The following services of incentives have been provided to land users'),
+                    'title': _('The following services or incentives have been provided to land users'),
                     'items': [
                         self.raw_data.get('financing_is_financing'),
+                        self.raw_data.get('financing_subsidies', {}).get('is_subsidised'),
                         self.raw_data.get('financing_is_credit'),
                         self.raw_data.get('financing_is_other'),
-                        self.raw_data.get('financing_subsidies', {}).get('is_subsidised')
                     ]
                 },
                 'subsidies': {
@@ -1054,16 +1204,20 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                         'title': _('Labour by land users was'),
                         'items': self.raw_data.get('financing_labour')
                     },
+                    'material_support': {
+                        'title': _('Financial/ material support provided to land users'),
+                        'text': self.raw_data_getter('financing_material_support'),
+                    },
                     'credit': {
-                        'title': 'Credit',
+                        'title': _('Credit'),
                         'items': [
-                            'Conditions: {}'.format(self.raw_data_getter(
+                            _('Conditions: {}').format(self.raw_data_getter(
                                 'financing_credit_conditions') or self.n_a
                             ),
-                            'Credit providers: {}'.format(self.raw_data_getter(
+                            _('Credit providers: {}').format(self.raw_data_getter(
                                 'financing_credit_provider') or self.n_a
                             ),
-                            'Credit receivers: {}'.format(self.raw_data_getter(
+                            _('Credit receivers: {}').format(self.raw_data_getter(
                                 'financing_credit_receiver') or self.n_a
                             )
                         ]
@@ -1087,12 +1241,13 @@ class ApproachesFullSummaryRenderer(GlobalValuesMixin, SummaryRenderer):
                 },
                 'motivation': {
                     'title': _('Main motivation of land users to implement SLM'),
-                    'items': self.raw_data.get('impacts_motivation')
+                    'items': self.raw_data.get('impacts_motivation') or self.n_a
                 },
                 'sustainability': {
                     'title': _('Sustainability of Approach activities'),
                     'subtitle': _('Can the land users sustain what hat been implemented through the Approach (without external support)?'),
-                    'items': self.raw_data.get('impacts_sustainability')
+                    'items': self.raw_data.get('impacts_sustainability'),
+                    'comment': self.raw_data_getter('impacts_sustainability_comments')
                 }
             }
         }

@@ -11,6 +11,7 @@ from unittest.mock import patch
 
 from accounts.models import User
 from functional_tests.base import FunctionalTest
+from questionnaire.views import QuestionnaireLinkSearchView
 from sample.tests.test_views import (
     route_questionnaire_details,
     route_questionnaire_list,
@@ -2900,7 +2901,7 @@ class QuestionnaireLinkTest(FunctionalTest):
             'xpath', '//*[text()[contains(.,"This is the first key")]]')
         self.findBy('xpath', '//*[text()[contains(.,"Foo")]]')
 
-    @patch('samplemulti.views.generic_questionnaire_link_search')
+    @patch.object(QuestionnaireLinkSearchView, 'dispatch')
     def test_search(self, mock_link_search):
 
         # Alice logs in
@@ -2915,10 +2916,7 @@ class QuestionnaireLinkTest(FunctionalTest):
         search_field = self.findBy(
             'xpath', '//input[contains(@class, "link-search-field")][1]')
 
-        mock_link_search.return_value = JsonResponse({
-            'total': 0,
-            'data': []
-        })
+        mock_link_search.return_value = JsonResponse([], safe=False)
         search_field.send_keys('foo')
         self.wait_for('xpath', '//li[@class="ui-menu-item"]')
         # She enters the name of link which does not exist. She gets a
@@ -2938,11 +2936,9 @@ class QuestionnaireLinkTest(FunctionalTest):
             'code': 'bar',
             'display': 'foo',
             'value': 1,
+            'id': 1,
         }] * 15
-        mock_link_search.return_value = JsonResponse({
-            'total': 15,
-            'data': data
-        })
+        mock_link_search.return_value = JsonResponse(data, safe=False)
 
         search_field.send_keys('foo')
         self.wait_for('xpath', '//li[@class="ui-menu-item"]')

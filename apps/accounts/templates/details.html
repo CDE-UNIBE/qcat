@@ -81,9 +81,14 @@
         loadQuestionnaires(1);
 
         questionnairesContainer.on('click', 'ul.pagination li a', function() {
-          loadQuestionnaires($(this).data('page'));
+          var page = getURLParameter($(this).attr('href'), 'page');
+          loadQuestionnaires(page);
           return false;
         });
+
+        function getURLParameter(url, name) {
+          return (RegExp(name + '=' + '(.+?)(&|$)').exec(url)||[,null])[1];
+        }
       });
       </script>
     {% endcompress %}

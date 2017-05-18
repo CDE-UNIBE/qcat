@@ -7,7 +7,7 @@
     <b>{{ content.infos.location.title }}:</b> {{ content.infos.location.text }}
   </p>
   <p><b>{{ content.infos.sites.title }}:</b> {{ content.infos.sites.text }}</p>
-  <div class="paragraph"><b>{% trans "Geo-reference" %}</b>
+  <div class="paragraph"><b>{{ content.infos.geo_reference_title }}</b>
     <ul class="bullets">
       {% for list_item in content.infos.geo_reference %}
         <li>

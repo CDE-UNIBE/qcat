@@ -1,67 +1,83 @@
-from collections import namedtuple
-
 from django.db.models import Lookup, Field
 
 
 @Field.register_lookup
-class JsonDataContains(Lookup):
+class DataLookup(Lookup):
     """
-    Custom lookup for json in the form of:
+    Lookup for values inside the data JSON of questionnaires. This is based on a
+    text search inside the JSON of the questiongroup. It is therefore not
+    extremely fast and also quite fuzzy!
 
-    data->key->language ILIKE '%my-search-term%'
+    A dictionary with the following lookup parameters is required:
 
-    Will be made more generic if required. Use the namedtuple below to pass
-    the arguments.
+        "lookup_by": string, required. Either "string" or "key_value". Either
+        look for a string (case insensitive) or look for a specific key/value
+        pair (case sensitive).
 
-    This can't be used right now to replace the raw sql query on
-    questionnaire.utils.query_questionnaires_for_link as Lateral joins are not
-    yet nicely handled in django: https://code.djangoproject.com/ticket/25590
+        "questiongroup": string, required. The keyword of the questiongroup
+          which is looked up.
 
-    Lookup as of now:
+        "value": string, required. The value which is looked for.
 
-    qs = Questionnaire.objects.filter(
-        # force left outer join
-        Q(questionnairemembership__questionnaire_id__isnull=True) |
-        Q(questionnairemembership__questionnaire_id__isnull=False)
-    ).filter(
-        questionnaireconfiguration__configuration__code='sample'
-    ).filter(
-        status=4
-    ).filter(
-        reduce(operator.or_, json_filters)
-    ).annotate(max_id=Max('id'))
+         "key": string, required when using "lookup_by": "key_value". Can
+           optionally be used for "lookup_by": "string" to narrow the search.
 
-    Don't use this for user input, as data isn't escaped properly!
+        "lookup_in_list": boolean, defaults to False. By default, only the first
+          element of a data list is searched. If set to True, the entire data
+          list of the questiongroup is searched.
+
+    Use as:
+        Questionnaire.objects.filter(data__qs_data=lookup_params)
+
+        where lookup_params is a dict containing the lookup parameters.
     """
-    lookup_name = 'json_contains'
+    lookup_name = 'qs_data'
 
-    def as_sql(self, compiler, connection):
+    def as_postgresql(self, compiler, connection):
         lhs, lhs_params = self.process_lhs(compiler, connection)
         rhs, rhs_params = self.process_rhs(compiler, connection)
-        qs = "{lhs}{json_lookup} ILIKE '%%{term}%%'".format(
-            lhs=lhs,
-            json_lookup=self.get_key_structure(rhs_params[0].json_keys),
-            term=rhs_params[0].term,
-        )
-        return qs, []
 
-    def key_structure(self, keys):
-        """
-        Return a string that can be used for the lookup in form
-        ->{key}-->{last_key}
+        # Check general format of params
+        if len(rhs_params) != 1 or not isinstance(rhs_params[0], dict):
+            raise NotImplementedError('RHS params must be exactly 1 dict.')
+        lookup_params = rhs_params[0]
 
-        Args:
-            keys: list of keys
+        # Check required params
+        value = lookup_params.get('value')
+        if value is None:
+            raise Exception('Value must be provided.')
+        questiongroup = lookup_params.get('questiongroup')
+        if questiongroup is None:
+            raise Exception('Questiongroup must be provided.')
 
-        Returns:
-            string
-        """
-        key_structure = ''
-        for key in keys[:1]:
-            key_structure += '->{key}'.format(key)
+        # Additional params
+        key = lookup_params.get('key')
+        lookup_in_list = lookup_params.get('lookup_in_list', False)
+
+        lookup_by = lookup_params.get('lookup_by')
+        if lookup_by == 'string':
+            # Lookup for simple string search.
+            if key is not None:
+                params = '%"{}":%{}%'.format(key, value)
+            else:
+                params = '%{}%'.format(value)
+            query_operator = 'ILIKE'
+
+        elif lookup_by == 'key_value':
+            # Lookup for exact key/value matches.
+            if key is None:
+                raise Exception(
+                    'Key must be provided when using lookup_by "key_value".')
+            params = '%"{}": "{}"%'.format(key, value)
+            query_operator = 'LIKE'
+
         else:
-            key_structure += '-->{key}'.format(keys[-1])
-        return key_structure
+            raise NotImplementedError(
+                'Unknown lookup_by "{}".'.format(lookup_by))
 
+        if lookup_in_list is True:
+            element_accessor = " ->> '{}'".format(questiongroup)
+        else:
+            element_accessor = " -> '{}' ->> 0".format(questiongroup)
 
-JsonLookup = namedtuple('JsonLookup', 'questiongroup json_keys value')
+        return " ".join([lhs, element_accessor, query_operator, rhs]), [params]

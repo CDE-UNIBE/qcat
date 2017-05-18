@@ -1,9 +1,8 @@
-from unittest.mock import patch
-
 from django.test.utils import override_settings
 
 from configuration.cache import get_configuration
 from configuration.configuration import QuestionnaireConfiguration
+from configuration.utils import create_new_code
 from qcat.tests import TestCase
 from questionnaire.serializers import QuestionnaireSerializer
 
@@ -24,10 +23,12 @@ class SerializerTest(TestCase):
         self.questionnaire.add_link(linked_questionnaire)
         self.questionnaire.save()
         self.serialized = QuestionnaireSerializer(self.questionnaire).data  # noqa
+        code = create_new_code(self.questionnaire, 'sample')
+        linked_code = create_new_code(linked_questionnaire, 'sample')
         self.expected = {
             'original_locale': 'en',
             'flags': [],
-            'code': 'sample_0',
+            'code': code,
             'name': {'en': 'Unknown name'},
             'data': {'foo': 'bar'},
             'compilers': [{'name': 'bar foo', 'id': 1}],
@@ -35,7 +36,7 @@ class SerializerTest(TestCase):
             'editors': [],
             'links': [
                 {
-                    'code': 'sample_1',
+                    'code': linked_code,
                     'configuration': 'sample',
                     'name': {
                         'default': 'Unknown name',
@@ -44,14 +45,14 @@ class SerializerTest(TestCase):
                         'es': 'Unknown name',
                     },
                     'url': {
-                        'default': '/en/sample/view/sample_1/',
-                        'en': '/en/sample/view/sample_1/',
-                        'fr': '/fr/sample/view/sample_1/',
-                        'es': '/es/sample/view/sample_1/',
+                        'default': '/en/sample/view/{}/'.format(linked_code),
+                        'en': '/en/sample/view/{}/'.format(linked_code),
+                        'fr': '/fr/sample/view/{}/'.format(linked_code),
+                        'es': '/es/sample/view/{}/'.format(linked_code),
                     }
                 }
             ],
-            'url': '/en/sample/view/sample_0/',
+            'url': '/en/sample/view/{}/'.format(code),
             'serializer_config': 'sample',
             'translations': ['en'],
             'status': ['draft', 'Draft'],

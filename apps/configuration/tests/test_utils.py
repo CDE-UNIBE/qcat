@@ -1,4 +1,4 @@
-from unittest.mock import patch
+from unittest.mock import patch, Mock
 
 from django.db.models import Q
 
@@ -87,17 +87,16 @@ class GetConfigurationIndexFilterTest(TestCase):
 
 class CreateNewCodeTest(TestCase):
 
-    def test_returns_new_code(self):
-        code = create_new_code('configuration', {})
+    def test_returns_string(self):
+        obj = Mock()
+        code = create_new_code(obj, 'sample')
         self.assertIsInstance(code, str)
 
-    def test_always_returns_non_existing_code(self):
-        Configuration(code='sample', active=True).save()
-        questionnaire = get_valid_questionnaire()
-        questionnaire.code = 'sample_1'
-        questionnaire.save()
-        code = create_new_code('sample', {})
-        self.assertEqual(Questionnaire.objects.filter(code=code).count(), 0)
+    def test_returns_new_code(self):
+        obj = Mock()
+        obj.id = '99'
+        code = create_new_code(obj, 'sample')
+        self.assertEqual(code, 'sample_99')
 
 
 class GetChoicesFromModelTest(TestCase):

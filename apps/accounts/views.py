@@ -5,6 +5,7 @@ from django.contrib.auth import (
 )
 from django.contrib.auth.decorators import login_required
 from django.core.urlresolvers import reverse
+from django.db import IntegrityError
 from django.db.models import Q
 from django.http import Http404
 from django.http import HttpResponseRedirect, JsonResponse
@@ -12,18 +13,19 @@ from django.shortcuts import get_object_or_404, redirect, resolve_url
 from django.utils.decorators import method_decorator
 from django.utils.http import is_safe_url
 from django.utils.timezone import now
-from django.utils.translation import ugettext as _
+from django.utils.translation import ugettext as _, get_language
 from django.views.decorators.cache import never_cache
 from django.views.decorators.debug import sensitive_post_parameters
 from django.views.decorators.http import require_POST
-from django.views.generic import DetailView
-from django.views.generic import FormView
+from django.views.generic import View, DetailView, FormView
 
 from braces.views import LoginRequiredMixin
+from configuration.cache import get_configuration
 from configuration.configuration import QuestionnaireConfiguration
 from django.views.generic import ListView
-from questionnaire.models import STATUSES
+from questionnaire.models import Questionnaire, STATUSES
 from questionnaire.utils import query_questionnaires, get_list_values
+from questionnaire.view_utils import get_paginator, get_pagination_parameters
 from .client import typo3_client
 from .conf import settings
 from .forms import WocatAuthenticationForm
@@ -193,7 +195,7 @@ class QuestionnaireListMixin(ListView):
     Mixin for paginated questionnaires.
     """
     template_name = 'questionnaire_status_list.html'
-    paginate_by = 3
+    per_page = 3  # use qcats default paginator
 
     @property
     def status(self):
@@ -220,9 +222,17 @@ class QuestionnaireListMixin(ListView):
         parents get_context_data method.
         """
         context = super().get_context_data(**kwargs)
-        context['list_values'] = get_list_values(
-            questionnaire_objects=context['object_list'], status_filter=Q()
+        questionnaires, paginator = get_paginator(
+            objects=context['object_list'],
+            page=self.request.GET.get('page', 1),
+            limit=self.per_page
         )
+        context['list_values'] = get_list_values(
+            questionnaire_objects=questionnaires, status_filter=Q()
+        )
+        context.update(**get_pagination_parameters(
+            self.request, paginator, questionnaires
+        ))
         return context
 
 
@@ -241,9 +251,7 @@ class PublicQuestionnaireListView(QuestionnaireListMixin):
 
 class QuestionnaireStatusListView(LoginRequiredMixin, QuestionnaireListMixin):
     """
-    Display all questionnaires for the requested status. Results are paginated,
-    the paginator shows a specified (paginator_quicklink_range) number of pages
-    before and after the current page.
+    Display all questionnaires for the requested status. Results are paginated.
     """
 
     @property
@@ -272,6 +280,77 @@ class QuestionnaireStatusListView(LoginRequiredMixin, QuestionnaireListMixin):
         important.
         """
         return {'user': self.request.user if self.status is settings.QUESTIONNAIRE_PUBLIC else None}  # noqa
+
+
+class QuestionnaireSearchView(LoginRequiredMixin, ListView):
+    """
+    Search questionnaires by name or compiler, this is only allowed for staff
+    members.
+
+    The same logic is used for both ajax-response for the autocomplete-element
+    and classic list view.
+    """
+    template_name = 'questionnaire_search.html'
+
+    def dispatch(self, request, *args, **kwargs):
+        response = super().dispatch(request, *args, **kwargs)
+        if not self.request.user.is_staff:
+            raise Http404
+        return response
+
+    def get(self, request, *args, **kwargs):
+        if self.request.is_ajax():
+            return JsonResponse(list(self.get_json_data()), safe=False)
+        else:
+            return super().get(request, *args, **kwargs)
+
+    def get_paginate_by(self, queryset):
+        return 10 if self.request.is_ajax() else 20
+
+    def get_queryset(self):
+        term = self.request.GET.get('term', '')
+        data_lookup_params = {
+            'questiongroup': 'qg_name',
+            'lookup_by': 'string',
+            'value': term,
+        }
+        return Questionnaire.with_status.not_deleted().filter(
+            Q(questionnairemembership__user__firstname__icontains=term) |
+            Q(questionnairemembership__user__lastname__icontains=term) |
+            Q(data__qs_data=data_lookup_params),
+        ).distinct()
+
+    def get_json_data(self):
+        """
+        Structure as required for frontend.
+        """
+        questionnaires = self.get_queryset()[:self.get_paginate_by(None)]
+        for questionnaire in questionnaires:
+            yield {
+                'name': questionnaire.get_name(),
+                'url': questionnaire.get_absolute_url(),
+                'compilers': ', '.join(
+                    [compiler['name'] for compiler in questionnaire.compilers]
+                ),
+                'country': ', '.join(questionnaire.get_countries()),
+                'status': questionnaire.get_status_display(),
+                'id': questionnaire.id,
+            }
+
+    def get_context_data(self, **kwargs):
+        context = super().get_context_data(**kwargs)
+        questionnaires, paginator = get_paginator(
+            objects=self.get_queryset(),
+            page=self.request.GET.get('page', 1),
+            limit=self.get_paginate_by(None)
+        )
+        context['list_values'] = get_list_values(
+            questionnaire_objects=questionnaires, status_filter=Q()
+        )
+        context.update(**get_pagination_parameters(
+            self.request, paginator, questionnaires
+        ))
+        return context
 
 
 def logout(request):
@@ -362,7 +441,14 @@ def user_update(request):
         return JsonResponse(ret)
 
     # Update (or insert) the user details in the local database
-    user, created = User.objects.get_or_create(pk=user_uid)
+    try:
+        user, created = User.objects.get_or_create(
+            pk=user_uid, email=user_info.get('username'))
+    except IntegrityError:
+        ret['message'] = 'Duplicate email address "{}"'.format(
+            user_info.get('username'))
+        return JsonResponse(ret)
+
     typo3_client.update_user(user, user_info)
 
     ret = {

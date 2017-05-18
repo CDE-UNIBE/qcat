@@ -1,7 +1,7 @@
 from django.conf.urls import url, patterns
 
 from questionnaire.views import QuestionnaireEditView, QuestionnaireStepView, \
-    QuestionnaireMapView, QuestionnaireView
+    QuestionnaireMapView, QuestionnaireView, QuestionnaireLinkSearchView
 
 urlpatterns = patterns(
     '',
@@ -23,8 +23,8 @@ urlpatterns = patterns(
     url(r'^edit/(?P<identifier>[^/]+)/(?P<step>\w+)/$',
         QuestionnaireStepView.as_view(url_namespace=__package__),
         name='questionnaire_new_step'),
-    url(r'^search/links/$', 'approaches.views.questionnaire_link_search',
-        name='questionnaire_link_search'),
+    url(r'^search/links/$', QuestionnaireLinkSearchView.as_view(
+        configuration_code=__package__), name='questionnaire_link_search'),
     url(r'^list/$', 'approaches.views.questionnaire_list',
         name='questionnaire_list'),
     url(r'^list_partial/$', 'approaches.views.questionnaire_list_partial',

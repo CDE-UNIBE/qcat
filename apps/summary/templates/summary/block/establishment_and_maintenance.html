@@ -11,7 +11,7 @@
           <h5>{{ content.introduction.title }}</h5>
           <ul class="bullets">
             {% for list_item in content.introduction.items  %}
-              <li>{{ list_item }}</li>
+              <li>{{ list_item|safe }}</li>
             {% endfor %}
           </ul>
         </div>
@@ -26,7 +26,11 @@
 <div class="row">
   <div class="small-12 columns">
     <h5>{{ content.establishment.title }}</h5>
-    {% include 'summary/partial/ordered_list.html' with class="numbers" list_items=content.establishment.list %}
+    {% if content.establishment.list %}
+      {% include 'summary/partial/ordered_list.html' with class="numbers" list_items=content.establishment.list %}
+    {% else %}
+      n.a.
+    {% endif %}
     {{ content.establishment.comment }}
   </div>
   {% if content.establishment.table.partials %}
@@ -38,7 +42,11 @@
 <div class="row">
   <div class="small-12 columns">
     <h5>{{ content.maintenance.title }}</h5>
-    {% include 'summary/partial/ordered_list.html' with class="numbers" list_items=content.maintenance.list %}
+    {% if content.maintenance.list %}
+      {% include 'summary/partial/ordered_list.html' with class="numbers" list_items=content.maintenance.list %}
+    {% else %}
+      n.a.
+    {% endif %}
     {{ content.maintenance.comment }}
   </div>
   {% if content.maintenance.table.partials %}

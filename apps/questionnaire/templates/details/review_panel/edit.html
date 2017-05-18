@@ -42,6 +42,10 @@
   {% include 'details/review_panel/_delete.html' %}
 {% endif %}
 
+{% if 'change_compiler' in review_config.permissions %}
+  {% include 'details/review_panel/_change_compiler.html' %}
+{% endif %}
+
 {% if 'flag_unccd_questionnaire' in review_config.permissions %}
   <div class="row process-action">
     <div class="medium-2 columns">

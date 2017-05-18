@@ -5,7 +5,7 @@ app.
 from django.conf.urls import patterns, url
 
 from .views import LoginView, ProfileView, QuestionnaireStatusListView, \
-    PublicQuestionnaireListView, UserDetailView
+    PublicQuestionnaireListView, UserDetailView, QuestionnaireSearchView
 
 urlpatterns = patterns(
     '',
@@ -26,4 +26,9 @@ urlpatterns = patterns(
         QuestionnaireStatusListView.as_view(),
         name='questionnaires_status_list'
         ),
+    url(r'^questionnaires/search/$',
+        QuestionnaireSearchView.as_view(),
+        name='staff_questionnaires_search'
+        ),
+
 )

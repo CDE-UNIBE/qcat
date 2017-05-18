@@ -801,6 +801,11 @@ def get_link_data(linked_objects, link_configuration_code=None):
             configuration = original_configuration.code
 
         link_list = links.get(link_configuration_code, [])
+
+        if next((item for item in link_list if item['code'] == link.code),
+                None) is not None:
+            continue
+
         link_list.append({
             'id': link.id,
             'code': link.code,
@@ -1017,115 +1022,6 @@ def get_query_status_filter(request):
     status_filter |= Q(status=settings.QUESTIONNAIRE_PUBLIC)
 
     return status_filter
-
-
-def get_raw_link_status_filter(request):
-    """
-    Create a raw SQL filter to be used for database queries when
-    searching for links.
-
-    The following filters are applied:
-
-    * Not logged in users always only see "public" Questionnaires.
-      However, normally, users must be logged in to search for links so
-      this may never occur.
-
-    * Logged in users see all "public" Questionnaires, along with their
-      own "draft" and "pending" versions.
-
-    Args:
-        ``request`` (django.http.HttpRequest): The request object.
-
-    Returns:
-        ``str``. A raw SQL filter string.
-    """
-    # Public always only sees "public"
-    status_filter = 'questionnaire_questionnaire.status = 4'
-
-    # Logged in users see all "public", along with their own "draft" and
-    # "pending".
-    if request.user.is_authenticated():
-        status_filter = """
-            questionnaire_questionnaire.status = 4 OR (
-                questionnaire_questionnaire.status IN (1, 2, 3) AND
-                questionnaire_questionnairemembership.user_id = %s)
-        """ % request.user.id
-
-    return status_filter
-
-
-def query_questionnaires_for_link(request, configuration, q, limit=10):
-    """
-    Do a raw SQL search in the JSON data field of questionnaires. Only
-    questionnaires of the configuration's keyword are returned. The
-    search happens in the name field as defined by the parameter
-    ``is_name`` in the configuration, searched in any language. The same
-    term can also be used to search by code of the questionnaire.
-
-    The links are filtered by a status query.
-
-    .. seealso::
-        :func:`get_raw_link_status_filter`
-
-    Args:
-        ``configuration``
-        (configuration.configuration.QuestionnaireConfiguration): The
-        questionnaire configuration.
-
-        ``q`` (str): The query string (to search either in the name or
-        the code of the questionnaire).
-
-    Kwargs:
-        ``limit`` (int): Limit the number of results to return.
-
-    Returns:
-
-        ``int``. The total count of results encountered in the database.
-
-        ``list``. The list of results. The length of this list may be
-        smaller than the total count because of the limit applied.
-    """
-    question_keyword, questiongroup_keyword = configuration.get_name_keywords()
-    if question_keyword is None or questiongroup_keyword is None:
-        return 0, []
-
-    query = """
-        SELECT MAX(questionnaire_questionnaire.id) AS id
-        FROM questionnaire_questionnaire
-            LEFT OUTER JOIN questionnaire_questionnairemembership ON
-                questionnaire_questionnaire.id =
-                questionnaire_questionnairemembership.questionnaire_id
-            JOIN questionnaire_questionnaireconfiguration ON
-                questionnaire_questionnaire.id =
-                questionnaire_questionnaireconfiguration.questionnaire_id
-            JOIN configuration_configuration ON
-                questionnaire_questionnaireconfiguration.configuration_id =
-                configuration_configuration.id
-                AND configuration_configuration.code = %s,
-        lateral jsonb_array_elements(
-            questionnaire_questionnaire.data -> %s) questiongroup
-        WHERE ("""
-    args = [configuration.keyword, questiongroup_keyword]
-
-    query += get_raw_link_status_filter(request) + ') AND ('
-
-    languages = [l[0] for l in settings.LANGUAGES]
-    for lang in languages:
-        query += """
-            questiongroup->%s->>'{}' ILIKE %s OR
-        """.format(lang)
-        args.extend([question_keyword, '%{}%'.format(q)])
-
-    query += """
-        questionnaire_questionnaire.code LIKE %s)
-        GROUP BY questionnaire_questionnaire.code;
-    """
-    args.extend(['%{}%'.format(q)])
-
-    results = Questionnaire.objects.raw(query, args)
-    total = len(list(results))
-
-    return total, results[:limit]
 
 
 def get_list_values(
@@ -1540,6 +1436,94 @@ def handle_review_actions(request, questionnaire_object, configuration_code):
             messages.error(request, 'At least one of the assigned users could '
                                     'not be updated.')
 
+    elif request.POST.get('change-compiler'):
+
+        if 'change_compiler' not in permissions:
+            messages.error(
+                request, 'You do not have permissions to change the compiler!')
+            return
+
+        # Check the submitted user IDs
+        user_ids_string = request.POST.get('compiler-id', '').split(',')
+
+        if len(user_ids_string) > 1:
+            messages.error(request, 'You can only choose one new compiler!')
+            return
+
+        try:
+            user_id = int(user_ids_string[0])
+        except ValueError:
+            messages.error(request, 'No valid new compiler provided!')
+            return
+
+        # Create or update the user
+        user_info = typo3_client.get_user_information(user_id)
+        if not user_info:
+            messages.error(
+                request,
+                'No user information found for user {}'.format(user_id))
+        new_compiler, created = User.objects.get_or_create(pk=user_id)
+        typo3_client.update_user(new_compiler, user_info)
+
+        role_compiler = settings.QUESTIONNAIRE_COMPILER
+
+        # Get old compiler(s) -> there should always only be 1
+        previous_compilers = questionnaire_object.get_users_by_role(
+            role_compiler)
+
+        # Do not do anything if the new compiler is already the old compiler.
+        if previous_compilers == [new_compiler]:
+            messages.info(request, 'This user is already the compiler.')
+            return
+
+        # Remove old compiler
+        for pc in previous_compilers:
+            change_member.send(
+                sender=settings.NOTIFICATIONS_REMOVE_MEMBER,
+                questionnaire=questionnaire_object,
+                user=request.user,
+                affected=pc,
+                role=role_compiler
+            )
+            questionnaire_object.remove_user(pc, role_compiler)
+
+        # Add new compiler
+        questionnaire_object.add_user(new_compiler, role_compiler)
+        change_member.send(
+            sender=settings.NOTIFICATIONS_ADD_MEMBER,
+            questionnaire=questionnaire_object,
+            user=request.user,
+            affected=new_compiler,
+            role=role_compiler
+        )
+
+        keep_as_editor = request.POST.get('change-compiler-keep-editor')
+        if keep_as_editor is not None:
+            # Keep the previous compiler as editor
+            role_editor = settings.QUESTIONNAIRE_EDITOR
+            editors = questionnaire_object.get_users_by_role(role_editor)
+            for pc in previous_compilers:
+                # Do not add again if already an editor
+                if pc in editors:
+                    continue
+                questionnaire_object.add_user(pc, role_editor)
+                change_member.send(
+                    sender=settings.NOTIFICATIONS_ADD_MEMBER,
+                    questionnaire=questionnaire_object,
+                    user=request.user,
+                    affected=pc,
+                    role=role_editor
+                )
+
+        # Re-add the questionnaire to ES if it was public
+        if questionnaire_object.status == settings.QUESTIONNAIRE_PUBLIC:
+            delete_questionnaires_from_es(
+                configuration_code, [questionnaire_object])
+            added, errors = put_questionnaire_data(
+                configuration_code, [questionnaire_object])
+
+        messages.success(request, 'Compiler was changed successfully')
+
     elif request.POST.get('flag-unccd'):
 
         if 'flag_unccd_questionnaire' not in permissions:
@@ -1746,11 +1730,18 @@ def prepare_list_values(data, config, **kwargs):
         links[link_configuration].append(link)
     data['links'] = links
 
-    # 'translations' must not list the currently active language
+    # Get the display values of the translation languages
     if data['translations']:
-        data['translations'] = [
-            [lang, str(languages[lang])] for lang in data['translations'] if lang != language
-        ]
+        translations = []
+        for lang in data['translations']:
+            # 'translations' must not list the currently active language
+            if lang == language:
+                continue
+            if lang in languages.keys():
+                translations.append([lang, str(languages[lang])])
+            else:
+                translations.append([lang, lang])
+        data['translations'] = translations
 
     data['configuration'] = config.keyword
     # dict key is suffixed with _property when called from the serializer.

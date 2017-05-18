@@ -16,7 +16,7 @@
 {% load list_to_columns %}
 
 {% if config.label %}
-  <h5>{{ config.label }}</h5><br>
+  <h5 class="{% if config.label_class %}{{ config.label_class }}{% endif %}">{{ config.label }}</h5>
 {% endif %}
 <div{% if config.questiongroup_condition %} id="{{ config.questiongroup_condition }}"{% endif %} class="questiongroup{% if config.numbered %} questiongroup-numbered-{{ config.numbered }}{% endif %}{% if config.numbered == 'prefix' %} sortable{% endif %}">
   {% include "form/helptext.html" with helptext=config.helptext helptext_length=config.helptext_length %}

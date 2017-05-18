@@ -193,7 +193,7 @@ class ActionContextQuerySet(models.QuerySet):
         This is intentionally rather permissive, only a basic 'loose' connection
         to the questionnaire is required.
         """
-        if not user or user.is_authenticated() or not questionnaire_code:
+        if not user or not user.is_authenticated() or not questionnaire_code:
             return False
 
         has_global_permissions = self.get_questionnaires_for_permissions(user)

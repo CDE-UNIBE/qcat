@@ -2,22 +2,77 @@
   <div class="small-12 columns">
     {% include 'summary/partial/title_bar.html' with title=title %}
   </div>
-  <div class="small-6 columns">
+</div>
+
+<div class="row avoidbreak">
+  <div class="small-12 columns">
     <h5>{{ content.compiler.title }}</h5>
     {% include 'summary/partial/unordered_list.html' with list_items=content.compiler.items%}
+  </div>
+</div>
+<div class="row avoidbreak">
+  <div class="small-12 columns">
     <h5>{{ content.people.title }}</h5>
     {% include 'summary/partial/unordered_list.html' with list_items=content.people.items %}
   </div>
-  <div class="small-6 columns">
-    <h5>{{ content.references.title }}</h5>
-    {% include 'summary/partial/unordered_list.html' with list_items=content.references.items %}
-    </div>
 </div>
+
 <div class="row avoidbreak">
   <div class="small-12 columns">
     <h5>{{ content.more.title }}</h5>
     {% include 'summary/partial/unordered_list.html' with list_items=content.more.items %}
+  </div>
+</div>
+<div class="row avoidbreak">
+  <div class="small-12 columns">
     <h5>{{ content.links.title }}</h5>
     {% include 'summary/partial/unordered_list.html' with list_items=content.links.items %}
+  </div>
+</div>
+
+<div class="row compact">
+  <div class="small-12 columns">
+    <h5>{{ content.project_institution.title }}</h5>
+  </div>
+</div>
+
+<div class="row">
+  <div class="small-12 columns">
+  {{ content.project_institution.institutions.title }}
+  <ul class="bullets">
+    {% for list_item in content.project_institution.institutions.items  %}
+{#    <div class="institution_logo">#}
+{#      <img src="{{ list_item.logo }}" alt="logo">#}
+      <li>{{ list_item.title }}</li>
+{#    </div>#}
+      {% endfor %}
+    </ul>
+    {{ content.project_institution.projects.title }}
+    <ul class="bullets">
+      {% for list_item in content.project_institution.projects.items  %}
+        <li>{{ list_item.title }}</li>
+      {% endfor %}
+    </ul>
+  </div>
+</div>
+
+<div class="row avoidbreak">
+  <div class="small-12 columns">
+    <div class="calculation_costs_section references">
+      <div class="row compact">
+        <div class="small-12 columns">
+          <h5>{{ content.references.title }}</h5>
+          {% include 'summary/partial/unordered_list.html' with list_items=content.references.items %}
+        </div>
+        <div class="small-12 columns">
+          <h5>{{ content.web_references.title }}</h5>
+            <ul>
+            {% for element in content.web_references.items %}
+              <li>{{ element.title }}: <a href="{{ element.url }}" target="_blank">{{ element.url }}</a></li>
+            {% endfor %}
+            </ul>
+        </div>
+      </div>
+    </div>
   </div>
 </div>

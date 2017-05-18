@@ -5,7 +5,6 @@ from unittest.mock import patch, Mock
 from accounts.tests.test_models import create_new_user
 from qcat.tests import TestCase
 from technologies.views import (
-    questionnaire_link_search,
     questionnaire_list,
     questionnaire_list_partial,
 )
@@ -71,15 +70,6 @@ class HomeTest(TestCase):
         res = self.client.get(self.url)
         self.assertTemplateUsed(res, 'technologies/questionnaire/list.html')
         self.assertEqual(res.status_code, 200)
-
-
-class QuestionnaireLinkSearchTest(TestCase):
-
-    @patch('technologies.views.generic_questionnaire_link_search')
-    def test_calls_generic_function(self, mock_generic_function):
-        request = Mock()
-        questionnaire_link_search(request)
-        mock_generic_function.assert_called_once_with(request, 'technologies')
 
 
 class QuestionnaireNewTest(TestCase):

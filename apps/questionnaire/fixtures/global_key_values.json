@@ -5718,6 +5718,14 @@
     "fields": {
       "translation_type": "questiongroup",
       "data": {
+        "technologies": {
+          "label": {
+            "en": "Add geo-referenced information on the map below"
+          },
+          "helptext": {
+            "en": "Add a point for each technology site that was considered/ analysed in the documentation of this technology. If more than 10 sites were considered, select and add a point for those that are most representative."
+          }
+        },
         "approaches": {
           "helptext": {
             "en": "Specify the centre of the area in which the Approach has been applied."
@@ -6470,7 +6478,13 @@
       "keyword": "person_email_1",
       "translation": 5026,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_person_email"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -6513,7 +6527,13 @@
       "keyword": "user_resourceperson_other",
       "translation": 5029,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_person_type_other"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -6876,7 +6896,13 @@
       "keyword": "links_title",
       "translation": 5059,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_links_title"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -6887,7 +6913,13 @@
       "keyword": "links_url",
       "translation": 5060,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "references_links_url"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -9219,8 +9251,8 @@
       "translation": null,
       "configuration": {
         "form_options": {
-          "min_num": 1,
-          "max_num": 5,
+          "min_num": 3,
+          "max_num": 10,
           "template": "table",
           "numbered": "display"
         },
@@ -9239,8 +9271,8 @@
       "translation": null,
       "configuration": {
         "form_options": {
-          "min_num": 1,
-          "max_num": 5,
+          "min_num": 3,
+          "max_num": 10,
           "template": "table",
           "numbered": "display"
         },
@@ -9259,8 +9291,8 @@
       "translation": null,
       "configuration": {
         "form_options": {
-          "min_num": 1,
-          "max_num": 5,
+          "min_num": 3,
+          "max_num": 10,
           "template": "table",
           "column_widths": ["60%", "40%"],
           "numbered": "display"
@@ -9281,8 +9313,8 @@
       "translation": null,
       "configuration": {
         "form_options": {
-          "min_num": 1,
-          "max_num": 5,
+          "min_num": 3,
+          "max_num": 10,
           "template": "table",
           "column_widths": ["60%", "40%"],
           "numbered": "display"

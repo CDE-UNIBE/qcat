@@ -81,6 +81,27 @@ def sort_by_key(entry, key, none_value=0):
     return v
 
 
+def is_empty_questiongroup(qg_dict):
+    """
+    Check if a questiongroup dictionary contains only empty values. Also checks
+    for empty translation strings.
+
+    Args:
+        qg_dict: dict.
+
+    Returns:
+        bool.
+    """
+    for question, question_data in qg_dict.items():
+        if isinstance(question_data, dict):
+            for translation in question_data.values():
+                if translation:
+                    return False
+        elif question_data:
+            return False
+    return True
+
+
 class Command(BaseCommand):
     help = 'Imports the data from the old WOCAT database.'
 
@@ -222,12 +243,18 @@ class ImportObject(Logger):
         # Example:
         # T_MOR010en
         code_parts = re.findall('[a-zA-Z_]+\d{3}', self.code_wocat)
+        # Handle code 'A_    ' which should still be migrated
+        if str(self.code_wocat) == 'A_    ':
+            code_parts = ['A_']
         if not len(code_parts) == 1:
             raise Exception('Invalid code: {}'.format(self.code_wocat))
         code = code_parts[0]
         self.code = code
 
         language = self.code_wocat.replace(code, '')
+        # Handle code 'A_    ' which should still be migrated
+        if str(self.code_wocat) == 'A_    ':
+            language = 'ru'
         if language not in LANGUAGE_MAPPING:
             raise Exception('Invalid language code: {}'.format(self.code_wocat))
         self.language = language
@@ -326,13 +353,15 @@ class ImportObject(Logger):
     def get_wocat_table_data(self, table_name):
         return self.wocat_data.get(table_name)
 
-    def get_wocat_attribute_data(self, table_name, attribute_name):
+    def get_wocat_attribute_data(
+            self, table_name, attribute_name, keep_null_values=False):
         """
         Return a list of attributes found in the WOCAT data.
 
         Args:
             table_name: The WOCAT table name.
             attribute_name: The WOCAT attribute name (the table column).
+            keep_null_values: Keep values in the list even if they are None
 
         Returns:
             list. A list of attributes.
@@ -343,7 +372,7 @@ class ImportObject(Logger):
         attribute_data = []
         for wocat_table_d in wocat_table_data:
             attribute_d = wocat_table_d.get(attribute_name)
-            if attribute_d:
+            if attribute_d or keep_null_values is True:
                 attribute_data.append(attribute_d)
         return attribute_data
 
@@ -410,27 +439,42 @@ class ImportObject(Logger):
         except ValueError:
             return None
 
-        if file_id in [
-            902,
-            1014,
-            1515,
-            3202,
-        ]:
-            self.add_mapping_message('File {} not found.'.format(file_id))
-            return None
+        from wocat.management.commands.import_qa_data import QAImportObject
+        if not isinstance(self, QAImportObject):
+            if file_id in [
+                902,
+                1014,
+                1515,
+                3202,
+            ]:
+                self.add_mapping_message('File {} not found.'.format(file_id))
+                return None
 
-        if file_id in [
-            4752, 886, 1309,
-        ]:
-            self.add_mapping_message(
-                'There was a problem with the file {}.'.format(file_id))
-            return None
+            if file_id in [
+                4752, 886, 1309,
+            ]:
+                self.add_mapping_message(
+                    'There was a problem with the file {}.'.format(file_id))
+                return None
+
+        if isinstance(self, QAImportObject):
+            if file_id in [
+                1862, 1935, 1307
+            ]:
+                self.add_mapping_message('File {} not found.'.format(file_id))
+                return None
+
+            if file_id in [540, 22, 1889, 1771, 335, 678, 817, 1351, 247]:
+                self.add_mapping_message(
+                    'There was a problem with the file {}.'.format(file_id))
+                return None
 
         file_info = self.file_infos.get(int(file_id))
         if file_info is None:
             self.add_error(
                 'mapping', 'No file info found with ID {} for object {}'.format(
                     file_id, self))
+            return
 
         content_type = file_info.get('blob_content_type')
         mapped_content_type = FILE_CONTENT_MAPPING.get(
@@ -537,7 +581,7 @@ class ImportObject(Logger):
                 return len(ref_value) == 0
             elif operator == 'not_empty':
                 return len(ref_value) != 0
-            elif operator == 'one_of':
+            elif operator in ['one_of', 'not_one_of']:
                 if isinstance(ref_value, list):
                     if len(ref_value) == 0:
                         return False
@@ -546,7 +590,10 @@ class ImportObject(Logger):
                             'List for one_of ({}) should contain exactly 1 '
                             'element.'.format(ref_value))
                     ref_value = ref_value[0]
-                return ref_value in cond_value
+                if operator == 'one_of':
+                    return ref_value in cond_value
+                elif operator == 'not_one_of':
+                    return ref_value not in cond_value
             else:
                 raise NotImplementedError(
                     'Condition operator "{}" not specified or not valid'.format(
@@ -612,7 +659,8 @@ class ImportObject(Logger):
     def collect_mapping(
             self, mappings, separator=None, value_mapping_list=None,
             return_list=False, value_prefix='', value_suffix='',
-            return_row_values=False, no_duplicates=False, table_data=None):
+            return_row_values=False, no_duplicates=False, table_data=None,
+            group_by_rows=False, string_format=None, split_questions=None):
         """
         Collect the values defined in the mapping.
 
@@ -636,6 +684,12 @@ class ImportObject(Logger):
             table_data: Dict. Optionally already provide a dictionary of WOCAT
                 table data. In this case, the mapping needs only the
                 wocat_column entries to access the values from the dict.
+            group_by_rows: Boolean. Use this when wanting to map several
+                attributes of the same row to one group.
+            string_format: Str. A Python string format (with {}) used to compose
+                the mapped values.
+            split_questions: Bool or None. Group mappings into separate
+                questions (by index)
 
         Returns:
             String. (or list if return_list=True)
@@ -652,6 +706,38 @@ class ImportObject(Logger):
             Returns:
                 string.
             """
+            def do_lookup(v):
+                """
+                Helper function to do the lookup of a value.
+
+                Args:
+                    v:
+
+                Returns:
+
+                """
+                if lookup_table is True:
+                    try:
+                        v = int(v)
+                        lookup_value = self.lookup_table.get(v)
+                    except ValueError:
+                        lookup_value = None
+                else:
+                    try:
+                        v = int(lookup_text)
+                        lookup_value = self.lookup_table_text.get(v)
+                    except ValueError:
+                        lookup_value = None
+
+                if lookup_value:
+                    return lookup_value.get(
+                        LANGUAGE_MAPPING[self.language], v)
+
+                return v
+
+            if split_questions is True and v in ['', 0, None]:
+                return ''
+
             value_mapping = mapping.get('value_mapping')
             if value_mapping:
                 v = value_mapping
@@ -669,24 +755,12 @@ class ImportObject(Logger):
 
             lookup_table = mapping.get('lookup_table')
             lookup_text = mapping.get('lookup_text')
+            lookup_list = mapping.get('lookup_list')
             if lookup_table is True or lookup_text is not None:
-
-                if lookup_table is True:
-                    try:
-                        v = int(v)
-                        lookup_value = self.lookup_table.get(v)
-                    except ValueError:
-                        lookup_value = None
+                if lookup_list is True:
+                    v = ', '.join([str(do_lookup(part)) for part in v.split(',')])
                 else:
-                    try:
-                        v = int(lookup_text)
-                        lookup_value = self.lookup_table_text.get(v)
-                    except ValueError:
-                        lookup_value = None
-
-                if lookup_value:
-                    v = lookup_value.get(
-                        LANGUAGE_MAPPING[self.language], v)
+                    v = do_lookup(v)
 
             if return_list is True:
                 return v
@@ -694,6 +768,7 @@ class ImportObject(Logger):
                 return str(v)
 
         values = []
+        grouped_values = []
 
         for mapping in mappings:
 
@@ -708,7 +783,9 @@ class ImportObject(Logger):
                     value_prefix=mapping.get('value_prefix', ''),
                     value_suffix=mapping.get('value_suffix', ''),
                     table_data=table_data,
-                    no_duplicates=no_duplicates)
+                    no_duplicates=no_duplicates,
+                    group_by_rows=group_by_rows,
+                    string_format=mapping.get('string_format'))
                 if sub_value:
 
                     if mapping.get('conditions'):
@@ -736,16 +813,20 @@ class ImportObject(Logger):
                     values.extend(wocat_data)
                 continue
 
+            keep_null_values = split_questions or mapping.get(
+                'index_filter') is not None
+
             if table_data is None:
                 wocat_attribute = self.get_wocat_attribute_data(
-                    table_name=wocat_table, attribute_name=wocat_column)
+                    table_name=wocat_table, attribute_name=wocat_column,
+                    keep_null_values=keep_null_values)
             else:
                 table_attribute = table_data.get(wocat_column)
                 if not table_attribute:
                     continue
                 wocat_attribute = [table_attribute]
 
-            if not wocat_attribute:
+            if not wocat_attribute and string_format is None:
                 continue
 
             if mapping.get('conditions'):
@@ -769,8 +850,20 @@ class ImportObject(Logger):
             if mapping.get('mapping_message'):
                 self.add_mapping_message(mapping.get('mapping_message'))
 
+            if group_by_rows is True:
+                grouped_values.append(
+                    [do_value_mapping(v) for v in wocat_attribute])
+                continue
+
             for value in wocat_attribute:
                 values.append(do_value_mapping(value))
+
+        if group_by_rows is True:
+            for rearranged in [list(t) for t in zip(*grouped_values)]:
+                if string_format:
+                    values.append(string_format.format(*rearranged))
+                else:
+                    values.append(''.join(rearranged))
 
         if no_duplicates is True:
             values = list(set(values))
@@ -825,7 +918,11 @@ class ImportObject(Logger):
                     question_properties.get('conditions_join')) is False:
                 return {}
 
-        no_duplicates = True if q_type in ['dropdown'] else False
+        split_questions = question_properties.get('split_questions')
+
+        no_duplicates = False
+        if q_type in ['dropdown'] and split_questions is not True:
+            no_duplicates = True
 
         value = self.collect_mapping(
             mappings,
@@ -833,7 +930,10 @@ class ImportObject(Logger):
             value_mapping_list=question_properties.get('value_mapping_list'),
             value_prefix=question_properties.get('value_prefix', ''),
             value_suffix=question_properties.get('value_suffix', ''),
-            no_duplicates=no_duplicates, table_data=table_data)
+            no_duplicates=no_duplicates, table_data=table_data,
+            group_by_rows=question_properties.get('group_by_rows'),
+            string_format=question_properties.get('string_format'),
+            split_questions=split_questions)
 
         if q_type == 'string':
             # For string values, also collect translations.
@@ -853,7 +953,10 @@ class ImportObject(Logger):
                         'value_mapping_list'),
                     value_prefix=question_properties.get('value_prefix', ''),
                     value_suffix=question_properties.get('value_suffix', ''),
-                    table_data=table_data)
+                    table_data=table_data,
+                    group_by_rows=question_properties.get('group_by_rows'),
+                    string_format=question_properties.get('string_format'),
+                    split_questions=split_questions)
 
                 if translated_value:
                     values.append(
@@ -882,11 +985,92 @@ class ImportObject(Logger):
             }
 
         elif q_type == 'date':
+
+            date_format = question_properties.get(
+                'date_format', WOCAT_DATE_FORMAT)
+
+            # Manual fixing of incorrect dates ...
+            if value == 'July/August 2014':
+                value = '01-08-2014'
+            elif value == 'April/May 2013':
+                value = '01-05-2013'
+            elif value == 'Abril/Maio 2013':
+                value = '01-05-2013'
+            elif value == 'May 2012':
+                value = '15-05-2012'
+
+            if date_format == '%d-%m-%Y':
+                manual_date_mapping = {
+                    '2012-02-12': '12-02-2012',
+                    '2012-11-02': '02-11-2012',
+                    '2013-04-10': '10-04-2013',
+                    '22/09/2011': '22-09-2011',
+                    '2/01/2013': '02-01-2013',
+                    'o2/08/2011': '02-08-2011',
+                    '01/08/2011': '01-08-2011',
+                    '19/04/2013': '19-04-2013',
+                    'April 15, 2015': '15-04-2015',
+                    '2011-2016': '01-01-2011',
+                    '2011': '01-01-2011',
+                }
+                value = manual_date_mapping.get(value, value)
+
+            elif date_format == '%Y-%m-%d':  # WOCAT_DATE_FORMAT
+                manual_date_mapping = {
+                    '15.08.08': '2008-08-15',
+                    '15/08/08': '2008-08-15',
+                    '2012.01.01': '2012-01-01',
+                    '2010/04/01': '2010-04-01',
+                    '19/11/2007': '2007-11-19',
+                    '2010-16-08': '2010-08-16',
+                    '23-08-2009': '2009-08-23',
+                    '22-11-09': '2009-11-22',
+                    '10.09.08': '2008-09-10',
+                    '05.09.08': '2008-09-05',
+                    '23/07/2008': '2008-07-23',
+                    '04.10.2010': '2010-10-04',
+                    '2009-04-00': '2009-04-01',
+                    '2009-12-00': '2009-12-01',
+                    '2011-11-00': '2011-11-01',
+                    '2003/5/15': '2003-05-15',
+                    ' 2003/5/15': '2003-05-15',
+                    '20/3/2009': '2009-03-20',
+                    '22-05-2012': '2012-05-22',
+                    '2008/02/': '2008-02-01',
+                    '2014-03': '2014-03-01',
+                    '15-2-2013': '2013-02-15',
+                    '08.07.2015': '2015-07-08',
+                    '20.08,08': '2008-08-20',
+                    '20.08.08': '2008-08-20',
+                    '28/02/2012': '2012-02-28',
+                    '2012/08/28': '2012-08-28',
+                    '2014-09003': '2014-09-03',
+                    '1995': '1995-01-01',
+                    '1996': '1996-01-01',
+                    '2008': '2008-01-01',
+                    '2003': '2003-01-01',
+                    '2005': '2005-01-01',
+                    '2010': '2010-01-01',
+                    '2011': '2011-01-01',
+                    '2013': '2013-01-01',
+                    '2013г': '2013-01-01',
+                    '2014': '2014-01-01',
+                    'September ': None,
+                }
+                value = manual_date_mapping.get(value, value)
+
+            if value is None:
+                return {}
+
             try:
                 value = datetime.strptime(
-                    value, WOCAT_DATE_FORMAT).strftime(
-                    QCAT_DATE_FORMAT)
+                    value, date_format).strftime(QCAT_DATE_FORMAT)
             except ValueError:
+                self.add_error(
+                    'mapping',
+                    'Date {} of object {} is not valid: {}. Should be of format'
+                    ' "{}"'.format(
+                        qcat_question_keyword, self, value, date_format))
                 return {}
 
             return {
@@ -949,8 +1133,7 @@ class ImportObject(Logger):
                     v = 89.34065
                 else:
                     self.output(
-                        'Invalid coordinates ({}) of object {}'.format(
-                            v, self.identifier),
+                        'Invalid coordinates ({}) of object {}'.format(v, self),
                         v=1, l='error')
                     continue
 
@@ -964,6 +1147,9 @@ class ImportObject(Logger):
                     'Coordinates of object {} are not valid: {}'.format(
                         self, values))
                 return None
+
+        if parsed_values == [0.0, 0.0]:
+            return {}
 
         if len(parsed_values) == 2:
             geojson = {
@@ -1268,9 +1454,23 @@ class ImportObject(Logger):
             if wocat_table_data is None:
                 return
 
+            if questiongroup_properties.get('index_filter'):
+                index_filter = questiongroup_properties.get('index_filter')
+                if not isinstance(index_filter, list) or len(index_filter) != 1:
+                    raise Exception(
+                        'Index filter must be a list of exactly 1 item!')
+
+                wocat_table_data = self.apply_index_filter(
+                    values=wocat_table_data, index_filter=index_filter[0])
+
             if questiongroup_properties.get('sort_function'):
                 wocat_table_data = sorted(wocat_table_data, key=lambda k: eval(
                     questiongroup_properties.get('sort_function')))
+
+            if questiongroup_properties.get('limit_qg_length') is not None:
+                qg_limit = questiongroup_properties.get('limit_qg_length')
+                if len(wocat_table_data) > qg_limit:
+                    wocat_table_data = wocat_table_data[:qg_limit]
 
             for data in wocat_table_data:
                 single_questiongroup_mapping(
@@ -1299,6 +1499,7 @@ class ImportObject(Logger):
                     'separator': 'QUESTIONSEPARATOR'
                 })
                 question_properties['composite'] = composite_options
+                question_properties['split_questions'] = True
             single_questiongroup_mapping(
                 qcat_questiongroup_keyword, questiongroup_properties)
 
@@ -1310,26 +1511,41 @@ class ImportObject(Logger):
             max_length = 0
             for questiongroup_data in questiongroup_data_list:
                 for question_keyword, question_data in questiongroup_data.items():
-                    grouped_questions[question_keyword] = {}
-                    for lang, data in question_data.items():
-                        data_split = data.split('QUESTIONSEPARATOR')
+                    if isinstance(question_data, dict):
+                        grouped_questions[question_keyword] = {}
+                        for lang, data in question_data.items():
+                            data_split = data.split('QUESTIONSEPARATOR')
+                            max_length = max(len(data_split), max_length)
+                            grouped_questions[question_keyword][lang] = data_split
+                    else:
+                        data_split = str(question_data).split('QUESTIONSEPARATOR')
                         max_length = max(len(data_split), max_length)
-                        grouped_questions[question_keyword][lang] = data_split
+                        grouped_questions[question_keyword] = data_split
 
             new_data_list = []
             for i in range(max_length):
                 new_data = {}
                 for question_keyword, langs in grouped_questions.items():
-                    new_data[question_keyword] = {}
-                    for lang, data in langs.items():
+                    if isinstance(langs, dict):
+                        new_data[question_keyword] = {}
+                        for lang, data in langs.items():
+                            try:
+                                new_data[question_keyword][lang] = data[i]
+                            except IndexError:
+                                pass
+                    else:
                         try:
-                            new_data[question_keyword][lang] = data[i]
+                            new_data[question_keyword] = langs[i]
                         except IndexError:
                             pass
-                new_data_list.append(new_data)
+
+                if not is_empty_questiongroup(new_data):
+                    new_data_list.append(new_data)
 
             if new_data_list:
                 self.data_json[qcat_questiongroup_keyword] = new_data_list
+            else:
+                self.data_json[qcat_questiongroup_keyword] = []
 
         else:
             single_questiongroup_mapping(

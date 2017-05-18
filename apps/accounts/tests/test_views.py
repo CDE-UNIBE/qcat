@@ -6,8 +6,7 @@ from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.contrib.messages.storage.fallback import FallbackStorage
 from django.core.urlresolvers import reverse
-from django.http import Http404
-from django.http import HttpResponseRedirect
+from django.http import Http404, HttpResponseRedirect, JsonResponse
 from django.template.response import TemplateResponse
 from django.test import override_settings
 from django.test.client import RequestFactory
@@ -21,7 +20,7 @@ from accounts.views import (
     user_update,
     LoginView,
     ProfileView, QuestionnaireStatusListView,
-    UserDetailView)
+    UserDetailView, QuestionnaireSearchView)
 
 User = get_user_model()
 accounts_route_login = 'login'
@@ -375,3 +374,47 @@ class UserDetailsTest(TestCase):
         self.view.get_context_data()
         get_unccd_countries.assert_called_once_with()
 
+
+class QuestionnaireSearchViewTest(TestCase):
+
+    def setUp(self):
+        self.user = MagicMock()
+        self.user.is_staff = True
+        self.url = reverse('staff_questionnaires_search')
+        self.request = RequestFactory().get(self.url)
+        self.request.user = self.user
+        self.view = self.setup_view(QuestionnaireSearchView(), request=self.request)
+
+    def test_dispatch(self):
+        response = self.view.dispatch(request=self.request)
+        self.assertTrue(isinstance(response, TemplateResponse))
+
+    def test_dispatch_non_staff(self):
+        request = RequestFactory().get(self.url)
+        request.user = MagicMock()
+        request.user.is_staff = False
+        view = self.setup_view(QuestionnaireSearchView(), request=request)
+        with self.assertRaises(Http404):
+            view.dispatch(request=request)
+
+    def test_get(self):
+        self.request.is_ajax = lambda : True
+        view = self.setup_view(self.view, self.request)
+        with patch.object(QuestionnaireSearchView, 'get_json_data') as mock_json:
+            response = view.get(request=self.request)
+            self.assertTrue(isinstance(response, JsonResponse))
+            mock_json.assert_called_once()
+
+    def test_pagination(self):
+        self.request.is_ajax = MagicMock()
+        self.view.get_paginate_by(None)
+        self.request.is_ajax.assert_called_once()
+
+    @patch.object(QuestionnaireSearchView, 'get_queryset')
+    def test_get_json_data(self, mock_get_queryset):
+        mock_get_queryset.return_value = [MagicMock()]
+        json = list(self.view.get_json_data())
+        self.assertListEqual(
+            ['name', 'url', 'compilers', 'country', 'status', 'id'],
+            list(json[0].keys())
+        )

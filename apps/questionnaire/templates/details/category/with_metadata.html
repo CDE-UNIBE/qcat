@@ -36,7 +36,7 @@
       <li>
         <span class="is-muted">{% if metadata.editors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
         {% for editor in metadata.editors %}
-          <a rel="author" href="#" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
+          <a rel="author" href="{% url 'user_details' editor.id %}" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
         {% empty %}
           &ndash;
         {% endfor %}
@@ -89,6 +89,7 @@
     </button>
     <ul id="tech-details-print" data-dropdown-content class="f-dropdown" aria-hidden="true">
       <li><a {% if not questionnaire_object.id %}disabled="disabled"{% else %}href="{% url 'questionnaire_summary' questionnaire_object.id %}"{% endif %}>{% trans "Full summary as PDF" %}</a></li>
+      <li><a {% if not questionnaire_object.id %}disabled="disabled"{% else %}href="{% url 'questionnaire_summary' questionnaire_object.id %}?quality=print"{% endif %}>{% trans "Full summary as PDF for print" %}</a></li>
     </ul>
 {#    <button href="#" class="button dropdown{% if not metadata.code %} disabled{% endif %}" data-dropdown="tech-details-export" aria-controls="tech-details-export" aria-expanded="false">#}
     <button href="#" class="button dropdown disabled" title="{% trans "Coming soon" %}" data-tooltip="" data-dropdown="tech-details-export" aria-controls="tech-details-export" aria-expanded="false">

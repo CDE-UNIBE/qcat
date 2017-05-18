@@ -40,7 +40,7 @@
       <li>
         <span class="is-muted">{% if metadata.editors|length > 1 %}{% trans "Editors:" %}{% else %}{% trans "Editor:" %}{% endif %}</span>
         {% for editor in metadata.editors %}
-          <a rel="author" href="#" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
+          <a rel="author" href="{% url 'user_details' editor.id %}" class="link">{{ editor.name }}</a>{% if not forloop.last %}, {% endif %}
         {% empty %}
           &ndash;
         {% endfor %}
@@ -84,16 +84,14 @@
       <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-view"></use></svg>
       {% trans "View full content" %}
     </a>
-    {% if IS_ACTIVE_FEATURE_SUMMARY %}
-      <button href="#" class="button dropdown" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false">
-    {% else %}
-      <button href="#" class="button dropdown disabled" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false" title="{% trans "Coming soon" %}" data-tooltip="">
-    {% endif %}
+    <button href="#" class="button dropdown" data-dropdown="tech-details-print" aria-controls="tech-details-print" aria-expanded="false">
       <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-print"></use></svg>
       {% trans "Print summary" %}
     </button>
       <ul id="tech-details-print" data-dropdown-content class="f-dropdown" aria-hidden="true">
         <li><a {% if not questionnaire_object.id %}disabled="disabled"{% else %}href="{% url 'questionnaire_summary' questionnaire_object.id %}"{% endif %}>{% trans "Full summary as PDF" %}</a></li>
+        <li><a {% if not questionnaire_object.id %}disabled="disabled"{% else %}href="{% url 'questionnaire_summary' questionnaire_object.id %}?quality=print"{% endif %}>{% trans "Full summary as PDF for print" %}</a></li>
+        <li><a {% if not questionnaire_object.id %}disabled="disabled"{% else %}href="{% url 'questionnaire_summary' questionnaire_object.id %}?as=html"{% endif %} target="_blank">{% trans "Full summary in the browser" %}</a></li>
       </ul>
 {#    <button href="#" class="button dropdown{% if not metadata.code %} disabled{% endif %}" data-dropdown="tech-details-export" aria-controls="tech-details-export" aria-expanded="false">#}
     <button href="#" class="button dropdown disabled" title="{% trans "Coming soon" %}" data-tooltip="" data-dropdown="tech-details-export" aria-controls="tech-details-export" aria-expanded="false">

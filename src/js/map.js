@@ -105,16 +105,30 @@
 
         // Listen to all kinds of map actions.
         qgContainer.find('.js-btn-feature-count').click(function() { toggleMapOverlay('js-map-points') });
+        qgContainer.find('.js-btn-delete-features').click(function() { toggleMapOverlay('js-map-delete-features') });
         qgContainer.find('.js-btn-coordinates-show').click(function() { toggleMapOverlay('js-map-coordinates') });
         qgContainer.find('.js-btn-search-show').click(function() { toggleMapOverlay('js-map-search') });
         qgContainer.find('.js-btn-overlay-close').click(hideMapOverlays);
         qgContainer.find('.js-btn-show-features').click(zoomToFeatures);
-        qgContainer.find('.js-btn-delete-features').click(deleteAllFeatures);
+        qgContainer.find('.js-btn-confirm-delete-features').click(deleteAllFeatures);
         qgContainer.find('[name="map-layers-0"]').on('change', function() { toggleLayer(0, this.value) });
         qgContainer.find('[name="map-layers-1"]').on('change', function() { toggleLayer(1, this.value) });
         qgContainer.find('.js-btn-parse-coordinates').click(parseCoordinates);
-        if ($.fn.autocomplete) { qgContainer.find('.js-map-search-field').autocomplete(getSearchAutocompleteOptions()) }
 
+        // Map search with Google
+        var mapSearchInput = qgContainer.find('.js-map-search-field');
+        if (mapSearchInput.length) {
+            var mapSearch = new google.maps.places.SearchBox(mapSearchInput[0]);
+            mapSearch.addListener('places_changed', function() {
+                var places = this.getPlaces();
+                if (places.length != 1) {
+                  return;
+                }
+                var loc = places[0].geometry.location.toJSON();
+                map.getView().setCenter(ol.proj.transform([loc.lng, loc.lat], 'EPSG:4326', 'EPSG:900913'));
+                map.getView().setZoom(15);
+            });
+        }
 
         /**
          * A Select interaction used to manually highlight geometries.
@@ -156,77 +170,6 @@
                     highlightInteraction.getFeatures().clear();
                 }
             });
-        }
-
-        /**
-         * Get the options needed for the autocomplete when searching for
-         * locations.
-         *
-         * @returns {{source: source, create: create, select: select}}
-         */
-        function getSearchAutocompleteOptions() {
-            return {
-                source: function(request, response) {
-                    var thisElement = $(this.element);
-                    var translationNoResults = thisElement.data('translation-no-results');
-                    var translationTooManyResults = thisElement.data('translation-too-many-results');
-                    var currentLocale = thisElement.data('current-locale');
-                    $.ajax({
-                        url: 'http://api.geonames.org/searchJSON',
-                        dataType: 'json',
-                        data: {
-                            username: 'wocat_webdev',
-                            lang: currentLocale,
-                            maxRows: 10,
-                            name_startsWith: request.term
-                        },
-                        success: function(data) {
-                            if (data.totalResultsCount == 0) {
-                                // No results
-                                var result = [
-                                    {
-                                        error: translationNoResults
-                                    }
-                                ];
-                                return response(result);
-                            }
-                            var res = data.geonames;
-                            if (data.totalResultsCount > 10) {
-                                var moreResults = data.totalResultsCount - 10;
-                                // Too many results
-                                res.push({
-                                    error: '(' + moreResults + ') ' + translationTooManyResults
-                                });
-                            }
-                            return response(res);
-                        }
-                    });
-                },
-                create: function() {
-                    $(this).data('ui-autocomplete')._renderItem = function(ul, item) {
-                        var displayName = item.name + (item.adminName1 ? ", " + item.adminName1 : "") + ", " + item.countryName;
-                        if (item.error) {
-                            displayName = item.error;
-                        }
-                        return $('<li>')
-                            .append('<a>' + displayName + '</a>')
-                            .appendTo(ul);
-                    }
-                },
-                select: function(event, ui) {
-                    if (ui.item.error) {
-                        return false;
-                    }
-                    var lat = parseFloat(ui.item.lat);
-                    var lng = parseFloat(ui.item.lng);
-                    if (isNaN(lat) || isNaN(lng)) {
-                        return false;
-                    }
-
-                    map.getView().setCenter(ol.proj.transform([lng, lat], 'EPSG:4326', 'EPSG:3857'));
-                    map.getView().setZoom(15);
-                }
-            }
         }
 
         /**
@@ -535,7 +478,7 @@
                 .html(features.length);
 
             var pointsList = thisMapContainer.find('.map-points-list');
-            var pointsHtml = pointsList.data('empty-text');
+            var pointsHtml = '<p>' + pointsList.data('empty-text') + '</p>';
 
             if (features.length) {
                 pointsHtml = $('<ul class="map-point-entries"></ul>');
@@ -661,13 +604,13 @@
         function getDefaultVectorStyle() {
             return new ol.style.Style({
                 image: new ol.style.Circle({
-                    radius: 5,
+                    radius: 6,
                     fill: new ol.style.Fill({
-                        color: 'rgba(255, 255, 255, 0.4)'
+                        color: '#f5f900'
                     }),
                     stroke: new ol.style.Stroke({
-                        color: '#dc7d35',
-                        width: 1.25
+                        color: 'black',
+                        width: 2.25
                     })
                 })
             });

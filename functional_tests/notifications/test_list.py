@@ -4,6 +4,7 @@ import time
 from django.conf import settings
 from django.contrib.auth import get_user_model
 from django.core.urlresolvers import reverse
+from django.test.utils import override_settings
 from model_mommy import mommy
 from notifications.models import Log, StatusUpdate, ReadLog
 from notifications.views import LogListView, LogQuestionnairesListView
@@ -59,6 +60,7 @@ class NotificationSetupMixin:
 
 class ProfileNotificationsTest(NotificationSetupMixin, FunctionalTest):
 
+    @override_settings(NOTIFICATIONS_TEASER_PAGINATE_BY=1)
     def test_notification_display(self):
         # From a logged in state, open the profile page
         self.doLogin(user=self.robin)
@@ -69,6 +71,7 @@ class ProfileNotificationsTest(NotificationSetupMixin, FunctionalTest):
             self.findBy('id', 'latest-notification-updates').text
         )
         # create a new notification
+        self.create_status_log(self.robin)
         self.create_status_log(self.robin)
         # After a reload, the notification for robin is shown, displaying one
         # notification log.

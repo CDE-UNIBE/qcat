@@ -1,0 +1,32 @@
+{% extends 'technologies/base.html' %}
+
+{% load i18n %}
+
+{% block bodyclass %}layout-technologies{% endblock %}
+
+{% block content %}
+
+  <div class="top-bar-search">
+    <div class="row large-no-gutters">
+      <form action="{% url "staff_questionnaires_search" %}" method="get" class="questionnaire-search-form">
+        <input type="text" value="{{ request.GET.term }}" name="term" class="questionnaire-search">
+        <input type="submit" class="search-submit button" value="Search">
+      </form>
+    </div>
+  </div>
+
+  <main class="row large-collapse" role="main">
+    <section class="tech-list small-12 columns">
+      <div class="tech-group">
+        <h2 class="is-group">{% trans "Search results" %} (<span id="questionnaire-count">{{ count }}</span>)</h2>
+        <div id="questionnaire-list">
+          {% include "technologies/questionnaire/partial/list.html" %}
+        </div>
+      </div>
+      <div id="pagination" class="is-rhythmed-2">
+        {% include "pagination.html" %}
+      </div>
+    </section>
+  </main>
+
+{% endblock %}

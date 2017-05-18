@@ -46,7 +46,7 @@ class Command(BaseCommand):
             pre_save.disconnect(prevent_updates_on_published_items,
                                 sender=Questionnaire)
 
-        questionnaires = Questionnaire.objects.all()
+        questionnaires = Questionnaire.with_status.not_deleted().all()
         error_questionnaires = []
         grouped_errors = {}
         for questionnaire in questionnaires:

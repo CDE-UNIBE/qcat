@@ -7,9 +7,11 @@ in full - so its not actually a summary but just a pdf-export.
 
 Following changes are planned:
 
-* Users should be able to select/deselect sections on the pdf (description,
-  location, etc.)
-* Changes in the output format (A6) should be configurable
+* Users should be able to select/deselect sections in the pdf (description,
+  location, etc.). So editing the markup before creating the PDF will be
+  required.
+* Changes in the output format (paper formats, fields on display) should be
+  configurable.
 
 
 Idea and rationale
@@ -31,8 +33,8 @@ The created HTML is then converted to PDF with wkhtmltopdf.
 
 This concept was decided upon because:
 
-* Work can be sourced to external colleagues
-* Robust handling of data (questionnaires will change)
+* Frontend work can be sourced to external colleagues
+* Robust handling of data (questionnaires and configs will change)
 * More summary types can be added later
 * HTML can be converted to different formats (doc) as well
 * The very first step of combining data from config and questionnaire was
@@ -49,7 +51,7 @@ Technical workflow
 * In the parser module (```summary.parsers```), questionnaire and configuration
   data is combined with the same class built for the questionnaire detail API
   resource: ```configuration.configured_questionnaire.ConfiguredQuestionnaire```
-* The full data is then preparde as defined in the configuration.
+* The full data is then prepared as defined in the configuration.
 * The initial idea was to define each question which must appear in the summary.
   This 'whitelisting' is not always a good fit due to repeating questions/
   questiongroups. Therefore, specific data preparation methods are available on
@@ -59,7 +61,7 @@ Technical workflow
 Add a new summary type
 ----------------------
 * Either subclass ```summary.views.SummaryPDFCreateView``` with a custom
-  summary-type, or refactor the class for dynamic usage.
+  summary-type, or refactor the class for dynamic usage via get param or such.
 * Define a renderer in ```summary.views.SummaryPDFCreateView.render_classes```
 * A new template may be created (```summary.templates.layout```) and can be
   passed as GET-parameter to the view.
@@ -72,7 +74,7 @@ Add a new field
   to the 'configuration' value (see examples below).
 * Depending on the complexity of the question(s) involved, a specific data
   loading method on the parser may be required (but is optional).
-* For most questions, the default data loding is fine - simply add the field
+* For most questions, the default data loading is fine - simply add the field
   on the respective renderer.
 * Minimal example
   ::

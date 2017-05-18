@@ -23,7 +23,8 @@ from staticmap import StaticMap, CircleMarker, Polygon
 
 from accounts.models import User
 from configuration.cache import get_configuration
-from configuration.models import Configuration
+from configuration.models import Configuration, Value
+from qcat.errors import ConfigurationError
 from .signals import change_status, create_questionnaire
 
 from .conf import settings
@@ -113,9 +114,11 @@ class Questionnaire(models.Model):
              "Can assign questionnaire (for review/publish)"),
             ("view_questionnaire", "Can view questionnaire"),
             ("edit_questionnaire", "Can edit questionnaire"),
+            ("change_compiler", "Can change compiler of questionnaire"),
             ("flag_unccd_questionnaire", "Can flag UNCCD questionnaire"),
             ("unflag_unccd_questionnaire", "Can unflag UNCCD questionnaire"),
         )
+        unique_together = (('code', 'version'),)
 
     def _get_url_from_configured_app(self, url_name: str) -> str:
         """
@@ -292,8 +295,7 @@ class Questionnaire(models.Model):
                     'The questionnaire cannot be updated because of its status'
                     ' "{}"'.format(previous_version.status))
         else:
-            from configuration.utils import create_new_code
-            code = create_new_code(configuration_code, data)
+            code = ''  # Will be generated later
             version = 1
             uuid = uuid4()
         if status not in [s[0] for s in STATUSES]:
@@ -306,6 +308,13 @@ class Questionnaire(models.Model):
         questionnaire = Questionnaire.objects.create(
             data=data, uuid=uuid, code=code, version=version, status=status,
             created=created, updated=updated)
+
+        if not previous_version:
+            # Generate and set a new code for the questionnaire
+            from configuration.utils import create_new_code
+            code = create_new_code(questionnaire, configuration_code)
+            questionnaire.code = code
+
         create_questionnaire.send(
             sender=settings.NOTIFICATIONS_CREATE,
             questionnaire=questionnaire,
@@ -476,7 +485,7 @@ class Questionnaire(models.Model):
             permissions.extend(
                 ['edit_questionnaire', 'delete_questionnaire',
                  'submit_questionnaire', 'review_questionnaire',
-                 'publish_questionnaire'])
+                 'publish_questionnaire', 'change_compiler'])
             if self.status in [settings.QUESTIONNAIRE_SUBMITTED,
                                settings.QUESTIONNAIRE_REVIEWED]:
                 permissions.extend(['assign_questionnaire'])
@@ -535,7 +544,44 @@ class Questionnaire(models.Model):
                         data.append(value)
         return data
 
-    def update_geometry(self, configuration_code):
+    def get_name(self, locale='') -> str:
+        """
+        Return the name of the questionnaire, based on the configuration.
+        """
+        active_config = self.configurations.filter(
+            active=True
+        ).first()
+        if not active_config:
+            raise ConfigurationError(
+                'No active configuration for questionnaire {}'.format(self.id)
+            )
+        config = get_configuration(active_config.code)
+        names = config.get_questionnaire_name(self.data) or {}
+        name = names.get(locale or get_language())
+        if name:
+            # omit additional query
+            return name
+
+        original_lang = self.questionnairetranslation_set.filter(
+            original_language=True
+        ).first()
+        if original_lang and names.get(original_lang.language):
+            return names[original_lang.language]
+
+        return ''
+
+    def get_countries(self) -> []:
+        """
+        Return list of translated country names.
+        """
+        codes = self.get_question_data('qg_location', 'country')
+        if codes:
+            values = Value.objects.filter(keyword__in=codes)
+            if values.exists():
+                return [value.get_translation(keyword='label') for value in values]
+        return []
+
+    def update_geometry(self, configuration_code, force_update=False):
         """
         Update the geometry of a questionnaire based on the GeoJSON found in the
         data json.
@@ -593,20 +639,21 @@ class Questionnaire(models.Model):
         except ValidationError:
             return
 
-        if self.geom is None or not geometry_changed:
+        if self.geom is None or (not force_update and not geometry_changed):
             # If there is no geometry or if it did not change, there is no need
             # to create the static map image (again)
             return
 
         # Create static map
-        width = 500
-        height = 400
+        width = 1000
+        height = 800
+        marker_diameter = 24
         marker_color = '#0036FF'
 
         m = StaticMap(width, height)
 
         for point in iter(self.geom):
-            m.add_marker(CircleMarker((point.x,  point.y), marker_color, 12))
+            m.add_marker(CircleMarker((point.x,  point.y), marker_color, marker_diameter))
 
         bbox = None
         questionnaire_country = self.get_question_data('qg_location', 'country')
@@ -647,7 +694,6 @@ class Questionnaire(models.Model):
 
         filename = '{}_{}.jpg'.format(self.uuid, self.version)
         image.save(os.path.join(map_folder, filename))
-
 
     def add_flag(self, flag):
         """

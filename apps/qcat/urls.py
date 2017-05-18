@@ -7,7 +7,7 @@ from django.contrib.sitemaps.views import sitemap
 from django.core.urlresolvers import reverse_lazy
 from django.views.generic import TemplateView, RedirectView
 
-from .views import static_sitemap
+from .views import static_sitemap, FactsTeaserView
 
 
 urlpatterns = patterns(
@@ -44,6 +44,7 @@ urlpatterns += i18n_patterns(
     url(r'^summary/', include('summary.urls')),
     url(r'^api/', include('api.urls')),
     url(r'^notifications/', include('notifications.urls')),
+    url(r'^qcat/facts_teaser', FactsTeaserView.as_view(), name='facts_teaser'),
 )
 
 if settings.DEBUG:

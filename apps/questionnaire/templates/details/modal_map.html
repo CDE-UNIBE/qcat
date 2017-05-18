@@ -32,26 +32,27 @@
       </div>
       <div class="map-overlay hide js-map-points">
         <a class="map-overlay-close js-btn-overlay-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
-        <div class="row">
-          <div class="small-12 columns"><h4>{% trans "List of all points on the map:" %}</h4></div>
+        <div class="row map-overlay-content">
+          <strong class="small-12 columns">{% trans "List of all points on the map:" %}</strong>
           <div class="small-12 columns map-points-list" data-empty-text="{% trans 'No points on the map.' %}"><!-- Points list --></div>
         </div>
       </div>
       <div>
         <div class="map-layers">
-          <div class="row">
-            <div class="columns small-4">
-              {% include 'parts/map_layers_select.html' with select_name='map-layers-0' selected='googlehybrid'%}
+          <div>
+            {% trans "Map layers:" %}
+          </div>
+          <div>
+            {% include 'parts/map_layers_select.html' with select_name='map-layers-0' selected='googlehybrid'%}
+          </div>
+          <div>
+            <div class="nstSlider map-layers-slider" data-range_min="0" data-range_max="100"
+                       data-cur_min="0">
+              <div class="leftGrip"></div>
             </div>
-            <div class="columns small-4">
-              <div class="nstSlider map-layers-slider" data-range_min="0" data-range_max="100"
-                         data-cur_min="0">
-                <div class="leftGrip"></div>
-              </div>
-            </div>
-            <div class="columns small-4">
-              {% include 'parts/map_layers_select.html' with select_name='map-layers-1' selected='osm'%}
-            </div>
+          </div>
+          <div>
+            {% include 'parts/map_layers_select.html' with select_name='map-layers-1' selected='osm'%}
           </div>
         </div>
         <div class="map-form-container"><!-- Map --></div>

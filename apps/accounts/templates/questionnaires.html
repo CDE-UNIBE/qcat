@@ -26,12 +26,28 @@
         </div>
       </section>
     </div>
+    {% if request.user.is_staff %}
+      <div class="small-12 columns">
+        <section class="tech-list small-12 columns">
+          <div class="tech-group">
+            <h2 class="is-group">{% trans "Search" %}</h2>
+              <form action="{% url "staff_questionnaires_search" %}" method="get" class="questionnaire-search-form">
+                <input type="search" id="search-questionnaires" name="term"
+                  data-url="{% url "staff_questionnaires_search" %}"
+                  placeholder="{% trans "Search questionnaires by name or compilers name" %}"
+                  class="questionnaire-search">
+                <input type="submit" class="search-submit button " value="Search">
+              </form>
+          </div>
+        </section>
+      </div>
+    {% endif %}
     <div class="small-12 columns">
       {% for status, name in statuses.items %}
         <section class="tech-list small-12 columns">
           <div class="tech-group">
             <h2 class="is-group">{{ name }}</h2>
-            <div id="questionnaire-list" data-status="{{ status }}">
+            <div class="questionnaire-list" data-status="{{ status }}">
               <div id="status-{{ status }}" class="questionnaire-status-list"></div>
             </div>
           </div>
@@ -50,11 +66,13 @@
       <script src="{% static 'notifications/js/ajaxCsrf.js' %}"></script>
       <script src="{% static 'notifications/js/notificationActions.js' %}"></script>
       <script src="{% static 'js/chosen.jquery.min.js' %}"></script>
+      <script src="{% static 'js/jquery-ui.min.js' %}"></script>
       <script>
         $(document).ready(function() {
 
           var spinner = '<img src="{% static 'assets/img/ajax-loader.gif' %}">';
           var latestUpdatesContainer = $('#latest-notification-updates');
+          var searchInput = $('#search-questionnaires');
 
           // initialize isRead plugin.
           latestUpdatesContainer.bindNotificationActions({
@@ -89,20 +107,51 @@
           });
 
           // load data on click on paginator
-          $('.questionnaire-status-list').on('click', 'ul.pagination li a', function() {
-            var page = $(this).data('page');
-            if (page.length !== 0) {
-              loadQuestionnaires($(this).data('status'), page)
+          $('.questionnaire-list').on('click', 'ul.pagination li a', function() {
+            var page = getURLParameter($(this).attr('href'), 'page');
+            if (page) {
+              loadQuestionnaires($(this).parents('.questionnaire-list:first').data('status'), page)
             }
             return false;
           });
+
+          searchInput.autocomplete({
+            minLength: 3,
+            source: searchInput.data("url"),
+            select: function( event, ui ) {
+              window.location.href = ui.item.url;
+            },
+            open: function(event, ui) {
+              $(".ui-autocomplete").append(
+                "<li class='see-all'><a>{% trans "See all results... " %}</a></li>"
+              );
+            }
+          }).autocomplete("instance")._renderItem = function(ul, item) {
+            return $("<li>")
+              .append(
+                  "<strong>" + item.name + "</strong> (" + item.status +
+                  ")<br>Compiler: " + item.compilers + " | Country: " + item.country
+              ).appendTo(ul);
+          };
+          // For some reason, previously "focused" li is still active when
+          // hovering over the added link. Remove focus class manually.
+          $("body").on("mouseover", ".see-all", function() {
+            $(this).parent('ul').find('li.ui-state-focus').removeClass('ui-state-focus');
+          });
+          $("body").on("click", ".see-all", function() {
+              searchInput.parent("form").submit();
+          })
         });
+        function getURLParameter(url, name) {
+          return (RegExp(name + '=' + '(.+?)(&|$)').exec(url)||[,null])[1];
+        }
       </script>
     {% endcompress %}
   {% endaddtoblock %}
   {% addtoblock 'css' %}
     {% compress css %}
       <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" />
     {% endcompress %}
   {% endaddtoblock %}
 {% endblock %}

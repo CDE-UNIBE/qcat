@@ -409,8 +409,6 @@ class EditTest(FunctionalTest):
         self.toggle_all_sections()
         self.checkOnPage('asdf')
 
-    from nose.plugins.attrib import attr
-    @attr('foobar')
     def test_edit_questionnaire(self, mock_get_user_id):
 
         user = create_new_user(id=6, email='mod@bar.com')
@@ -818,7 +816,7 @@ class LinkedChoicesTest(FunctionalTest):
         self.click_edit_section('cat_4')
 
         # She selects some options in 4.4
-        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@id="subcat_4_4"]').click()
         self.findBy('xpath', '//input[@data-container="qg_40"]').click()
         self.findBy('xpath',
                     '//select[@id="id_qg_40-0-key_57"]/option['
@@ -917,7 +915,7 @@ class LinkedChoicesTest(FunctionalTest):
 
         # She selects some questiongroups in 4.4 and sees that they are now
         # available for selection in 4.5
-        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@id="subcat_4_4"]').click()
         self.findBy('xpath', '//input[@data-container="qg_40"]').click()
         # It is not sufficient to click the checkbox of the questiongroup, an
         # actual value of the questiongroup must be selected.
@@ -1065,7 +1063,7 @@ class LinkedChoicesTest(FunctionalTest):
 
         # She selects some questiongroups in 4.4 and sees that they are now
         # available for selection in 4.5
-        self.findBy('id', 'subcategory-4_4').click()
+        self.findBy('xpath', '//input[@id="subcat_4_4"]').click()
         self.findBy('xpath', '//input[@data-container="qg_41"]').click()
         self.findBy('xpath',
                     '//select[@id="id_qg_41-0-key_57"]/option['
@@ -1158,10 +1156,7 @@ class LockTest(FunctionalTest):
         )
         # and the edit button has no url, but a message about the locked status
         edit_button = self.findBy('link_text', 'Edit')
-        self.assertTrue(
-            edit_button.get_attribute('disabled')
-
-        )
+        self.assertTrue(edit_button.get_attribute('disabled'))
         self.findBy('xpath', '//*[text()[contains(.,"This questionnaire is '
                              'locked for editing by jay None.")]]')
 

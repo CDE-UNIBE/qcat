@@ -26,21 +26,29 @@
   </div>
   <hr>
 </div>
-<div class="row">
-  <div class="small-12 columns">
-    <h5>{{ content.subsidies.title }}</h5>
-    <p>{{ content.subsidies.labour.title }}</p>
-    {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.subsidies.labour.items %}
+{% if content.services.items.0.highlighted %}
+  <div class="row">
+    <div class="small-12 columns">
+      <h5>{{ content.subsidies.material_support.title }}</h5>
+      {{ content.subsidies.material_support.text }}
+    </div>
   </div>
-</div>
-{% if content.subsidies.items %}
+{% endif %}
+{% if content.services.items.1.highlighted %}
+  <div class="row">
+    <div class="small-12 columns">
+      <h5>{{ content.subsidies.title }}</h5>
+      <p>{{ content.subsidies.labour.title }}</p>
+      {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.subsidies.labour.items %}
+    </div>
+  </div>
   <div class="row">
     <div class="small-12 columns">
       {% include 'summary/partial/range_inline_comment_vertical_title.html' with class="highlights_list" list_items=content.subsidies.items %}
     </div>
   </div>
 {% endif %}
-{% if content.subsidies.credit %}
+{% if content.services.items.2.highlighted %}
   <div class="row">
   <hr>
     <div class="small-12 columns">
@@ -57,7 +65,7 @@
     </div>
   </div>
 {% endif %}
-{% if content.subsidies.other %}
+{% if content.services.items.3.highlighted %}
   <div class="row">
   <hr>
     <div class="small-12 columns">

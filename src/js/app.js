@@ -87,8 +87,7 @@ $(function () {
         var form = $(this).closest('form');
         var search_field = form.find('input[name="q"]');
         if (!search_field.val()) {
-            console.log("foo");
-            search_field.remove();
+            search_field.prop('disabled', 'disabled');
         }
         form.submit();
     });

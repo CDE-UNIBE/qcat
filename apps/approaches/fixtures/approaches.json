@@ -7036,7 +7036,13 @@
       "keyword": "app_can_lu_sustain_yes_comment",
       "translation": 7078,
       "configuration": {
-        "type": "text"
+        "type": "text",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "impacts_sustainability_comments"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -7081,7 +7087,13 @@
       "keyword": "app_flowchart_author",
       "translation": 7086,
       "configuration": {
-        "type": "char"
+        "type": "char",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "participation_flowchart_author"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -7099,7 +7111,6 @@
             "field_name": "participation_lead_agency"
           }
         }
-
       }
     },
     "model": "configuration.key",
@@ -7141,7 +7152,13 @@
       "keyword": "app_monitoring_comment",
       "translation": 5004,
       "configuration": {
-        "type": "text"
+        "type": "text",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "tech_support_monitoring_comment"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -7217,7 +7234,13 @@
       "keyword": "app_financial_support_specify",
       "translation": 7132,
       "configuration": {
-        "type": "text"
+        "type": "text",
+        "summary": {
+          "types": ["full"],
+          "default": {
+            "field_name": "financing_material_support"
+          }
+        }
       }
     },
     "model": "configuration.key",
@@ -10014,7 +10037,7 @@
                         "form_options": {
                           "template": "select_link",
                           "link": "technologies",
-                          "max_num": 3
+                          "max_num": 10
                         },
                         "view_options": {
                           "template": "links"
@@ -10081,7 +10104,7 @@
                             "form_options": {
                               "label_position": "none",
                               "num_rows": 10,
-                              "max_length": 3500
+                              "max_length": 5000
                             }
                           }
                         ]
@@ -12601,7 +12624,7 @@
                         "keyword": "app_qg_54",
                         "form_options": {
                           "template": "columns_o6_r6",
-                          "max_num": 2
+                          "max_num": 3
                         },
                         "view_options": {
                           "template": "measure_other"
@@ -12952,7 +12975,7 @@
                         "keyword": "app_qg_83",
                         "form_options": {
                           "template": "columns_e6_e6",
-                          "max_num": 2,
+                          "max_num": 5,
                           "row_class": "no-top-margin"
                         },
                         "questions": [

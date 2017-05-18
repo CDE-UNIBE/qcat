@@ -1,10 +1,10 @@
 {% for range_item in list_items %}
   <div class="row range">
-    <div class="small-4 columns">
+    <div class="small-{{ columns_left|default:4 }} columns">
       {{ range_item.label }}
       <p style="color:#bbbbbb;line-height:1em">{{ range_item.text }}</p>
     </div>
-    <div class="small-8 columns">
+    <div class="small-{{ columns_right|default:8 }} columns">
       <div>
         <div class="range_title range_min">
           {{ range_item.min }}

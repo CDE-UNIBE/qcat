@@ -872,26 +872,24 @@ $(function () {
                     url: $(this.element).data('search-url'),
                     dataType: 'json',
                     data: {
-                        q: request.term
+                        term: request.term
                     },
                     success: function (data) {
-                        if (!data.data.length) {
+                        if (!data.length) {
                             // No results
                             var result = [
                                 {
-                                    name: translationNoResults,
-                                    code: ''
+                                    html: '<strong>' + translationNoResults + '</strong>'
                                 }
                             ];
                             response(result);
                         } else {
-                            var res = data.data;
-                            if (data.total > 10) {
+                            var res = data;
+                            if (data.length > 10) {
                                 // Too many results
                                 res = res.slice(0, 10);
                                 res.push({
-                                    name: translationTooManyResults,
-                                    code: ''
+                                    html: '<strong>' + translationTooManyResults + '</strong>'
                                 });
                             }
                             response(res);
@@ -902,20 +900,23 @@ $(function () {
             create: function () {
                 // Prepare the entries to display the name and code.
                 $(this).data('ui-autocomplete')._renderItem = function (ul, item) {
-                    return $('<li>')
-                        .append('<a><strong>' + item.name + '</strong><br><i>' + item.code + '</i></a>')
-                        .appendTo(ul);
+                    var li = item.html;
+                    if (item.id) {
+                        li = "<strong>" + item.name + "</strong> (" + item.status +
+                              ")<br>Compiler: " + item.compilers + " | Country: " + item.country;
+                    }
+                    return $("<li>").append(li).appendTo(ul);
                 };
             },
             select: function (event, ui) {
-                if (!ui.item.value) {
+                if (!ui.item.id) {
                     // No value (eg. when clicking "No results"), do nothing
                     return false;
                 }
                 // First, make sure there is no other link with the same ID.
                 var alreadyAdded = false;
                 $('[name$=link_id]').each(function () {
-                    if ($(this).val() == ui.item.value) {
+                    if ($(this).val() == ui.item.id) {
                         alreadyAdded = true;
                     }
                 });
@@ -927,7 +928,7 @@ $(function () {
                 var qg = $(this).closest('.list-item');
 
                 // Add ID of link
-                qg.find('[name$=link_id]').val(ui.item.value).trigger('change');
+                qg.find('[name$=link_id]').val(ui.item.id).trigger('change');
 
                 // Set the name
                 qg.find('.link-name').data('link-name', ui.item.name);
@@ -1031,7 +1032,6 @@ $(function () {
 
         $('.user-search-field').autocomplete(userSearchAutocompleteOptions);
         $('.link-search-field').autocomplete(linkSearchAutocompleteOptions);
-        $('.ui-autocomplete').addClass('medium f-dropdown');
 
         // Initial user links
         $('.select-user-id').each(function () {

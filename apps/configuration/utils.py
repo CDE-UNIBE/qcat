@@ -128,36 +128,18 @@ class ConfigurationList(object):
         return configuration
 
 
-def create_new_code(configuration, questionnaire_data):
+def create_new_code(questionnaire, configuration):
     """
-    Create a new and non-existent code for a Questionnaire based on the
-    configuration.
-
-    TODO: This function is currently very limited, needs improvement.
+    Create a new code for a Questionnaire based on the configuration.
 
     Args:
-        ``configuration`` (str): The code of the configuration.
-
-        ``questionnaire_data`` (dict): The data dictionary of the
-        Questionnaire object.
+        questionnaire (Questionnaire): The Questionnaire object.
+        configuration (str): The code of the configuration.
 
     Returns:
-        ``str``. A new and non-existent code.
+        str.
     """
-    def random_code(configuration):
-        """
-        Recursive helper function to create a random non-existent code.
-        """
-        code = '{}_{}'.format(
-            configuration, ''.join(random.SystemRandom().choice(
-                string.ascii_uppercase + string.digits) for _ in range(3)))
-        if Questionnaire.objects.filter(code=code).count() != 0:
-            return random_code(configuration)
-        return code
-    code = '{}_{}'.format(configuration, Questionnaire.objects.count())
-    if Questionnaire.objects.filter(code=code).count() != 0:
-        code = random_code(configuration)
-    return code
+    return '{}_{}'.format(configuration, questionnaire.id)
 
 
 def get_choices_from_model(model_name, only_active=True):

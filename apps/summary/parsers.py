@@ -120,8 +120,8 @@ class QuestionnaireParser(ConfiguredQuestionnaire):
             selected = values[0].get(child.keyword, [])
         else:
             if settings.DEBUG:
-                logger.warning('No or more than one list of values '
-                               'is set for {keyword}'.format(child.keyword))
+                logger.warning('No or more than one list of values is set for '
+                               '{keyword}'.format(keyword=child.keyword))
             selected = []
 
         # default is 'checkbox', where multiple elements can be selected.
@@ -180,83 +180,11 @@ class QuestionnaireParser(ConfiguredQuestionnaire):
                 'text': child_text
             }
 
-    def get_qg_values_with_scale(self, child: QuestionnaireQuestion, **kwargs):
-        """
-        The same output format (see _qg_scale_format) is expected for various
-        question formats/styles. Maybe: move to separate functions.
-        """
-        if kwargs.get('qg_style') == 'multi_select':
-            # e.g. 6.1. - list only selected options. Get all questions from
-            # the parent Category and append comments.
-            categories = child.questiongroup.parent_object.parent_object.subcategories
-            questiongroups = itertools.chain(
-                *[category.questiongroups for category in categories]
-            )
-            for group in questiongroups:
-                value = self._get_qg_selected_value(group.children[0])
-                # Omit empty questions or 'other' questions.
-                if not value or not isinstance(value, int):
-                    continue
-
-                kwargs = group.children[0].additional_translations
-
-                # if a comment is set, add it
-                if len(group.children) > 2:
-                    comment = self._get_qg_selected_value(group.children[3])
-                    kwargs['comment'] = comment or ''
-
-                # override the scale for boolean fields
-                if group.children[0].field_type == 'bool':
-                    kwargs['label_left'] = group.children[0].choices[0][1]
-                    kwargs['label_right'] = group.children[0].choices[1][1]
-
-                yield from self._qg_scale_format(
-                    child=group.children[0],
-                    value=value,
-                    **kwargs
-                )
-
-        if kwargs.get('qg_style') == 'click_labels':
-            # e.g. 5.9 - get all info from parent questiongroup
-            for child in child.questiongroup.children:
-                try:
-                    value = int(self._get_qg_selected_value(child))
-                except (ValueError, TypeError):
-                    continue
-
-                yield from self._qg_scale_format(
-                    child=child,
-                    value=value,
-                    label_left=child.choices[0][1],
-                    label_right=child.choices[-1][1]
-                )
-
-        if kwargs.get('qg_style') == 'radio':
-            # e.g. 6.4. - all info from radio buttons
-            values = self._get_qg_selected_value(child, all_values=True)
-
-            for child in child.questiongroup.children:
-                str_value = values.get(child.keyword, '')
-                # in the template, the numeric position of the value in the
-                # 'range' is required.
-                try:
-                    choice_keys = dict(child.choices).keys()
-                    value = list(choice_keys).index(str_value) + 1
-                except ValueError:
-                    continue
-
-                yield from self._qg_scale_format(
-                    child=child,
-                    value=value,
-                    label_left=child.choices[0][1],
-                    label_right=child.choices[-1][1]
-                )
-
     def _get_qg_selected_value(self, child: QuestionnaireQuestion,
-                               all_values=False):
+                               all_values=False, index=0):
         values = {}
         with contextlib.suppress(IndexError):
-            values = self.values.get(child.questiongroup.keyword, [])[0]
+            values = self.values.get(child.questiongroup.keyword, [])[index]
         return values.get(child.keyword) if not all_values else values
 
     def _qg_scale_format(self, child: QuestionnaireQuestion, value: int,
@@ -407,6 +335,138 @@ class TechnologyParser(QuestionnaireParser):
     Specific methods for technologies.
     """
 
+    def get_human_env_access(self, child: QuestionnaireQuestion):
+        # e.g. 5.9 - get all info from parent questiongroup
+        # combine children from questiongroup with 'other'
+        children = itertools.chain(
+            *[qg.children for qg in child.questiongroup.parent_object.questiongroups]
+        )
+        for child in children:
+            try:
+                value = int(self._get_qg_selected_value(child))
+            except (ValueError, TypeError):
+                continue
+
+            if not child.keyword.startswith('tech_access_other_'):
+                # defined fields
+                yield from self._qg_scale_format(
+                    child=child,
+                    value=value,
+                    label_left=child.choices[0][1],
+                    label_right=child.choices[-1][1]
+                )
+            elif child.keyword == 'tech_access_other_measure':
+                # 'other'
+                yield from self._qg_scale_format(
+                    child=child,
+                    label=self._get_qg_selected_value(
+                        child, all_values=True
+                    ).get('tech_access_other_specify'),
+                    value=value,
+                    label_left=child.choices[0][1],
+                    label_right=child.choices[-1][1]
+                )
+
+    def get_tech_costbenefit(self, child: QuestionnaireQuestion):
+        # e.g. 6.4. - all info from radio buttons
+        values = self._get_qg_selected_value(child, all_values=True)
+
+        for child in child.questiongroup.children:
+            str_value = values.get(child.keyword, '')
+            # in the template, the numeric position of the value in the
+            # 'range' is required.
+            try:
+                choice_keys = dict(child.choices).keys()
+                value = list(choice_keys).index(str_value) + 1
+            except ValueError:
+                continue
+
+            yield from self._qg_scale_format(
+                child=child,
+                value=value,
+                label_left=child.choices[0][1],
+                label_right=child.choices[-1][1]
+            )
+
+    def get_impact(self, child: QuestionnaireQuestion, has_siblings: False):
+        """
+        The last block (off-site impacts) has no siblings, all other blocks
+        have nested questiongroups.
+        Also, as 'other' may be repeating, 'other_spefify' is in a loop as well.
+        Sorry!
+        """
+        if has_siblings:
+            categories = child.questiongroup.parent_object.parent_object.subcategories
+            questiongroups = itertools.chain(
+                *[category.questiongroups for category in categories]
+            )
+        else:
+            questiongroups = child.questiongroup.parent_object.questiongroups
+
+        for group in questiongroups:
+            if len(group.children) < 3:
+                # omit 'tech_specify'
+                continue
+            if group.children[0].keyword == 'tech_impacts_other_specify':
+                for items in self.values.get(group.keyword, []):
+                    value_child = 2
+                    label = items.get(group.children[0].keyword)
+                    value = items.get(group.children[value_child].keyword)
+                    label_left = items.get(group.children[1].keyword)
+                    label_right = items.get(group.children[3].keyword)
+                    before_label = group.children[4].label
+                    before_value = items.get(group.children[4].keyword)
+                    after_label = group.children[5].label
+                    after_value = items.get(group.children[5].keyword)
+                    comment_value = items.get(group.children[6].keyword)
+                    yield from self._get_impact_row(
+                        child=group.children[value_child], label=label,
+                        value=value, label_left=label_left,
+                        label_right=label_right, before_value=before_value,
+                        before_label=before_label, after_value=after_value,
+                        after_label=after_label, comment_value=comment_value
+                    )
+            else:
+                value_child = 0
+                label = group.children[value_child].label
+                value = self._get_qg_selected_value(group.children[value_child])
+                label_left = group.children[0].additional_translations.get('label_left')
+                label_right = group.children[0].additional_translations.get('label_right')
+                before_label = group.children[1].label
+                before_value = self._get_qg_selected_value(group.children[1])
+                after_label = group.children[2].label
+                after_value = self._get_qg_selected_value(group.children[2])
+                comment_value = self._get_qg_selected_value(group.children[3])
+                yield from self._get_impact_row(
+                    child=group.children[value_child], label=label,
+                    value=value, label_left=label_left, label_right=label_right,
+                    before_value=before_value, before_label=before_label,
+                    after_value=after_value, after_label=after_label,
+                    comment_value=comment_value,
+                )
+
+    def _get_impact_row(self, child: QuestionnaireQuestion, label: str,
+                        value: int, label_left: str, label_right: str,
+                        before_value: str, before_label: str, after_value: str,
+                        after_label: str, comment_value: str):
+        if value and isinstance(value, int):
+            comment = ''
+            if before_value or after_value:
+                comment = f'{before_label}: {before_value}\n{after_label}: {after_value}'
+
+            # if a comment is set, add it
+            if comment_value:
+                comment += '\n' + (comment_value or '')
+
+            yield from self._qg_scale_format(
+                child=child,
+                value=value,
+                label=label,
+                label_left=label_left,
+                label_right=label_right,
+                comment=comment
+            )
+
     def get_climate_change(self, child: QuestionnaireQuestion):
         # based on this first question, get all questiongroups with at least
         # one # filled in question.
@@ -439,7 +499,9 @@ class TechnologyParser(QuestionnaireParser):
 
     def _prepare_climate_change_row(self, group: QuestionnaireQuestiongroup, **values):
         """
-        Create elements for a single line
+        Create elements for a single line. The structure of questions varies
+        between all elements, regarding number of questions and content/scale of
+        questions.
         """
         label = group.label
         comment = ''
@@ -460,25 +522,31 @@ class TechnologyParser(QuestionnaireParser):
                 # mode of layout. If the selected value is empty or unknown,
                 # this is added as comment.
                 choice_keys = list(
-                    dict(question.choices).keys() - ['', 'cope_unknown']
+                    collections.OrderedDict(question.choices).keys()
                 )
+                with contextlib.suppress(ValueError):
+                    choice_keys.remove('')
+                    choice_keys.remove('cope_unknown')
 
                 value = values.get(question.keyword)
                 if value not in choice_keys:
                     string_value = dict(question.choices).get(value)
-                    if string_value :
+                    if string_value:
                         comment += _(' Answer: {}').format(string_value)
                 else:
-                    value = choice_keys.index(value) + 1
+                    value = choice_keys.index(value)
 
             else:
                 # All other fields, such as 'season' go into the comments.
                 comment_key = values.get(question.keyword)
+                if not group.label.startswith('other'):
+                    comment_key = dict(question.choices).get(comment_key)
                 if comment_key:
                     comment += '{label}: {value}'.format(
                         label=question.label,
-                        value=dict(question.choices).get(comment_key)
+                        value=comment_key
                     )
+
         return {
             'label': label,
             'range': range(0, len(choice_keys)),
@@ -515,30 +583,48 @@ class ApproachParser(QuestionnaireParser):
             except (KeyError, IndexError):
                 continue
 
-            yield '{}: {}'.format(group.label, text)
+            yield group.label, text
 
     def get_stakeholders_roles(self, child: QuestionnaireQuestion):
         groups = child.questiongroup.parent_object.questiongroups
-        # the first element in the group contains the labels of filled in
-        # questiongroups
-        labels = self.values.get(groups[0].keyword)[0].get('app_stakeholders')
-        for pos, group in itertools.islice(enumerate(groups), 1):
-            try:
-                values = self.values[group.keyword][0]
-            except (KeyError, IndexError):
-                continue
+        # the first element in the group contains the labels of the selected
+        # questiongroups, so get the values.
+        label_values = self.values.get(groups[0].keyword)
+        if not label_values:
+            return
+        labels = label_values[0].get('app_stakeholders')
 
-            label = Value.objects.get(keyword=labels[pos]).get_translation(
+        # use only groups that are selected (i.e. in the labels-list)
+        selected_group_keywords = [
+            group.keyword for group in groups
+            if group.view_options.get('conditional_question') in labels
+        ]
+
+        for index, group_keyword in enumerate(selected_group_keywords):
+            values = self.values[group_keyword][0]
+            label = Value.objects.get(keyword=labels[index]).get_translation(
                 keyword='label', configuration='approaches'
             )
+            yield from self._get_stakeholder_row(label=label, **values)
 
-            roles = values.get('app_stakeholders_roles')
-            comments = values.get('app_stakeholders_comments')
-            yield '{label}{roles}{comments}'.format(
-                label=label,
-                roles=' ({})'.format(roles) if roles else '',
-                comments=': {}'.format(comments) if comments else ''
+        # Also include 'other' stakeholders
+        other_group = next(group for group in groups if group.children[0].keyword == 'app_stakeholders_other')
+        other = self.values.get(other_group.keyword, [])
+        if other and len(other) == 1:
+            values = other[0]
+            yield from self._get_stakeholder_row(
+                label=values[other_group.children[0].keyword], **values
             )
+
+    def _get_stakeholder_row(self, label: str, **kwargs):
+        roles = kwargs.get('app_stakeholders_roles')
+        comments = kwargs.get('app_stakeholders_comments')
+
+        yield '{label}{roles}{comments}'.format(
+            label=label,
+            roles=' ({})'.format(roles) if roles else '',
+            comments=': {}'.format(comments) if comments else ''
+        )
 
     def get_involvement(self, child: QuestionnaireQuestion):
         for qg in child.questiongroup.parent_object.questiongroups:
@@ -567,7 +653,7 @@ class ApproachParser(QuestionnaireParser):
         return {
             'value': self.get_full_range_values(child),
             'bool': {
-                'highlighted': selected != 'app_institutions_no',
+                'highlighted': selected and selected != 'app_institutions_no',
                 'text': child.questiongroup.parent_object.label
             }
         }
@@ -618,8 +704,8 @@ class ApproachParser(QuestionnaireParser):
 
         return {
             "is_subsidised": {
-                "highlighted": none_selected not in selected_groups,
-                "text": _("Financial/ material support")
+                "highlighted": selected_groups and none_selected not in selected_groups,
+                "text": _("Subsidies for specific inputs")
             },
             "subsidies": {
                 "title": child.questiongroup.parent_object.label,
@@ -649,7 +735,10 @@ class ApproachParser(QuestionnaireParser):
         return SubsidiesRow(questiongroup, **values)
 
     def get_impacts_motivation(self, child: QuestionnaireQuestion):
-        selected = self.values.get(child.questiongroup.keyword)[0].get(child.keyword)
+        selected_values = self.values.get(child.questiongroup.keyword)
+        if not selected_values:
+            return
+        selected = selected_values[0].get(child.keyword)
         for keyword, label in dict(child.choices).items():
             yield {
                 'highlighted': keyword in selected,

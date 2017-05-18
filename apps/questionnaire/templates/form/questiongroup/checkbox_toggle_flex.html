@@ -1,0 +1,81 @@
+{% comment %}
+  The questiongroup has a checkbox (labelled with label of the QG), the questions only appear after clicking the checkbox.
+
+  config: The configuration of the questiongroup
+
+  formset: The (repeating) forms as formset
+
+{% endcomment %}
+
+{% load i18n %}
+{% load floppyforms %}
+{% load list_to_columns %}
+
+<div{% if config.questiongroup_condition %} id="{{ config.questiongroup_condition }}"{% endif %} class="small-12 columns questiongroup{% if config.numbered %} questiongroup-numbered-{{ config.numbered }}{% endif %}{% if config.numbered == 'prefix' %} sortable{% endif %}">
+
+  {% if config.detail_level %}
+    <ul class="accordion plus-questiongroup" role="tablist" data-accordion="">
+      <li class="accordion-navigation">
+        <a data-toggle="{{ config.keyword }}" href="#{{ config.keyword }}">{% trans "+ [TODO] Advanced Questions" %}</a>
+        <div id="{{ config.keyword }}" class="content active">
+  {% endif %}
+
+  <div class="small-12 medium-3 columns{% if config.columns_class %} {{ config.columns_class }}{% endif %}">
+    <label class="input-multiline">
+      <input type="checkbox" class="cb-toggle-questiongroup" data-container="{{ config.keyword }}"{% if edit_mode != "edit" %} disabled="disabled"{% endif %}>
+      <span{% if config.helptext %} class="has-tip" title="{{ config.helptext }}" aria-haspopup="true" data-tooltip=""{% endif %}>
+        {{ config.label }}
+        {% if config.helptext %}<svg class="icon-information is-inline right"><use xlink:href="#icon-information"></svg>{% endif %}
+      </span>
+    </label>
+  </div>
+  <div id="{{ config.keyword }}"
+       class="small-12 medium-8 columns cb-toggle-questiongroup-content"
+       style="display:none;"
+      {% if config.questiongroup_to_options %}
+        data-questiongroup-to-options="{{ config.questiongroup_to_options|join:"," }}"
+        data-questiongroup-to-options-label="{{ config.label }}"
+        data-questiongroup-to-options-keyword="{{ config.keyword }}"
+      {% endif %}>
+
+    {{ formset.management_form }}
+
+    {% include "form/errors.html" with errors=formset.non_form_errors %}
+
+    {% for qg_form in formset.forms %}
+
+      <div class="list-item list-item-flex{% if formset.max_num > formset.min_num %} is-removable" data-questiongroup-keyword="{{ config.keyword }}{% endif %}">
+        {% for field in qg_form.visible_fields %}
+          {% with template=config.templates|get_by_keyword:field.name options=config.options|get_by_keyword:field.name %}
+            {% if template %}
+              {% formrow field using template %}
+            {% else %}
+              {% formrow field using "form/question/default.html" %}
+            {% endif %}
+          {% endwith %}
+        {% endfor %}
+        {% for field in qg_form.hidden_fields %}{% formfield field %}{% endfor %}
+        {% if formset.max_num > 1 %}
+          <div class="columns right">
+            <a class="right list-item-action link is-{{ configuration_name }}" data-remove-this="" {% if forloop.counter <= formset.min_num and formset|length <= formset.min_num %}
+            style="display: none;"{% endif %}>{% trans "Remove" %}</a>
+          </div>
+        {% endif %}
+      </div>
+
+    {% endfor %}
+    {% if formset.max_num > formset.min_num %}
+      <div class="row list-action">
+        <div class="small-12 columns">
+          <p><a data-add-item="" data-questiongroup-keyword="{{ config.keyword }}" class="link is-{{ configuration_name }}" {% if formset.total_form_count >= formset.max_num or edit_mode != 'edit' %} style="display:none;"{% endif %}>{% trans 'Add More' %}</a></p>
+        </div>
+      </div>
+    {% endif %}
+  </div>
+
+  {% if config.detail_level %}
+        </div>
+      </li>
+    </ul>
+  {% endif %}
+</div>

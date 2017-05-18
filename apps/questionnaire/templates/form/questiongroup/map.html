@@ -20,6 +20,25 @@
 
   {% include "form/helptext.html" with helptext=config.helptext helptext_length=config.helptext_length %}
 
+  <div class="help-bloc">
+    {% blocktrans with button_search='<svg class="icon-lines in-text"><use xlink:href="#icon-search"></use></svg>' button_pin='<svg class="icon-lines in-text"><use xlink:href="#icon-location2"></use></svg>' button_gps='<svg class="icon-lines in-text"><use xlink:href="#icon-compass2"></use></svg>' %}
+      <p>Choose map layers, using the dropdown menus on top of the map image. You can overlay the selected map layers by moving the slider.</p>
+      <p>Zoom into your area / location by using one of the following methods:</p>
+      <ul>
+        <li>Use +/- buttons on the top left of the map</li>
+        <li>Use the mouse wheel</li>
+        <li>Search a location by entering a location name using the {{ button_search }} button</li>
+      </ul>
+      <p>Add points on the map by using one of the following methods:</p>
+      <ul>
+        <li>Set a point using the {{ button_pin }} button</li>
+        <li>Set a point based on GPS coordinates using the {{ button_gps }} button</li>
+      </ul>
+      <p>Use the edit and delete buttons to move points, delete single points or delete all points from the map</p>
+      <p>Click on the “number” button to display a list of all points. Here you can also delete single points.</p>
+    {% endblocktrans %}
+  </div>
+
   {{ formset.management_form }}
 
   {% include "form/errors.html" with errors=formset.non_form_errors %}
@@ -35,6 +54,14 @@
             <label class="map-controls-button button small tip-right" for="{{ config.keyword }}_{{ forloop.counter }}_1" title="{% trans "Add a point by clicking on the map" %}" data-tooltip="">
               <svg class="icon-lines is-inline"><use xlink:href="#icon-location2"></use></svg>
             </label>
+            <button type="button" class="map-controls-button button small tip-right js-btn-coordinates-show" title="{% trans "Set a point based on GPS coordinates" %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-compass2"></use></svg>
+            </button>
+            <button type="button" class="map-controls-button button small tip-right js-btn-search-show" title="{% trans "Search and zoom to a location on the map" %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-search"></use></svg>
+            </button>
+          </div>
+          <div class="map-controls-group">
             <input type="radio" id="{{ config.keyword }}_{{ forloop.counter }}_2" value="modify" name="map-actions" previousvalue="false" disabled="disabled">
             <label class="map-controls-button button small tip-right map-btn-disabled map-btn-toggle" for="{{ config.keyword }}_{{ forloop.counter }}_2" title="{% trans "Click and hold an existing point on the map to move it." %}" data-tooltip="">
               <svg class="icon-lines is-inline"><use xlink:href="#icon-edit"></use></svg>
@@ -43,6 +70,9 @@
             <label class="map-controls-button button small tip-right map-btn-disabled map-btn-toggle" for="{{ config.keyword }}_{{ forloop.counter }}_3" title="{% trans "Delete an existing point on the map by clicking it." %}" data-tooltip="">
               <svg class="icon-lines is-inline"><use xlink:href="#icon-cross2"></use></svg>
             </label>
+            <button type="button" class="map-controls-button button small tip-right map-btn-danger map-btn-disabled map-btn-toggle js-btn-delete-features" title="{% trans "Delete all points from the map" %}" data-tooltip="">
+              <svg class="icon-lines is-inline"><use xlink:href="#icon-bin"></use></svg>
+            </button>
           </div>
           <div class="map-controls-group">
             <button type="button" class="map-controls-button button small tip-right button-feature-count js-btn-feature-count" title="{% trans "Number of points on the map" %}" data-tooltip="">
@@ -50,30 +80,29 @@
             <button type="button" class="map-controls-button button small tip-right map-btn-disabled map-btn-toggle js-btn-show-features" title="{% trans "Zoom to all points on the map" %}" data-tooltip="">
               <svg class="icon-lines is-inline"><use xlink:href="#icon-shrink"></use></svg>
             </button>
-            <button type="button" class="map-controls-button button small tip-right map-btn-danger map-btn-disabled map-btn-toggle js-btn-delete-features" title="{% trans "Delete all points from the map" %}" data-tooltip="">
-              <svg class="icon-lines is-inline"><use xlink:href="#icon-bin"></use></svg>
-            </button>
-          </div>
-          <div class="map-controls-group">
-            <button type="button" class="map-controls-button button small tip-right js-btn-coordinates-show" title="{% trans "Set a point based on GPS coordinates" %}" data-tooltip="">
-              <svg class="icon-lines is-inline"><use xlink:href="#icon-compass2"></use></svg>
-            </button>
-            <button type="button" class="map-controls-button button small tip-right js-btn-search-show" title="{% trans "Search and zoom to a location on the map" %}" data-tooltip="">
-              <svg class="icon-lines is-inline"><use xlink:href="#icon-search"></use></svg>
-            </button>
           </div>
         </div>
         <div class="map-overlay hide js-map-points">
           <a class="map-overlay-close js-btn-overlay-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
-          <div class="row">
-            <div class="small-12 columns"><h4>{% trans "List of all points on the map:" %}</h4></div>
+          <div class="row map-overlay-content">
+            <strong class="small-12 columns">{% trans "List of all points on the map:" %}</strong>
             <div class="small-12 columns map-points-list" data-empty-text="{% trans 'No points on the map.' %}"><!-- Points list --></div>
           </div>
         </div>
+        <div class="map-overlay hide js-map-delete-features">
+          <a class="map-overlay-close js-btn-overlay-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
+          <div class="row map-overlay-content">
+            <div class="small-12 columns">
+              <strong>{% trans "Delete all points from the map" %}</strong>
+              <p>{% trans "Are you sure you want to delete all the points from the map? This cannot be undone." %}</p>
+              <a class="button alert js-btn-confirm-delete-features">{% trans "Delete" %}</a>
+            </div>
+          </div>
+
+        </div>
         <div class="map-overlay hide js-map-coordinates">
           <a class="map-overlay-close js-btn-overlay-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
-          <div class="row map-coordinates-parse">
-            <br/>
+          <div class="row map-overlay-content">
             {% trans 'Please enter the coordinates in the field below. The coordinates must be in decimal degrees of format "Latitude, Longitude", eg. 46.9526, 7.4352. Use the link below to convert from degrees, minutes and seconds to decimal degrees.' as msg %}
             {% include "form/helptext.html" with helptext=msg %}
             <div class="small-12 columns map-converter-link">
@@ -94,28 +123,28 @@
         </div>
         <div class="map-overlay hide js-map-search">
           <a class="map-overlay-close js-btn-overlay-close"><svg class="icon-lines is-inline"><use xlink:href="#icon-cross"/></svg></a>
-          <div class="row map-search-container">
-            <br/>
+          <div class="row map-overlay-content">
             {% trans 'Enter the name of a village, city, etc. in the textfield below and select one of the results to zoom to its location.' as msg %}
             {% include "form/helptext.html" with helptext=msg %}
-            <input type="search" class="js-map-search-field" placeholder="Search for a village, city, etc." data-translation-no-results="{% trans 'No results found' %}" data-translation-too-many-results="{% trans 'Too many results found, please narrow the search' %}" data-current-locale="{{ request.LANGUAGE_CODE }}">
+            <input type="search" class="js-map-search-field" placeholder="{% trans "Search for a village, city, etc." %}">
           </div>
         </div>
         <div>
           <div class="map-layers">
-            <div class="row">
-              <div class="columns small-4">
-                {% include 'parts/map_layers_select.html' with select_name='map-layers-0' selected='googlehybrid'%}
+            <div>
+              {% trans "Map layers:" %}
+            </div>
+            <div>
+              {% include 'parts/map_layers_select.html' with select_name='map-layers-0' selected='googlehybrid'%}
+            </div>
+            <div>
+              <div class="nstSlider map-layers-slider" data-range_min="0" data-range_max="100"
+                         data-cur_min="0">
+                <div class="leftGrip"></div>
               </div>
-              <div class="columns small-4">
-                <div class="nstSlider map-layers-slider" data-range_min="0" data-range_max="100"
-                           data-cur_min="0">
-                  <div class="leftGrip"></div>
-                </div>
-              </div>
-              <div class="columns small-4">
-                {% include 'parts/map_layers_select.html' with select_name='map-layers-1' selected='osm'%}
-              </div>
+            </div>
+            <div>
+              {% include 'parts/map_layers_select.html' with select_name='map-layers-1' selected='osm'%}
             </div>
           </div>
           <div class="map-form-container"><!-- Map --></div>
@@ -141,7 +170,7 @@
 </div>
 
 {% addtoblock 'js' %}
-  <script src="https://maps.googleapis.com/maps/api/js?v=3&key={{ GOOGLE_MAPS_JAVASCRIPT_API_KEY }}"></script>
+  <script src="https://maps.googleapis.com/maps/api/js?v=3&key={{ GOOGLE_MAPS_JAVASCRIPT_API_KEY }}&libraries=places"></script>
   <script type="text/javascript" src="{% static 'js/ol3gm.min.js' %}"></script>
   <script src="{% static 'js/jquery-ui.min.js' %}"></script>
   <script src="{% static 'js/map.min.js' %}"></script>

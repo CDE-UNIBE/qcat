@@ -12,11 +12,9 @@
       <h5>{{ content.zone.title }}</h5>
       {% include 'summary/partial/unordered_list.html' with class="highlights_list" list_items=content.zone.items %}
   </div>
-  <div class="small-3 columns">
+  <div class="small-6 columns">
       <h5>{{ content.specifications.title }}</h5>
-      {{ content.specifications.text }}
-  </div>
-  <div class="small-3 columns">
+      {{ content.specifications.text|linebreaksbr }}
   </div>
 </div>
 <div class="row">

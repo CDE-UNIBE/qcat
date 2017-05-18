@@ -12,14 +12,11 @@
       <div class="small-12 columns">
         <h1 class="is-title">
           <a href="{% url 'wocat:add' %}" title="Back" class="button-back"><svg class="icon"><use xlink:href="#icon-caret_left"></use></svg></a>
-          {% trans "Add SLM Module" %}
+          {% trans "Add CCA Module" %}
         </h1>
         <p>
-          {% trans "You can add a module to an existing SLM Technology. If the SLM Technology is not included in the WOCAT SLM Technology database yet, please first add it." %}
+          {% trans "You can add a CCA Module to an existing SLM Technology. If the SLM Technology is not included in the WOCAT SLM Technology database yet, please first add it." %}
           <a href="{% url 'technologies:questionnaire_new' %}" class="link">{% trans "Add new SLM Technology." %}</a>
-        </p>
-        <p>
-          {% trans 'Currently the module "Climate Change Adaptation" can be added.' %}
         </p>
       </div>
     </div>
@@ -54,11 +51,8 @@
         <div class="card">
           <div class="card-well">
             <h3>
-              {% trans "2. Select a module" %}
+              {% trans "2. Select CCA Module" %}
             </h3>
-            <p>
-              {% trans "Select a module which you would like to add to the Technology." %}
-            </p>
             <div id="modules-available">
               <img class="module-loading" src="{% static 'assets/img/ajax-loader.gif' %}">
             </div>
@@ -71,7 +65,7 @@
         <div class="card">
           <div class="card-well">
             <h3>
-              {% trans "3. Create the module" %}
+              {% trans "3. Create CCA Module" %}
             </h3>
             <input type="submit" value="{% trans "Create" %}" class="button">
           </div>
@@ -108,5 +102,10 @@
       </script>
     {% endcompress %}
   {% endaddtoblock %}
-
+  {% addtoblock 'css' %}
+    {% compress css %}
+      <link href="{% static 'css/chosen.min.css' %}" rel="stylesheet">
+      <link rel="stylesheet" href="{% static 'css/jquery-ui.min.css' %}" />
+    {% endcompress %}
+  {% endaddtoblock %}
 {% endblock %}

@@ -7,17 +7,17 @@
   <div class="small-12 columns">
     <h5>{{ content.main.title }}</h5>
     {{ content.main.text|linebreaksbr }}
+    <hr>
   </div>
   <div class="small-12 columns">
     {% for list_item in content.elements  %}
-    <h5>{{ list_item.title }}</h5>
-    <ul class="bullets">
-      {% for item in list_item.items  %}
-      <li>
-        {{ item }}
-      </li>
-      {% endfor %}
-    </ul>
+      <h5>{{ list_item.title }}</h5>
+        {% for item in list_item.items  %}
+          <p>
+            <strong>{{ item.0 }}</strong>: {{ item.1 }}
+          </p>
+        {% endfor %}
+      <hr>
     {% endfor %}
   </div>
 </div>

@@ -370,6 +370,11 @@
           "questionnaire"
         ],
         [
+          "change_compiler",
+          "questionnaire",
+          "questionnaire"
+        ],
+        [
           "add_project",
           "configuration",
           "project"

@@ -101,8 +101,8 @@ class BaseSettings(Configuration):
         ('km', _('Khmer')),
         ('lo', _('Lao')),
         ('ar', _('Arabic')),
-        ('bs', _('Bosnian')),
         ('pt', _('Portuguese')),
+        ('af', _('Afrikaans')),
     )
     # languages with extraordinarily long words that need 'forced' line breaks
     # to remain consistent in the box-layout.
@@ -151,20 +151,43 @@ class BaseSettings(Configuration):
     )
     THUMBNAIL_ALIASES = {
         'summary': {
-            'header_image': {
-                'size': (0, 700),
-                'crop': 'smart',
-                'upscale': True
+            'screen': {
+                'header_image': {
+                    'size': (0, 1840),
+                    'crop': 'smart',
+                    'upscale': True
+                },
+                'half_height': {
+                    'size': (640, 640),
+                    'crop': 'smart',
+                    'upscale': True
+                },
+                'map': {
+                    'size': (560, 0)
+                },
+                'flow_chart': {
+                    'size': (900, 0),
+                    'upscale': True
+                }
             },
-            'half_height': {
-                'size': (0, 290),
-                'crop': 'smart',
-            },
-            'map': {
-                'size': (300, 0)
-            },
-            'flow_chart': {
-                'size': (450, 0)
+            'print': {
+                'header_image': {
+                    'size': (0, 7360),
+                    'crop': 'smart',
+                    'upscale': True
+                },
+                'half_height': {
+                    'size': (2560, 2560),
+                    'crop': 'smart',
+                    'upscale': True
+                },
+                'map': {
+                    'size': (2240, 0)
+                },
+                'flow_chart': {
+                    'size': (3600, 0),
+                    'upscale': True
+                }
             }
         }
     }
@@ -300,7 +323,7 @@ class BaseSettings(Configuration):
     IS_ACTIVE_FEATURE_WATERSHED = values.BooleanValue(
         environ_prefix='', default=False
     )
-    IS_ACTIVE_FEATURE_SUMMARY = values.BooleanValue(
+    IS_ACTIVE_FEATURE_FACTSHEET = values.BooleanValue(
         environ_prefix='', default=False
     )
 
@@ -322,7 +345,7 @@ class BaseSettings(Configuration):
     # Settings for piwik integration. Tracking happens in the frontend
     # (base template) and backend (API)
     PIWIK_SITE_ID = values.IntegerValue(environ_prefix='', default=None)
-    PIWIK_URL = values.Value(environ_prefix='')
+    PIWIK_URL = values.Value(environ_prefix='', default='https://piwik.wocat.net/')
     PIWIK_AUTH_TOKEN = values.Value(environ_prefix='')
     PIWIK_API_VERSION = values.IntegerValue(environ_prefix='', default=1)
 
@@ -336,6 +359,7 @@ class BaseSettings(Configuration):
     SEND_MAILS = values.BooleanValue(default=False)
 
     WOCAT_IMPORT_DATABASE_URL = values.Value(environ_prefix='')
+    WOCAT_IMPORT_DATABASE_URL_LOCAL = values.Value(environ_prefix='')
 
     # TODO: Temporary test of UNCCD flagging.
     TEMP_UNCCD_TEST = values.ListValue(environ_prefix='')
