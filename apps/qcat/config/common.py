@@ -251,7 +251,7 @@ class BaseSettings(Configuration):
     }
     API_PAGE_SIZE = values.IntegerValue(default=25, environ_prefix='')
 
-    DATABASES = values.DatabaseURLValue()
+    DATABASES = values.DatabaseURLValue(environ_required=True)
 
     # SECURITY WARNING: don't run with debug turned on in production!
     DEBUG = values.BooleanValue(default=False)
@@ -260,11 +260,11 @@ class BaseSettings(Configuration):
 
     ALLOWED_HOSTS = values.ListValue(default=['localhost', '127.0.0.1'])
 
-    SECRET_KEY = values.SecretValue()
+    SECRET_KEY = values.SecretValue(environ_required=True)
 
     # The base URL of the Typo3 REST API used for authentication
     AUTH_API_URL = values.Value(environ_prefix='',
-                                default='https://dev.wocat.net/rest/')
+                                default='https://beta.wocat.net/api/v1/')
 
     # The username used for API login
     AUTH_API_USER = values.Value(environ_prefix='')
