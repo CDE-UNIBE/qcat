@@ -233,6 +233,11 @@ class Technologies(Edition):
                 transform_configuration=self.various_translation_updates,
                 release_note=''
             ),
+            Operation(
+                transform_configuration=self.add_new_LUT_listvalues,
+                release_note=_(
+                    '8.1: New Annual crops, Perennial crops, Tree/shrub crops, animal type, crop-livestock management practices, products and services, New forest plantation types, tree types and new species for "Livestock population" were added.'),
+            ),
         ]
 
     def add_question_tech_input_maint_total_costs_usd(self, **data) -> dict:
@@ -3146,6 +3151,86 @@ class Technologies(Edition):
                 }
             }
         )
+
+        return data
+
+    def add_new_LUT_listvalues(self, **data) -> dict:
+
+        # Add annual cropping list of crops, Perennial cropping list of crops, Tree and shrub cropping list of crops
+        annual_crops_keyword = 'tech_lu_cropland_annual_cropping_crops'
+        perennial_crops_keyword = 'tech_lu_cropland_perennial_cropping_crops'
+        treeshrub_crops_keyword = 'tech_lu_cropland_tree_shrub_cropping_crops'
+
+        # Add animal types, Add new products and services
+        type_animal_keyword = 'tech_lu_grazingland_animals'
+        type_products_keyword = 'tech_lu_grazingland_products'
+
+        # Add new forest plantation type, Add new tree types
+        type_forest_plantation_keyword = 'tech_lu_forest_plantation_type'
+        type_tree_keyword = 'tech_lu_forest_tree_type'
+
+        # Dictionary of values to be added
+        [
+            self.add_new_value(
+                question_keyword=qk,
+                value=self.create_new_value(
+                    keyword=k,
+                    translation={
+                        'label': {
+                            'en': l
+                        }
+                    },
+                ),
+            )
+            for i, (qk, k, l) in enumerate([
+                (annual_crops_keyword, 'annual_crops_450', 'cereals - buckwheat'),
+                (annual_crops_keyword, 'annual_crops_458', 'legumes and pulses - lentils'),
+                (annual_crops_keyword, 'annual_crops_472', 'root/tuber crops - yams, taro/cocoyam, other'),
+                (perennial_crops_keyword, 'perennial_crops_529', 'passiflora - passion fruit, maracuja'),
+                # (perennial_crops_keyword, 'perennial_crops_465', 'pineapple'), # pineapple is already present
+                (perennial_crops_keyword, 'perennial_crops_474', 'herbs, chili, capsicum'),
+                (perennial_crops_keyword, 'perennial_crops_427', 'fodder crops - grasses'),
+                (perennial_crops_keyword, 'perennial_crops_418', 'fodder crops - legumes, clover'),
+                (perennial_crops_keyword, 'perennial_crops_non_fodder', 'non-fodder grasses - e.g. for thatching or stabilization (vetiver)'),
+                (perennial_crops_keyword, 'perennial_crops_natural_grasses', 'natural grasses'),
+                (treeshrub_crops_keyword, 'tree_shrub_474', 'cactus, cactus-like (e.g. opuntia)'),
+                (treeshrub_crops_keyword, 'tree_shrub_cork_oak', 'cork oak'),
+                (treeshrub_crops_keyword, 'tree_shrub_caragana', 'caragana'),
+                (treeshrub_crops_keyword, 'tree_shrub_argan', 'argan'),
+
+                (type_animal_keyword, 'animals_cattle', 'cattle - dairy and beef (e.g. zebu)'),
+                (type_animal_keyword, 'animals_beekeeping', 'beekeeping, apiculture'),
+                (type_animal_keyword, 'animals_fish', 'fish'),
+                (type_products_keyword, 'prod_service_manure', 'manure as fertilizer/ energy production'),
+                (type_products_keyword, 'prod_service_economic', 'economic security, investment prestige'),
+
+                (type_forest_plantation_keyword, 'plantation_forest_shrubland', 'subtropical shrubland plantation'),
+                (type_tree_keyword, 'tree_type_acer', 'Acer species (e.g. maple)'),
+                (type_tree_keyword, 'tree_type_cedrus', 'Cedrus species'),
+                (type_tree_keyword, 'tree_type_erythrina', 'Erythrina species'),
+                (type_tree_keyword, 'tree_type_salix', 'Salix species'),
+                (type_tree_keyword, 'tree_type_haloxylon', 'Haloxylon species'),
+            ])
+        ]
+
+        # Add new livestock species population
+        # This is added after adding the new Livestock animals
+        #  - same keyword is used to ensure population is matched to species
+        keyword_species = 'tech_lu_grazingland_pop_species'
+
+        [
+            self.add_new_value(
+                question_keyword=qk,
+                value=self.get_value(
+                    keyword=k,
+                ),
+            )
+            for i, (qk, k) in enumerate([
+                (keyword_species, 'animals_cattle'),
+                (keyword_species, 'animals_beekeeping'),
+                (keyword_species, 'animals_fish'),
+            ])
+        ]
 
         return data
 
