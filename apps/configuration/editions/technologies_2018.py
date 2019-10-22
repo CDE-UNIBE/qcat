@@ -236,7 +236,7 @@ class Technologies(Edition):
             Operation(
                 transform_configuration=self.add_new_LUT_listvalues,
                 release_note=_(
-                    '8.1: New Annual crops, Perennial crops, Tree/shrub crops, animal type, crop-livestock management practices, products and services, New forest plantation types, tree types and new species for "Livestock population" were added.'),
+                    'Update October 2019: Question 3.2: New Annual crops, Perennial crops, Tree/shrub crops, animal type, crop-livestock management practices, products and services, New forest plantation types, tree types and new species for "Livestock population" were added.'),
             ),
         ]
 
