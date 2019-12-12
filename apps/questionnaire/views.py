@@ -1664,6 +1664,20 @@ class QuestionnaireAddModule(QuestionnaireModuleMixin, View):
                 self.request, 'Module exists already for this questionnaire.')
             return redirect(error_redirect)
 
+        # Find latest draft version of the this questionnaire, if any
+        draft_questionnaire_object = Questionnaire.with_status.draft().filter(
+            code=self.questionnaire_object.code
+        ).filter(
+            version__gt=self.questionnaire_object.version
+        ).distinct()
+
+        if draft_questionnaire_object is not None:
+            messages.error(
+                self.request, 'A newer, unpublished version of this technology exists. It has to be published before '
+                              'you can add a CCA module. Please contact the compiler or the WOCAT secretariat '
+                              'for further information.')
+            return redirect(error_redirect)
+
         # Create a new questionnaire
         module_data = {}
         new_module = Questionnaire.create_new(
