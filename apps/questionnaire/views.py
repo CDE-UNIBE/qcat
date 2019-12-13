@@ -23,6 +23,7 @@ from django.shortcuts import (
 )
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, get_language
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -1675,9 +1676,10 @@ class QuestionnaireAddModule(QuestionnaireModuleMixin, View):
                                 settings.QUESTIONNAIRE_REJECTED]
             ).exists():
                 messages.error(
-                    self.request, 'A newer, unpublished version of this technology exists. It has to be published '
-                                  'before you can add a CCA module. Please contact the compiler or the WOCAT '
-                                  'secretariat for further information.')
+                    self.request, mark_safe('A newer, unpublished version of this technology exists. <br> '
+                                            'It has to be published before you can add a CCA module. <br> '
+                                            'Please contact the compiler or the WOCAT secretariat for further '
+                                            'information.'))
                 return redirect(error_redirect)
 
         # Create a new questionnaire
