@@ -1676,8 +1676,8 @@ class QuestionnaireAddModule(QuestionnaireModuleMixin, View):
                                 settings.QUESTIONNAIRE_REJECTED]
             ).exists():
                 messages.error(
-                    self.request, mark_safe('A newer, unpublished version of this technology exists. <br> '
-                                            'It has to be published before you can add a CCA module. <br> '
+                    self.request, mark_safe('A newer, unpublished version of this technology exists. It has to be '
+                                            'published before you can add a CCA module. <br> '
                                             'Please contact the compiler or the WOCAT secretariat for further '
                                             'information.'))
                 return redirect(error_redirect)
