@@ -35,6 +35,332 @@ from .signals import change_status, change_member, delete_questionnaire
 logger = logging.getLogger(__name__)
 
 
+def validate_questionnaire_data(data, configuration, no_limit_check=False):
+    """
+    Validate a questionnaire data dictionary so it can be saved to the
+    database. This namely removes all empty values and parses measured
+    values to integers.
+
+    This function can also be used to test if a questionnaire data
+    dictionary is empty (if returned cleaned data = {}).
+
+    Args:
+        ``data`` (dict): A questionnaire data dictionary.
+
+        ``configuration``
+        (:class:`configuration.configuration.QuestionnaireConfiguration`):
+        The configuration of the questionnaire to test the data against.
+
+    Returns:
+        ``dict``. The cleaned questionnaire data dictionary.
+
+        ``list``. A list with errors encountered. Empty if the
+        dictionary is valid.
+    """
+    errors = []
+    cleaned_data = {}
+    try:
+        is_valid_questionnaire_format(data)
+    except QuestionnaireFormatError as e:
+        return cleaned_data, [str(e)]
+    """
+    Collect the questiongroup conditions. This can be done only once for
+    all questiongroups for performance reasons.
+    The conditions are collected in a dict of form:
+    {
+        "CONDITION_NAME": ("QG_KEYWORD", "Q_KEYWORD", ["COND_1", "COND_2"])
+    }
+    """
+    questiongroup_conditions = {}
+    for questiongroup in configuration.get_questiongroups():
+        for question in questiongroup.questions:
+            for conditions in question.questiongroup_conditions:
+                condition, condition_name = conditions.split('|')
+                if condition_name in questiongroup_conditions:
+                    questiongroup_conditions[condition_name][2].append(
+                        condition)
+                else:
+                    questiongroup_conditions[condition_name] = \
+                        questiongroup.keyword, question.keyword, [condition]
+    for qg_keyword, qg_data_list in data.items():
+        questiongroup = configuration.get_questiongroup_by_keyword(qg_keyword)
+        if questiongroup is None:
+            # If the questiongroup is not part of the configuration raise error
+            errors.append(
+                "Questiongroup with keyword '{}' is not valid for this Configuration".format(
+                    qg_keyword))
+            continue
+        if questiongroup.max_num < len(qg_data_list):
+            errors.append(
+                'Questiongroup with keyword "{}" has a max_num of {} but '
+                'appears {} times'.format(
+                    qg_keyword, questiongroup.max_num, len(qg_data_list)))
+            continue
+        if questiongroup.inherited_configuration:
+            # Do not store linked questiongroups
+            continue
+        cleaned_qg_list = []
+        ordered_qg = False
+        for qg_data in qg_data_list:
+            cleaned_qg = {}
+            for key, value in qg_data.items():
+                if not value and not isinstance(value, (bool, int)):
+                    continue
+                if key == '__order':
+                    cleaned_qg['__order'] = value
+                    continue
+                question = questiongroup.get_question_by_key_keyword(key)
+                if question is None:
+                    errors.append(
+                        'Question with keyword "{}" is not valid for '
+                        'Questiongroup with keyword "{}"'.format(
+                            key, qg_keyword))
+                    continue
+                if question.conditional:
+                    for q in question.questiongroup.questions:
+                        for c in q.conditions:
+                            if key in c[2]:
+                                cond_data = qg_data.get(q.keyword)
+                                if not cond_data or c[0] not in cond_data:
+                                    errors.append(
+                                        'Key "{}" is only valid if "{}={}"'
+                                        .format(key, q.keyword, c[0]))
+                if question.field_type in ['measure']:
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        errors.append(
+                            'Measure value "{}" of key "{}" (questiongroup '
+                            '"{}") is not valid.'.format(
+                                value, key, qg_keyword))
+                        continue
+                if question.field_type in [
+                        'bool', 'measure', 'select_type', 'select', 'radio',
+                    'select_conditional_custom']:
+                    if value not in [c[0] for c in question.choices]:
+                        errors.append(
+                            'Value "{}" is not valid for key "{}" ('
+                            'questiongroup "{}").'.format(
+                                value, key, qg_keyword))
+                        continue
+                elif question.field_type in [
+                    'select_conditional_questiongroup']:
+                    # This is checked later.
+                    pass
+                elif question.field_type in [
+                        'checkbox', 'image_checkbox', 'cb_bool', 'multi_select']:
+                    if not isinstance(value, list):
+                        errors.append(
+                            'Value "{}" of key "{}" needs to be a list'.format(
+                                value, key))
+                        continue
+                    if question.field_type in ['cb_bool']:
+                        try:
+                            value = [int(v) for v in value]
+                        except ValueError:
+                            errors.append(
+                                'Value "{}" is not a valid boolean checkbox '
+                                'value for key "{}" (questiongroup "{}")'
+                                .format(value, key, qg_keyword))
+                            continue
+                    for v in value:
+                        if v not in [c[0] for c in question.choices]:
+                            errors.append(
+                                'Value "{}" is not valid for key "{}" ('
+                                'questiongroup "{}").'.format(
+                                    value, key, qg_keyword))
+                            continue
+                    max_cb = question.form_options.get('field_options', {}).get(
+                        'data-cb-max-choices')
+                    if max_cb and len(value) > max_cb:
+                        errors.append('Key "{}" has too many values: {}'.format(
+                            key, value))
+                        continue
+                elif question.field_type in ['char', 'text', 'wms_layer']:
+                    if not isinstance(value, dict):
+                        errors.append(
+                            'Value "{}" of key "{}" needs to be a dict.'
+                            .format(value, key))
+                        continue
+                    translations = {}
+                    for locale, translation in value.items():
+                        if translation:
+                            if (not no_limit_check and question.max_length and
+                                    len(translation) > question.max_length):
+
+                                subcategory = questiongroup.get_top_subcategory()
+                                subcategory_name = '{} {}'.format(
+                                    subcategory.form_options.get('numbering'),
+                                    subcategory.label)
+                                error_msg = 'Value of question "{}" of ' \
+                                            'subcategory "{}" is too long. It ' \
+                                            'can only contain {} ' \
+                                            'characters.'.format(
+                                                question.label,
+                                                subcategory_name,
+                                                question.max_length)
+                                errors.append(error_msg)
+                                continue
+                            translations[locale] = translation
+                    value = translations
+                elif question.field_type in ['int']:
+                    try:
+                        value = int(value)
+                    except ValueError:
+                        errors.append('Value "{}" of key "{}" is not a valid '
+                                      'integer.'.format(value, key))
+                        continue
+                elif question.field_type in ['float']:
+                    try:
+                        value = float(value)
+                    except ValueError:
+                        errors.append('Value "{}" of key "{}" is not a valid '
+                                      'number.'.format(value, key))
+                        continue
+                elif question.field_type in ['select_model']:
+                    model = question.form_options.get('model')
+                    choices = get_choices_from_model(model, only_active=False)
+                    if str(value) not in [str(c[0]) for c in choices]:
+                        errors.append('The value is not a valid choice of model'
+                                      ' "{}"'.format(model))
+                        continue
+                    try:
+                        value = int(value)
+                    except TypeError:
+                        value = None
+                elif question.field_type in ['todo']:
+                    value = None
+                elif question.field_type in ['image', 'file', 'date']:
+                    pass
+                elif question.field_type in [
+                        'user_id', 'link_id', 'hidden', 'display_only']:
+                    pass
+                elif question.field_type in ['link_video']:
+                    # TODO: This should be properly checked!
+                    pass
+                elif question.field_type in ['map']:
+                    # A very rough check if the value is a GeoJSON.
+                    try:
+                        geojson = json.loads(value)
+                    except ValueError:
+                        errors.append('Invalid geometry: "{}"'.format(value))
+                        continue
+                    for feature in geojson.get('features', []):
+                        geom = feature.get('geometry', {})
+                        if 'coordinates' not in geom or 'type' not in geom:
+                            errors.append('Invalid geometry: "{}"'.format(value))
+                            continue
+                else:
+                    raise NotImplementedError(
+                        'Field type "{}" needs to be checked properly'.format(
+                            question.field_type))
+                if value or isinstance(value, (bool, int, float)):
+                    cleaned_qg[key] = value
+            if cleaned_qg:
+                if len(cleaned_qg) == 1 and '__order' in cleaned_qg:
+                    continue
+                cleaned_qg_list.append(cleaned_qg)
+                if '__order' in cleaned_qg:
+                    ordered_qg = True
+        if ordered_qg is True:
+            cleaned_qg_list = sorted(
+                cleaned_qg_list, key=lambda qg: qg.get('__order', 0))
+        if cleaned_qg_list:
+            cleaned_data[qg_keyword] = cleaned_qg_list
+        if cleaned_qg_list and questiongroup.questiongroup_condition:
+            condition_fulfilled = False
+            for condition_name, condition_data in questiongroup_conditions.\
+                    items():
+                if condition_name != questiongroup.questiongroup_condition:
+                    continue
+                for qg_data in data.get(condition_data[0], []):
+                    condition_value = qg_data.get(condition_data[1])
+                    if isinstance(condition_value, list):
+                        all_values_evaluated = False
+                        for cond_value in condition_value:
+                            evaluated = True
+                            for c in condition_data[2]:
+                                try:
+                                    evaluated = evaluated and eval(
+                                        '{}{}'.format(cond_value, c))
+                                except NameError:
+                                    evaluated = evaluated and eval(
+                                        '"{}"{}'.format(cond_value, c))
+                                except:
+                                    evaluated = False
+                                    continue
+                            all_values_evaluated = (
+                                all_values_evaluated or evaluated)
+                        condition_fulfilled = (
+                            condition_fulfilled or all_values_evaluated)
+                    else:
+                        evaluated = True
+                        for c in condition_data[2]:
+                            try:
+                                evaluated = evaluated and eval('{}{}'.format(
+                                    condition_value, c))
+                            except NameError:
+                                evaluated = evaluated and eval(
+                                    '"{}"{}'.format(condition_value, c))
+                            except:
+                                evaluated = False
+                                continue
+                        condition_fulfilled = evaluated or condition_fulfilled
+            if condition_fulfilled is False:
+                errors.append(
+                    'Questiongroup with keyword "{}" requires condition "{}".'.
+                    format(
+                        questiongroup.keyword,
+                        questiongroup.questiongroup_condition))
+
+    # Check for select_conditional_questiongroup questions. This needs to be
+    # done after cleaning the data JSON as these questions depend on other
+    # questiongroups. Empty questiongroups (eg. {'qg_42': [{'key_57': ''}], ...}
+    # are now cleaned.
+    for qg_keyword, cleaned_qg_list in cleaned_data.items():
+
+        questiongroup = configuration.get_questiongroup_by_keyword(qg_keyword)
+        if questiongroup is None:
+            continue
+
+        select_conditional_questiongroup_data_list = []
+        select_conditional_questiongroup_found = False
+
+        for qg_data in cleaned_qg_list:
+            select_conditional_questiongroup_data = {}
+            for key, value in qg_data.items():
+
+                question = questiongroup.get_question_by_key_keyword(key)
+                if question is None:
+                    continue
+
+                if question.field_type in ['select_conditional_questiongroup']:
+                    select_conditional_questiongroup_found = True
+
+                    # Set currently valid question choices
+                    questiongroups = question.form_options.get(
+                        'options_by_questiongroups', [])
+                    question.choices = get_choices_from_questiongroups(
+                        cleaned_data, questiongroups, configuration.keyword,
+                        configuration.edition)
+
+                    if value in [c[0] for c in question.choices]:
+                        # Only copy values which are valid options.
+                        select_conditional_questiongroup_data[key] = value
+
+                else:
+                    select_conditional_questiongroup_data[key] = value
+
+            select_conditional_questiongroup_data_list.append(
+                select_conditional_questiongroup_data)
+
+        if select_conditional_questiongroup_found:
+            cleaned_data[
+                qg_keyword] = select_conditional_questiongroup_data_list
+
+    return cleaned_data, errors
+
+
 def clean_questionnaire_data(data, configuration, no_limit_check=False):
     """
     Clean a questionnaire data dictionary so it can be saved to the

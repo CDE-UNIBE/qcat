@@ -13,6 +13,15 @@ from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 
+from rest_framework import parsers, renderers
+from api.models import AppToken
+from rest_framework.authtoken.serializers import AuthTokenSerializer
+from rest_framework.views import APIView
+from rest_framework.throttling import UserRateThrottle
+from api.authentication import AppTokenAuthentication
+from api.serializers import AppTokenSerializer
+
+
 from .authentication import NoteTokenAuthentication
 from .models import RequestLog
 
@@ -40,7 +49,7 @@ class APIRoot(APIView):
 
     [doc]: https://qcat.readthedocs.io/en/latest/api/docs.html
     """
-    http_method_names = ('get',)
+    http_method_names = ('get', 'post', )
     renderer_classes = (BrowsableAPIRenderer, JSONRenderer,)
 
     def get(self, request, format=None):
@@ -82,11 +91,54 @@ class APIRoot(APIView):
                 request=request,
                 format=format
             ),
+            # 'questionnaire edit': reverse(
+            #     'v2:questionnaires-api-edit',
+            #     kwargs={
+            #         'configuration': configuration.code,
+            #         'edition': configuration.edition,
+            #         'identifier': identifier
+            #     },
+            #     request=request,
+            #     format=format
+            # ),
             'documentation': reverse(
                 'api-docs',
                 request=request,
                 format=format
             ),
+        }
+        return Response(urls)
+
+    # TODO: Figure out how to do the POST endpoints
+    @staticmethod
+    def post(request, format=None):
+        identifier = Questionnaire.with_status.public().first().code
+        configuration = Configuration.objects.latest('created')
+        urls = {
+            'auth login': reverse(
+                'v2:api-token-auth',
+                request=request,
+                format=format
+            ),
+            'questionnaire create': reverse(
+                'v2:questionnaires-api-create',
+                kwargs={
+                    'configuration': configuration.code,
+                    'edition': configuration.edition
+                },
+                request=request,
+                format=format
+            ),
+            # 'questionnaire edit': reverse(
+            #     'v2:questionnaires-api-edit',
+            #     kwargs={
+            #         'configuration': configuration.code,
+            #         'edition': configuration.edition,
+            #         'identifier': identifier
+            #     },
+            #     request=request,
+            #     format=format
+            # ),
         }
         return Response(urls)
 
@@ -135,7 +187,7 @@ class LogUserMixin:
 
 class PermissionMixin:
     """
-    Default permissions for all API views.
+    Default permissions for all GET API views.
 
     """
     authentication_classes = (NoteTokenAuthentication,)
@@ -145,6 +197,71 @@ class PermissionMixin:
         """
         Don't force permissions for development.
         """
+
         if settings.DEBUG:
             self.permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES
         return super().get_permissions()
+
+
+class AppPermissionMixin:
+    """
+    Default permissions for all APP API views.
+
+    """
+    authentication_classes = (AppTokenAuthentication,)
+    permission_classes = (IsAuthenticated,)
+
+    def get_permissions(self):
+        """
+        Don't force permissions for development.
+        """
+
+        if settings.DEBUG:
+            self.permission_classes = api_settings.DEFAULT_PERMISSION_CLASSES
+        return super().get_permissions()
+
+
+class ObtainAuthToken(APIView):
+    """
+    Get application token for API v2.
+
+    Returns the authenticated user's application token
+
+    ``email``: The user's login email (e.g. "abc@domain.com").
+
+    ``password``: The user's login password.
+    """
+
+    throttle_classes = (UserRateThrottle,)
+    parser_classes = (parsers.JSONParser,)
+    renderer_classes = (renderers.JSONRenderer,)
+    serializer_class = AppTokenSerializer
+
+    def get_serializer_context(self):
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self
+        }
+
+    def get_serializer(self, *args, **kwargs):
+        kwargs['context'] = self.get_serializer_context()
+        return self.serializer_class(*args, **kwargs)
+
+    def post(self, request, *args, **kwargs):
+        serializer = self.get_serializer(data=request.data)
+        serializer.is_valid(raise_exception=True)
+        user = serializer.validated_data['user']
+        token, created = AppToken.objects.get_or_create(user=user)
+
+        # Log this request, LogUserMixin doesn't work as the user is not known
+        try:
+            RequestLog(user=user, resource=request.build_absolute_uri()).save()
+        except Exception as e:
+            # Catch any exception. Logging errors must not result in application errors.
+            logger.error(e)
+
+        return Response({'token': token.key})
+
+
+obtain_auth_token = ObtainAuthToken.as_view()

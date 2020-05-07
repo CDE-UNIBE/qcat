@@ -9,6 +9,18 @@ from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.utils.urls import remove_query_param, replace_query_param
 
+from rest_framework.mixins import CreateModelMixin
+from rest_framework import status
+from questionnaire.serializers import QuestionnaireInputSerializer
+from questionnaire.utils import validate_questionnaire_data, is_valid_questionnaire_format
+from configuration.structure import ConfigurationStructure
+from api.views import AppPermissionMixin
+from rest_framework.parsers import JSONParser,ParseError
+from configuration.cache import get_configuration
+from django.utils import timezone
+from uuid import uuid4
+
+
 from api.views import LogUserMixin, PermissionMixin
 from configuration.configured_questionnaire import ConfiguredQuestionnaire
 from questionnaire.views import ESQuestionnaireQueryMixin
@@ -282,3 +294,216 @@ class ConfiguredQuestionnaireDetailView(QuestionnaireDetailView):
         self.object = self.get_current_object()
         prepared_data = self.prepare_data()
         return Response(self.get_configured_questionnaire(**prepared_data))
+
+
+class QuestionnaireCreateNew(CreateModelMixin, AppPermissionMixin, LogUserMixin, GenericAPIView):
+    """
+    Create a new questionnaire for API v2
+
+    Returns the  identifier of the newly created Questionnaire.
+    The POST data must contain questiongroup keywords and its values
+
+    ``configuration``: The code of the configuration (e.g. "technologies").
+
+    ``edition``: The edition of the configuration (e.g. "2018").
+    """
+
+    parser_classes = [JSONParser]
+    serializer_class = QuestionnaireInputSerializer
+
+    def get_serializer_context(self):
+        return {
+            'request': self.request,
+            'format': self.format_kwarg,
+            'view': self,
+        }
+
+    def get_serializer(self, *args, **kwargs):
+        return self.serializer_class(*args, **kwargs)
+#
+    def post(self, request, *args, **kwargs):
+
+        if not request.data:
+            # No data passed.
+            return Response({'detail': 'No questionnaire data.'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Parse the configuration code and edition
+        request_code = kwargs['configuration']
+        request_edition = kwargs['edition']
+
+        # Validate configuration exists for code and edition
+        structure_obj = ConfigurationStructure(code=request_code, edition=request_edition,)
+
+        if structure_obj.error:
+            # No configuration found for this code and edition.
+            return Response({'detail': 'No configuration found for this code and edition.'},
+                            status=status.HTTP_404_NOT_FOUND)
+
+        # Fetch a new configuration
+        request_config = get_configuration(code=request_code, edition=request_edition)
+
+        # Questionnaires can only be created for the latest edition
+        if request_config.has_new_edition:
+            # Newer edition found for this code
+            return Response({'detail': 'A newer edition exists for {}. Questionnaires can be '
+                                       'published only for the latest edition.'.format(request_code)},
+                            status=status.HTTP_406_NOT_ACCEPTABLE)
+
+        # Questionnaire data is validated
+        cleaned_data, config_errors = validate_questionnaire_data(request.data, request_config)
+
+        if config_errors:
+            # Questionnaire data does not fit configuration structure.
+            return Response({'detail': config_errors}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Validate the questionnaire data using the serializer
+        serializer = self.get_serializer(data={'data': cleaned_data})
+        if serializer.is_valid():
+
+            # Create a new Questionnaire and save
+            new_questionnaire = Questionnaire.create_new(
+                configuration_code=request_code,
+                data=cleaned_data,
+                user=request.user,
+                created=timezone.now(),
+                updated=timezone.now()
+            )
+            new_questionnaire.save()
+
+            return Response({'success': "true", 'code': new_questionnaire.code}, status=status.HTTP_201_CREATED)
+        else:
+            return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+# TODO: Complete Edit Endpoints after clarifying locking mechanism <WIP>
+# TODO: Maybe use a commong class for initial validation across create and edit
+# class QuestionnaireEdit(AppPermissionMixin, LogUserMixin, GenericAPIView):
+#     """
+#         Get or Edit a single questionnaire for API v2
+#     """
+#
+#     parser_classes = [JSONParser]
+#     serializer_class = QuestionnaireInputSerializer
+#
+#     def get(self, request, *args, **kwargs):
+#         """
+#         Get a Questionnaire by its identifier for API v2.
+#
+#         Returns the questiongroup keywords and its values
+#
+#         ``configuration``: The code of the configuration (e.g. "technologies").
+#
+#         ``edition``: The edition of the configuration (e.g. "2018").
+#
+#         ``identifier``: The identifier / code of the questionnaire (e.g. technologies_0123).
+#         """
+#
+#         # Parse the configuration code, edition and idenfiier
+#         request_code = kwargs['configuration']
+#         request_edition = kwargs['edition']
+#         request_identifier = kwargs['identifier']
+#
+#         # Validate configuration exists for code and edition
+#         structure_obj = ConfigurationStructure(code=request_code, edition=request_edition, )
+#
+#         if structure_obj.error:
+#             # No configuration found for this code and edition.
+#             return Response({'detail': 'No configuration found for this code and edition.'},
+#                             status=status.HTTP_404_NOT_FOUND)
+#
+#         # Fetch the questionnaire using its identifier
+#         questionnaire = get_object_or_404(Questionnaire, code=request_identifier)
+#
+#         # Check if the user can edit this questionnaire
+#         if not questionnaire.can_edit(request.user):
+#             return Response({'detail': 'Not authorized.'}, status=status.HTTP_400_BAD_REQUEST)
+#
+#
+#
+#         return get_object_or_404(Questionnaire.with_status.public(), code=request_identifier)
+#
+#
+#     def post(self, request, *args, **kwargs):
+#         """
+#         Update a Questionnaire by its identifier for API v2.
+#
+#         Returns the  identifier of the updated Questionnaire.
+#         The POST data must only contain questiongroup keywords and its values
+#
+#         ``configuration``: The code of the configuration (e.g. "technologies").
+#
+#         ``edition``: The edition of the configuration (e.g. "2018").
+#
+#         ``identifier``: The identifier / code of the questionnaire (e.g. technologies_0123).
+#         """
+#
+#         if not request.data:
+#             # No data passed.
+#             return Response({'detail': 'No questionnaire data.'}, status=status.HTTP_400_BAD_REQUEST)
+#
+#         # Parse the configuration code and edition
+#         request_code = kwargs['configuration']
+#         request_edition = kwargs['edition']
+#         request_identifier = kwargs['identifier']
+#
+#         # Validate configuration exists for code and edition
+#         structure_obj = ConfigurationStructure(code=request_code, edition=request_edition, )
+#
+#         if structure_obj.error:
+#             # No configuration found for this code and edition.
+#             return Response({'detail': 'No configuration found for this code and edition.'},
+#                             status=status.HTTP_404_NOT_FOUND)
+#
+#         # Fetch a new configuration
+#         request_config = get_configuration(code=request_code, edition=request_edition)
+#
+#         # Questionnaires can only be created for the latest edition
+#         if request_config.has_new_edition:
+#             # Newer edition found for this code
+#             err = str(
+#                 'A newer edition exists for {}. Questionnaires can be published only for the latest edition.'.format(
+#                     request_code))
+#             return Response({'detail': err}, status=status.HTTP_406_NOT_ACCEPTABLE)
+#
+#         print("post", type(request.data))
+#         print("post", request.data)
+#         cleaned_data, config_errors = validate_questionnaire_data(request.data, request_config)
+#         print("cleaned data", cleaned_data)
+#         print("cleaned errors", config_errors)
+#
+#         if config_errors:
+#             # Questionnaire data does not fit configuration structure.
+#             return Response({'detail': config_errors}, status=status.HTTP_400_BAD_REQUEST)
+#
+#         # Create the serializer data with all attributes
+#         request_data = {}
+#         request_data['data'].append(cleaned_data)
+#
+#         return Response("Error", status=status.HTTP_400_BAD_REQUEST)
+#
+#         # Create a new Questionnaire with the data
+#         new_questionnaire = Questionnaire.create_new(
+#             configuration_code=request_code,
+#             data={},
+#             user=request.user,
+#         )
+#         print("New Questionnaire", dir(new_questionnaire))
+#         print("New Questionnaire", new_questionnaire.code)
+#         print("New Questionnaire", new_questionnaire.compilers)
+#         print("New Questionnaire", new_questionnaire.reviewers)
+#
+#         # Validate the new questionnaire data
+#         serializer = self.get_serializer(instance=new_questionnaire, data=request.data)
+#         # serializer.is_valid(raise_exception=True)
+#         # self.perform_create(serializer)
+#         if serializer.is_valid():
+#             print("Valid", serializer.data)
+#             print("Name", serializer.get_name)
+#             # Questionnaire.update_data(data, updated, configuration_code)
+#             new_questionnaire.delete()
+#             # new_questionnaire.save()
+#             return Response({'success': "true", 'code': new_questionnaire.code}, status=status.HTTP_201_CREATED)
+#         else:
+#             print("Error", serializer.errors)
+#             new_questionnaire.delete()
+#             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)

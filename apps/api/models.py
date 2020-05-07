@@ -2,12 +2,14 @@ import contextlib
 import logging
 import random
 
+
 import requests
 from django.conf import settings
 from django.db import models
 
 from requests.exceptions import RequestException
 from rest_framework.authtoken.models import Token
+from django.utils.translation import gettext_lazy as _
 
 logger = logging.getLogger(__name__)
 
@@ -61,6 +63,24 @@ class NoteToken(Token):
     API and its usage.
     """
     notes = models.TextField()
+
+    @property
+    def requests_from_user(self):
+        return self.user.requestlog_set.count()
+
+
+class AppToken(Token):
+    """
+    Custom APP token model
+    """
+
+    key = models.CharField(_("Key"), max_length=40, primary_key=True)
+    user = models.OneToOneField(
+        settings.AUTH_USER_MODEL, related_name='app_token',
+        on_delete=models.CASCADE, verbose_name=_("User")
+    )
+    created = models.DateTimeField(_("Created"), auto_now_add=True)
+    updated = models.DateTimeField(_("Updated"), auto_now_add=True)
 
     @property
     def requests_from_user(self):
