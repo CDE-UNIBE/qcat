@@ -20,11 +20,11 @@ class AppTokenSerializer(serializers.Serializer):
     )
 
     def validate(self, attrs):
-        username = get('email')
-        password = get('password')
+        username = attrs.get('email')
+        password = attrs.get('password')
 
         if username and password:
-            user = authenticate(request=get('request'),
+            user = authenticate(request=attrs.get('request'),
                                 username=username, password=password)
 
             # The authenticate call simply returns None for is_active=False

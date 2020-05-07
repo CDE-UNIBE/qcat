@@ -376,7 +376,7 @@ class QuestionnaireCreateNew(CreateModelMixin, AppPermissionMixin, LogUserMixin,
 
 
 # TODO: Complete Edit Endpoints after clarifying locking mechanism <WIP>
-# TODO: Maybe use a commong class for initial validation across create and edit
+# TODO: Maybe use a common class for initial validation across create and edit
 # class QuestionnaireEdit(AppPermissionMixin, LogUserMixin, GenericAPIView):
 #     """
 #         Get or Edit a single questionnaire for API v2
