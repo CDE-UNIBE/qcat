@@ -82,6 +82,17 @@ class AppToken(Token):
     created = models.DateTimeField(_("Created"), auto_now_add=True)
     updated = models.DateTimeField(_("Updated"), auto_now_add=True)
 
-    @property
-    def requests_from_user(self):
-        return self.user.requestlog_set.count()
+
+class EditRequestLog(models.Model):
+    """
+    Simple model to log requests to the Create/Edit Questionnaires & Image Upload API endpoints.
+    """
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    access = models.DateTimeField(auto_now_add=True)
+    resource = models.CharField(max_length=100)
+
+    class Meta:
+        ordering = ['access']
+
+    def __str__(self):
+        return u"{}: {}".format(self.user, self.resource)

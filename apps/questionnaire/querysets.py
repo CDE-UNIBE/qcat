@@ -55,3 +55,18 @@ class LockStatusQuerySet(models.QuerySet):
             filters |= Q(user=for_user)
 
         return self.filter_code(code=code).filter(filters)
+
+
+class EditRequestsStatusQuerySet(models.QuerySet):
+    """
+    Helpers to get Questionnaire edit requests
+    """
+
+    def filter_code(self, code: str):
+        return self.filter(questionnaire_code=code)
+
+    def is_active(self, code: str, for_user=None):
+        """
+        Filters requests that are active for the given code and user
+        """
+        return self.filter_code(code=code).filter(is_edit_complete=False, user=for_user)

@@ -15,12 +15,12 @@ from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
 
 from rest_framework import parsers, renderers
 from api.models import AppToken
-from rest_framework.authtoken.serializers import AuthTokenSerializer
-from rest_framework.views import APIView
+# from rest_framework.authtoken.serializers import AuthTokenSerializer
+# from rest_framework.views import APIView
 from rest_framework.throttling import UserRateThrottle
 from api.authentication import AppTokenAuthentication
 from api.serializers import AppTokenSerializer
-
+from .models import EditRequestLog
 
 from .authentication import NoteTokenAuthentication
 from .models import RequestLog
@@ -91,16 +91,16 @@ class APIRoot(APIView):
                 request=request,
                 format=format
             ),
-            # 'questionnaire edit': reverse(
-            #     'v2:questionnaires-api-edit',
-            #     kwargs={
-            #         'configuration': configuration.code,
-            #         'edition': configuration.edition,
-            #         'identifier': identifier
-            #     },
-            #     request=request,
-            #     format=format
-            # ),
+            'questionnaire edit': reverse(
+                'v2:questionnaires-api-edit',
+                kwargs={
+                    'configuration': configuration.code,
+                    'edition': configuration.edition,
+                    'identifier': identifier
+                },
+                request=request,
+                format=format
+            ),
             'documentation': reverse(
                 'api-docs',
                 request=request,
@@ -110,7 +110,7 @@ class APIRoot(APIView):
         return Response(urls)
 
     # TODO: Figure out how to do the POST endpoints
-    @staticmethod
+    # @staticmethod
     def post(request, format=None):
         identifier = Questionnaire.with_status.public().first().code
         configuration = Configuration.objects.latest('created')
@@ -129,16 +129,16 @@ class APIRoot(APIView):
                 request=request,
                 format=format
             ),
-            # 'questionnaire edit': reverse(
-            #     'v2:questionnaires-api-edit',
-            #     kwargs={
-            #         'configuration': configuration.code,
-            #         'edition': configuration.edition,
-            #         'identifier': identifier
-            #     },
-            #     request=request,
-            #     format=format
-            # ),
+            'questionnaire edit': reverse(
+                'v2:questionnaires-api-edit',
+                kwargs={
+                    'configuration': configuration.code,
+                    'edition': configuration.edition,
+                    'identifier': identifier
+                },
+                request=request,
+                format=format
+            ),
         }
         return Response(urls)
 
@@ -183,6 +183,21 @@ class LogUserMixin:
         except Exception as e:
             logger.error(e)
         return super().finalize_response(request, response, *args, **kwargs)
+
+
+class LogEditAPIMixin:
+    """
+
+    """
+
+    def finalize_response(self, request, response, *args, **kwargs):
+        try:
+            EditRequestLog(user=request.user, resource=request.build_absolute_uri()).save()
+        except Exception as e:
+            logger.error(e)
+        return super().finalize_response(request, response, *args, **kwargs)
+
+
 
 
 class PermissionMixin:
@@ -256,7 +271,7 @@ class ObtainAuthToken(APIView):
 
         # Log this request, LogUserMixin doesn't work as the user is not known
         try:
-            RequestLog(user=user, resource=request.build_absolute_uri()).save()
+            EditRequestLog(user=user, resource=request.build_absolute_uri()).save()
         except Exception as e:
             # Catch any exception. Logging errors must not result in application errors.
             logger.error(e)

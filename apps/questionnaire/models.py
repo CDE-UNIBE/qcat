@@ -28,7 +28,7 @@ from .signals import create_questionnaire
 
 from .conf import settings
 from .errors import QuestionnaireLockedException
-from .querysets import StatusQuerySet, LockStatusQuerySet
+from .querysets import StatusQuerySet, LockStatusQuerySet, EditRequestsStatusQuerySet
 
 from questionnaire.upload import (
     create_thumbnails,
@@ -1361,3 +1361,30 @@ class Lock(models.Model):
 
     objects = models.Manager()
     with_status = LockStatusQuerySet.as_manager()
+
+
+class APIEditRequests(models.Model):
+    """
+    Model to keep track of user requests to edit questionnaires
+    - Primarily to keep track of GET requests on mobile API endpoints.
+    """
+
+    questionnaire_code = models.CharField(max_length=64, default='')
+    access = models.DateTimeField(auto_now_add=True)
+    questionnaire_version = models.IntegerField()
+    is_edit_complete = models.BooleanField(default=False)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+
+    objects = models.Manager()
+    with_status = EditRequestsStatusQuerySet.as_manager()
+
+    def close_request(self, is_edit_complete):
+        self.is_edit_complete = True
+        self.save()
+
+    # @staticmethod
+    # def create_new(code, version, user):
+    #     """
+    #     Create a new entry for the GET request
+    #     """
+    #     QuestionnaireEditRequests.objects.create(questionnaire_code=code, questionnaire_version=version, user=user)

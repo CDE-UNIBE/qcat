@@ -3,7 +3,6 @@ from rest_framework.urlpatterns import format_suffix_patterns
 
 from questionnaire.api import views as questionnaire_views
 from configuration.api import views as configuration_views
-
 from api import views as api_views
 
 urlpatterns = {
@@ -22,10 +21,10 @@ urlpatterns = {
         questionnaire_views.QuestionnaireCreateNew.as_view(),
         name='questionnaires-api-create',
         ),
-    # url(r'^questionnaires/(?P<configuration>[^/]+)/(?P<edition>[^/]+)/(?P<identifier>(?!create)[^/]+)/$',
-    #     questionnaire_views.QuestionnaireEdit.as_view(),
-    #     name='questionnaires-api-edit',
-    #     ),
+    url(r'^questionnaires/(?P<configuration>[^/]+)/(?P<edition>[^/]+)/(?P<identifier>(?!create)[^/]+)/$',
+        questionnaire_views.QuestionnaireEdit.as_view(),
+        name='questionnaires-api-edit',
+        ),
     url(r'^configuration/(?P<code>[^/]+)/(?P<edition>[^/]+)/$',
         configuration_views.ConfigurationStructureView.as_view(),
         name='api-configuration-structure',
