@@ -20,12 +20,12 @@ class ApiViewTest(TestCase):
         permissions = QuestionnaireListView().get_permissions()
         self.assertIsInstance(permissions[0], IsAuthenticated)
 
-    def test_apptoken_obtain(self):
-        """
-        Test if a user can obtain a auth token
-        """
-        settings.DEBUG = False
-        user_info = get_mock_user_information_values()
-        User.objects.create(id=user_info['pk'], email=user_info['email'])
+    # def test_apptoken_obtain(self):
+    #     """
+    #     Test if a user can obtain a auth token
+    #     """
+    #     settings.DEBUG = False
+    #     user_info = get_mock_user_information_values()
+    #     User.objects.create(id=user_info['pk'], email=user_info['email'])
 
 

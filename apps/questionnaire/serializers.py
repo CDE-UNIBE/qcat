@@ -48,14 +48,10 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
         If an elasticsearch result is deserialized, the 'data' kwarg is passed.
         """
 
-        configuration = Configuration.objects.latest('created')
-
         if instance:
-            print("Instance", instance)
             self.config = instance.configuration_object
 
-        elif data != empty and get('serializer_config'):
-            print("ES deserialized", data)
+        elif data != empty and data.get('serializer_config'):
             # Restore object from json data. Make sure the serializer_config
             # is valid / exists in the db.
             self.config = get_configuration(
@@ -63,9 +59,8 @@ class QuestionnaireSerializer(serializers.ModelSerializer):
                 edition=data['serializer_edition'])
 
         else:
-            self.config = get_configuration(code=configuration.code, edition=configuration.edition)
-            # raise ValueError(_(u"Can't serialize questionnaire without a valid "
-            #                    u"configuration."))
+            raise ValueError(_(u"Can't serialize questionnaire without a valid "
+                               u"configuration."))
 
         super().__init__(instance=instance, data=data, **kwargs)
 
