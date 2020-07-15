@@ -2,7 +2,7 @@
 # Basic Requirements
 #################################################################
 
-django==1.11.26
+django==1.11.29
 psycopg2-binary==2.7.4
 django-cookie-law==2.0.1
 django-pgjson==0.3.1  # legacy
