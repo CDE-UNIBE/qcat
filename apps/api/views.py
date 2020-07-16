@@ -1,29 +1,27 @@
 import logging
 
-from configuration.models import Configuration
 from django.conf import settings
-from questionnaire.models import Questionnaire
+
 from rest_framework.permissions import IsAuthenticated
-from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer, \
-    CoreJSONRenderer
+from rest_framework.renderers import BrowsableAPIRenderer, JSONRenderer, CoreJSONRenderer
 from rest_framework.reverse import reverse
 from rest_framework.response import Response
 from rest_framework.schemas import SchemaGenerator
 from rest_framework.settings import api_settings
 from rest_framework.views import APIView
 from rest_framework_swagger.renderers import SwaggerUIRenderer, OpenAPIRenderer
-
 from rest_framework import parsers, renderers
-from api.models import AppToken
-# from rest_framework.authtoken.serializers import AuthTokenSerializer
-# from rest_framework.views import APIView
 from rest_framework.throttling import UserRateThrottle
-from api.authentication import AppTokenAuthentication
-from api.serializers import AppTokenSerializer
-from .models import EditRequestLog
 
+from api.models import AppToken
+from api.authentication import AppTokenAuthentication
 from .authentication import NoteTokenAuthentication
+from api.serializers import AppTokenSerializer
+from questionnaire.models import Questionnaire
+from configuration.models import Configuration
+from .models import EditRequestLog
 from .models import RequestLog
+
 
 logger = logging.getLogger(__name__)
 
@@ -49,8 +47,8 @@ class APIRoot(APIView):
 
     [doc]: https://qcat.readthedocs.io/en/latest/api/docs.html
     """
-    http_method_names = ('get', 'post', )
-    renderer_classes = (BrowsableAPIRenderer, JSONRenderer,)
+    http_method_names = ('get', )
+    renderer_classes = (BrowsableAPIRenderer, JSONRenderer)
 
     def get(self, request, format=None):
         identifier = Questionnaire.with_status.public().first().code
@@ -91,30 +89,7 @@ class APIRoot(APIView):
                 request=request,
                 format=format
             ),
-            'questionnaire edit': reverse(
-                'v2:questionnaires-api-edit',
-                kwargs={
-                    'configuration': configuration.code,
-                    'edition': configuration.edition,
-                    'identifier': identifier
-                },
-                request=request,
-                format=format
-            ),
-            'documentation': reverse(
-                'api-docs',
-                request=request,
-                format=format
-            ),
-        }
-        return Response(urls)
 
-    # TODO: Figure out how to do the POST endpoints
-    # @staticmethod
-    def post(request, format=None):
-        identifier = Questionnaire.with_status.public().first().code
-        configuration = Configuration.objects.latest('created')
-        urls = {
             'auth login': reverse(
                 'v2:api-token-auth',
                 request=request,
@@ -129,6 +104,21 @@ class APIRoot(APIView):
                 request=request,
                 format=format
             ),
+            'questionnaire upload image': reverse(
+                'v2:questionnaires-api-image-upload',
+                request=request,
+                format=format
+            ),
+            'questionnaire fetch edit': reverse(
+                'v2:questionnaires-api-edit',
+                kwargs={
+                    'configuration': configuration.code,
+                    'edition': configuration.edition,
+                    'identifier': identifier
+                },
+                request=request,
+                format=format
+            ),
             'questionnaire edit': reverse(
                 'v2:questionnaires-api-edit',
                 kwargs={
@@ -136,6 +126,17 @@ class APIRoot(APIView):
                     'edition': configuration.edition,
                     'identifier': identifier
                 },
+                request=request,
+                format=format
+            ),
+            'questionnaire my data': reverse(
+                'v2:questionnaires-api-mydata',
+                request=request,
+                format=format
+            ),
+
+            'documentation': reverse(
+                'api-docs',
                 request=request,
                 format=format
             ),
@@ -198,8 +199,6 @@ class LogEditAPIMixin:
         return super().finalize_response(request, response, *args, **kwargs)
 
 
-
-
 class PermissionMixin:
     """
     Default permissions for all GET API views.
@@ -248,7 +247,7 @@ class ObtainAuthToken(APIView):
     """
 
     throttle_classes = (UserRateThrottle,)
-    parser_classes = (parsers.JSONParser,)
+    parser_classes = (parsers.FormParser, parsers.JSONParser,)
     renderer_classes = (renderers.JSONRenderer,)
     serializer_class = AppTokenSerializer
 
@@ -269,7 +268,7 @@ class ObtainAuthToken(APIView):
         user = serializer.validated_data['user']
         token, created = AppToken.objects.get_or_create(user=user)
 
-        # Log this request, LogUserMixin doesn't work as the user is not known
+        # Log this request, LogEditAPIMixin doesn't work as the user is not known
         try:
             EditRequestLog(user=user, resource=request.build_absolute_uri()).save()
         except Exception as e:
@@ -277,6 +276,3 @@ class ObtainAuthToken(APIView):
             logger.error(e)
 
         return Response({'token': token.key})
-
-
-obtain_auth_token = ObtainAuthToken.as_view()

@@ -40,7 +40,7 @@ class AppTokenAuthentication(TokenAuthentication):
         # - otherwise, update the updated time to now
         if token.updated < utc_now - timedelta(hours=24):
             token.delete()
-            raise exceptions.AuthenticationFailed('Token expired, request a new Token')
+            raise exceptions.AuthenticationFailed('APP Token expired, request a new APP Token')
         else:
             token.updated = utc_now
             token.save()

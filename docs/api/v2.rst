@@ -15,10 +15,27 @@ the GUI application `Postman`_.
 
 Authorization
 -------------
-Requests to the QCAT API require an authorization token in the header of the
-request. Please contact the Wocat secretariat if you want to access the API, stating
+Requests to the QCAT API require an authorization token in the header of the request.
+
+To access the following API endpoints, please contact the Wocat secretariat stating
 your activated Wocat account (required) and the purpose of your API requests.
 An authentication token will then be created for your account.
+This token is denoted as `AUTH_TOKEN` in this document.
+
+ * Available Configurations
+ * Available Editions for a Configuration
+ * Structure of a Configuration
+ * List of Questionnaires
+ * Details of a Questionnaire
+
+To access the following API endpoints, use the `Obtain Application Token` endpoint.
+This token is denoted as `APP_TOKEN` in this document.
+
+ * Create a New Questionnaire
+ * Upload an Image
+ * Fetch Questionnaire Data
+ * Edit Existing Questionnaire
+ * List of User's Questionnaires
 
 Available Configurations
 -------------------------
@@ -122,8 +139,8 @@ Response::
     If the response of your request is in binary format (e.g. weird characters shown on the screen), add the parameter `-\\-compressed` to the curl command.
 
 
-Structure of configuration
---------------------------
+Structure of a Configuration
+----------------------------
 Return the structure of the configuration of a questionnaire. Contains
 information about the categories, questiongroups and questions that build a
 questionnaire.
@@ -194,7 +211,7 @@ Response::
     If the response of your request is in binary format (e.g. weird characters shown on the screen), add the parameter `-\\-compressed` to the curl command.
 
 
-List of questionnaires
+List of Questionnaires
 ----------------------
 Return a list of Questionnaires. The same filter parameters as for the list view
 (search or filter) in QCAT can be passed.
@@ -299,8 +316,8 @@ Code examples
   `Requests library`_)
 * `Script library for download`_
 
-Details of questionnaire
-------------------------
+Details of a Questionnaire
+--------------------------
 Return a single Questionnaire by its code. The returned data contains the full
 configuration (including labels of sections, questiongroups etc.).
 
@@ -392,3 +409,277 @@ Example request with Postman
 .. _Requests library: http://docs.python-requests.org/en/master/
 .. _query string: https://en.wikipedia.org/wiki/Query_string
 .. _Script library for download: https://github.com/CDE-UNIBE/qcat-api-scripts
+
+
+Obtain Application Token
+------------------------
+Return the user's application token. This application token is used for authorizing all
+POST endpoints and GET endpoints `Fetch Questionnaire Data` and .
+
+Endpoint: ``/api/v2/auth/login/``
+
+Allowed method: ``POST``
+
+Request headers:
+    ``Content-Type``: Specify the format of the POST data. Available formats
+    are JSON (``application/json``) and XML (``application/xml``). Default: ``application/json``
+
+Data:
+    ``email``: The QCAT login email of the user.
+    ``password``: The QCAT login password of the user.
+
+
+Example request with curl
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Request::
+
+    curl -X POST -H 'Content-Type: application/json' -d '{"email":"abc@example.com","password":"abc123!"}' https://qcat.wocat.net/en/api/v2/auth/login/
+
+Response::
+
+    {
+        "token":"9c99bb2d2733f7bea2d20b04ac54b5e0f9fc1931"
+    }
+
+
+
+.. hint::
+    If the response of your request is in binary format (e.g. weird characters shown on the screen), add the parameter `-\\-compressed` to the curl command.
+
+
+Create a New Questionnaire
+--------------------------
+Return the identifier of the successfully created Questionnaire.
+
+Endpoint: ``/api/v2/questionnaires/{configuration}/{edition}/create/``
+
+Allowed method: ``POST``
+
+Request headers:
+    ``Authorization``: Your application token for the QCAT API. Specified in
+    the format ``Token APP_TOKEN``
+
+    ``Accept``: Optionally specify the format of the response. Available formats
+    are JSON (``application/json``), XML (``application/xml``) and
+    CSV (``text/csv``). Default: ``application/json``
+
+    ``Content-Type``: Specify the format of the POST data. Available formats
+    are JSON (``application/json``) and XML (``application/xml``). Default: ``application/json``
+
+Data:
+    ``data``: The questionnaire data.
+
+
+Example request with curl
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Request::
+
+    curl -X POST -H 'Authorization: Token 9c99bb2d2733f7bea2d20b04ac54b5e0f9fc1931' -H 'Accept: application/json' -H 'Content-Type: application/json' -d '{"qg_name": [{"name": {"en": "Example_CreateTechnology"}}]}' https://qcat.wocat.net/en/api/v2/questionnaires/technologies/2018/create/
+
+Response::
+
+    {
+        "success":"true",
+        "code": "technologies_4534"
+    }
+
+
+
+.. hint::
+    If the response of your request is in binary format (e.g. weird characters shown on the screen), add the parameter `-\\-compressed` to the curl command.
+
+Upload an Image
+---------------
+Return the url and thumbnail information for the uploaded image.
+
+Endpoint: ``/api/v2/image/upload/``
+
+Allowed method: ``POST``
+
+Request headers:
+    ``Authorization``: Your application token for the QCAT API. Specified in
+    the format ``Token APP_TOKEN``
+
+    ``Accept``: Optionally specify the format of the response. Available formats
+    are JSON (``application/json``), XML (``application/xml``) and
+    CSV (``text/csv``). Default: ``application/json``
+
+    ``Content-Type``: The format of the POST data must be (``multipart/form-data``)
+
+Data:
+    ``file``: The image file to be uploaded.
+
+Example request with curl
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Request::
+
+    curl -X POST -H 'Authorization: Token 9c99bb2d2733f7bea2d20b04ac54b5e0f9fc1931' -H 'Accept: application/json' -H 'Content-Type: multipart/form-data' https://qcat.wocat.net/en/api/v2/image/upload/ -F file=@/home/Downloads/example.jpg
+
+Response::
+
+    {
+    "success": true,
+    "uid": "cfb23a06-385a-47c5-8a94-83cae1fd90b7",
+    "interchange": [
+        "[/upload/9d/a/9da8b521-7130-48df-ba31-549016a748e5.jpg, (default)]",
+        "[/upload/0a/3/0a3fea13-1485-4ec8-92ee-351eef561d2d.jpg, (small)]",
+        "[/upload/17/0/170251f9-a9ea-4945-a714-0beaebb7c750.jpg, (medium)]",
+        "[/upload/cf/b/cfb23a06-385a-47c5-8a94-83cae1fd90b7.jpg, (large)]"
+    ],
+    "url": "/upload/cf/b/cfb23a06-385a-47c5-8a94-83cae1fd90b7.jpg"
+    }
+
+
+
+.. hint::
+    If the response of your request is in binary format (e.g. weird characters shown on the screen), add the parameter `-\\-compressed` to the curl command.
+
+Fetch Questionnaire Data
+------------------------
+Returns a questionnaire's data.
+
+Endpoint: ``/api/v2/questionnaires/{configuration}/{edition}/{identifier}/``
+
+Allowed method: ``GET``
+
+Request headers:
+    ``Authorization``: Your application token for the QCAT API. Specified in
+    the format ``Token APP_TOKEN``
+
+    ``Accept``: Optionally specify the format of the response. Available formats
+    are JSON (``application/json``), XML (``application/xml``) and
+    CSV (``text/csv``). Default: ``application/json``
+
+
+Example request with curl
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Request::
+
+    curl -X POST -H 'Authorization: Token 9c99bb2d2733f7bea2d20b04ac54b5e0f9fc1931' -H 'Accept: application/json' https://qcat.wocat.net/en/api/v2/questionnaires/technologies/2018/technologies_4534/
+
+Response::
+
+    {
+        "status":"draft",
+        "data": {
+            "qg_name": [
+                {
+                    "name": {
+                        "en": "Example_EditTechnology"
+                    }
+                }
+            ]
+            // ...
+        }
+    }
+
+
+
+.. hint::
+    If the response of your request is in binary format (e.g. weird characters shown on the screen), add the parameter `-\\-compressed` to the curl command.
+
+Edit Existing Questionnaire
+---------------------------
+Return the identifier of the successfully edited Questionnaire.
+
+Endpoint: ``/api/v2/questionnaires/{configuration}/{edition}/{identifier}/``
+
+Allowed method: ``POST``
+
+Request headers:
+    ``Authorization``: Your application token for the QCAT API. Specified in
+    the format ``Token APP_TOKEN``
+
+    ``Accept``: Optionally specify the format of the response. Available formats
+    are JSON (``application/json``), XML (``application/xml``) and
+    CSV (``text/csv``). Default: ``application/json``
+
+    ``Content-Type``: Specify the format of the POST data. Available formats
+    are JSON (``application/json``) and XML (``application/xml``). Default: ``application/json``
+
+Data:
+    ``data``: The questionnaire data.
+
+
+Example request with curl
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Request::
+
+    curl -X POST -H 'Authorization: Token 9c99bb2d2733f7bea2d20b04ac54b5e0f9fc1931' -H 'Accept: application/json' -H 'Content-Type: application/json' -d '{"qg_name": [{"name": {"en": "Example_EditedTechnology"}}]}' https://qcat.wocat.net/en/api/v2/questionnaires/technologies/2018/technologies_4534/
+
+Response::
+
+    {
+        "success":"true",
+        "code": "technologies_4534"
+    }
+
+
+
+.. hint::
+    If the response of your request is in binary format (e.g. weird characters shown on the screen), add the parameter `-\\-compressed` to the curl command.
+
+List of User's Questionnaires
+-----------------------------
+Return a list of public/draft Questionnaires where the User is the compiler
+
+Endpoint: ``/api/v2/questionnaires/mydata/``
+
+Allowed method: ``GET``
+
+Request headers:
+    ``Authorization``: Your application token for the QCAT API. Specified in
+    the format ``Token APP_TOKEN``
+
+    ``Accept``: Optionally specify the format of the response. Available formats
+    are JSON (``application/json``), XML (``application/xml``) and
+    CSV (``text/csv``). Default: ``application/json``
+
+
+Example request with curl
+^^^^^^^^^^^^^^^^^^^^^^^^^
+
+Request::
+
+    curl -X POST -H 'Authorization: Token 9c99bb2d2733f7bea2d20b04ac54b5e0f9fc1931' -H 'Accept: application/json' -H 'Content-Type: application/json' https://qcat.wocat.net/en/api/v2/questionnaires/mydata/
+
+Response::
+
+    {
+        "results": [
+        {
+          "name": "Participatory action research on drip irrigation",
+          "image": "/upload/22/a/22ad49a2-8e96-45d2-b8a4-bc6ca99f63a3.jpg",
+          "definition": {
+                "en": "Conducting participatory action research with farmers and line agencies for demonstrating, disseminating and scaling up drip irrigation."
+          },
+          "created": "2020-05-05T18:32:51.706944Z",
+          "updated": "2020-07-15T08:16:47.710998Z",
+          "code": "approaches_2350",
+          "edition": "2015",
+          "status": "Draft"
+        },
+        {
+          "name": "Farmer field schools on integrated plant nutrient systems",
+           "image": "/upload/a5/1/a516e41f-f788-4bfd-aacf-fd25899614e5.jpg",
+          "definition": {
+                "en": "Participatory and collaborative learning through the farmer field school approach"
+          },
+          "created": "2020-05-05T18:32:51.706944Z",
+          "updated": "2020-07-15T08:16:47.710998Z",
+          "code": "approaches_2351",
+          "edition": "2015",
+          "status": "Draft"
+        },
+        // ...
+    }
+
+
+
+.. hint::
+    If the response of your request is in binary format (e.g. weird characters shown on the screen), add the parameter `-\\-compressed` to the curl command.

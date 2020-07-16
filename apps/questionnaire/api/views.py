@@ -4,29 +4,35 @@ import logging
 from django.core.paginator import EmptyPage
 from django.http import Http404
 from django.utils.translation import get_language
-from rest_framework.generics import GenericAPIView, get_object_or_404
 from django.shortcuts import get_list_or_404
+from django.db.models import Q
+from django.utils import timezone
+
+from rest_framework.parsers import FormParser, MultiPartParser
+from rest_framework.views import APIView
+from rest_framework.throttling import UserRateThrottle
+from rest_framework.generics import GenericAPIView, get_object_or_404
 from rest_framework.response import Response
 from rest_framework.reverse import reverse
 from rest_framework.utils.urls import remove_query_param, replace_query_param
-
 from rest_framework.mixins import CreateModelMixin
 from rest_framework import status
+
+from PIL import Image
+
 from questionnaire.serializers import QuestionnaireInputSerializer
 from questionnaire.utils import validate_questionnaire_data, is_valid_questionnaire_format, compare_questionnaire_data
 from configuration.structure import ConfigurationStructure
 from api.views import LogEditAPIMixin, AppPermissionMixin
-from rest_framework.parsers import JSONParser, ParseError
 from configuration.cache import get_configuration
-from django.utils import timezone
-
 from api.views import LogUserMixin, PermissionMixin
 from configuration.configured_questionnaire import ConfiguredQuestionnaire
 from questionnaire.views import ESQuestionnaireQueryMixin
 from search.search import get_element
 from ..conf import settings
-from ..models import Questionnaire, APIEditRequests
+from ..models import Questionnaire, APIEditRequests, File
 from ..utils import get_list_values, get_questionnaire_data_in_single_language
+
 
 logger = logging.getLogger(__name__)
 
@@ -600,3 +606,149 @@ class QuestionnaireEdit(AppPermissionMixin, LogEditAPIMixin, GenericAPIView):
                             status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
+
+
+class QuestionnaireImageUpload(AppPermissionMixin, LogEditAPIMixin, APIView):
+    """
+    Upload image files for a questionnaire for API v2
+
+    Returns the identifier, url and thumbnails of the newly created Image.
+
+    The image data must be of content-type: multipart/form-data
+    """
+
+    parser_classes = (MultiPartParser, FormParser,)
+    throttle_classes = (UserRateThrottle,)
+
+    def post(self, request, format=None, *args, **kwargs):
+
+        if 'file' not in request.data:
+            return Response({'detail': 'Empty content'}, status=status.HTTP_400_BAD_REQUEST)
+
+        file_data = request.data['file']
+
+        # Checking if uploaded blob is an image
+        try:
+            img = Image.open(file_data)
+            img.verify()
+        except Exception as ex:
+            print(str(ex))
+            return Response({'detail': 'Not an image file'}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Uploaded file is stored and thumbnails are generated
+        # - unsupported file types <only png, jpg and gif are allowed>
+        # - max. file size allowed is 3MB
+        try:
+            file_obj = File.handle_upload(file_data)
+        except Exception as ex:
+            return Response({'detail': str(ex)}, status=status.HTTP_400_BAD_REQUEST)
+
+        # Fetch the stored file and return the id, thumbnails & url
+        file_data = File.get_data(file_object=file_obj)
+        ret = {
+            'success': True,
+            'uid': file_data.get('uid'),
+            'interchange': file_data.get('interchange'),
+            'url': file_data.get('url'),
+        }
+
+        return Response(ret, status=status.HTTP_201_CREATED)
+
+
+class QuestionnaireMyData(AppPermissionMixin, LogEditAPIMixin, GenericAPIView):
+    """
+        Get a list of Questionnaires, where the User is the Compiler
+    """
+
+    def get(self, request, *args, **kwargs):
+        """
+            Get a list of Questionnaires where the user is the compiler.
+        """
+
+        # Questionnaires where their status is draft/public and the request.user is the compiler
+        status_filter = (
+                Q(members=request.user) &
+                Q(questionnairemembership__role__in=[
+                    settings.QUESTIONNAIRE_COMPILER
+                ])
+                & Q(status__in=[settings.QUESTIONNAIRE_DRAFT,
+                                settings.QUESTIONNAIRE_PUBLIC
+                                ])
+        )
+
+        # All the public/draft questionnaires for the request.user are fetched
+        query = Questionnaire.with_status.not_deleted()\
+            .filter(status_filter)\
+            .order_by('code', '-updated') \
+            .distinct('code')
+
+        if len(query) == 0:
+            # No questionnaires for this user
+            return Response({'details': 'No questionnaires created.'}, status=status.HTTP_404_NOT_FOUND)
+
+        # Array for accumulating the questionnaires
+        list_entries = []
+
+        for obj in query:
+            # For each questionnaire following attributes are fetched
+            # - name
+            # - image location
+            # - short description
+            # - created datetime
+            # - updated datetime
+            # - code
+            # - edition
+            # - status <draft|public>
+
+            # Metadata from the configuration template is fetched
+            questionnaire_data = obj.configuration_object.get_list_data([obj.data])[0]
+
+            # Country & code specific definition/description fields are removed
+            # - Only name, image path & short definition are appended
+            if 'country' in questionnaire_data:
+                del questionnaire_data['country']
+                
+            dict_keys = list(questionnaire_data.keys())
+            for key in dict_keys:
+                if key.endswith('_definition') or key.endswith('_description'):
+                    del questionnaire_data[key]
+
+            # Metadata is fetched and appended
+            questionnaire_data.update(obj.get_metadata())
+
+            # Questionnaire edition is added
+            if 'configuration' in questionnaire_data:
+                questionnaire_data.update({'edition': questionnaire_data['configuration'].edition})
+
+            # Extra attributes are removed
+            if 'status' in questionnaire_data:
+                del questionnaire_data['status']
+
+            if 'compilers' in questionnaire_data:
+                del questionnaire_data['compilers']
+
+            if 'reviewers' in questionnaire_data:
+                del questionnaire_data['reviewers']
+
+            if 'editors' in questionnaire_data:
+                del questionnaire_data['editors']
+
+            if 'configuration' in questionnaire_data:
+                del questionnaire_data['configuration']
+
+            if 'translations' in questionnaire_data:
+                del questionnaire_data['translations']
+
+            if 'flags' in questionnaire_data:
+                del questionnaire_data['flags']
+
+            if 'original_locale' in questionnaire_data:
+                del questionnaire_data['original_locale']
+
+            # Status attribute is added as a string and the last attribute
+            questionnaire_data.update({'status': obj.get_status_display().lower()})
+
+            # Questionnaire is added to array
+            list_entries.append(questionnaire_data)
+
+        return Response({'results': list_entries}, status=status.HTTP_200_OK)
