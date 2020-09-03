@@ -402,7 +402,7 @@ class QuestionnaireEdit(AppPermissionMixin, LogEditAPIMixin, GenericAPIView):
         ``identifier``: The identifier / code of the questionnaire (e.g. technologies_0123).
         """
 
-        # Parse the configuration code, edition and idenfiier
+        # Parse the configuration code, edition and identifier
         request_code = kwargs['configuration']
         request_edition = kwargs['edition']
         request_identifier = kwargs['identifier']
@@ -598,12 +598,37 @@ class QuestionnaireEdit(AppPermissionMixin, LogEditAPIMixin, GenericAPIView):
             # Edit Request is set to complete
             questionnaire_edit_request.close_request(is_edit_complete=True)
 
-            # Questionnaire data is updated
-            questionnaire.update_data(serializer.data['data'], timezone.now(), questionnaire.configuration.code)
+            # If the questionnaire status is public, we create a new draft version
+            if questionnaire.status == settings.QUESTIONNAIRE_PUBLIC:
 
-            return Response({'success': "true",
-                             'code': questionnaire.code},
-                            status=status.HTTP_200_OK)
+                new_questionnaire = Questionnaire.create_new(
+                    configuration_code=questionnaire.configuration.code,
+                    data=questionnaire.data,
+                    user=self.request.user,
+                    previous_version=questionnaire
+                )
+
+                # Also add previous links to new questionnaire.
+                for linked_questionnaire in questionnaire.links.all():
+                    new_questionnaire.add_link(linked_questionnaire)
+
+                # 'Draft' Questionnaire data is updated
+                new_questionnaire.update_data(serializer.data['data'],
+                                              timezone.now(), new_questionnaire.configuration.code)
+
+                return Response({'success': "true",
+                                 'code': new_questionnaire.code},
+                                status=status.HTTP_200_OK)
+
+            # If the questionnaire is a draft version, we accept the edits
+            if questionnaire.status == settings.QUESTIONNAIRE_DRAFT:
+                # Questionnaire data is updated
+                questionnaire.update_data(serializer.data['data'],
+                                          timezone.now(), questionnaire.configuration.code)
+
+                return Response({'success': "true",
+                                 'code': questionnaire.code},
+                                status=status.HTTP_200_OK)
         else:
             return Response(serializer.errors, status=status.HTTP_400_BAD_REQUEST)
 
