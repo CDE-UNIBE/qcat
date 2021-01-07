@@ -37,7 +37,7 @@ model-mommy==1.5.1
 petl==1.1.1
 django-wkhtmltopdf==3.1.0
 markdown==2.6.11  # For better documentation of DRF API
-lxml==4.2.1
+lxml==4.6.2
 beautifulsoup4==4.6.0
 tabulate==0.8.2
 psutil==5.4.5
