@@ -5,6 +5,35 @@
 {% load sekizai_tags %}
 {% load staticfiles %}
 
+  {% block messages %}
+    {% if messages %}
+      {% for message in messages %}
+
+        <div id="modal-technologies-add-CCA-error" class="reveal-modal" data-reveal aria-hidden="true" role="dialog">
+          <h3 class="alert-box-title">
+            <svg class="icon-lines is-inline"><use xlink:href="#icon-alert"></use></svg>{% trans "There was an issue adding the CCA Module" %}
+          </h3>
+          <p>{{ message }}</p>
+            <div class="text-right">
+              <a class="close-modal-technologies-add-CCA-error button">
+              {% trans "Close" %}
+              </a>
+            </div>
+        </div>
+        {% addtoblock 'js' %}
+          <script>
+            $(document).ready(function(){$('#modal-technologies-add-CCA-error').foundation('reveal', 'open', {
+                close_on_background_click: false
+            })});
+            $('a.close-modal-technologies-add-CCA-error').on('click', function() {$('#modal-technologies-add-CCA-error').foundation('reveal', 'close')});
+          </script>
+      {% endaddtoblock %}
+
+<!--      </div>-->
+      {% endfor %}
+    {% endif %}
+  {% endblock %}
+
 {% block content %}
   <form role="main" id="module-form" action="{% url 'technologies:add_module_action' %}" method="POST">
     {% csrf_token %}

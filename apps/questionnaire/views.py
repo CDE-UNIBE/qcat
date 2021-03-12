@@ -23,6 +23,7 @@ from django.shortcuts import (
 )
 from django.template.loader import render_to_string
 from django.utils.decorators import method_decorator
+from django.utils.safestring import mark_safe
 from django.utils.translation import ugettext as _, get_language
 from django.views.decorators.clickjacking import xframe_options_exempt
 from django.views.decorators.csrf import ensure_csrf_cookie
@@ -1663,6 +1664,23 @@ class QuestionnaireAddModule(QuestionnaireModuleMixin, View):
             messages.error(
                 self.request, 'Module exists already for this questionnaire.')
             return redirect(error_redirect)
+
+        # For a public questionnaire,
+        #  - check if newer version with status of draft,submitted,reviewed or rejected exists
+        if self.questionnaire_object.status == settings.QUESTIONNAIRE_PUBLIC:
+            if Questionnaire.with_status.not_deleted().filter(
+                    code=self.questionnaire_object.code,
+                    status__in=[settings.QUESTIONNAIRE_DRAFT,
+                                settings.QUESTIONNAIRE_SUBMITTED,
+                                settings.QUESTIONNAIRE_REVIEWED,
+                                settings.QUESTIONNAIRE_REJECTED]
+            ).exists():
+                messages.error(
+                    self.request, mark_safe('A newer, unpublished version of this technology exists. It has to be '
+                                            'published before you can add a CCA module. <br> '
+                                            'Please contact the compiler or the WOCAT secretariat for further '
+                                            'information.'))
+                return redirect(error_redirect)
 
         # Create a new questionnaire
         module_data = {}
