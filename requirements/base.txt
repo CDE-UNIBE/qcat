@@ -16,7 +16,7 @@ Pillow==5.1.0
 python-magic==0.4.15
 requests==2.20.0
 elasticsearch>=6.0.0,<7.00
-djangorestframework==3.8.2
+djangorestframework==3.11.2
 django-rest-swagger==2.2.0
 django-filter==1.1.0
 djangorestframework-xml==1.3.0
