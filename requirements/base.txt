@@ -34,7 +34,7 @@ django-braces==1.13.0
 xlrd==1.1.0
 staticmap==0.4.9
 model-mommy==1.5.1
-petl==1.1.1
+petl==1.7.4
 django-wkhtmltopdf==3.1.0
 markdown==2.6.11  # For better documentation of DRF API
 lxml==4.2.1
