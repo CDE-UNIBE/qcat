@@ -1,21 +1,51 @@
 version: 2.1
-
 orbs:
-  python: circleci/python@0.2.1
-
+  python: circleci/python@1.0.0
 jobs:
-  build-and-test:
-    executor: python/default
+  build:
+    docker:
+      - image: cimg/python:3.6.10
+        environment:
+          DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
+      - image: circleci/postgres:9.6.2
+        environment:
+          POSTGRES_USER: root
+          POSTGRES_DB: circle_test
     steps:
       - checkout
-      - python/load-cache
-      - python/install-deps
-      - python/save-cache
+      - python/install-packages
       - run:
-          command: ./manage.py test
-          name: Test
-
-workflows:
-  main:
-    jobs:
-      - build-and-test
+          shell: /bin/sh
+          command: |
+            export LC_ALL=C
+            wget -qO - https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
+            curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - 
+            wget -qO - https://deb.opera.com/archive.key | sudo apt-key add -
+            rm /etc/apt/sources.list.d/basho_riak.list
+            curl -L https://packagecloud.io/github/git-lfs/gpgkey | apt-key add -
+            sudo add-apt-repository --remove ppa:jonathonf/backports
+            sudo apt-get update && sudo apt-get -y install python3-pip libjpeg-dev libjpeg8-dev binutils libproj-dev gdal-bin openssl libssl-dev libxrender-dev libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig
+            wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+            tar xvf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
+            mv wkhtmltox/bin/wkhtmlto* /usr/local/bin
+            wget https://artifacts.elastic.co/downloads/elasticsearch/elasticsearch-6.2.4.deb
+            dpkg -i elasticsearch-6.2.4.deb
+            service elasticsearch start
+            psql -c "create role circleci with superuser login password '123456'" -U postgres
+            psql -c 'create database qcat;' -U postgres
+            psql -d "qcat" -U postgres -c "create extension postgis"
+            echo "`pwd`/apps" > `python3 -c "from distutils.sysconfig import get_python_lib; print(get_python_lib())"`/_qcat_path.pth
+            echo "DevDefaultSite" > envs/DJANGO_CONFIGURATION
+            echo "qcat.settings" > envs/DJANGO_SETTINGS_MODULE
+            echo "postgis://circleci:123456@localhost:5432/qcat" > envs/DATABASE_URL
+            echo "123" > envs/DJANGO_SECRET_KEY
+            echo "True" > envs/DJANGO_DEBUG
+            echo "" > envs/NEXT_MAINTENANCE
+            pip install -r requirements/development.txt
+            pip install -r requirements/production.txt
+            export DISPLAY=:99.0
+            mkdir -p circleci/testresults
+            mkdir -p circleci/codecoverage
+            mkdir ../upload
+            xvfb-run --server-args="-ac" pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
+            unset LC_ALL        
