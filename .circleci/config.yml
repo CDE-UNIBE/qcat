@@ -25,6 +25,8 @@ jobs:
           POSTGRES_DB: circle_test
     steps:
       - checkout
+      - restore_cache:  # ensure this step occurs *before* installing dependencies
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
       - python/install-packages
       - run:
           shell: /bin/sh
@@ -61,6 +63,12 @@ jobs:
             mkdir ../upload
             xvfb-run --server-args="-ac" pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
             unset LC_ALL
+      - save_cache:
+          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
+          paths:
+            - ".venv"
+            - "/usr/local/bin"
+            - "/usr/local/lib/python3.6/site-packages"
       - run: mkdir test-reports        #ask for testing commands
   deploy:
     docker:
