@@ -70,6 +70,11 @@ jobs:
             - "/usr/local/bin"
             - "/usr/local/lib/python3.6/site-packages"
       - run: mkdir test-reports        #ask for testing commands
+      - store_test_results:
+          path: test-results
+      - store_artifacts:
+          path: test-results
+          destination: tr1
   deploy:
     docker:
       - image: cimg/python:3.6.10
