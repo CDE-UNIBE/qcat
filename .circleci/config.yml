@@ -15,7 +15,8 @@ workflows: # Define a Workflow running the build job, then the deploy job
               only: develop
 jobs:
   build:
-    executor: python/default   
+    docker:
+      - image: cimg/python:3.6   
     steps:
       - checkout          
       - run:
