@@ -30,9 +30,7 @@ jobs:
       - python/install-packages
       - run:
           shell: /bin/sh
-          command: |
-            sudo apt update
-            sudo apt-get install xvfb
+          command: |          
             export LC_ALL=C
             wget -qO - https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
             curl -sS https://dl.yarnpkg.com/debian/pubkey.gpg | sudo apt-key add - 
@@ -40,7 +38,7 @@ jobs:
             rm /etc/apt/sources.list.d/basho_riak.list
             curl -L https://packagecloud.io/github/git-lfs/gpgkey | apt-key add -
             sudo add-apt-repository --remove ppa:jonathonf/backports
-            sudo apt-get update && sudo apt-get -y install python3-pip libjpeg-dev libjpeg8-dev binutils libproj-dev gdal-bin openssl libssl-dev libxrender-dev libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig
+            sudo apt-get update && sudo apt-get -y install xvfb python3-pip libjpeg-dev libjpeg8-dev binutils libproj-dev gdal-bin openssl libssl-dev libxrender-dev libx11-dev libxext-dev libfontconfig1-dev libfreetype6-dev fontconfig
             wget https://github.com/wkhtmltopdf/wkhtmltopdf/releases/download/0.12.4/wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
             tar xvf wkhtmltox-0.12.4_linux-generic-amd64.tar.xz
             mv wkhtmltox/bin/wkhtmlto* /usr/local/bin
