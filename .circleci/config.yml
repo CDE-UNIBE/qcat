@@ -20,7 +20,8 @@ jobs:
       - checkout      
       - python/install-packages:
           args: pytest
-          pkg-manager: pipenv
+          pip-dependency-file:  requirements/development.txt
+          pkg-manager: pip
       - run:
           shell: /bin/sh
           command: |          
@@ -47,9 +48,8 @@ jobs:
             echo "postgis://circleci:123456@localhost:5432/qcat" > envs/DATABASE_URL
             echo "123" > envs/DJANGO_SECRET_KEY
             echo "True" > envs/DJANGO_DEBUG
-            echo "" > envs/NEXT_MAINTENANCE
-            pip install -r requirements/development.txt
-            pip install -r requirements/production.txt
+            echo "" > envs/NEXT_MAINTENANCE      
+            pip install envdir    
             export DISPLAY=:99.0
             mkdir ../upload            
             unset LC_ALL     
@@ -57,7 +57,7 @@ jobs:
           command: |
             mkdir -p circleci/testresults
             mkdir -p circleci/codecoverage
-            pipenv run pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
+            pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
       - store_test_results:
           path: circleci/testresults
       - store_artifacts:
