@@ -49,6 +49,7 @@ jobs:
             echo "" > envs/NEXT_MAINTENANCE      
             pip install -r requirements/development.txt
             pip install envdir    
+            pip install pytest
             export DISPLAY=:99.0
             mkdir ../upload            
             unset LC_ALL     
