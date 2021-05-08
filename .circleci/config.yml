@@ -31,6 +31,7 @@ jobs:
       - run:
           shell: /bin/sh
           command: |
+            sudo apt update
             sudo apt-get install xvfb
             export LC_ALL=C
             wget -qO - https://www.mongodb.org/static/pgp/server-3.6.asc | sudo apt-key add -
