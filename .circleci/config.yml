@@ -51,17 +51,17 @@ jobs:
             pip install -r requirements/development.txt
             pip install -r requirements/production.txt
             export DISPLAY=:99.0
-            mkdir -p circleci/testresults
-            mkdir -p circleci/codecoverage
             mkdir ../upload            
             unset LC_ALL     
       - run:
           command: |
-            xvfb-run --server-args="-ac" pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
+            mkdir -p circleci/testresults
+            mkdir -p circleci/codecoverage
+            pipenv run pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
       - store_test_results:
-          path: test-results
+          path: circleci/testresults
       - store_artifacts:
-          path: test-results
+          path: circleci/testresults
           destination: tr1
   deploy:
     docker:
