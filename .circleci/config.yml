@@ -46,6 +46,7 @@ jobs:
             echo "123" > envs/DJANGO_SECRET_KEY
             echo "True" > envs/DJANGO_DEBUG
             echo "" > envs/NEXT_MAINTENANCE      
+            pip install --upgrade pip
             pip install -r requirements/development.txt
             pip install -r requirements/production.txt
             export DISPLAY=:99.0
