@@ -15,19 +15,12 @@ workflows: # Define a Workflow running the build job, then the deploy job
               only: develop
 jobs:
   build:
-    docker:
-      - image: drydock/u16pytall:v6.6.4
-        environment:
-          DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
-      - image: circleci/postgres:9.6.2
-        environment:
-          POSTGRES_USER: root
-          POSTGRES_DB: circle_test
+    executor: python/default   
     steps:
-      - checkout
-      - restore_cache:  # ensure this step occurs *before* installing dependencies
-          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-      - python/install-packages
+      - checkout      
+      - python/install-packages:
+          args: pytest
+          pkg-manager: pipenv
       - run:
           shell: /bin/sh
           command: |          
@@ -61,13 +54,7 @@ jobs:
             mkdir -p circleci/testresults
             mkdir -p circleci/codecoverage
             mkdir ../upload            
-            unset LC_ALL
-      - save_cache:
-          key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
-          paths:
-            - ".venv"
-            - "/usr/local/bin"
-            - "/usr/local/lib/python3.6/site-packages"
+            unset LC_ALL     
       - run:
           command: |
             xvfb-run --server-args="-ac" pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
