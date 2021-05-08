@@ -16,7 +16,7 @@ workflows: # Define a Workflow running the build job, then the deploy job
 jobs:
   build:
     docker:
-      - image: cimg/python:3.6.10
+      - image: drydock/u16pytall:v6.6.4
         environment:
           DATABASE_URL: postgresql://root@localhost/circle_test?sslmode=disable
       - image: circleci/postgres:9.6.2
