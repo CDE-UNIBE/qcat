@@ -50,7 +50,7 @@ jobs:
             pip install -r requirements/development.txt
             pip install envdir    
             pip install pytest
-            pip install configurations
+            pip install django-configurations
             export DISPLAY=:99.0
             mkdir ../upload            
             unset LC_ALL     
