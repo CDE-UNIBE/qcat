@@ -17,9 +17,7 @@ jobs:
   build:
     executor: python/default   
     steps:
-      - checkout      
-      - python/install-packages:
-          args: pytest                    
+      - checkout          
       - run:
           shell: /bin/sh
           command: |          
@@ -48,17 +46,13 @@ jobs:
             echo "True" > envs/DJANGO_DEBUG
             echo "" > envs/NEXT_MAINTENANCE      
             pip install -r requirements/development.txt
-            pip install envdir    
-            pip install pytest
-            pip install django-configurations
+            pip install -r requirements/production.txt
             export DISPLAY=:99.0
-            mkdir ../upload            
-            unset LC_ALL     
-      - run:
-          command: |
             mkdir -p testresults
             mkdir -p codecoverage
             pytest -m unit --junitxml=testresults/nosetests.xml --cov apps --cov-report xml:codecoverage/coverage.xml
+            mkdir ../upload            
+            unset LC_ALL
       - store_test_results:
           path: testresults
       - store_artifacts:
