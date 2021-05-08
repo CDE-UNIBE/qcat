@@ -19,8 +19,7 @@ jobs:
     steps:
       - checkout      
       - python/install-packages:
-          args: pytest
-          pip-dependency-file:  requirements/development.txt
+          args: pytest          
           pkg-manager: pip
       - run:
           shell: /bin/sh
@@ -49,6 +48,7 @@ jobs:
             echo "123" > envs/DJANGO_SECRET_KEY
             echo "True" > envs/DJANGO_DEBUG
             echo "" > envs/NEXT_MAINTENANCE      
+            pip install -r requirements/development.txt
             pip install envdir    
             export DISPLAY=:99.0
             mkdir ../upload            
