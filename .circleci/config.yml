@@ -50,18 +50,19 @@ jobs:
             pip install -r requirements/development.txt
             pip install envdir    
             pip install pytest
+            pip install configurations
             export DISPLAY=:99.0
             mkdir ../upload            
             unset LC_ALL     
       - run:
           command: |
-            mkdir -p circleci/testresults
-            mkdir -p circleci/codecoverage
-            pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
+            mkdir -p testresults
+            mkdir -p codecoverage
+            pytest -m unit --junitxml=testresults/nosetests.xml --cov apps --cov-report xml:codecoverage/coverage.xml
       - store_test_results:
-          path: circleci/testresults
+          path: testresults
       - store_artifacts:
-          path: circleci/testresults
+          path: testresults
           destination: tr1
   deploy:
     docker:
