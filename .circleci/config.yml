@@ -16,7 +16,7 @@ workflows: # Define a Workflow running the build job, then the deploy job
 jobs:
   build:
     docker:
-      - image: cimg/python:3.6   
+      - image: drydock/u16pytall:v6.6.4   
     steps:
       - checkout          
       - run:
