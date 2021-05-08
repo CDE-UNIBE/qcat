@@ -1,6 +1,6 @@
 version: 2.1
 orbs:
-  python: circleci/python@1.0.0
+  python: circleci/python@1.4.0
 
 workflows: # Define a Workflow running the build job, then the deploy job
   version: 2
