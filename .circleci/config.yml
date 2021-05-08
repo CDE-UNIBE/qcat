@@ -47,8 +47,8 @@ jobs:
             echo "True" > envs/DJANGO_DEBUG
             echo "" > envs/NEXT_MAINTENANCE
             sudo pip install --upgrade pip
-            pipenv install -r requirements/development.txt
-            pipenv install -r requirements/production.txt
+            pip install -r requirements/development.txt
+            pip install -r requirements/production.txt
             export DISPLAY=:99.0
             mkdir -p testresults
             mkdir -p codecoverage
