@@ -60,8 +60,7 @@ jobs:
             export DISPLAY=:99.0
             mkdir -p circleci/testresults
             mkdir -p circleci/codecoverage
-            mkdir ../upload
-            xvfb-run --server-args="-ac" pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
+            mkdir ../upload            
             unset LC_ALL
       - save_cache:
           key: deps9-{{ .Branch }}-{{ checksum "Pipfile.lock" }}
@@ -69,7 +68,9 @@ jobs:
             - ".venv"
             - "/usr/local/bin"
             - "/usr/local/lib/python3.6/site-packages"
-      - run: mkdir test-reports        #ask for testing commands
+      - run:
+          command: |
+            xvfb-run --server-args="-ac" pytest -m unit --junitxml=circleci/testresults/nosetests.xml --cov apps --cov-report xml:circleci/codecoverage/coverage.xml
       - store_test_results:
           path: test-results
       - store_artifacts:
