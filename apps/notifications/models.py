@@ -5,7 +5,7 @@ import operator
 
 from django.core import signing
 from django.core.mail import EmailMultiAlternatives
-from django.core.urlresolvers import reverse, reverse_lazy
+from django.urls import reverse, reverse_lazy
 from django.db import models, transaction
 from django.db.models import F, Q
 from django.template.loader import render_to_string
@@ -270,13 +270,14 @@ class Log(models.Model):
     created = models.DateTimeField(auto_now_add=True)
     catalyst = models.ForeignKey(
         settings.AUTH_USER_MODEL, related_name='catalyst',
-        help_text='Person triggering the log'
+        help_text='Person triggering the log',
+        on_delete=models.SET_DEFAULT
     )
     subscribers = models.ManyToManyField(
         settings.AUTH_USER_MODEL, related_name='subscribers',
         help_text='All people that are members of the questionnaire'
     )
-    questionnaire = models.ForeignKey(Questionnaire)
+    questionnaire = models.ForeignKey(Questionnaire,on_delete=models.SET_DEFAULT)
     action = models.PositiveIntegerField(choices=settings.NOTIFICATIONS_ACTIONS)
     was_processed = models.BooleanField(default=False)
 
@@ -632,7 +633,7 @@ class StatusUpdate(models.Model):
     for all changes regarding the publication cycle.
 
     """
-    log = models.OneToOneField(Log)
+    log = models.OneToOneField(Log,on_delete=models.SET_DEFAULT)
     status = models.PositiveIntegerField(
         choices=STATUSES, null=True, blank=True
     )
@@ -647,7 +648,7 @@ class InformationUpdate(models.Model):
     Store a text containing some information (right now only editors that have
     finished working on a questionnaire).
     """
-    log = models.OneToOneField(Log)
+    log = models.OneToOneField(Log,on_delete=models.SET_DEFAULT)
     info = models.TextField()
 
 
@@ -655,8 +656,8 @@ class MemberUpdate(models.Model):
     """
     Invited or removed members.
     """
-    log = models.OneToOneField(Log)
-    affected = models.ForeignKey(settings.AUTH_USER_MODEL)
+    log = models.OneToOneField(Log,on_delete=models.SET_DEFAULT)
+    affected = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT)
     role = models.CharField(max_length=50)
 
 
@@ -667,7 +668,7 @@ class ContentUpdate(models.Model):
     is not stored anymore, as this feature is not on the radar anymore and the sysadmin
     complained about the large, unused fields.
     """
-    log = models.OneToOneField(Log)
+    log = models.OneToOneField(Log,on_delete=models.SET_DEFAULT)
 
 
 class ReadLog(models.Model):
@@ -691,7 +692,7 @@ class MailPreferences(models.Model):
     """
     User preferences for receiving email notifications.
     """
-    user = models.OneToOneField(settings.AUTH_USER_MODEL)
+    user = models.OneToOneField(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT)
     subscription = models.CharField(
         max_length=10, choices=settings.NOTIFICATIONS_EMAIL_SUBSCRIPTIONS, default='all'
     )

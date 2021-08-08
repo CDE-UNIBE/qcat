@@ -248,7 +248,7 @@ class Key(models.Model):
 
     keyword = models.CharField(max_length=63, unique=True)
     translation = models.ForeignKey(
-        'Translation', limit_choices_to={'translation_type': translation_type})
+        'Translation',on_delete=models.SET_DEFAULT, limit_choices_to={'translation_type': translation_type})
     configuration = JSONField(help_text="""
             The JSON configuration. See section "Questionnaire
             Configuration" of the manual for more information.<br/>
@@ -292,7 +292,7 @@ class Value(models.Model):
     keyword = models.CharField(max_length=63, unique=True)
     order_value = models.IntegerField(blank=True, null=True)
     translation = models.ForeignKey(
-        'Translation', limit_choices_to={'translation_type': translation_type})
+        'Translation', on_delete=models.SET_DEFAULT,limit_choices_to={'translation_type': translation_type})
     configuration = JSONField(blank=True, null=True, help_text="""
             The JSON configuration. See section "Questionnaire
             Configuration" of the manual for more information.<br/>
@@ -325,7 +325,7 @@ class Questiongroup(models.Model):
 
     keyword = models.CharField(max_length=63, unique=True)
     translation = models.ForeignKey(
-        'Translation', limit_choices_to={'translation_type': translation_type},
+        'Translation',on_delete=models.SET_DEFAULT, limit_choices_to={'translation_type': translation_type},
         null=True, blank=True)
     configuration = JSONField(blank=True, help_text="""
             The JSON configuration. See section "Questionnaire
@@ -356,7 +356,7 @@ class Category(models.Model):
 
     keyword = models.CharField(max_length=63, unique=True)
     translation = models.ForeignKey(
-        'Translation', limit_choices_to={'translation_type': translation_type})
+        'Translation', on_delete=models.SET_DEFAULT,limit_choices_to={'translation_type': translation_type})
 
     def get_translation(self, *args, **kwargs):
         """
@@ -411,7 +411,7 @@ class Institution(models.Model):
     name = models.CharField(max_length=255)
     abbreviation = models.CharField(max_length=255, null=True, blank=True)
     country = models.ForeignKey(
-        'Value', null=True, blank=True,
+        'Value', null=True, blank=True,on_delete=models.SET_DEFAULT,
         limit_choices_to=Q(key__keyword='country'))
     active = models.BooleanField(default=True)
 
@@ -447,8 +447,8 @@ class ValueUser(models.Model):
     Represents a many-to-many relationship between Values and Users with
     additional fields. Additional fields define the type of relationship.
     """
-    value = models.ForeignKey('Value')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    value = models.ForeignKey('Value',on_delete=models.SET_DEFAULT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT)
     relation = models.CharField(max_length=64, choices=VALUEUSER_RELATIONS)
 
 

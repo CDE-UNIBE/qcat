@@ -6,7 +6,7 @@ from django.conf import settings
 from django.contrib import messages
 from django.core.exceptions import ObjectDoesNotExist
 from django.core import signing
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.db import IntegrityError
 from django.http import Http404
 from django.http import HttpResponse

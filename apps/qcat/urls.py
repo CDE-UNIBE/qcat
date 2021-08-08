@@ -4,7 +4,7 @@ from django.conf.urls import include, url
 from django.conf.urls.i18n import i18n_patterns
 from django.contrib import admin
 from django.contrib.sitemaps.views import sitemap
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.views.generic import TemplateView, RedirectView
 
 from . import views
@@ -23,7 +23,7 @@ urlpatterns = [
         name='privacy-policy'),
     url(r'^grappelli/', include('grappelli.urls')),
     url(r'^admin/login/', RedirectView.as_view(url=reverse_lazy('login'), permanent=False)),
-    url(r'^admin/', include(admin.site.urls)),
+    url(r'^admin/', admin.site.urls),
     url(r'^sitemap\.xml$', sitemap, {'sitemaps': views.static_sitemap},
         name='django.contrib.sitemaps.views.sitemap'),
     url(r'^robots\.txt', TemplateView.as_view(template_name='robots.txt'))
@@ -36,33 +36,33 @@ urlpatterns += i18n_patterns(
         url=reverse_lazy('wocat:home'),
         permanent=False
     ), name='home'),
-    url(r'^accounts/', include('accounts.urls')),
-    url(r'^api/', include('api.urls')),
-    url(r'^configuration', include('configuration.urls', namespace='configuration')),
+    url(r'^accounts/', include(('accounts.urls','accounts'),namespace='accounts')),
+    url(r'^api/', include(('api.urls','api'),namespace='api')),
+    url(r'^configuration', include(('configuration.urls','configuration'), namespace='configuration')),
     url(r'^notifications/', include('notifications.urls')),
     url(r'^qcat/facts_teaser', views.FactsTeaserView.as_view(), name='facts_teaser'),
     url(r'^questionnaire/', include('questionnaire.urls')),
-    url(r'^search/', include('search.urls', namespace='search')),
+    url(r'^search/', include(('search.urls','search'), namespace='search')),
     url(r'^summary/', include('summary.urls')),
-    url(r'^unccd/', include('unccd.urls', namespace='unccd')),
-    url(r'^wocat/', include('wocat.urls', namespace='wocat')),
-    url(r'^wocat/approaches/', include('approaches.urls',
+    url(r'^unccd/', include(('unccd.urls','unccd'), namespace='unccd')),
+    url(r'^wocat/', include(('wocat.urls','wocat'), namespace='wocat')),
+    url(r'^wocat/approaches/', include(('approaches.urls','approaches'),
         namespace='approaches')),
-    url(r'^wocat/cca/', include('cca.urls', namespace='cca')),
-    url(r'^wocat/cbp/', include('cbp.urls', namespace='cbp')),
-    url(r'^wocat/technologies/', include('technologies.urls',
+    url(r'^wocat/cca/', include(('cca.urls','cca'), namespace='cca')),
+    url(r'^wocat/cbp/', include(('cbp.urls','cbp'), namespace='cbp')),
+    url(r'^wocat/technologies/', include(('technologies.urls','technologies'),
         namespace='technologies')),
     url(r'^wocat/watershed/', include(
-        'watershed.urls', namespace='watershed')),
+        ('watershed.urls','watershed'), namespace='watershed')),
 )
 
 if settings.DEBUG:
     urlpatterns += i18n_patterns(
-        url(r'^sample/', include('sample.urls', namespace='sample')),
-        url(r'^samplemulti/', include('samplemulti.urls',
+        url(r'^sample/', include(('sample.urls','sample'), namespace='sample')),
+        url(r'^samplemulti/', include(('samplemulti.urls','samplemulti'),
             namespace='samplemulti')),
         url(r'^samplemodule/',
-            include('samplemodule.urls', namespace='samplemodule')),
+            include(('samplemodule.urls','samplemodule'), namespace='samplemodule')),
         url(r'^404/', TemplateView.as_view(template_name='404.html')),
         url(r'^500/', TemplateView.as_view(template_name='500.html')),
         url(r'^503/', TemplateView.as_view(template_name='503.html')),

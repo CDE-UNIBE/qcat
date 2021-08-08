@@ -28,7 +28,7 @@ def get_static_map_url(obj):
     return ''
 
 
-@register.assignment_tag
+@register.simple_tag
 def call_model_method(method, obj, user):
     """
     Call a method on the Questionnaire model with given user and return its
@@ -64,7 +64,7 @@ def get_percent(base, value):
     return float(value) / base * 100
 
 
-@register.assignment_tag
+@register.simple_tag
 def prepare_image(image):
     """
     Helper to display the main image, with a focus point as set in the form.

@@ -9,7 +9,7 @@ from django.contrib import messages
 from django.contrib.auth.decorators import login_required
 from django.core.exceptions import PermissionDenied
 from django.core.management import call_command
-from django.core.urlresolvers import reverse_lazy
+from django.urls import reverse_lazy
 from django.shortcuts import redirect
 from django.views.generic import RedirectView, TemplateView
 from django.utils.translation import ugettext_lazy as _

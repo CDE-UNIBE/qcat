@@ -140,7 +140,7 @@ def get_by_keyword(dictionary, key):
         return None
 
 
-@register.assignment_tag
+@register.simple_tag
 def nested_counter(nested_list, inner_index, outer_index):
     """
     Return the counter of a nested list.

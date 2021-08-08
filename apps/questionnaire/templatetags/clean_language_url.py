@@ -1,5 +1,5 @@
 from django import template
-from django.utils.six.moves.urllib.parse import urlsplit, urlunsplit
+from urllib.parse import urlsplit, urlunsplit
 from django.utils.translation import get_language_from_path
 
 register = template.Library()

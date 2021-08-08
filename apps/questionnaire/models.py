@@ -15,7 +15,7 @@ from django.contrib.gis.db import models
 from django.contrib.messages import WARNING, SUCCESS
 from django.contrib.postgres.fields import JSONField
 from django.core.exceptions import ValidationError
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 from django.utils.functional import cached_property
 from django.utils.translation import ugettext as _, get_language, activate
 from django.utils import timezone
@@ -1160,7 +1160,7 @@ class QuestionnaireTranslation(models.Model):
     languages a Questionnaire is available. Additional fields mark the
     language in which the Questionnaire was originally entered.
     """
-    questionnaire = models.ForeignKey('Questionnaire')
+    questionnaire = models.ForeignKey('Questionnaire',on_delete=models.SET_DEFAULT)
     language = models.CharField(max_length=63, choices=settings.LANGUAGES)
     original_language = models.BooleanField(default=False)
 
@@ -1182,10 +1182,10 @@ class QuestionnaireLink(models.Model):
 
     """
     from_questionnaire = models.ForeignKey(
-        'Questionnaire', related_name='from_questionnaire')
+        'Questionnaire', on_delete=models.SET_DEFAULT,related_name='from_questionnaire')
     from_status = models.IntegerField(choices=STATUSES)
     to_questionnaire = models.ForeignKey(
-        'Questionnaire', related_name='to_questionnaire')
+        'Questionnaire', on_delete=models.SET_DEFAULT,related_name='to_questionnaire')
     to_status = models.IntegerField(choices=STATUSES)
 
 
@@ -1194,8 +1194,8 @@ class QuestionnaireMembership(models.Model):
     The model representing the membership of a :class:`User` in a
     :class`Questionnaire` and his roles (:class:`QuestionnaireRole`).
     """
-    questionnaire = models.ForeignKey('Questionnaire')
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    questionnaire = models.ForeignKey('Questionnaire',on_delete=models.SET_DEFAULT)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT)
     role = models.CharField(max_length=64, choices=QUESTIONNAIRE_ROLES)
 
 
@@ -1355,7 +1355,7 @@ class Lock(models.Model):
     This could be extended with a field for the questionnaires section.
     """
     questionnaire_code = models.CharField(max_length=50)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT)
     start = models.DateTimeField(auto_now_add=True)
     is_finished = models.BooleanField(default=False)
 
@@ -1373,7 +1373,7 @@ class APIEditRequests(models.Model):
     access = models.DateTimeField(auto_now_add=True)
     questionnaire_version = models.IntegerField()
     is_edit_complete = models.BooleanField(default=False)
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT)
 
     objects = models.Manager()
     with_status = EditRequestsStatusQuerySet.as_manager()

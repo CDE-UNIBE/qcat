@@ -5,7 +5,7 @@ import datetime
 import floppyforms as forms
 from django.apps import apps
 from django.contrib.auth import get_user_model
-from django.core.urlresolvers import reverse, NoReverseMatch
+from django.urls import reverse, NoReverseMatch
 from django.forms import BaseFormSet, formset_factory
 from django.template.loader import render_to_string
 from django.utils.translation import ugettext as _

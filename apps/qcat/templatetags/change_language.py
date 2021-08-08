@@ -1,6 +1,6 @@
 from django.conf import settings
 from django.template import Library
-from django.core.urlresolvers import resolve, reverse, Resolver404
+from django.urls  import resolve, reverse, Resolver404
 from django.utils.translation import activate, get_language
 
 register = Library()

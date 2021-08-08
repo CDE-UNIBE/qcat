@@ -18,7 +18,7 @@ class RequestLog(models.Model):
     """
     Simple model to log requests to the API.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT)
     access = models.DateTimeField(auto_now_add=True)
     resource = models.CharField(max_length=100)
 
@@ -87,7 +87,7 @@ class EditRequestLog(models.Model):
     """
     Simple model to log requests to the Create/Edit Questionnaires & Image Upload API endpoints.
     """
-    user = models.ForeignKey(settings.AUTH_USER_MODEL)
+    user = models.ForeignKey(settings.AUTH_USER_MODEL,on_delete=models.SET_DEFAULT)
     access = models.DateTimeField(auto_now_add=True)
     resource = models.CharField(max_length=100)
 

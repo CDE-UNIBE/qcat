@@ -11,7 +11,7 @@ class TestDefaultSite(TestMixin, DevDefaultSite):
     pass
 
 
-class ProdDefaultSite(ProdMixin, CompressMixin, SecurityMixin, MetricsMixin, LogMixin, BaseSettings):
+class ProdDefaultSite(ProdMixin, CompressMixin,  LogMixin, BaseSettings):
     """
     Settings for live and demo hosting.
     """
