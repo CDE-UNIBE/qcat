@@ -182,7 +182,7 @@
                     <a href="{% change_lang lang.0 %}" data-language="{{ lang.0 }}">{% language lang.0 %}{{ lang.1 }}{% endlanguage %}</a>
                   </li>
                 {% endfor %}
-                <li class="lang-switcher-info"><a href="{{ WOCAT_CONTACT_PAGE }}" target="_blank" data-tooltip="" title="{% trans "Would you like to help us translate the SLM Database? Please contact the WOCAT Secretariat for more information." %}"><svg class="icon-lines is-inline"><use xlink:href="#icon-info"></use></svg></a></li>
+                <li class="lang-switcher-info"><a href="https://www.wocat.net/en/translation-wocat-questionnaires-and-database" target="_blank" data-tooltip="" title="{% trans "Credits for the translation of the WOCAT Questionnaires and Database" %}"><svg class="icon-lines is-inline"><use xlink:href="#icon-info"></use></svg></a></li>
               </ul>
             </li>
           </ul>
@@ -192,6 +192,7 @@
             <li{% if request.resolver_match.view_name == 'wocat:questionnaire_list' %} class="active"{% endif %}><a href="{% url 'wocat:questionnaire_list' %}">{% trans "Search SLM Data" %}</a></li>
             <li{% if request.resolver_match.view_name == 'wocat:add' or request.resolver_match.view_name == 'technologies:add_module' or request.resolver_match.view_name == 'technologies:questionnaire_new' or request.resolver_match.view_name == 'approaches:questionnaire_new' %} class="active"{% endif %}><a href="{% url 'wocat:add' %}">{% trans "Add SLM data" %}</a></li>
             <li{% if request.resolver_match.view_name == 'account_questionnaires' %} class="active"{% endif %}><a href="{% if user.is_authenticated %}{% url 'account_questionnaires' %}{% else %}{% url 'login' %}{% endif %}">{% trans "My SLM Data" %}</a></li>
+            <li{% if request.resolver_match.view_name == 'wocat:home' %} {% endif %}><a href="https://explorer.wocat.net" target="_blank">{% trans "Visualize SLM Data" %}</a></li>
           </ul>
 
           {% comment %}

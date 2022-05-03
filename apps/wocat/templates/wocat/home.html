@@ -35,7 +35,7 @@
             <img src="{% static 'assets/img/landingpage/slide_2.jpg' %}" alt="slide 2" />
             <div class="orbit-caption">
               <h1 class="orbit-caption-title">{% trans "the Global Database on Sustainable Land Management" %}</h1>
-              <p class="orbit-caption-text">{% trans "is open access and contains over 800 SLM practices" %}</p>
+              <p class="orbit-caption-text">{% trans "is open access and contains over 2000 SLM practices" %}</p>
             </div>
           </li>
           {# Orbit 3 #}
@@ -77,31 +77,18 @@
       </a>
       <div id="about-wocat" class="content">
         <p class="is-rhythmed-2">
-          {% trans "The Global Database on Sustainable Land Management (SLM) of WOCAT (the World Overview of Conservation Approaches and Technologies) provides free access to the documentation of field-tested SLM data including SLM practices and maps from different places in the world and offers practitioners the opportunity to share their own SLM practice or map." %}
+          {% trans "The Global Database on Sustainable Land Management (SLM) of WOCAT (the World Overview of Conservation Approaches and Technologies) provides free access to the documentation of field-tested SLM practices from different places in the world and offers practitioners the opportunity to share their own SLM practices. Due to its long-term presence and wealth of knowledge, WOCAT’s Database has been officially recognized by the" %}
+          <a href="https://www.unccd.int/land-and-life/sustainable-land-management-and-restoration/get-involved/unccd-wocat-partnership-slm" target="_blank">UNCCD</a>{% trans " as the primary recommended Global Database for SLM best practices." %}
         </p>
         <p class="is-rhythmed-2">
-          {% trans "SLM in the context of WOCAT is defined as the use of land resources - including soil, water, vegetation and animals - to produce goods and provide services to meet human needs, while ensuring the long-term productive potential of these resources and sustaining their environmental functions." %}
+          <a href="https://www.wocat.net/en/slm" target="_blank">SLM in the context of WOCAT</a>
+          is defined as the use of land resources - including soil, water, vegetation and animals -
+          to produce goods and provide services to meet human needs, while ensuring the long-term productive potential of these resources and
+          sustaining their environmental functions. A SLM practice can be either an
+          <a href="https://www.wocat.net/en/global-slm-database/slm-practices-technologies-and-approaches" target="_blank">SLM Technology or an SLM Approach.</a>
         </p>
         <p class="is-rhythmed-2">
           {% trans "The objective of documenting and assessing SLM practices is to share and spread valuable knowledge in land management, support evidence-based decision-making and scale up identified good practices, thereby contributing to preventing and reducing land degradation and to restoring degraded land." %}
-        </p>
-        <p class="is-rhythmed-2">
-          {% trans "A SLM practice can be either an SLM Technology (a physical practice that controls land degradation and/or enhances productivity, consisting of one or several measures) or an SLM Approach (ways and means used to implement one or several SLM Technologies, including technical and material support, stakeholder engagement, and other)." %}
-        </p>
-        <div class="is-rhythmed-2">
-          <p>{% trans "Credits for the translation of the WOCAT Questionnaires and Database go to:" %}</p>
-          <ul>
-            <li>{% trans "<strong>Russian</strong>: Olga Andreeva (Associate Professor Moscow Lomonosov State University), Julia Johnson (Translator)" %}</li>
-            <li>{% trans "<strong>Spanish</strong>: Pedro Charles Alborno (Translator)" %}</li>
-            <li>{% trans "<strong>French</strong>: Barbara de Choudens (Translator)" %}</li>
-            <li>{% trans "<strong>Lao</strong>: National Agriculture and Forestry Institute (NAFRI) Lao PDR" %}</li>
-            <li>{% trans "<strong>Khmer</strong>: Royal University of Agriculture (RUA) Cambodia" %}</li>
-            <li>{% trans "<strong>Chinese</strong>: Mr. Sun Guoji, Director General of Department of Combating Desertification, National Forestry and Grassland Administration, China" %}</li>
-            <li>{% trans "<strong>Thai</strong>: Dr. Bunjirtluk Jintaridth and Mr. Kamchai Kanjanatanaseth, Land Development Department (LDD), Ministry of Agriculture and Cooperatives, Thailand; Dr. Pitayakon Limtong, Soil and Fertilizer Society of Thailand" %}</li>
-          </ul>
-        </div>
-        <p class="is-rhythmed-2">
-          {% trans 'Please contact the WOCAT Secretariat (<a href="mailto:wocat@cde.unibe.ch" class="link">wocat@cde.unibe.ch</a>) if you are interested in translating the Questionnaires or the Global SLM Database into another language or further information about WOCAT.' %}
         </p>
         <p class="is-rhythmed-2">
           <a href="{% url 'wocat:help_questionnaire_introduction' %}" class="link">{% trans 'Read more about the WOCAT documentation of SLM practices.' %}</a>
@@ -122,10 +109,6 @@
 
 <main class="home-main row large-no-gutters" role="main">
   <div class="small-12 medium-9 columns">
-    <ul class="tabs" data-tab role="tablist">
-      <li class="tab-title active" role="presentation"><a href="#panel2-1" role="tab" tabindex="0" aria-selected="true" aria-controls="panel2-1">{% trans "Search SLM data" %}</a></li>
-      <li class="tab-title" role="presentation"><a href="#panel2-2" role="tab" tabindex="0" aria-selected="false" aria-controls="panel2-2">{% trans "Add SLM data" %}</a></li>
-    </ul>
     <div class="tabs-content">
       <section role="tabpanel" aria-hidden="false" class="content active" id="panel2-1">
         <div class="home-search">
@@ -152,7 +135,8 @@
               <div class="card-well">
                 <h2 class="card-title">{% trans "SLM Technologies" %}</h2>
                 <p class="card-desc">{% trans "An <strong>SLM Technology</strong> is a land management practice that controls land degradation and enhances productivity and/ or other ecosystem services." %}</p>
-                <a href="{% url 'wocat:questionnaire_list' %}?type=technologies" class="button large expand">{% trans "View all" %}</a>
+                <a href="{% url 'wocat:questionnaire_list' %}?type=technologies" class="button large expand">{% trans "View" %}</a>
+                <a href="{% url 'wocat:add' %}" class="button large expand">{% trans "Add" %}</a>
               </div>
             </div>
           </div>
@@ -172,7 +156,8 @@
               <div class="card-well">
                 <h2 class="card-title">{% trans "SLM Approaches" %}</h2>
                 <p class="card-desc">{% trans "An <strong>SLM Approach</strong> defines the ways and means used to implement an SLM Technology, including the stakeholders involved and their roles." %}</p>
-                <a href="{% url 'wocat:questionnaire_list' %}?type=approaches" class="button large expand">{% trans "View all" %}</a>
+                <a href="{% url 'wocat:questionnaire_list' %}?type=approaches" class="button large expand">{% trans "View" %}</a>
+                <a href="{% url 'wocat:add' %}" class="button large expand">{% trans "Add" %}</a>
               </div>
             </div>
           </div>
@@ -188,8 +173,9 @@
                 <h2 class="card-title">{% trans "UNCCD Prais Practices" %}</h2>
                 <p class="card-desc">{% trans "A UNCCD PRAIS Practice is a best practice in SLM, as previously shared through the UNCCD PRAIS system in the UNCCD reporting process." %}</p>
                 <a href="{% url 'wocat:questionnaire_list' %}?type=unccd" class="button large expand">
-                  {% trans "View all" %}
+                  {% trans "View" %}
                 </a>
+                <a href="{% url 'wocat:add' %}" class="button large expand">{% trans "Add" %}</a>
               </div>
             </div>
           </div>
@@ -218,72 +204,90 @@
               </div>
             </div>
           </div>
-          {# Maps / Land Degradation/Conservation #}
+         {# Gender #}
           <div class="small-12 medium-4 columns">
             <div class="card">
-              <a href="http://qm.wocat.net/" target="_blank">
+              <a href="https://www.wocat.net/en/projects-and-countries/projects/gender">
                 <div class="card-image-holder">
-                  <img class="card-image" src="{% static 'assets/img/card_slm_maps.jpg' %}">
-                  <span class="card-image-overlay-container">
-                    <div class="card-image-overlay is-map">
-                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-map"></use></svg>
-                    </div>
-                  </span>
+                  <img class="card-image" src="{% static 'assets/img/Gender.jpg' %}">
                 </div>
               </a>
               <div class="card-well">
-                <h2 class="card-title">{% trans "Land Degradation / Conservation" %}</h2>
-                <p class="card-desc">{% trans "Mapping land management, degradation and conservation including driver, state and impacts." %}</p>
-                <a href="http://qm.wocat.net/" target="_blank" class="button large expand" title="{% trans "Maps are currently not yet available in the new database. Maps can be viewed or added in the old database (QM)." %}" aria-haspopup="true" data-tooltip="">
-                  {% trans "View all" %}<svg class="icon-information is-inline right no-pointer-events"><use xlink:href="#icon-information"></svg>
+                <h2 class="card-title">{% trans "Gender" %}</h2>
+                <p class="card-desc">{% trans "Tool for assessing gender-responsiveness of SLM Technologies and Approaches." %}</p>
+                <a href="https://www.wocat.net/en/projects-and-countries/projects/gender" class="button large expand">{% trans "View" %}</a>
+              </div>
+            </div>
+          </div>
+          {# Economics #}
+          <div class="small-12 medium-4 columns">
+            <div class="card">
+              <a href="https://explorer.wocat.net">
+                <div class="card-image-holder">
+                  <img class="card-image" src="{% static 'assets/img/Economics_small.jpg' %}">
+                </div>
+              </a>
+              <div class="card-well">
+                <h2 class="card-title">{% trans "Economics" %}</h2>
+                <p class="card-desc">{% trans "Analysing the Costs and Benefits of Sustainable Land Management Technologies." %}</p>
+                <a href="https://explorer.wocat.net" class="button large expand">
+                  {% trans "View" %}
                 </a>
               </div>
             </div>
           </div>
-          {# CCA #}
+          {# Sand, Dust, Storm #}
           <div class="small-12 medium-4 columns">
             <div class="card">
-              {% if IS_ACTIVE_FEATURE_MODULE %}
-              <a href="{% url 'wocat:questionnaire_list' %}?type=cca">
+              <a href="https://explorer.wocat.net">
                 <div class="card-image-holder">
-                  <img class="card-image" src="{% static 'assets/img/card_modules.jpg' %}">
-                  <span class="card-image-overlay-container">
-                    <div class="card-image-overlay is-climate">
-                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-climate"></use></svg>
-                    </div>
-                  </span>
+                  <img class="card-image" src="{% static 'assets/img/Sand_and_Dust_Storm_small.jpg' %}">
                 </div>
               </a>
               <div class="card-well">
-                <h2 class="card-title">{% trans "CCA Module" %}</h2>
-                <p class="card-desc">{% trans "The climate change adaptation tool assesses whether a specific SLM Technology is adapted to gradual climate changes and climate-related extremes (natural disasters)." %}</p>
-                <a href="{% url 'wocat:questionnaire_list' %}?type=cca" class="button large expand">
-                  {% trans "View all" %}
+                <h2 class="card-title">{% trans "SDS" %}</h2>
+                <p class="card-desc">{% trans "Sand and Dust Storm (SDS) responsiveness of SLM Technologies and Approaches" %}</p>
+                <a href="https://explorer.wocat.net" class="button large expand">
+                  {% trans "View" %}
                 </a>
               </div>
-              {% else %}
+            </div>
+          </div>
+          {# Drought #}
+          <div class="small-12 medium-4 columns">
+            <div class="card">
+              <a href="https://explorer.wocat.net">
                 <div class="card-image-holder">
-                  <img class="card-image" src="{% static 'assets/img/card_modules.jpg' %}">
-                  <span class="card-image-overlay-container">manger
-                    <div class="card-image-overlay is-climate">
-                      <svg class="icon"><use xmlns:xlink="http://www.w3.org/1999/xlink" xlink:href="#icon-climate"></use></svg>
-                    </div>
-                  </span>
+                  <img class="card-image" src="{% static 'assets/img/Drought_small.jpg' %}">
                 </div>
-                <div class="card-well">
-                  <h2 class="card-title">{% trans "CCA Module" %}</h2>
-                  <p class="card-desc">{% trans "The climate change adaptation tool assesses whether a specific SLM Technology is adapted to gradual climate changes and climate-related extremes (natural disasters)." %}</p>
-                  <a href="#" class="button large expand disabled" title="{% trans "Modules will be added soon to the new database." %}" aria-haspopup="true" data-tooltip="">
-                    {% trans "View all" %}<svg class="icon-information is-inline right no-pointer-events"><use xlink:href="#icon-information"></svg>
-                  </a>
+              </a>
+              <div class="card-well">
+                <h2 class="card-title">{% trans "Drought" %}</h2>
+                <p class="card-desc">{% trans "Drought responsiveness of SLM Technologies and Approaches" %}</p>
+                <a href="https://explorer.wocat.net" class="button large expand">
+                  {% trans "View" %}
+                </a>
+              </div>
+            </div>
+          </div>
+          {# Land Degradation Neutrality Tools #}
+          <div class="small-12 medium-4 columns">
+            <div class="card">
+              <a href="https://explorer.wocat.net">
+                <div class="card-image-holder">
+                  <img class="card-image" src="{% static 'assets/img/LDN_training.original.jpg' %}">
                 </div>
-              {% endif %}
+              </a>
+              <div class="card-well">
+                <h2 class="card-title">{% trans "Land Degradation Neutrality Tools" %}</h2>
+                <p class="card-desc">{% trans "Tools and methods for monitoring, validation and implementation Land Degradation Neutrality (LDN)" %}</p>
+                <a href="https://www.wocat.net/en/ldn" class="button large expand">
+                  {% trans "View" %}
+                </a>
+              </div>
             </div>
           </div>
         </div>
-      </section>
-      <section role="tabpanel" aria-hidden="true" class="content" id="panel2-2">
-        {% include 'wocat/partial/add.html' %}
       </section>
     </div>
   </div>
