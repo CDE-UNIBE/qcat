@@ -136,7 +136,7 @@
                 <h2 class="card-title">{% trans "SLM Technologies" %}</h2>
                 <p class="card-desc">{% trans "An <strong>SLM Technology</strong> is a land management practice that controls land degradation and enhances productivity and/ or other ecosystem services." %}</p>
                 <a href="{% url 'wocat:questionnaire_list' %}?type=technologies" class="button large expand">{% trans "View" %}</a>
-                <a href="{% url 'wocat:add' %}" class="button large expand">{% trans "Add" %}</a>
+                <a href="./technologies/edit/new/" class="button large expand">{% trans "Add" %}</a>
               </div>
             </div>
           </div>
@@ -157,7 +157,7 @@
                 <h2 class="card-title">{% trans "SLM Approaches" %}</h2>
                 <p class="card-desc">{% trans "An <strong>SLM Approach</strong> defines the ways and means used to implement an SLM Technology, including the stakeholders involved and their roles." %}</p>
                 <a href="{% url 'wocat:questionnaire_list' %}?type=approaches" class="button large expand">{% trans "View" %}</a>
-                <a href="{% url 'wocat:add' %}" class="button large expand">{% trans "Add" %}</a>
+                <a href="./approaches/edit/new/" class="button large expand">{% trans "Add" %}</a>
               </div>
             </div>
           </div>
@@ -175,7 +175,6 @@
                 <a href="{% url 'wocat:questionnaire_list' %}?type=unccd" class="button large expand">
                   {% trans "View" %}
                 </a>
-                <a href="{% url 'wocat:add' %}" class="button large expand">{% trans "Add" %}</a>
               </div>
             </div>
           </div>
@@ -199,8 +198,9 @@
                 <p class="card-desc">{% trans "Tools for assessing the carbon benefits and greenhouse gas emissions of an SLM Technology." %}</p>
 <!--                <a href="https://banr.nrel.colostate.edu/CBP/" class="button large expand">{% trans "Visit CBP Tools Page" %}</a>-->
                 <a href="{% url 'wocat:questionnaire_list' %}?type=cbp" class="button large expand">
-                  {% trans "View all" %}
+                  {% trans "View" %}
                 </a>
+                <a href="./technologies/add_module/" class="button large expand">{% trans "Add" %}</a>
               </div>
             </div>
           </div>
@@ -222,7 +222,7 @@
           {# Economics #}
           <div class="small-12 medium-4 columns">
             <div class="card">
-              <a href="https://explorer.wocat.net">
+              <a href="https://www.wocat.net/en/projects-and-countries/projects/costs-and-benefits-slm-technologies">
                 <div class="card-image-holder">
                   <img class="card-image" src="{% static 'assets/img/Economics_small.jpg' %}">
                 </div>
@@ -230,7 +230,7 @@
               <div class="card-well">
                 <h2 class="card-title">{% trans "Economics" %}</h2>
                 <p class="card-desc">{% trans "Analysing the Costs and Benefits of Sustainable Land Management Technologies." %}</p>
-                <a href="https://explorer.wocat.net" class="button large expand">
+                <a href="https://www.wocat.net/en/projects-and-countries/projects/costs-and-benefits-slm-technologies" class="button large expand">
                   {% trans "View" %}
                 </a>
               </div>
@@ -239,15 +239,15 @@
           {# Sand, Dust, Storm #}
           <div class="small-12 medium-4 columns">
             <div class="card">
-              <a href="https://explorer.wocat.net">
+              <a href="https://www.wocat.net/en/projects-and-countries/projects/wocat-slm-database-alignment-unccd-sds-and-drought-toolboxes">
                 <div class="card-image-holder">
                   <img class="card-image" src="{% static 'assets/img/Sand_and_Dust_Storm_small.jpg' %}">
                 </div>
               </a>
               <div class="card-well">
-                <h2 class="card-title">{% trans "SDS" %}</h2>
+                <h2 class="card-title">{% trans "Sand and Dust Storm" %}</h2>
                 <p class="card-desc">{% trans "Sand and Dust Storm (SDS) responsiveness of SLM Technologies and Approaches" %}</p>
-                <a href="https://explorer.wocat.net" class="button large expand">
+                <a href="https://www.wocat.net/en/projects-and-countries/projects/wocat-slm-database-alignment-unccd-sds-and-drought-toolboxes" class="button large expand">
                   {% trans "View" %}
                 </a>
               </div>
@@ -256,15 +256,15 @@
           {# Drought #}
           <div class="small-12 medium-4 columns">
             <div class="card">
-              <a href="https://explorer.wocat.net">
+              <a href="https://www.wocat.net/en/projects-and-countries/projects/wocat-slm-database-alignment-unccd-sds-and-drought-toolboxes">
                 <div class="card-image-holder">
                   <img class="card-image" src="{% static 'assets/img/Drought_small.jpg' %}">
                 </div>
               </a>
               <div class="card-well">
                 <h2 class="card-title">{% trans "Drought" %}</h2>
-                <p class="card-desc">{% trans "Drought responsiveness of SLM Technologies and Approaches" %}</p>
-                <a href="https://explorer.wocat.net" class="button large expand">
+                <p class="card-desc">{% trans "Drought relevant SLM Technologies" %}</p>
+                <a href="https://www.wocat.net/en/projects-and-countries/projects/wocat-slm-database-alignment-unccd-sds-and-drought-toolboxes" class="button large expand">
                   {% trans "View" %}
                 </a>
               </div>
@@ -273,13 +273,13 @@
           {# Land Degradation Neutrality Tools #}
           <div class="small-12 medium-4 columns">
             <div class="card">
-              <a href="https://explorer.wocat.net">
+              <a href="https://www.wocat.net/en/ldn">
                 <div class="card-image-holder">
                   <img class="card-image" src="{% static 'assets/img/LDN_training.original.jpg' %}">
                 </div>
               </a>
               <div class="card-well">
-                <h2 class="card-title">{% trans "Land Degradation Neutrality Tools" %}</h2>
+                <h2 class="card-title">{% trans "LDN" %}</h2>
                 <p class="card-desc">{% trans "Tools and methods for monitoring, validation and implementation Land Degradation Neutrality (LDN)" %}</p>
                 <a href="https://www.wocat.net/en/ldn" class="button large expand">
                   {% trans "View" %}
@@ -293,7 +293,7 @@
   </div>
   <div class="small-12 medium-3 columns">
     <div class="home-keynumbers-container">
-      <h3 class="keynumbers-heading">{% trans "Key Numbers" %}</h3>
+      <h3 class="keynumbers-heading"><a href="https://explorer.wocat.net">{% trans "Key Numbers" %}</a></h3>
       <div class="home-keynumbers-content">
         <img src="{% static 'assets/img/ajax-loader.gif' %}">
       </div>
